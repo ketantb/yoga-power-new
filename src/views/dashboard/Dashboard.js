@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-
 import {
   CAvatar,
   CButton,
@@ -24,6 +23,8 @@ import {
 import { CChartBar, CChartLine, CChartPie } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
 import CIcon from '@coreui/icons-react'
+import { useSelector } from 'react-redux'
+
 import {
   cibCcAmex,
   cibCcApplePay,
@@ -57,9 +58,20 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import { useNavigate } from 'react-router-dom'
+import { dashboardRights } from '../hr/Rights/rightsValue/crmRightsValue'
+
+
 
 const Dashboard = () => {
+
   const navigate = useNavigate()
+  const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights?.crmDashboard?.rights) 
+  const access = rightsData?rightsData:[]
+  const isAdmin = useSelector((el)=>el.isAdmin) 
+  
+  
+
+
   const user = JSON.parse(localStorage.getItem('user-info'))
   useEffect(() => {
     if (user == null) {
@@ -70,6 +82,7 @@ const Dashboard = () => {
       localStorage.clear()
     }
   }, [])
+
 
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
   const [active, setActive] = useState('Today')
@@ -222,8 +235,10 @@ const Dashboard = () => {
               Go
             </CButton>
           </CInputGroup>
+
           <CRow>
-            <CCol lg={3} sm={6}>
+
+            {(access?.includes(dashboardRights.allEnquiry)||isAdmin)  &&<CCol lg={3} sm={6}>
               <CCard className="mb-4">
                 <CCardHeader>All Enquiries</CCardHeader>
                 <CCardBody>
@@ -247,8 +262,9 @@ const Dashboard = () => {
                   />
                 </CCardBody>
               </CCard>
-            </CCol>
-            <CCol lg={3} sm={6}>
+            </CCol>}
+
+            {(access?.includes(dashboardRights.totalSales)||isAdmin)  && <CCol lg={3} sm={6}>
               <CCard className="mb-4">
                 <CCardHeader>Total Sales</CCardHeader>
                 <CCardBody>
@@ -274,8 +290,8 @@ const Dashboard = () => {
                   />
                 </CCardBody>
               </CCard>
-            </CCol>
-            <CCol lg={3} sm={6}>
+            </CCol>}
+            {(access?.includes(dashboardRights.totalClients)||isAdmin)&&<CCol lg={3} sm={6}>
               <CCard className="mb-4">
                 <CCardHeader>Total Clients</CCardHeader>
                 <CCardBody>
@@ -307,8 +323,9 @@ const Dashboard = () => {
                   />
                 </CCardBody>
               </CCard>
-            </CCol>
-            <CCol lg={3} sm={6}>
+            </CCol>}
+
+            {(access?.includes(dashboardRights.totalService)||isAdmin)&&<CCol lg={3} sm={6}>
 
               <CCard className="mb-4">
                 <CCardHeader>Total Services</CCardHeader>
@@ -333,14 +350,20 @@ const Dashboard = () => {
                   />
                 </CCardBody>
               </CCard>
-            </CCol>
+            </CCol>}
           </CRow>
+
+
         </CCardBody>
       </CCard>
 
-      <WidgetsDropdown />
+      <WidgetsDropdown 
+      data={access}
+      isAdmin={isAdmin}
+      />
       <CRow>
-        <CCol lg={6} sm={12}>
+
+        {(access?.includes(dashboardRights.income)||isAdmin)&&<CCol lg={6} sm={12}>
           <CCard className="mb-4">
             <CCardBody>
               <CRow>
@@ -420,8 +443,8 @@ const Dashboard = () => {
               </CCard>
             </CCardBody>
           </CCard>
-        </CCol>
-        <CCol lg={6} sm={12}>
+        </CCol>}
+        {(access?.includes(dashboardRights.attendance)||isAdmin)&&<CCol lg={6} sm={12}>
           <CCard className="mb-4">
 
             <CCardBody>
@@ -491,152 +514,10 @@ const Dashboard = () => {
               </CRow>
             </CCardBody>
           </CCard>
-        </CCol>
+        </CCol>}
 
-        <CCol lg={6} sm={12}>
-          <CCard className="mb-2">
-            <CCardBody>
-              <CRow>
-                <CCol sm={5}>
-                  <h4 id="traffic" className="card-title mb-0">
-                    Traffic
-                  </h4>
-                  <div className="small text-medium-emphasis">
-                    January - July 2021
-                  </div>
-                </CCol>
-                <CCol sm={7} className="d-none d-md-block">
-                  <CButton color="primary" className="float-end">
-                    <CIcon icon={cilCloudDownload} />
-                  </CButton>
-                  <CButtonGroup className="float-end me-3">
-                    {['Day', 'Month', 'Year'].map((value) => (
-                      <CButton
-                        color="outline-secondary"
-                        key={value}
-                        className="mx-0"
-                        active={value === 'Month'}
-                      >
-                        {value}
-                      </CButton>
-                    ))}
-                  </CButtonGroup>
-                </CCol>
-              </CRow>
-              <CChartLine
-                style={{ height: '270px', marginTop: '20px' }}
-                data={{
-                  labels: [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                    'July',
-                  ],
-                  datasets: [
-                    {
-                      label: 'My First dataset',
-                      backgroundColor: hexToRgba(getStyle('--cui-success'), 50),
-                      borderColor: getStyle('--cui-info'),
-                      pointHoverBackgroundColor: getStyle('--cui-info'),
-                      borderWidth: 2,
-                      data: [
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                      ],
-                      fill: true,
-                    },
-                    {
-                      label: 'My Second dataset',
-                      backgroundColor: 'transparent',
-                      borderColor: getStyle('--cui-red'),
-                      pointHoverBackgroundColor: getStyle('--cui-success'),
-                      borderWidth: 2,
-                      data: [
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                      ],
-                    },
-                    {
-                      label: 'My Third dataset',
-                      backgroundColor: 'success',
-                      borderColor: getStyle('--cui-danger'),
-                      pointHoverBackgroundColor: getStyle('--cui-danger'),
-                      borderWidth: 1,
-                      borderDash: [8, 5],
-                      data: [65, 65, 65, 65, 65, 65, 65],
-                    },
-                  ],
-                }}
-                options={{
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-                  scales: {
-                    x: {
-                      grid: {
-                        drawOnChartArea: false,
-                      },
-                    },
-                    y: {
-                      ticks: {
-                        beginAtZero: true,
-                        maxTicksLimit: 5,
-                        stepSize: Math.ceil(250 / 5),
-                        max: 250,
-                      },
-                    },
-                  },
-                  elements: {
-                    line: {
-                      tension: 0.4,
-                    },
-                    point: {
-                      radius: 0,
-                      hitRadius: 10,
-                      hoverRadius: 4,
-                      hoverBorderWidth: 3,
-                    },
-                  },
-                }}
-              />
-            </CCardBody>
-            <CCardFooter>
-              <CRow xs={{ cols: 2 }} md={{ cols: 5 }} className="text-center">
-                {progressExample.map((item, index) => (
-                  <CCol className="mb-sm-2 mb-0" key={index}>
-                    <div className="text-medium-emphasis">{item.title}</div>
-                    <strong style={{ fontSize: '10px' }}>
-                      {item.value} ({item.percent}%)
-                    </strong>
-                    <CProgress
-                      thin
-                      className="mt-2"
-                      color={item.color}
-                      value={item.percent}
-                    />
-                  </CCol>
-                ))}
-              </CRow>
-            </CCardFooter>
-          </CCard>
-        </CCol>
-        <CCol lg={6} sm={12}>
+      
+        {(access?.includes(dashboardRights.socialMedia)||isAdmin)&&<CCol lg={12} sm={12}>
           <CCard className="mb-4">
 
             <CCardBody>
@@ -703,13 +584,17 @@ const Dashboard = () => {
               ))}
             </CCardBody>
           </CCard>
-        </CCol>
+        </CCol>}
 
       </CRow>
-      <WidgetsBrand withCharts />
+      {/* <WidgetsBrand 
+      withCharts
+      data={access}
+      isAdmin={isAdmin}
+      /> */}
 
       <CRow>
-        <CCol >
+        {(access?.includes(dashboardRights.socialMedia)||isAdmin) && <CCol >
           <CCard className="mb-4">
             <CCardHeader>Admin panel</CCardHeader>
             <CCardBody>
@@ -802,7 +687,7 @@ const Dashboard = () => {
               </CTable>
             </CCardBody>
           </CCard>
-        </CCol>
+        </CCol>}
       </CRow>
     </>
   )

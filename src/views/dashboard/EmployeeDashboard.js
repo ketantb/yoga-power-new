@@ -55,8 +55,17 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import { useNavigate } from 'react-router-dom'
 import WidgetsDropdown2 from '../widgets/WidgetsDropdown2'
+import { empLoyeeeRights } from '../hr/Rights/rightsValue/crmRightsValue'
+import { useSelector } from 'react-redux'
 
 const EmployeeDashboard = () => {
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmEmployee?.items?.crmDashboard1?.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
+
+
     const navigate = useNavigate()
     const user = JSON.parse(localStorage.getItem('user-info'))
     useEffect(() => {
@@ -205,9 +214,13 @@ const EmployeeDashboard = () => {
 
     return (
         <>
-            <WidgetsDropdown2 />
+            <WidgetsDropdown2
+              access={access}
+              isAdmin={isAdmin}
+            />
+
             <CRow>
-                <CCol lg={6} sm={12}>
+                {(access?.includes(empLoyeeeRights.income)||isAdmin)&&<CCol lg={6} sm={12}>
                     <CCard className="mb-4">
                         <CCardBody>
                             <CRow>
@@ -287,8 +300,8 @@ const EmployeeDashboard = () => {
                             </CCard>
                         </CCardBody>
                     </CCard>
-                </CCol>
-                <CCol lg={6} sm={12}>
+                </CCol>}
+                {(access?.includes(empLoyeeeRights.attendance)||isAdmin)&&<CCol lg={6} sm={12}>
                     <CCard className="mb-4">
 
                         <CCardBody>
@@ -358,152 +371,9 @@ const EmployeeDashboard = () => {
                             </CRow>
                         </CCardBody>
                     </CCard>
-                </CCol>
+                </CCol>}
 
-                <CCol lg={6} sm={12}>
-                    <CCard className="mb-2">
-                        <CCardBody>
-                            <CRow>
-                                <CCol sm={5}>
-                                    <h4 id="traffic" className="card-title mb-0">
-                                        Traffic
-                                    </h4>
-                                    <div className="small text-medium-emphasis">
-                                        January - July 2021
-                                    </div>
-                                </CCol>
-                                <CCol sm={7} className="d-none d-md-block">
-                                    <CButton color="primary" className="float-end">
-                                        <CIcon icon={cilCloudDownload} />
-                                    </CButton>
-                                    <CButtonGroup className="float-end me-3">
-                                        {['Day', 'Month', 'Year'].map((value) => (
-                                            <CButton
-                                                color="outline-secondary"
-                                                key={value}
-                                                className="mx-0"
-                                                active={value === 'Month'}
-                                            >
-                                                {value}
-                                            </CButton>
-                                        ))}
-                                    </CButtonGroup>
-                                </CCol>
-                            </CRow>
-                            <CChartLine
-                                style={{ height: '270px', marginTop: '20px' }}
-                                data={{
-                                    labels: [
-                                        'January',
-                                        'February',
-                                        'March',
-                                        'April',
-                                        'May',
-                                        'June',
-                                        'July',
-                                    ],
-                                    datasets: [
-                                        {
-                                            label: 'My First dataset',
-                                            backgroundColor: hexToRgba(getStyle('--cui-success'), 50),
-                                            borderColor: getStyle('--cui-info'),
-                                            pointHoverBackgroundColor: getStyle('--cui-info'),
-                                            borderWidth: 2,
-                                            data: [
-                                                random(50, 200),
-                                                random(50, 200),
-                                                random(50, 200),
-                                                random(50, 200),
-                                                random(50, 200),
-                                                random(50, 200),
-                                                random(50, 200),
-                                            ],
-                                            fill: true,
-                                        },
-                                        {
-                                            label: 'My Second dataset',
-                                            backgroundColor: 'transparent',
-                                            borderColor: getStyle('--cui-red'),
-                                            pointHoverBackgroundColor: getStyle('--cui-success'),
-                                            borderWidth: 2,
-                                            data: [
-                                                random(50, 200),
-                                                random(50, 200),
-                                                random(50, 200),
-                                                random(50, 200),
-                                                random(50, 200),
-                                                random(50, 200),
-                                                random(50, 200),
-                                            ],
-                                        },
-                                        {
-                                            label: 'My Third dataset',
-                                            backgroundColor: 'success',
-                                            borderColor: getStyle('--cui-danger'),
-                                            pointHoverBackgroundColor: getStyle('--cui-danger'),
-                                            borderWidth: 1,
-                                            borderDash: [8, 5],
-                                            data: [65, 65, 65, 65, 65, 65, 65],
-                                        },
-                                    ],
-                                }}
-                                options={{
-                                    maintainAspectRatio: false,
-                                    plugins: {
-                                        legend: {
-                                            display: false,
-                                        },
-                                    },
-                                    scales: {
-                                        x: {
-                                            grid: {
-                                                drawOnChartArea: false,
-                                            },
-                                        },
-                                        y: {
-                                            ticks: {
-                                                beginAtZero: true,
-                                                maxTicksLimit: 5,
-                                                stepSize: Math.ceil(250 / 5),
-                                                max: 250,
-                                            },
-                                        },
-                                    },
-                                    elements: {
-                                        line: {
-                                            tension: 0.4,
-                                        },
-                                        point: {
-                                            radius: 0,
-                                            hitRadius: 10,
-                                            hoverRadius: 4,
-                                            hoverBorderWidth: 3,
-                                        },
-                                    },
-                                }}
-                            />
-                        </CCardBody>
-                        <CCardFooter>
-                            <CRow xs={{ cols: 2 }} md={{ cols: 5 }} className="text-center">
-                                {progressExample.map((item, index) => (
-                                    <CCol className="mb-sm-2 mb-0" key={index}>
-                                        <div className="text-medium-emphasis">{item.title}</div>
-                                        <strong style={{ fontSize: '10px' }}>
-                                            {item.value} ({item.percent}%)
-                                        </strong>
-                                        <CProgress
-                                            thin
-                                            className="mt-2"
-                                            color={item.color}
-                                            value={item.percent}
-                                        />
-                                    </CCol>
-                                ))}
-                            </CRow>
-                        </CCardFooter>
-                    </CCard>
-                </CCol>
-                <CCol lg={6} sm={12}>
+                {(access?.includes(empLoyeeeRights.socialMedia)||isAdmin)&&<CCol lg={12} sm={12}>
                     <CCard className="mb-4">
 
                         <CCardBody>
@@ -570,13 +440,14 @@ const EmployeeDashboard = () => {
                             ))}
                         </CCardBody>
                     </CCard>
-                </CCol>
+                </CCol>}
 
             </CRow>
-            <WidgetsBrand withCharts />
+
+            {/* <WidgetsBrand withCharts /> */}
 
             <CRow>
-                <CCol >
+                {(access?.includes(empLoyeeeRights.yogPowerBranch)||isAdmin)&&<CCol >
                     <CCard className="mb-4">
                         <CCardHeader>Yog Power Branch</CCardHeader>
                         <CCardBody>
@@ -669,7 +540,7 @@ const EmployeeDashboard = () => {
                             </CTable>
                         </CCardBody>
                     </CCard>
-                </CCol>
+                </CCol>}
             </CRow>
         </>
     )

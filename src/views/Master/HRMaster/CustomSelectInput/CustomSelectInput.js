@@ -3,14 +3,15 @@ import { useEffect, useState } from 'react'
 import './CustomSelectInput.css'
 import {AiOutlineDown,AiOutlineUp,AiOutlineSearch} from 'react-icons/ai'
 
-const CustomSelectInput = ({title,data,dataneed,getData}) => {
+const CustomSelectInput = ({title,data,dataneed,getData,email}) => {
 
     const [visibale,setVisibale] = useState(false)
     const [inputvalName,setInputValName] = useState('')
     const [selectedName,setSelectedName] = useState(title)
 
     function getDataFun(event,el){
-    console.log(el)
+
+      const EmpName =el?.empName ||el?.FullName
        if(event.target.id==='data-li-c'){
           getData(el)
           setSelectedName(el.empName)
@@ -40,9 +41,10 @@ const CustomSelectInput = ({title,data,dataneed,getData}) => {
       
         <ul className="options-data-li-c">
 
-        {data?.filter((el)=>el.empName.toLocaleLowerCase().includes(inputvalName.toLocaleLowerCase())).map((el)=>{
-                        return <li  id='data-li-c' onClick={(e)=>getDataFun(e,el)} >{el.empName }<br/>
-                        {el.empId}
+        {data?.filter((el)=>(el?.empName ||el.FullName).toLocaleLowerCase().includes(inputvalName.toLocaleLowerCase())).map((el)=>{
+                        return <li  id='data-li-c' onClick={(e)=>getDataFun(e,el)} >{(el?.empName ||el.FullName )}<br/>
+                        {el?.empId ||el.EmployeeID}<br/>
+                        {el?.email ||el.email}
                         </li>
                     })}
         </ul>

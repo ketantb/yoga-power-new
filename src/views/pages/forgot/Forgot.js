@@ -38,7 +38,7 @@ const Forgot = () => {
       setError(null)
       let data = { email }
       // console.warn(data);
-      axios.post(`https://yoga-power-appv0.herokuapp.com/signup/update/${email}`, data
+      axios.post(`https://yog-seven.vercel.app/signup/update/${email}`, data
       )
         .then(() => {
           setClick(false)

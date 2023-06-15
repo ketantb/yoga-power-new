@@ -37,14 +37,44 @@ import FeedBackCall from './FeedBackCall';
 import GreetingCall from './GreetingCall';
 import IrregularMemberCall from './IrregularMemberCall';
 import CallHistory from './CallHistory';
+import { empLoyeeeRights } from '../../hr/Rights/rightsValue/crmRightsValue'
+
+
 
 const ServiceCall = ({id}) => {
-    const [activeKey, setActiveKey] = useState(1)
-    const [staff, setStaff] = useState([])
-    const monthName =     ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const username = user.user.username;
+
+    const [staff, setStaff] = useState([])
+    const monthName =     ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmEmployee?.items?.crmMemberCalls1?.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
+    const funValidate = (val)=>{
+        return (access?.includes(empLoyeeeRights[val])||isAdmin)
+    }
+
+
+    const welcomeCallsVal =  funValidate(' welcomeCalls')
+    const feedbackCallsVal = funValidate('feedbackCalls')
+    const paymentCallsVal = funValidate('paymentCalls')
+    const irregularMemberCallVal = funValidate('irregularMemberCall')
+    const greetingCallsVal = funValidate('greetingCalls')
+    const callHistoryVal =funValidate('callHistory')
+
+    
+    const [activeKey, setActiveKey] = useState(
+        (welcomeCallsVal&&1)||
+        (feedbackCallsVal&&2)||
+        (paymentCallsVal&&3)||
+        (irregularMemberCallVal&&4)||
+        (greetingCallsVal&&5)||
+        (callHistoryVal&&6))
 
     const url = useSelector((el)=>el.domainOfApi) 
     const initialFilterObj = {
@@ -81,7 +111,7 @@ const ServiceCall = ({id}) => {
                 <CCard>
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
                         <CNav responsive variant="pills" role="tablist">
-                            <CNavItem md={12}>
+                            { welcomeCallsVal&& <CNavItem md={12}>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 1}
@@ -90,8 +120,8 @@ const ServiceCall = ({id}) => {
                                 >
                                     Welcome Calls
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem md={12}>
+                            </CNavItem>}
+                            {feedbackCallsVal&&<CNavItem md={12}>
                                 <CNavLink 
 
                                     href="javascript:void(0);"
@@ -103,8 +133,8 @@ const ServiceCall = ({id}) => {
 
                                     Feedback Calls
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                           {paymentCallsVal&&<CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 3}
@@ -114,8 +144,8 @@ const ServiceCall = ({id}) => {
                                 >
                                     Payment Calls
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                            {irregularMemberCallVal&& <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 4}
@@ -125,9 +155,8 @@ const ServiceCall = ({id}) => {
                                 >
                                     Irregular Member Call
                                 </CNavLink>
-                            </CNavItem>
-                           
-                            <CNavItem>
+                            </CNavItem>}                           
+                            {greetingCallsVal&& <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 5}
@@ -137,9 +166,8 @@ const ServiceCall = ({id}) => {
                                 >
                                     Greeting Calls
                                 </CNavLink>
-                            </CNavItem>
-
-                            <CNavItem>
+                            </CNavItem>}
+                            {callHistoryVal&& <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 6}
@@ -149,7 +177,7 @@ const ServiceCall = ({id}) => {
                                 >
                                     Call History
                                 </CNavLink>
-                            </CNavItem>
+                            </CNavItem>}
                         </CNav>
                     </CCardHeader>
                     <CCardBody style={{overflowY:'scroll'}}>

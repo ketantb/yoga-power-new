@@ -32,14 +32,13 @@ import useMonthlyReport from './AttendanceHook/useMonthlyReport'
 import useDailyBatchAtten from './AttendanceHook/useDailyBatchAtten'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { trainerSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
 const LiveClasses = () => {
 
      const updateAttendance = useAttendance()
      const updateMonthlyReport = useMonthlyReport()
      const updateDailyReport = useDailyBatchAtten()
-
-
-
+     
      const url = useSelector((el)=>el.domainOfApi) 
      const [selectedMonth,setMonth] = useState(new Date().getMonth())
      const [selectedYear,setYear] = useState(new Date().getFullYear())
@@ -53,8 +52,24 @@ const LiveClasses = () => {
      const [clientAttendance2,setClientAttendence2] = useState([])
      const [memBerData2,setMemberData] = useState([])
 
+     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights?.
+     crmTrainer?.items?.superRight) 
+     const access = rightsData?rightsData:[]
+     const isAdmin = useSelector((el)=>el.isAdmin) 
 
-     const [activeKey, setActiveKey] = useState(1)
+     const dailyAttendedvalidate =  rightsData?.dailybatchAttendance?.includes(trainerSuperRight.liveClasses)
+     const monthlyReportvalidate =  rightsData?.monthlyReport?.includes(trainerSuperRight.liveClasses)
+     const clientAttendanceRegvalidate =  rightsData?.clientAttendanceReg?.includes(trainerSuperRight.liveClasses)
+
+
+     const number =  ( (isAdmin&&1)||(dailyAttendedvalidate&&1)||
+     (monthlyReportvalidate&&2)||
+     (clientAttendanceRegvalidate&&3))
+
+     const [activeKey, setActiveKey] = useState(number)
+
+    
+
      let user = JSON.parse(localStorage.getItem('user-info'))
      const token = user.token;
 
@@ -161,7 +176,7 @@ let allTotalOfAttendance = 0
                 <CCard>
                     <CCardHeader >
                         <CNav variant="pills" role="tablist">
-                            <CNavItem>
+                            {(isAdmin|| dailyAttendedvalidate)&& <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 1}
@@ -170,8 +185,8 @@ let allTotalOfAttendance = 0
                                    Daily batch  Attendance 
 
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                            { (isAdmin||monthlyReportvalidate)&&<CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 2}
@@ -180,8 +195,8 @@ let allTotalOfAttendance = 0
 
                                     Monthly Report
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                            {(isAdmin||clientAttendanceRegvalidate)&&<CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 3}
@@ -189,7 +204,7 @@ let allTotalOfAttendance = 0
                                 >
                                     Client Attendance Reg
                                 </CNavLink>
-                            </CNavItem>
+                            </CNavItem>}
                            
 
 
@@ -408,11 +423,7 @@ let allTotalOfAttendance = 0
                                 </CTable>
                             </CTabPane>
                             
-                           
-                           
-                         
-                           
-                          
+                    
                         </CTabContent>
                     </CCardBody>
                 </CCard>

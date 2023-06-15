@@ -1,6 +1,20 @@
-import { createStore } from 'redux'
+import { createStore,applyMiddleware } from 'redux'
+import thunkMiddleware from 'redux-thunk'
+import obj from './views/hr/crmErpObjeact/obj';
+
+let user = JSON.parse(localStorage.getItem('user-info'))
+
+
+import axios from 'axios';
+
+
 
 const initialState = {
+  isAdmin:false,
+  showHomePage:false,
+  isEmployee:false,
+  activeToCall:'',
+  empLoyeeRights:obj,
   sidebarShow: true,
   domainOfApi:'https://yog-power-api.vercel.app',
   stockDataClothData:[],
@@ -13,7 +27,7 @@ const initialState = {
   foodProductDataClearFun:()=>{},
   genralProduct:[],
   genralProductDataClearFun:()=>{},
-
+  getUserRight:()=>{}
 }
 
 function toConfirmBooking(state,id){
@@ -36,11 +50,40 @@ function toPreserveValOFInvoce(prevstate,newState){
   })
 }
 
+
 const toPreventToAdd = (data) =>{
 return data?.some((el)=>el?.toInvoice)
 }
 
-const changeState = (state = initialState, { type, ...rest }) => {
+const store = createStore(changeState,applyMiddleware(thunkMiddleware))
+
+
+function functionUser(token,emailUniqId){
+  return function(dispatch){
+    axios.get(`${'https://yog-power-api.vercel.app'}/allRight/rights/${emailUniqId}`, {
+      headers: {
+          'Authorization': `Bearer ${token}`
+      }
+  })
+      .then((res) => {
+        if(res.status===200){
+          dispatch({type:'activeToCall',payload:true})
+          dispatch({type:'getRigtsData',payload:res.data})
+        }
+      })
+      .catch((error) => {
+          console.error(error)
+      })
+  }
+}
+
+// store.dispatch(functionUser())
+
+function getUserRight(token,emailUniqId){
+  store.dispatch(functionUser(token,emailUniqId))
+}
+
+function changeState (state = initialState, { type, ...rest }){
   switch (type) {
     case 'set':
       return { ...state, ...rest }
@@ -92,8 +135,6 @@ const changeState = (state = initialState, { type, ...rest }) => {
      state.stockDataFoodProduct=toConfirmBooking(state.stockDataFoodProduct,rest.payload)
      return  { ...state, ...rest }
     
-
-
     // To genral Product 
     case 'add genral Product':
     if(!toPreventToAdd(state.genralProduct)){
@@ -105,7 +146,6 @@ const changeState = (state = initialState, { type, ...rest }) => {
     state.genralProduct=toConfirmBooking(state.genralProduct,rest.payload)
     return  { ...state, ...rest }
 
-
     // clear all store 
     case 'clear Stock':
       state.stockDataClothData=[]
@@ -113,18 +153,40 @@ const changeState = (state = initialState, { type, ...rest }) => {
       state.stockDataFitnessProduct=[]
       state.stockDataFoodProduct=[]
       state.genralProduct=[]
-      return  { ...state, ...rest }
+    return  { ...state, ...rest }
 
-     default:
+    // HandleRights
+     case 'getRigtsData':
+      state.isEmployee =true
+      state.empLoyeeRights = rest.payload
+    return  { ...state, ...rest }
+
+    case 'activeToCall':
+    state.activeToCall=rest.payload
+    return  { ...state, ...rest }
+
+    case 'chnageGetRightDataFun':
+    state.getUserRight =()=>{}
+    state.empLoyeeRights = []
+    return  { ...state, ...rest }
+    case 'getRightDataFun':
+    state.getUserRight =getUserRight
+    return  { ...state, ...rest }
+    case 'dispatchIsAdmin':
+    state.isAdmin = true
+    return  { ...state, ...rest }
+    case 'showHomePage':
+    state.showHomePage = rest.payload 
+    return  { ...state, ...rest }
+    case 'clearentireStore':
+    return {...initialState}
+    default:
+
      return state
   } 
 
 }
 
-
-
-
-const store = createStore(changeState)
 
 
 

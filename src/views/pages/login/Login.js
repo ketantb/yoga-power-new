@@ -18,16 +18,52 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 
+import { useSelector,useDispatch } from 'react-redux'
+
 const Login = () => {
   const [click, setClick] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
   const navigate = useNavigate()
+  const url = useSelector((el)=>el.domainOfApi) 
+  const [userinfo,setUserInfo] = useState({})
+
 
   useEffect(() => {
     localStorage.clear()
   }, [])
+
+
+
+  const disPatch = useDispatch()
+  const data = useSelector((el)=>el.empLoyeeRights)   
+  const getUserRight = useSelector((el)=>el.getUserRight)    
+  const isEmployee = useSelector((el)=>el.isEmployee)    
+  const activeToCall = useSelector((el)=>el.activeToCall)    
+   
+
+
+console.log(userinfo)
+
+useEffect(()=>{
+  if(userinfo?.token){
+  disPatch({type:'getRightDataFun'})
+  disPatch({type:'activeToCall',payload:false})
+  }
+  
+},[userinfo?.user?.emailUniqId,userinfo.token])
+
+  useEffect(()=>{
+    if(userinfo?.token){
+      if(data?.emailUniqId){
+          navigate('/')
+        }
+      disPatch({type:'getRightDataFun'})
+      getUserRight(userinfo.token,userinfo.user.emailUniqId)
+    }
+  },[getUserRight,activeToCall,userinfo?.user?.emailUniqId,isEmployee,userinfo.token])
+
 
   async function login() {
     if (email != '' || password != '') {
@@ -35,7 +71,7 @@ const Login = () => {
       setError(null)
       let item = { email, password }
 
-      let result = await fetch("https://yog-seven.vercel.app/login", {
+      let result = await fetch(`${url}/login`, {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -44,19 +80,19 @@ const Login = () => {
         body: JSON.stringify(item)
       })
 
-      if (result.status == 400) {
+      if (result.status == 400||result.status == 404) {
         setClick(false)
         setError('Invalid Details! Please Enter Valid Details')
       }
-      // console.log(await result.json())
 
       result = await result.json()
       
-      console.log(result)
+      setUserInfo(result)
       localStorage.setItem('user-info', JSON.stringify(result))
       let user = JSON.parse(localStorage.getItem('user-info'))
       console.log(user);
-      if (user.user.username != null) {
+      if (user?.user?.isAdmin) {
+        disPatch({type:'dispatchIsAdmin'})
         navigate('/')
       }
     } else {

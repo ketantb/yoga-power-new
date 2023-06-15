@@ -36,12 +36,16 @@ import CIcon from '@coreui/icons-react'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 const AppHeaderDropdown = () => {
+   
+  const disPatch = useDispatch()
   const navigate = useNavigate()
   const Logout = () => {
     localStorage.clear()
     navigate('/login')
+    disPatch({type:'clearentireStore'})
   }
 
   return (
@@ -55,21 +59,21 @@ const AppHeaderDropdown = () => {
                <h6 className='mb-3' >Admin Yog Power</h6>    
                   <CAvatar src={avatar8} size="md"  />
                </CCol> 
-                <CDropdownItem href="#" className='text-center'>
+                <CDropdownItem  className='text-center'>
                <CIcon icon={cilSettings} className="me-2 " />
                  Settings
                </CDropdownItem>
 
         
 
-         <CDropdownItem href="#" className='text-center'>
+         <CDropdownItem  className='text-center'>
           <CIcon icon={cilSettings} className="me-2" />
           Profile
         </CDropdownItem>
        
         
         <CDropdownDivider  />
-        <CDropdownItem href="#" onClick={Logout} className='text-center'>
+        <CDropdownItem  onClick={Logout} className='text-center'>
           <CIcon icon={cilLockLocked} className="me-2" />
           Logout
         </CDropdownItem> *
@@ -89,7 +93,7 @@ const AppHeaderDropdownForm = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
 
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/enquiry-form">
             <CIcon icon={cilBell} className="me-2"
               tabIndex={-1}
@@ -97,13 +101,13 @@ const AppHeaderDropdownForm = () => {
             Enquiry
           </Link>
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/member-form">
             <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
             Member
           </Link>
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
 
           <Link style={{ textDecoration: 'none' }} to="/forms/staff-form">
             <CIcon icon={cilTask} className="me-2" />
@@ -119,13 +123,13 @@ const AppHeaderDropdownForm = () => {
           </Link>
 
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/invoice">
             <CIcon icon={cilCreditCard} className="me-2" />
             Invoice
           </Link>
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
         <Link style={{ textDecoration: 'none' }} to="/forms/support">
           <CIcon icon={cilFile} className="me-2" />
           Support
@@ -133,9 +137,8 @@ const AppHeaderDropdownForm = () => {
         </CDropdownItem>
 
 
-        <CDropdownItem href="#">
+        <CDropdownItem >
 
-          {console.log(window.location.pathname)}
 
        <Link style={{ textDecoration: 'none' }} to="/message/reminder" >
 
@@ -159,7 +162,7 @@ const AppHeaderDropdownBook = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
 
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/live-class">
             <CIcon icon={cilBell} className="me-2"
               tabIndex={-1}
@@ -167,31 +170,31 @@ const AppHeaderDropdownBook = () => {
             Live Classes
           </Link>
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/offline-class">
             <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
             Offline Batch
           </Link>
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/pt-class">
             <CIcon icon={cilTask} className="me-2" />
             PT Classes
           </Link>
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/ttc">
             <CIcon icon={cilCommentSquare} className="me-2" />
             TTC
           </Link>
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/event">
             <CIcon icon={cilCommentSquare} className="me-2" />
             Event
           </Link>
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <CIcon icon={cilUser} className="me-2" />
           Venue
         </CDropdownItem>
@@ -262,7 +265,7 @@ const AppHeaderDropdownLink = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
 
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/enquiry-form">
             <CIcon icon={cilBell} className="me-2"
               tabIndex={-1}
@@ -270,19 +273,19 @@ const AppHeaderDropdownLink = () => {
             Feedback Link
           </Link>
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/member-form">
             <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
             Google Review Link
           </Link>
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/member-form">
             <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
             Payment Link
           </Link>
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem >
           <Link style={{ textDecoration: 'none' }} to="/forms/member-form">
             <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
             Social Media Link

@@ -13,11 +13,14 @@ import { CChartBar, CChartLine } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
 import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 import { FaEye } from 'react-icons/fa'
+import { dashboardRights } from '../hr/Rights/rightsValue/crmRightsValue'
 
-const WidgetsDropdown = () => {
+const WidgetsDropdown = ({data,isAdmin}) => {
+  console.log(data,isAdmin)
   return (
     <CRow>
-      <CCol sm={6} lg={3}>
+
+      {(data.includes(dashboardRights.members)||isAdmin)&& <CCol sm={6} lg={3}>
         <CWidgetStatsA
           className="mb-4"
           style={{ backgroundColor: 'red', color: "white" }}
@@ -118,8 +121,8 @@ const WidgetsDropdown = () => {
             />
           }
         />
-      </CCol>
-      <CCol sm={6} lg={3}>
+      </CCol>}
+      {(data.includes(dashboardRights.collection)||isAdmin)&& <CCol sm={6} lg={3}>
         <CWidgetStatsA
           className="mb-4"
           color="info"
@@ -219,8 +222,8 @@ const WidgetsDropdown = () => {
             />
           }
         />
-      </CCol>
-      <CCol sm={6} lg={3}>
+      </CCol>}
+      {(data.includes(dashboardRights.expense)||isAdmin)&& <CCol sm={6} lg={3}>
         <CWidgetStatsA
           className="mb-4"
           color="warning"
@@ -307,8 +310,8 @@ const WidgetsDropdown = () => {
             />
           }
         />
-      </CCol>
-      <CCol sm={6} lg={3}>
+      </CCol>}
+      {(data.includes(dashboardRights.profit)||isAdmin)&& <CCol sm={6} lg={3}>
         <CWidgetStatsA
           className="mb-4"
           color="success"
@@ -409,7 +412,7 @@ const WidgetsDropdown = () => {
             />
           }
         />
-      </CCol>
+      </CCol>}
     </CRow>
   )
 }

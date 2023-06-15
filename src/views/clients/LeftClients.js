@@ -142,6 +142,8 @@ const LeftClients = () => {
             .catch((error) => {
                 console.error(error)
             })
+
+      
     }, []);
 
     const [staff, setStaff] = useState([])

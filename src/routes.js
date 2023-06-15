@@ -8,16 +8,12 @@ const Typography = React.lazy(() => import('./views/theme/typography/Typography'
 const PTTarget = React.lazy(() => import('./views/dashboard/PTTarget'))
 const SalesTarget = React.lazy(() => import('./views/dashboard/SalesTarget'))
 const CorporateTarget = React.lazy(() => import('./views/dashboard/CorporateTarget'))
-
-
 // Trainer
 const LiveClasses = React.lazy(()=>import('./views/dashboard/LiveClasses'))
 const AllBatches = React.lazy(()=>import('./views/dashboard/AllBatches'))
 const PtClasses = React.lazy(()=>import('./views/dashboard/PtClasses'))
 const TTCClasses = React.lazy(()=>import('./views/dashboard/TtcClassses'))
 const AllMembers  = React.lazy(()=>import('./views/dashboard/AllMembers'))
-
-
 //Leads
 const AllEnquires = React.lazy(() => import('./views/leads/AllEnquires'))
 const EnquireAppoitment = React.lazy(() => import('./views/leads/EnquireAppointment'))
@@ -125,6 +121,7 @@ const TtcPdfDetails = React.lazy(()=>import('./views/Courses/TtcPdfDetails'))
 const ClientCertificateDetails = React.lazy(()=>import('./views/Courses/ClientCertificateDetails'))
 //Master
 const CenterSetup = React.lazy(() => import('./views/Master/centerSetup/CenterSetup'))
+const CenterPartners = React.lazy(()=>import('./views/Master/CenterPartners/Centerpartners')) 
 const LogoSetup = React.lazy(() => import('./views/Master/centerSetup/LogoSetup'))
 const CompanyProfile = React.lazy(() => import('./views/Master/centerSetup/CompanyProfile'))
 const ServiceMaster = React.lazy(() => import('./views/Master/centerSetup/ServiceMaster'))
@@ -241,7 +238,7 @@ const routes = [
   { path: '/login', name: 'Login', element: Login },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   {
-    path: '/emp-dashboard',
+    path: '/employee/emp-dashboard',
     name: 'Employee Dashboard',
     element: EmployeeDashboard,
   },
@@ -257,7 +254,7 @@ const routes = [
   
   {
     path: '/employee/sales-target',
-    name: 'Sales Target',
+    name: 'Employee Target',
     element: SalesTarget,
   },
   {
@@ -293,7 +290,7 @@ const routes = [
   { path: '/clients/client-management/renewals-clients', name: 'Renewals Clients', element: RenewalsClients },
   { path: '/clients/client-management/renewed-clients', name: 'Renewed Clients', element: RenewedClients },
   { path: '/clients/client-management/left-clients', name: 'Left Clients', element: LeftClients },
-  { path: '/clients/service-call', name: 'Service Calls', element: ServiceCall },
+  { path: '/clients/service-call', name: 'Member Calls', element: ServiceCall },
   { path: '/clients/all-service', name: 'All Service', element: AllService },
   { path: '/clients/member-details/:id/:i', name: 'Member Details', element: MemberDetails },
   { path: '/clients/sales-call', name: 'Sales Call', element: SalesCall },
@@ -437,6 +434,8 @@ const routes = [
   { path:'/master/hr/emp-doc',name:'Employee Document Master',element:EmpDocumentsMaster},
   { path:'/master/hr/trainer-salary-slip',name:'Trainer Salary Slip',element: TrainerSalarySlipMaster},
   { path:'/master/hr/emp-Prformance',name:'Employee Performance',element: EmpPerformanceMaster},
+  { path:'/master/center-partners',name:'Center Partners',element: CenterPartners},
+
 
 
   { path: '/theme/typography', name: 'Typography', element: Typography },

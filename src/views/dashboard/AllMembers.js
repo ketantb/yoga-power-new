@@ -30,7 +30,7 @@ import { useSelector } from 'react-redux'
 import useAttendance from './AttendanceHook/useAttendance'
 import moment from 'moment/moment'
 import { Link } from 'react-router-dom'
-
+import { trainerSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
 
 const AllMembers = () => {
     const url = useSelector((el)=>el.domainOfApi) 
@@ -46,7 +46,19 @@ const AllMembers = () => {
     const [memBerData2,setMemberData] = useState([])
 
 
-    const [activeKey, setActiveKey] = useState(1)
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights?.
+    crmTrainer?.items?.superRight) 
+    const isAdmin = useSelector((el)=>el?.isAdmin) 
+
+    const clientAttendanceRegvalidate =  rightsData?.clientAttendanceReg?.includes(trainerSuperRight.allMembers)
+
+
+    const number =  ( (isAdmin&&1)||(+clientAttendanceRegvalidate&&1))
+
+    const [activeKey, setActiveKey] = useState(number)
+    console.log(activeKey)
+
+    
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
 
@@ -140,24 +152,22 @@ useEffect(()=>{
                 <CCard>
                     <CCardHeader >
                         <CNav variant="pills" role="tablist">
-                            <CNavItem>
+                        {(isAdmin||clientAttendanceRegvalidate)&&<CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
-                                    active={true}
+                                    active={activeKey === 1}
+                                    onClick={() => setActiveKey(1)}
                                 >
                                     Client Attendance Reg
                                 </CNavLink>
-                            </CNavItem>
-                           
-
-                            
+                            </CNavItem>}                         
                         </CNav>
                     </CCardHeader>
                     <CCardBody>
                         <CTabContent>
                          
                          
-                            <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={true}>
+                            <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey===1}>
                             <CRow className='mb-3'>
                                     <CCol lg={3} md={6} sm={8} >
                                         <CInputGroup>
@@ -196,7 +206,7 @@ useEffect(()=>{
                                     </CCol>                                                                
                                 </CRow>
                                
-                                <CTable bordered borderColor="black" responsive style={{width:'3500px'}}>
+                                <CTable bordered borderColor="black" responsive style={{width:'3500px'}}  visible={activeKey === 1}>
                                     <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                                         <CTableRow>
                                             <CTableHeaderCell scope="col">Sr.No</CTableHeaderCell>

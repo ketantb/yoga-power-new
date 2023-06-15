@@ -37,9 +37,20 @@ import { CountryList } from "src/components/CountryList";
 import moment from 'moment/moment'
 import { useSelector } from 'react-redux'
 import AdmissionForm1 from 'src/components/AdmissionForm1'
+import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
 
 
 const AllEnquires = () => {
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmLeads?.items?.superRight) 
+
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+    const enquiryAdd =  rightsData?.addOn?.includes(leadsSuperRight.allEnquires)
+    const enquiryDelete =  rightsData?.delete?.includes(leadsSuperRight.allEnquires)
+    const enquiryEdit  =  rightsData?.edit?.includes(leadsSuperRight.allEnquires)
+
+
+
 
     var currentdate = new Date();
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
@@ -584,8 +595,8 @@ const AllEnquires = () => {
             }
         })
             .then((res) => {
-                setResult1(res.data.filter((list) => list.username === username ).reverse())
-                setOgList(res.data.filter((list) => list.username === username).reverse())
+                setResult1(res.data.reverse())
+                setOgList(res.data.reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -1744,12 +1755,12 @@ const AllEnquires = () => {
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Enquiry stage</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Call Status</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Last Call</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Add</CTableHeaderCell>
+                                    {(isAdmin|| enquiryAdd)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Add</CTableHeaderCell>}
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px', minWidth: '100px' }} > Date/Time</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Assigned by</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Counseller</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Action</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Edit</CTableHeaderCell>
+                                    {(isAdmin|| enquiryAdd)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Edit</CTableHeaderCell>}
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -1862,7 +1873,7 @@ const AllEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| enquiryAdd)?'block':'none'}}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -1910,20 +1921,19 @@ const AllEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| enquiryAdd)?'block':'none'}}>
                                         <CFormInput
                                             className="mb-1"
-                                            style={{ minWidth: "100px" }}
                                             type="text"
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            style={{ minWidth: "100px" }}
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
 
                                 {result1.filter((list)=>list.enquirestatus!=='notshow').slice(paging * 10, paging * 10 + 10).filter((list) => {
-                                    return list.username === username && 
-                                           list.Fullname.toLowerCase().includes(Search3.toLowerCase())
+                                    return  list.Fullname.toLowerCase().includes(Search3.toLowerCase())
                                         && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) &&
                                            list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) &&
@@ -1941,9 +1951,10 @@ const AllEnquires = () => {
                                         <CTableDataCell>{item.appointmentfor}</CTableDataCell>
                                         <CTableDataCell>{item.CallStatus}</CTableDataCell>
                                         <CTableDataCell>{item.Message}</CTableDataCell>
-                                        <CTableDataCell>
-                                            <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }}
-                                            onClick={() => { setEdit(item._id), handleAdmission({...item,type:'bottom'}) }} />
+                                        <CTableDataCell style={{display:(isAdmin|| enquiryAdd)?'block':'none'}}>
+                                            {(isAdmin|| enquiryAdd) && <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }}
+                                            onClick={() => { setEdit(item._id), handleAdmission({...item,type:'bottom'}) }} />}
+                                            
                                             </CTableDataCell>
 
                                         <CTableDataCell>
@@ -1968,18 +1979,23 @@ const AllEnquires = () => {
                                             <a href={`mailto: ${ item.Emailaddress }`} target="_black">
                                                 <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }}
                                                     onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a>
-                                            <BsPlusCircle id={item._id} style={{
+                                           
+                                            {(isAdmin|| enquiryAdd)&&<BsPlusCircle id={item._id} style={{
                                                 cursor: 'pointer',
                                                 markerStart: '10px', marginLeft: "4px"
-                                            }} onClick={() => handleFollowup(item._id,item)} />
+                                            }} onClick={() => handleFollowup(item._id,item)} />}
+
                                         </CTableDataCell>
 
-                                        <CTableDataCell className='text-center'>{
-                                            dashboardAccess === 'admin' &&
+                                         {(isAdmin|| enquiryEdit ||enquiryDelete) &&<CTableDataCell className='text-center'>{
+                                            (isAdmin|| enquiryEdit) && 
                                             <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }}
                                                 onClick={() => handleEnquiry(item)} size='20px' />}
-                                            <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }}
-                                                onClick={() => deleteEnquiry(item._id)} size='20px' /></CTableDataCell>
+                                                
+                                            {(isAdmin|| enquiryDelete) && <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }}
+                                                onClick={() => deleteEnquiry(item._id)} size='20px' />}
+                                                
+                                                </CTableDataCell>}
                                     </CTableRow>
                                 ))}
                             </CTableBody>

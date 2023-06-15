@@ -32,11 +32,32 @@ import React, { useState,useCallback,useEffect } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom';
+import { empLoyeeeRights } from '../../hr/Rights/rightsValue/crmRightsValue'
+
 
 
 const SalesCall = () => {
     const url = useSelector((el)=>el.domainOfApi) 
-    const [activeKey, setActiveKey] = useState(1)
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmEmployee?.items?.crmSalesCall1?.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
+    const funValidate = (val)=>{
+        return (access?.includes(empLoyeeeRights[val])||isAdmin)
+    }
+
+    const upgradeCallsVal =  funValidate('upgradeCalls')
+    const renewalsCallsVal = funValidate('renewalsCalls')
+    const crossCellCallsVal = funValidate('paymentCalls')
+
+    const [activeKey, setActiveKey] = useState(
+        (upgradeCallsVal&&1)||
+        (renewalsCallsVal&&2)||
+        (crossCellCallsVal&&3))   
+    
+    
     const [uppgradeCallsData,setUppgradeCallsData] = useState([])
     const [renevalsCallData,setRenevalsCallData] = useState([])
     const [crossCellCallsData,setCrossCellCallsData] = useState([])
@@ -126,7 +147,7 @@ const SalesCall = () => {
                 <CCard>
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
                         <CNav responsive variant="pills" role="tablist">
-                            <CNavItem>
+                            {upgradeCallsVal&& <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 1}
@@ -135,8 +156,8 @@ const SalesCall = () => {
                                 >
                                     Upgrade Calls
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                            {renewalsCallsVal&& <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 2}
@@ -146,8 +167,8 @@ const SalesCall = () => {
 
                                     Renewals Calls
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                            {crossCellCallsVal&&<CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 3}
@@ -157,8 +178,7 @@ const SalesCall = () => {
                                 >
                                     Cross-Cell Calls
                                 </CNavLink>
-                            </CNavItem>
-                            
+                            </CNavItem>}                            
                         </CNav>
                     </CCardHeader>
                     <CCardBody >

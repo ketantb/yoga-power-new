@@ -15,8 +15,8 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilAddressBook, cilCode, cilLockLocked, cilUser } from '@coreui/icons'
 import { useNavigate } from 'react-router-dom'
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
+
+import { useSelector } from 'react-redux'
 
 const Register = () => {
   const [username, setUsername] = useState("")
@@ -25,6 +25,7 @@ const Register = () => {
   const [repeatPassword, setRepeatPassword] = useState("")
   const [dashboardAccess, setDashboardAccess] = useState("")
   const navigate = useNavigate()
+  const url = useSelector((el)=>el.domainOfApi) 
 
   function saveData() {
     let data = { username, email, password, dashboardAccess }

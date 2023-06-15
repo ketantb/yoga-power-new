@@ -11,8 +11,9 @@ import {
   cilCalendar,
 } from '@coreui/icons'
 import { CChart } from '@coreui/react-chartjs'
+import { dashboardRights } from '../hr/Rights/rightsValue/crmRightsValue'
 
-const WidgetsBrand = ({ withCharts }) => {
+const WidgetsBrand = ({ withCharts, data,isAdmin }) => {
   const chartOptions = {
     elements: {
       line: {
@@ -43,6 +44,7 @@ const WidgetsBrand = ({ withCharts }) => {
 
   return (
     <CRow>
+      
       <CCol sm={6} lg={3}>
         <CWidgetStatsD
           className="mb-4"

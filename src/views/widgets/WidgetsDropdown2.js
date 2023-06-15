@@ -13,11 +13,16 @@ import { CChartBar, CChartLine } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
 import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 import { FaEye } from 'react-icons/fa'
+import { empLoyeeeRights } from '../hr/Rights/rightsValue/crmRightsValue'
 
-const WidgetsDropdown2 = () => {
+const WidgetsDropdown2 = ({access,isAdmin}) => {
+
+  
+
     return (
         <CRow>
-            <CCol sm={6} lg={3}>
+
+            {(access?.includes(empLoyeeeRights.achived)||isAdmin) && <CCol sm={6} lg={3}>
                 <CWidgetStatsA
                     className="mb-4"
                     style={{ backgroundColor: 'red', color: "white" }}
@@ -115,8 +120,8 @@ const WidgetsDropdown2 = () => {
                         />
                     }
                 />
-            </CCol>
-            <CCol sm={6} lg={3}>
+            </CCol>}
+            {(access?.includes(empLoyeeeRights.target)||isAdmin)&&<CCol sm={6} lg={3}>
                 <CWidgetStatsA
                     className="mb-4"
                     color="info"
@@ -216,8 +221,8 @@ const WidgetsDropdown2 = () => {
                         />
                     }
                 />
-            </CCol>
-            <CCol sm={6} lg={3}>
+            </CCol>}
+            {(access?.includes(empLoyeeeRights.incentive)||isAdmin)&&<CCol sm={6} lg={3}>
                 <CWidgetStatsA
                     className="mb-4"
                     color="warning"
@@ -304,8 +309,8 @@ const WidgetsDropdown2 = () => {
                         />
                     }
                 />
-            </CCol>
-            <CCol sm={6} lg={3}>
+            </CCol>}
+            {(access?.includes(empLoyeeeRights.profit)||isAdmin)&&<CCol sm={6} lg={3}>
                 <CWidgetStatsA
                     className="mb-4"
                     color="success"
@@ -406,7 +411,7 @@ const WidgetsDropdown2 = () => {
                         />
                     }
                 />
-            </CCol>
+            </CCol>}
         </CRow>
     )
 }

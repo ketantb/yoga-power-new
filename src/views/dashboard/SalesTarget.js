@@ -1,33 +1,19 @@
-import { cilArrowCircleBottom, cilArrowCircleTop } from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
+
 import {
-    CButton,
-    CButtonGroup,
     CCard,
     CCardBody,
     CCardHeader,
     CCol,
-    CFormInput,
-    CFormSelect,
-    CInputGroup,
-    CInputGroupText,
     CNav,
     CNavItem,
     CNavLink,
     CRow,
     CTabContent,
-    CTable,
-    CTableBody,
-    CTableDataCell,
-    CTableHead,
-    CTableHeaderCell,
-    CTableRow,
-    CTabPane,
 } from '@coreui/react'
-import React, { useState,useCallback,useEffect } from 'react'
+import React, { useState,useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-
+import { empLoyeeeRights } from '../hr/Rights/rightsValue/crmRightsValue'
 
 const SalesTargetTable = React.lazy(()=>import('./Target/SalesTargetTable'))
 const ClinetTargetTabel = React.lazy(()=>import('./Target/ClientTargetDataTable'))
@@ -42,8 +28,35 @@ const MeadiaTargetTable = React.lazy(()=>import('./Target/MediaTargetTable'))
 
 const SalesTarget = () => {
     const url = useSelector((el) => el.domainOfApi)
-    const [activeKey, setActiveKey] = useState(1)
     const [employeeData, setEmployeeData] = useState([])
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmEmployee?.items?.crmEmployeeTarget1?.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
+    const funValidate = (val)=>{
+        return (access?.includes(empLoyeeeRights[val])||isAdmin)
+    }
+
+    const salesTargetVal =  funValidate('salesTarget')
+    const clientTargetVal = funValidate('clientTarget')
+    const callsTargetVal = funValidate('callsTarget')
+    const leadTargetVal = funValidate('leadTarget')
+    const renewalVal = funValidate('renewal')
+    const referralLeadsVal =funValidate('referralLeads')
+    const mediaTargetVal  = funValidate('mediaTarget')
+    
+
+    const [activeKey, setActiveKey] = useState(
+        (salesTargetVal&&1)||
+        (clientTargetVal&&2)||
+        (callsTargetVal&&3)||
+        (leadTargetVal&&4)||
+        (renewalVal&&5)||
+        (salesTargetVal&&6)||
+        (mediaTargetVal&&7))
+
 
 
     async function getEmployee() {
@@ -68,7 +81,7 @@ const SalesTarget = () => {
                 <CCard>
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
                         <CNav variant="pills" role="tablist">
-                            <CNavItem>
+                        {salesTargetVal&& <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 1}
@@ -77,8 +90,8 @@ const SalesTarget = () => {
                                 >
                                     Sales Target
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                        {clientTargetVal&& <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 2}
@@ -89,8 +102,8 @@ const SalesTarget = () => {
 
                                     Client Target
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                        {callsTargetVal&&  <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 3}
@@ -100,8 +113,8 @@ const SalesTarget = () => {
                                 >
                                     Calls Target
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                        {leadTargetVal&&  <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 4}
@@ -110,8 +123,8 @@ const SalesTarget = () => {
                                 >
                                     Lead Target
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                        {renewalVal&&<CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 5}
@@ -120,8 +133,8 @@ const SalesTarget = () => {
                                 >
                                    Renewal
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                        {referralLeadsVal&& <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 6}
@@ -130,8 +143,8 @@ const SalesTarget = () => {
                                 >
                                     Referral Leads
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                         {mediaTargetVal&&   <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
                                     active={activeKey === 7}
@@ -140,9 +153,7 @@ const SalesTarget = () => {
                                 >
                                     Media Target
                                 </CNavLink>
-                            </CNavItem>
-
-                            
+                            </CNavItem>}
                         </CNav>
                     </CCardHeader>
                     <CCardBody>
@@ -154,7 +165,7 @@ const SalesTarget = () => {
                             {activeKey===4&&<LeadTargetTable EmployeeData ={employeeData}/>}                                                      
                             {activeKey===5&& <RenewalsTable EmployeeData ={employeeData}/>}
                             {activeKey===6&&<ReferralLeadsData EmployeeData ={employeeData}/>}
-                            {activeKey ===7&&<MeadiaTargetTable EmployeeData ={employeeData}/>}                 
+                            {activeKey===7&&<MeadiaTargetTable EmployeeData ={employeeData}/>}                 
                         </CTabContent>
                     </CCardBody>
                 </CCard>
