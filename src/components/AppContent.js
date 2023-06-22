@@ -6,6 +6,8 @@ import routes from '../routes'
 
 const AppContent = ({params }) => {
 
+  const Page500 = React.lazy(() => import('../../src/views/pages/page500/Page500'))
+
   console.log(params)
 
   const routesEl = routes.map((route, idx) => {
@@ -17,6 +19,7 @@ const AppContent = ({params }) => {
           exact={route.exact}
           name={route.name}
           element={<route.element/>}
+          errorElement={<Page500/>}
         />
       )
     )
@@ -44,12 +47,14 @@ const AppContent = ({params }) => {
           exact={route.exact}
           name={route.name}
           element={<route.element/>}
+          errorElement={<Page500/>}
+
         />
       )
     )
   })}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<Navigate to="/dashboard" replace />}  errorElement={<Page500/>} />
         </Routes>
       </Suspense>
       {/* {<Outlet/>} */}

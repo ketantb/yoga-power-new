@@ -1,7 +1,9 @@
 import { CCard,CTable,CTableHead,CTableHeaderCell,CTableRow
     ,CTableBody,CTableDataCell,CCol,CRow,CButton,CForm,
     CCardHeader,CCardTitle,CFormInput,CCallout,CModal,
-    CModalHeader,CModalTitle,CCardBody, CFormSelect
+    CModalHeader,CModalTitle,CCardBody, CFormSelect,
+    CDropdown,CDropdownMenu,CDropdownItem,CDropdownToggle,
+    CInputGroup
  } from "@coreui/react"
 
  import React,{useEffect, useState,useRef} from 'react'
@@ -11,7 +13,7 @@ import { useSelector } from "react-redux";
 import axios from 'axios'
 import { MdEdit,MdDelete } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
-
+import { Link } from "react-router-dom";
 import { storage } from "src/firebase";
 import {getDownloadURL, ref,uploadBytesResumable } from "firebase/storage";
 
@@ -20,8 +22,11 @@ function Centerpartners (){
   let user = JSON.parse(localStorage.getItem('user-info'))
   console.log(user);
   const token = user.token;
-  const username = user.user.username;
-  const centerCode = user.user.centerCode;
+    const username = user.user.username
+    const userID = user.user.emailUniqId
+
+
+
   const url = useSelector((el) => el.domainOfApi)
 
 
@@ -33,28 +38,27 @@ const handlePrint = useReactToPrint({
     onAfterPrint: () => alert('print success')
 })
 
+  const obj = {username:'',email:'',profileLogo: '',center: '',centerCode: '',
+               partnerName: '',typeOfPartner: '',location: '',startDate: '',
+               expDate: '',numberOfMY:0,typeOfNum:'Month',password: '',status:true,
+               Designation:'',empName:'',empId:'',mobNo:0,createdBy:username,createrId:userID,
+               isAdmin:false,isAdminPatner:true,isEmployee:false,packege:'',memBerId:'',brandLogo:'', 
+               city:'',country:''
+              }
+
+  const numberOfdayPack = {
+    Month:30,
+    Year:365,
+  }             
+
+
 
     const [showForm,setForm] = useState(true)
     const [visible, setVisible] = useState(false)
     const [centerPartnerData,setCenterPartnerData] = useState([])
     const [updateActive,setUpdateActive] = useState(false)
     const [imgPrograss,setImgPrograss] = useState(0)
-    const [centerPartnersObj,setCenterPartnersObj] = useState(
-      {
-        profileLogo: '',
-        centerName: '',
-        centerCode: '',
-        partnerName: '',
-        contact: 0,
-        typeOfPartner: '',
-        location: '',
-        city: '',
-        country: '',
-        startDate: new Date(),
-        expDate: new Date(),
-        packege: ''
-      }
-    )
+    const [centerPartnersObj,setCenterPartnersObj] = useState({...obj})
 
 
    
@@ -68,7 +72,7 @@ const handlePrint = useReactToPrint({
 
   
   const getCenterPartner = ()=>{
-   axios.get(`${url}/center-partner/all`,{headers}).then((el)=>{
+   axios.get(`${url}/signup/center-patner`,{headers}).then((el)=>{
     console.log(el.data)
     if(!el.data){
      return 
@@ -82,10 +86,10 @@ const handlePrint = useReactToPrint({
     console.log(centerPartnersObj)
     try{
       if(type==='Save'){
-        response = await  axios.post(`${url}/center-partner/create`,centerPartnersObj,{headers})
+        response = await  axios.post(`${url}/signup/create`,centerPartnersObj,{headers})
       }
       if(type==='Update'){
-       response = await  axios.post(`${url}/center-partner/update/${centerPartnersObj._id}`,centerPartnersObj,{headers})
+       response = await  axios.post(`${url}/signup/update/${centerPartnersObj._id}`,centerPartnersObj,{headers})
       }
   
      if(response?.status===200){
@@ -105,20 +109,7 @@ const handlePrint = useReactToPrint({
   function toToggaleFrom(){
    setForm((prev=>!prev))
     setUpdateActive(false)
-    setCenterPartnersObj({
-      profileLogo: '',
-      centerName: '',
-      centerCode: '',
-      partnerName: '',
-      contact: 0,
-      typeOfPartner: '',
-      location: '',
-      city: '',
-      country: '',
-      startDate: new Date(),
-      expDate: new Date(),
-      packege: ''
-    })
+    setCenterPartnersObj({...obj})
   }
   
 
@@ -141,7 +132,7 @@ const handlePrint = useReactToPrint({
          },
          ()=>{
           getDownloadURL(uploadTask.snapshot.ref).then((url)=>{
-            setCenterPartnersObj((prev)=>({...prev,profileLogo:url}))
+            setCenterPartnersObj((prev)=>({...prev,brandLogo:url}))
           })
          }
          )
@@ -155,7 +146,7 @@ const handlePrint = useReactToPrint({
     return
     }
     
-    const response = await  axios.delete(`${url}/center-partner/delete/${id}`, {headers})
+    const response = await  axios.delete(`${url}/signup/delete/${id}`, {headers})
     if(response.status===200){
       getCenterPartner()
     }
@@ -164,11 +155,32 @@ const handlePrint = useReactToPrint({
 
 
     const updateProduct = async (item)=>{
+      const packVal = item.packege.split(" ")
       setForm(false)
-      setCenterPartnersObj({...item})
+      setCenterPartnersObj({...item,numberOfMY:packVal[0],typeOfNum:packVal[2],
+        startDate:(new Date(item.startDate).toISOString().split('T')[0] )})
       setUpdateActive(true)
      
     }
+
+    const {startDate,numberOfMY,typeOfNum} =centerPartnersObj
+    useEffect(()=>{
+    
+    if(numberOfMY&&typeOfNum&&startDate){
+
+
+    const noOffDate  = (new Date(startDate).getDate() +(numberOfMY * numberOfdayPack[typeOfNum]))
+
+    const date2= new Date(startDate)
+    date2.setDate(noOffDate)
+    setCenterPartnersObj(
+      prev=>(
+          {...prev,
+          packege:(`${numberOfMY}  ${typeOfNum}`),
+          expDate:date2.toISOString().split('T')[0]  
+        })) 
+    }
+    },[startDate,numberOfMY,typeOfNum])
 
     return  <> 
  <CModal visible={visible} onClose={() => setVisible(false)}>
@@ -210,8 +222,10 @@ const handlePrint = useReactToPrint({
                 <CFormInput
                   type="text"
                   label='Center Name'
-                  value={centerPartnersObj.centerName}
-                  onChange={(e)=>setCenterPartnersObj((prev)=>({...prev,centerName:e.target.value}))}
+                  value={centerPartnersObj.center}
+                  onChange={(e)=>{
+                    setCenterPartnersObj((prev)=>({...prev,center:e.target.value}))
+                  }}
                 />
               </CCol>
               <CCol md={4}>
@@ -230,8 +244,10 @@ const handlePrint = useReactToPrint({
               <CFormInput
                   type="text"
                   label='Partner Name'
-                  value={centerPartnersObj.partnerName}
-                  onChange={(e)=>setCenterPartnersObj((prev)=>({...prev,partnerName:e.target.value}))}
+                  value={centerPartnersObj.empName}
+                  onChange={(e)=>{
+                    setCenterPartnersObj((prev)=>({...prev,empName:e.target.value,username:e.target.value}))
+                  }}
               
                 />
               </CCol>
@@ -239,8 +255,8 @@ const handlePrint = useReactToPrint({
               <CFormInput
                   type="number"
                   label='Contact'
-                  value={centerPartnersObj.contact}
-                  onChange={(e)=>setCenterPartnersObj((prev)=>({...prev,contact:e.target.value}))}
+                  value={centerPartnersObj.mobNo}
+                  onChange={(e)=>setCenterPartnersObj((prev)=>({...prev,mobNo:e.target.value}))}
               
                 />
               </CCol>
@@ -293,6 +309,29 @@ const handlePrint = useReactToPrint({
         </CRow>    
 
         <CRow >
+            
+              <CCol md={4} className="mt-2">
+    
+
+<label>Packege</label>
+<CInputGroup className="mb-3 mt-2">
+  <CFormInput aria-label="Text input with dropdown button" 
+   value={centerPartnersObj.numberOfMY}
+   onChange={(e)=>setCenterPartnersObj((prev)=>({...prev,numberOfMY:e.target.value}))}  
+   type="number"   
+  />
+
+  <CDropdown alignment="end" variant="input-group">
+    <CDropdownToggle color={"dark"} variant="outline" className="text-end" style={{width:'100px'}}> {centerPartnersObj.typeOfNum}</CDropdownToggle>
+    <CDropdownMenu>
+      <CDropdownItem  onClick={(e)=>setCenterPartnersObj((prev)=>({...prev,typeOfNum:'Month'}))} >Month</CDropdownItem>
+      <CDropdownItem  onClick={(e)=>setCenterPartnersObj((prev)=>({...prev,typeOfNum:'Year'}))} >Year</CDropdownItem>
+    </CDropdownMenu>
+  </CDropdown>
+</CInputGroup>
+
+              </CCol>
+
               <CCol md={4} className="mt-2">
               <CFormInput
                   type="date"
@@ -306,15 +345,25 @@ const handlePrint = useReactToPrint({
                   type="date"
                   label='EXP. Date'
                   value={centerPartnersObj.expDate}
-                  onChange={(e)=>setCenterPartnersObj((prev)=>({...prev,expDate:e.target.value}))}   
+                />
+              </CCol>
+
+              <CCol md={4} className="mt-2">
+              <CFormInput
+                  type="email"
+                  label='Email Id'
+                  value={centerPartnersObj.email}
+                  onChange={(e)=>setCenterPartnersObj((prev)=>({...prev,email:e.target.value}))}   
+
+                 
                 />
               </CCol>
               <CCol md={4} className="mt-2">
               <CFormInput
-                  type="text"
-                  label='Packege'
-                  value={centerPartnersObj.packege}
-                  onChange={(e)=>setCenterPartnersObj((prev)=>({...prev,packege:e.target.value}))}   
+                  type="password"
+                  label='Password'
+                  value={centerPartnersObj.password}
+                  onChange={(e)=>setCenterPartnersObj((prev)=>({...prev,password:e.target.value}))}  
                 />
               </CCol>
         </CRow>    
@@ -335,23 +384,25 @@ const handlePrint = useReactToPrint({
       </CCard>}
 
                 </CCol>
-<CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
+<CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345",width:'150%' }} hover responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                                 <CTableRow >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell>Profile Logo</CTableHeaderCell>
                                     <CTableHeaderCell>Center Name</CTableHeaderCell>
                                     <CTableHeaderCell>Center Code</CTableHeaderCell>
+                                    <CTableHeaderCell>Email ID</CTableHeaderCell>
                                     <CTableHeaderCell>Partner Name</CTableHeaderCell>
                                     <CTableHeaderCell>Contact </CTableHeaderCell>
-                                    <CTableHeaderCell>Franchise Partner </CTableHeaderCell>
-                                    <CTableHeaderCell>Softwere Partner</CTableHeaderCell>
+                                    <CTableHeaderCell>Partner Type</CTableHeaderCell>
                                     <CTableHeaderCell>Location</CTableHeaderCell>
                                     <CTableHeaderCell>City</CTableHeaderCell>
                                     <CTableHeaderCell>Country</CTableHeaderCell>
                                     <CTableHeaderCell>Start Date</CTableHeaderCell>
+                                    <CTableHeaderCell>Rights</CTableHeaderCell>
                                     <CTableHeaderCell>EXP. Date</CTableHeaderCell>
                                     <CTableHeaderCell>Packege</CTableHeaderCell>
+                                    <CTableHeaderCell>Edit</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>  
@@ -359,7 +410,7 @@ const handlePrint = useReactToPrint({
           
                               {centerPartnerData.map((el,i)=>
                               
-                              <CTableRow className="text-center">
+                              <CTableRow className="text-center"  >
                               <CTableDataCell>
                                 {i+1}
                               </CTableDataCell>
@@ -372,22 +423,26 @@ const handlePrint = useReactToPrint({
                                   <img
                                   width='100%'
                                   height='100%'
-                                  src={el.profileLogo}
+                                  src={el.brandLogo}
                                   />
 
                                 </div>
                               </CTableDataCell>
                               <CTableDataCell>   
-                                {el.centerName}                                 
+                                {el.center}                                 
                               </CTableDataCell>
                               <CTableDataCell>  
                                 {el.centerCode}           
                               </CTableDataCell>
+                              <CTableDataCell>   
+                                {el.email}                                 
+                              </CTableDataCell>
+                            
                               <CTableDataCell>  
-                                {el.partnerName}                                                                      
+                                {el.username}                                                                      
                               </CTableDataCell>   
                               <CTableDataCell>   
-                                {el.contact}          
+                                {el.mobNo}          
                               </CTableDataCell>
                               <CTableDataCell>     
                                 {el.typeOfPartner}                                                                   
@@ -404,6 +459,10 @@ const handlePrint = useReactToPrint({
                               <CTableDataCell>  
                                 {new Date(el.startDate).toDateString()}                                                                      
                               </CTableDataCell> 
+                              <CTableDataCell>
+                              <CButton size='sm'><Link style={{textDecoration:'none',color:'white'}}
+                                   to={`/hr/member-rightshr/${el._id}`}>View</Link></CButton>
+                              </CTableDataCell>
                               <CTableDataCell>    
                                  {new Date(el.expDate).toDateString()}                                                                               
                               </CTableDataCell>

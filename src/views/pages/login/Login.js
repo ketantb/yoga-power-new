@@ -37,28 +37,30 @@ const Login = () => {
 
 
   const disPatch = useDispatch()
-  const data = useSelector((el)=>el.empLoyeeRights)   
+  const data = useSelector((el)=>el?.empLoyeeRights)   
   const getUserRight = useSelector((el)=>el.getUserRight)    
   const isEmployee = useSelector((el)=>el.isEmployee)    
   const activeToCall = useSelector((el)=>el.activeToCall)    
    
 
 
-console.log(userinfo)
+console.log(data)
 
 useEffect(()=>{
   if(userinfo?.token){
   disPatch({type:'getRightDataFun'})
   disPatch({type:'activeToCall',payload:false})
   }
-  
 },[userinfo?.user?.emailUniqId,userinfo.token])
+
 
   useEffect(()=>{
     if(userinfo?.token){
-      if(data?.emailUniqId){
+      if(!data?.status){
+        navigate('/550')
+      }else if(data?.emailUniqId){
           navigate('/')
-        }
+      }
       disPatch({type:'getRightDataFun'})
       getUserRight(userinfo.token,userinfo.user.emailUniqId)
     }

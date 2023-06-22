@@ -44,9 +44,9 @@ const TtcClasses = () => {
         crmTrainer?.items?.superRight) 
         const isAdmin = useSelector((el)=>el.isAdmin) 
     
-        const dailyAttendedvalidate =  rightsData?.dailybatchAttendance?.includes(trainerSuperRight.pTClasses)
-        const monthlyReportvalidate =  rightsData?.monthlyReport?.includes(trainerSuperRight.pTClasses)
-        const clientAttendanceRegvalidate =  rightsData?.clientAttendanceReg?.includes(trainerSuperRight.pTClasses)
+        const dailyAttendedvalidate =  rightsData?.dailybatchAttendance?.includes(trainerSuperRight.ttCClasses)
+        const monthlyReportvalidate =  rightsData?.monthlyReport?.includes(trainerSuperRight.ttCClasses)
+        const clientAttendanceRegvalidate =  rightsData?.clientAttendanceReg?.includes(trainerSuperRight.ttCClasses)
     
     
         const number =  ( (isAdmin&&1)||(dailyAttendedvalidate&&1)||

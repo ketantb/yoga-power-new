@@ -10,13 +10,39 @@ import { fitnessRigths } from '../Rights/rightsValue/crmRightsValue'
 
 function FitnessRights({crmFitness,setRightObject}){
 
-    const {crmFitnessGoal,superRight} = crmFitness.items
+    const {crmFitnessGoal} = crmFitness.items
+    const {superRight} = crmFitness
+
+    console.log('kehrjg',superRight,crmFitness.items)
 
     const fitnessRigthFun = useRight(setRightObject,'crmFitness')
-    const totoggaleRights = useSuperRightFun(setRightObject,'crmRights','crmFitness')
-    const checkDashRights = useSuperRightVal(superRight)
-    
 
+    const useSuperRightFun = (setRightObject,parent,child)=>{
+        return (val,type)=>{
+           
+            setRightObject((prev)=>{
+              const rightsPath = prev[parent][child].superRight[type]
+              
+              console.log(rightsPath,'dkdkh')
+
+               if(!rightsPath?.includes(val)){
+                   rightsPath?.push(val)
+               }else if(rightsPath.includes(val)){
+                   rightsPath?.splice(rightsPath?.indexOf(val),1)
+               }   
+                 return {...prev}
+              })
+            
+           }
+    }
+    
+    const totoggaleRights = useSuperRightFun(setRightObject,'crmRights','crmFitness')
+
+    const checkDashRights =  (val,type)=>{
+            console.log(superRight[type].includes(val),'dkdkh')
+            return superRight[type].includes(val)
+           } 
+    
 
 return <div>
 <CRow >

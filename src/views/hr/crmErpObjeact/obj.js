@@ -147,17 +147,18 @@ const obj =  {
     },
     crmFitness:{
         value:false,
-        items:{
-              superRight:{
-                addOn:[],
-                delete:[],
-                edit:[],
-                access:[],
-            },
-            crmFitnessGoal:{
-                value:false,
-            }
-         }
+        superRight:{
+           addOn:[],
+           delete:[],
+           edit:[],
+           access:[],
+       },
+       items:{
+           crmFitnessGoal:{
+               value:false,
+               rights:[]
+           }
+       }
     }
     }   
    }

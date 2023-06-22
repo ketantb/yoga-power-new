@@ -110,6 +110,7 @@ const TrainerySalary = React.lazy(()=>import('./views/hr/TrainerySalarySlip'))
 const AllClassReport = React.lazy(()=>import('./views/hr/AllClassReport'))
 const ShiftTimingManagment = React.lazy(()=>import('./views/hr/ShiftTimingManagment'))
 const AllRightHr =  React.lazy(()=>import('./views/hr/AllRightHr')) 
+const Rights =  React.lazy(()=>import('./views/hr/Rights')) 
 const EmpPerformance = React.lazy(()=>import('./views/hr/EmpPerformance'))
 const Stafftarget = React.lazy(()=>import('./views/hr/staffTarget/Stafftarget'))
 const EmployeeTargetSheet =React.lazy(()=>import('./views/hr/EmployeeTargetSheet'))
@@ -380,6 +381,7 @@ const routes = [
   { path:'/hr/all-class-report',name:'All Classs Report',element:AllClassReport},
   { path:'/hr/shift-timing-managment',name:'Shift Timing ',element:ShiftTimingManagment},
   { path:'/hr/all-righthr',name:'All Right',element:AllRightHr},
+  { path:'/hr/member-rightshr/:emailUniqId',name:'Rights',element:Rights},
   { path:'/hr/emp-performance',name:'Emp Performance',element:EmpPerformance},
   { path:'/hr/view-staff-target',name:'View Staff Target',element:Stafftarget},
   { path:'/hr/emp-target-sheet',name:'Employee Target Sheet',element:EmployeeTargetSheet},

@@ -26,6 +26,7 @@ import {
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
+
 const _nav = [
   {
     component: CNavItem,
@@ -49,7 +50,7 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: ' Dashboard',
+        name: 'Dashboard',
         id:'crmDashboard1',
         to: '/employee/emp-dashboard',
       },

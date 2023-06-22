@@ -28,6 +28,7 @@ const LeadsRight = ({crmLeads,setRightObject }) => {
     const totoggaleRights = useSuperRightFun(setRightObject,'crmRights','crmLeads')
     const checkDashRights = useSuperRightVal(superRight)
     
+    
 
 
 

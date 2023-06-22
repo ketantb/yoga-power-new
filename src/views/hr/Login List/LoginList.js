@@ -1,6 +1,7 @@
 import React, { useEffect, useRef} from 'react'
 import { useState } from 'react'
 import { MdDelete,MdEdit } from 'react-icons/md'
+import { Link } from 'react-router-dom'
 import {
     CButton,   
     CCol,
@@ -32,12 +33,11 @@ import {
 import { useSelector } from 'react-redux'
 import CustomSelectInput from 'src/views/Master/HRMaster/CustomSelectInput/CustomSelectInput'
 import axios from 'axios'
-const LoginList = () => {
+const LoginList = ({admin}) => {
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
-    const centerCode = user.user.centerCode;
+    const {username,centerCode,center,emailUniqId,startDate,expDate,brandLogo} = user.user;
 
    const url = useSelector((el)=>el.domainOfApi) 
 
@@ -53,7 +53,7 @@ const LoginList = () => {
   const [slectedStaffObj,setSelectedStaffObj]  = useState({})
   const [activeUpdate,setActiveUpdate] = useState('')
   const [allEmailData,setAllEmailData] = useState([])
-  const [isAdimn,setIsAdmin] = useState(false)
+  const [isAdimn,setIsAdmin] = useState(admin)
   
   const [clientReferance,setClientReferance] = useState({
     clientName:'',
@@ -67,17 +67,28 @@ const LoginList = () => {
     username:' ',
     email: '',
     password: '',
-    center: '',
-    centerCode: '',
+    center:admin?'':center,
     status: true,
     Designation:'',
     empName:'',
     empId:'',
     mobNo:0,
-    MemBerId:'no',
+    memBerId:'no',
     createdBy:username,
-    createrId:'no',
-    isAdmin:false
+    createrId:emailUniqId,
+    isAdmin:admin,
+    centerCode:admin?'':centerCode,
+    typeOfPartner: '',
+    location: '',
+    startDate: admin?new Date():startDate,
+    expDate: admin?new Date(200000000022,2,1):expDate,
+    Designation:'',
+    isAdminPatner:false,
+    isEmployee:!admin,
+    packege:admin?'':user.user.package,
+    brandLogo:admin?'':brandLogo, 
+    city:'',
+    country:''
   }
 
 
@@ -142,8 +153,6 @@ const LoginList = () => {
 
  const saveData = async (type)=>{
     let response ={}
-
-    console.log(emailObj)
     try{
       if(type==='Save'){
         response = await  axios.post(`${url}/signup/create`,emailObj,{headers})
@@ -184,11 +193,10 @@ const LoginList = () => {
     }
   }
 
-  function toUppdateSwitch(val,id){
-    axios.post(`${url}/signup/update/${id}`,{status:!val},{headers}).then((res)=>{
+  function toUppdateSwitch(val,id,el){
+    axios.post(`${url}/signup/update/${id}`,{...el,status:!val},{headers}).then((res)=>{
       if(res.status===200){
         getAllEmailIdList()
-
       }
     })
   }
@@ -212,7 +220,15 @@ const LoginList = () => {
     MemBerId:el.MemBerId,
     createdBy:el.createdBy,
     createrId:el.createrId,
-    isAdmin:(el.isAdmin===undefined&&false)
+    isAdmin:el.isAdmin,
+    location: el.location,
+    startDate: admin?new Date():el.startDate,
+    expDate: admin?new Date(9999,2,1):el.expDate,
+    isAdminPatner:false,
+    packege:el.packege,
+    brandLogo:el.brandLogo, 
+    city:el.city,
+    country:el.country
    }))
   }
 
@@ -279,6 +295,16 @@ const LoginList = () => {
                 <CCol lg={4} md={6} >
                     <CFormInput type='text' label='Designation' value={emailObj.Designation} onChange={(e)=> setEmailObj(prev=>({...prev,Designation:e.target.value}))} />
                 </CCol>
+               <CCol lg={4} md={6} >
+                    <CFormInput type='text' label='Location' value={emailObj.location} onChange={(e)=> setEmailObj(prev=>({...prev,location:e.target.value}))} />
+                </CCol>
+                <CCol lg={4} md={6} >
+                    <CFormInput type='text' label='City' value={emailObj.city} onChange={(e)=> setEmailObj(prev=>({...prev,city:e.target.value}))} />
+                </CCol>
+                <CCol lg={4} md={6} >
+                    <CFormInput type='text' label='Country' value={emailObj.country} onChange={(e)=> setEmailObj(prev=>({...prev,country:e.target.value}))} />
+                </CCol>
+                
                 <CCol lg={4} md={6} > 
                     <CFormInput type='email' label='Email Id'  value={emailObj.email} onChange={(e)=> setEmailObj(prev=>({...prev,email:e.target.value}))} />
                 </CCol>
@@ -292,8 +318,7 @@ const LoginList = () => {
                 </CCol>
                 <CCol lg={12} md={12} sm={12} sx={12} className='py-0' >
 
-               {isAdimn&& <CFormSwitch size="xl"  label="Admin"   
-                checked={emailObj.isAdmin} onChange={()=>setEmailObj(prev=>({...prev,isAdmin:!prev.isAdmin}))} />}
+     
 
                 </CCol>
 
@@ -328,15 +353,18 @@ const LoginList = () => {
                             <CTableHeaderCell>Emp Id</CTableHeaderCell>
                             <CTableHeaderCell>Emp Name</CTableHeaderCell>
                             <CTableHeaderCell>Designation</CTableHeaderCell>
+                            <CTableHeaderCell>Location</CTableHeaderCell>
+                            <CTableHeaderCell>City</CTableHeaderCell>
+                            <CTableHeaderCell>Country</CTableHeaderCell>
                             <CTableHeaderCell>Emp Rights</CTableHeaderCell>
                             <CTableHeaderCell>Email Id</CTableHeaderCell>
-                            <CTableHeaderCell>Password</CTableHeaderCell>
-                            <CTableHeaderCell>Status</CTableHeaderCell>
-                            <CTableHeaderCell>Edit/Delete</CTableHeaderCell>
+                            <CTableHeaderCell style={{display:(admin?'none':'')}}>Status</CTableHeaderCell>
+                            <CTableHeaderCell>Edit
+                              {(admin?'':'/Delete')}</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {allEmailData.map((el,i)=>
+                        {allEmailData.filter((el)=>el.isAdmin===admin&&!el?.isAdminPatner).map((el,i)=>
                             <CTableRow className='text-center'key={i} >
                                 <CTableDataCell>{i+1}</CTableDataCell>
                                 <CTableDataCell>{el.center}</CTableDataCell>
@@ -344,13 +372,19 @@ const LoginList = () => {
                                 <CTableDataCell>{el.empId}</CTableDataCell>
                                 <CTableDataCell>{el.empName}</CTableDataCell>
                                 <CTableDataCell>{el.Designation}</CTableDataCell>
-                                <CTableDataCell ><CButton size='sm'>View</CButton></CTableDataCell>
+                                <CTableDataCell>{el.location}</CTableDataCell>
+                                <CTableDataCell>{el.city}</CTableDataCell>
+                                <CTableDataCell>{el.country}</CTableDataCell>
+                                <CTableDataCell >{
+                                el.isAdmin ?<CButton color='success' size='sm'>Admin</CButton>: 
+                                  <CButton size='sm'><Link style={{textDecoration:'none',color:'white'}}
+                                   to={`/hr/member-rightshr/${el._id}`}>View</Link></CButton>}</CTableDataCell>
                                 <CTableDataCell>{el.email}</CTableDataCell>
                                 {/* <CTableDataCell>{el.password}</CTableDataCell> */}
-                                <CTableDataCell></CTableDataCell> 
-                                <CTableDataCell>
-                                <CFormSwitch size="xl"  onClick={()=>toUppdateSwitch(el.status,el._id)} checked={el.status} />
+                                <CTableDataCell style={{display:(admin?'none':'')}}>
+                                <CFormSwitch size="xl"  onClick={()=>toUppdateSwitch(el.status,el._id,el)} checked={el.status} />
                                     </CTableDataCell>
+
                                     <CTableDataCell  >
                                         { <MdEdit onClick={()=>toEditEmail(el)} style={{cursor:'pointer'}} className='me-1'/>}                                       
                                         {!el.isAdmin && <MdDelete style={{cursor:'pointer'}} onClick={()=>deleteLeave(el)}/>}

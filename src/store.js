@@ -67,8 +67,9 @@ function functionUser(token,emailUniqId){
   })
       .then((res) => {
         if(res.status===200){
+          console.log('Hello I am Rights',res?.data?.data)
           dispatch({type:'activeToCall',payload:true})
-          dispatch({type:'getRigtsData',payload:res.data})
+          dispatch({type:'getRigtsData',payload:res?.data?.data})
         }
       })
       .catch((error) => {
@@ -174,6 +175,8 @@ function changeState (state = initialState, { type, ...rest }){
     return  { ...state, ...rest }
     case 'dispatchIsAdmin':
     state.isAdmin = true
+    state.isEmployee =true
+
     return  { ...state, ...rest }
     case 'showHomePage':
     state.showHomePage = rest.payload 

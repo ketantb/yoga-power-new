@@ -10,34 +10,55 @@ export const AppSidebarNav = ({ items }) => {
 
   const data = useSelector((el)=>el.empLoyeeRights)  
   const disPatch = useDispatch()
-  const [arr1,setArr1] = useState([])
+  const [arr1,setArr1] = useState([...items])
+  const [viewNav,setViewNav] = useState(false)
 
   const isAdmin = user?.user?.isAdmin;  
   const arr2 = data?.crmRights
-  // const arr1 = items.slice()
+  const arr =items
 
+const updatete = ()=>{
   if(!isAdmin){
-  arr1?.forEach((el,i)=>{
+
+    items?.forEach((el,i)=>{
   let  firstObj =el
+
   if(!!arr2[firstObj?.id]){// // lavel 1
+    console.log(firstObj?.id)
     const secondObj = arr2[firstObj?.id]
+
   if(secondObj?.value){
   if(secondObj?.items && firstObj?.items){ 
   const firstObj1 = firstObj?.items
+
      firstObj1?.forEach((el2,i2)=>{
-           if(!secondObj?.items[el2?.id]?.value){
+
+      if(!secondObj?.items[el2?.id]?.value){
             firstObj1?.splice(i2,1)
+            delete secondObj?.items[el2?.id]
       }  
+
   }) 
   }}else if(!arr2[firstObj?.id]?.value){
-   arr1?.splice(i,1)
-  }}})}  
-     
+    items?.splice(i,1)
+  delete arr2[firstObj?.id]
+  }}
+
+  if(items.length===i+1&&!viewNav){
+   setViewNav(true)
+  }
+}
+)} else if(!viewNav){
+  setViewNav(true)
+  items = arr
+}
+}
 
 
 useEffect(()=>{
   if(items.length&& arr2){
-    setArr1([...items].slice())
+    updatete()
+    setArr1([...items])
   }
 },[user?.emailUniqId,items?.length,arr2?.length])
 
@@ -90,7 +111,7 @@ useEffect(()=>{
 
   return (
     <React.Fragment>
-      { arr1 &&
+      { viewNav &&
          arr1.map((item, index) =>
           item.items ? navGroup(item, index) : navItem(item, index)
         )}
