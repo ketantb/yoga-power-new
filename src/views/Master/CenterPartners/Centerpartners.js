@@ -3,7 +3,7 @@ import { CCard,CTable,CTableHead,CTableHeaderCell,CTableRow
     CCardHeader,CCardTitle,CFormInput,CCallout,CModal,
     CModalHeader,CModalTitle,CCardBody, CFormSelect,
     CDropdown,CDropdownMenu,CDropdownItem,CDropdownToggle,
-    CInputGroup
+    CInputGroup,CFormSwitch
  } from "@coreui/react"
 
  import React,{useEffect, useState,useRef} from 'react'
@@ -43,7 +43,7 @@ const handlePrint = useReactToPrint({
                expDate: '',numberOfMY:0,typeOfNum:'Month',password: '',status:true,
                Designation:'',empName:'',empId:'',mobNo:0,createdBy:username,createrId:userID,
                isAdmin:false,isAdminPatner:true,isEmployee:false,packege:'',memBerId:'',brandLogo:'', 
-               city:'',country:''
+               city:'',country:'',superAdminUniqId:user.user.isAdmin?user.user.superAdminUniqId:''
               }
 
   const numberOfdayPack = {
@@ -181,6 +181,17 @@ const handlePrint = useReactToPrint({
         })) 
     }
     },[startDate,numberOfMY,typeOfNum])
+
+
+    function toUppdateSwitch(val,id,el){
+      el.status = !val
+      axios.post(`${url}/signup/update/${id}`,el,{headers}).then((res)=>{
+        if(res.status===200){
+          getCenterPartner()
+        }
+      })
+    }
+
 
     return  <> 
  <CModal visible={visible} onClose={() => setVisible(false)}>
@@ -399,11 +410,13 @@ const handlePrint = useReactToPrint({
                                     <CTableHeaderCell>City</CTableHeaderCell>
                                     <CTableHeaderCell>Country</CTableHeaderCell>
                                     <CTableHeaderCell>Start Date</CTableHeaderCell>
+                                    <CTableHeaderCell>Status</CTableHeaderCell>
                                     <CTableHeaderCell>Rights</CTableHeaderCell>
                                     <CTableHeaderCell>EXP. Date</CTableHeaderCell>
                                     <CTableHeaderCell>Packege</CTableHeaderCell>
                                     <CTableHeaderCell>Edit</CTableHeaderCell>
                                 </CTableRow>
+
                             </CTableHead>
                             <CTableBody>  
 
@@ -455,10 +468,16 @@ const handlePrint = useReactToPrint({
                               </CTableDataCell>  
                               <CTableDataCell>   
                                 {el.country}          
-                              </CTableDataCell>
+                              </CTableDataCell>                               
+
                               <CTableDataCell>  
                                 {new Date(el.startDate).toDateString()}                                                                      
                               </CTableDataCell> 
+                              
+                              <CTableDataCell >  
+                                 <CFormSwitch style={{cursor:'pointer'}} size="xl"  onClick={()=>toUppdateSwitch(el.status,el._id,el)} checked={el.status} />             
+                              </CTableDataCell> 
+
                               <CTableDataCell>
                               <CButton size='sm'><Link style={{textDecoration:'none',color:'white'}}
                                    to={`/hr/member-rightshr/${el._id}`}>View</Link></CButton>

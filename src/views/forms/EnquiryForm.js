@@ -78,11 +78,27 @@ const EnquiryForm = () => {
     const token = user.token;
     const username = user.user.username;
     const centerCode = user.user.centerCode;
+    
+    const userInfo = user.user
+
+
     const [result, setResult] = useState([]);
     const [serviceArr, setServiceArr] = useState([]);
     const [result1, setResult1] = useState([]);
     const [leadArr, setLeadArr] = useState([]);
     const [mem, setMem] = useState([]);
+    
+    const uniqObj  = {
+    empNameC:userInfo.username,
+    employeeIDC:'',
+    employeeUniqIdC:userInfo.emailUniqId,
+    centerNameC:userInfo.center,
+    centerCodeC:userInfo.centerCode,
+    adminNameC:userInfo.createdBy,
+    emIdback:userInfo.createrId,
+    }
+
+
     useEffect(() => {
         getStaff()
         getLeadSource()
@@ -240,7 +256,7 @@ return
         }
 
 
-        axios.post(`${url1}/enquiryForm/create`, data, { headers })
+        axios.post(`${url1}/enquiryForm/create`, {...data,...uniqObj}, { headers })
             .then((resp) => {
                 console.log(resp)
                 alert("successfully submitted")

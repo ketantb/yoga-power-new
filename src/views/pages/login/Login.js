@@ -56,7 +56,7 @@ useEffect(()=>{
 
   useEffect(()=>{
     if(userinfo?.token){
-      if(!data?.status){
+      if(!userinfo?.user?.status){
         navigate('/550')
       }else if(data?.emailUniqId){
           navigate('/')
@@ -103,6 +103,9 @@ useEffect(()=>{
     }
   }
   /*  */
+
+
+
   return (
     <div className=" min-vh-100 d-flex flex-row align-items-center" style={{ backgroundColor: '#0B5345' }}>
       <CContainer className="justify-content-center" >
