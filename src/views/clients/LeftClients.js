@@ -39,6 +39,7 @@ import ViewInvoice from 'src/components/ViewInvoice'
 import CallUpdate from 'src/components/CallUpdate'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 
 
 import ClientEditForm from './ClientEditForm/ClientEditForm'
@@ -115,6 +116,8 @@ const LeftClients = () => {
     const [editData,setEditData] = useState({})
 
 
+    const patPathVal =  useAdminValidation()
+
     let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
     const token = user.token;
@@ -148,7 +151,7 @@ const LeftClients = () => {
 
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url}/employeeForm/all`, {
+        axios.get(`${url}/employeeForm/${patPathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -185,7 +188,8 @@ const LeftClients = () => {
             Fullname, Emailaddress, ContactNumber, Gander, DateofBirth, address, Area, city, Profession,
             StaffName, CenterName, CallStatus, Message,
             person_Name, Relation, ContactNumber2: ContactNumber2,
-            EnquiryDate, ServiceName, Customertype, enquirytype, appointmentDate, appointmentTime, appointmentfor: appointmentfor, status: "all_enquiry",
+            EnquiryDate, ServiceName, Customertype, enquirytype, appointmentDate, appointmentTime,
+             appointmentfor: appointmentfor, status: "all_enquiry",
         }
 
         fetch(`${url}/memberForm/update/${edit}`, {
@@ -261,7 +265,7 @@ const LeftClients = () => {
    function findLeftClient(list){
     const time =  (new Date(list.endDate) -new Date())
     const days = Math.ceil(time/(1000*60*60*24))
-          if((days<=0 && list.username === username &&list.plan===true)){
+          if((days<=0 && list.plan===true)){
             console.log(list.invoiceId)
              return true 
           }
@@ -270,14 +274,14 @@ const LeftClients = () => {
    
 
     function getEnquiry() {
-        axios.get(`${url}/memberForm/all`, {
+        axios.get(`${url}/memberForm/${patPathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                setResult1(res.data.filter((list) => list.username === username &&findLeftClient(list)).reverse())
-                setOgList(res.data.filter((list) => list.username === username && findLeftClient(list)).reverse())
+                setResult1(res.data.filter((list) => findLeftClient(list)).reverse())
+                setOgList(res.data.filter((list) =>   findLeftClient(list)).reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -599,7 +603,7 @@ const LeftClients = () => {
                                 >
                                     <option value=''>Select</option>
                                     {arr.filter((list) => list[filterBy] != '').map((item, index) => (
-                                        item.username === username && (
+                                        (
                                             <option key={index} value={item.id}>{item[filterBy]}</option>
                                         )
                                     ))}
@@ -667,7 +671,7 @@ const LeftClients = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                    (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -684,8 +688,9 @@ const LeftClients = () => {
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) =>  list.Department.toLowerCase() === 'sales' &&
+                                                 list.selected === 'Select').map((item, index) => (
+                                                    (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}
@@ -802,7 +807,7 @@ const LeftClients = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                    (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -820,8 +825,8 @@ const LeftClients = () => {
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                                                    (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}</CFormSelect>
@@ -1173,7 +1178,7 @@ const LeftClients = () => {
                                                     >
                                                         <option>Select Service</option>
                                                         {result.map((item, index) => (
-                                                            item.username === username && (
+                                                             (
                                                                 item.status === true && (
                                                                     <option key={index} value={item.id}>{item.selected_service}</option>
                                                                 )
@@ -1457,13 +1462,12 @@ const LeftClients = () => {
                                     </CTableDataCell>
                                 </CTableRow>
                                 {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                                    list.username === username
-                                    && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
+                                   list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                                     list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) &&
                                      list.serviceName.toLowerCase().includes(Search6.toLowerCase()) &&
                                       list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                                 ).map((item, index) => (
-                                    item.username === username && (
+                                    (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{centerCode}MEM{index + 10 + (paging * 10)}</CTableDataCell>
@@ -1498,18 +1502,18 @@ const LeftClients = () => {
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
                         {result1.filter((list) =>
-                            list.username === username && list.plan === false
+                             list.plan === false
                             && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                         {result1.filter((list) =>
-                            list.username === username && list.plan === false
+                             list.plan === false
                             && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                         {result1.filter((list) =>
-                            list.username === username && list.plan === false
+                             list.plan === false
                             && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 1) * 10 ?

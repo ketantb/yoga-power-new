@@ -38,7 +38,7 @@ import moment from 'moment/moment'
 import { useSelector } from 'react-redux'
 import AdmissionForm1 from 'src/components/AdmissionForm1'
 import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
-
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 
 const AllEnquires = () => {
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
@@ -51,13 +51,15 @@ const AllEnquires = () => {
 
 
 
-
     var currentdate = new Date();
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
     var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
     var year = currentdate.getFullYear();
 
     const url = useSelector((el) => el.domainOfApi)
+    const pathRoute = useAdminValidation()
+    const unikqValidateObj = useUniqAdminObjeact()
+
 
 
 
@@ -184,7 +186,7 @@ const AllEnquires = () => {
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${ url }/prospect/all`, {
+        axios.get(`${ url }/prospect/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -211,7 +213,7 @@ const AllEnquires = () => {
 
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${ url }/employeeform`, {
+        axios.get(`${ url }/employeeForm/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -277,9 +279,9 @@ const AllEnquires = () => {
                 EnquiryID: followForm, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, 
                 ServiceName: ServiceName1, AppointmentDate: appointmentDate,
-                 AppointmentTime: appointmentTime, enquiryStage: enquiryStage, 
-                 CallStatus: CallStatus1, FollowupDate: FollowupDate,
-                  TimeFollowp: TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName, Discussion: Discussion,
+                AppointmentTime: appointmentTime, enquiryStage: enquiryStage, 
+                CallStatus: CallStatus1, FollowupDate: FollowupDate,
+                TimeFollowp: TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName, Discussion: Discussion,
                 status: 'CallReport'
             }
 
@@ -325,7 +327,7 @@ const AllEnquires = () => {
                   FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, 
                   Counseller: staff.find((el)=>el._id===Counseller)?.FullName, Discussion: Discussion,
                 status: 'CallReport',
-                EmployeeId:Counseller
+                EmployeeId:Counseller,...unikqValidateObj 
             }
 
             fetch(`${ url }/enquiryForm/update/${followForm}`, {
@@ -367,7 +369,7 @@ const AllEnquires = () => {
                 Name: Name, Contact: Contact, Email: email, ServiceName:
                  ServiceName1, enquiryStage: enquiryStage, CallStatus: "Cold", 
                   Counseller: staff.find((el)=>el._id===Counseller)?.FullName, Discussion: Discussion,
-                status: 'CallReport'
+                status: 'CallReport',... unikqValidateObj 
             }
 
             fetch(`${ url }/enquiryForm/update/${ followForm }`, {
@@ -416,7 +418,7 @@ const AllEnquires = () => {
                   AppointmentTime: appointmentTime, enquiryStage: enquiryStage,
                    CallStatus: CallStatus1, FollowupDate: FollowupDate, 
                    TimeFollowp: TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName, Discussion: Discussion,
-                status: 'CallReport'
+                status: 'CallReport',... unikqValidateObj 
             }
             fetch(`${ url }/prospect/create`, {
                 method: "POST",
@@ -437,17 +439,19 @@ const AllEnquires = () => {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email,
-                 ServiceName: ServiceName1, AppointmentDate: appointmentDate,
-                  AppointmentTime: appointmentTime, enquiryStage: enquiryStage,
-                   CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp:
-                    TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'prospect'
+                ServiceName: ServiceName1, AppointmentDate: appointmentDate,
+                AppointmentTime: appointmentTime, enquiryStage: enquiryStage,
+                CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp:
+                TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName , Discussion: Discussion,
+                status: 'prospect',... unikqValidateObj 
             }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate,
+                 AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, 
+                 FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName , Discussion: Discussion,
+                status: 'CallReport',... unikqValidateObj 
             }
             if (pros.filter((list) => list.EnquiryID === followForm).length > 0) {
                 const found = pros.filter((list) => list.EnquiryID === followForm).map((element, index) => {
@@ -519,20 +523,20 @@ const AllEnquires = () => {
                     })
                 })
             }
-            fetch(`${ url }/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${ token }`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data2)
-            }).then((resp) => {
-                resp.json().then(() => {
-                    setCallReport(false)
-                    getEnquiry()
-                })
-            })
+            // fetch(`${ url }/prospect/create`, {
+            //     method: "POST",
+            //     headers: {
+            //         "Authorization": `Bearer ${ token }`,
+            //         'Accept': 'application/json',
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(data2)
+            // }).then((resp) => {
+            //     resp.json().then(() => {
+            //         setCallReport(false)
+            //         getEnquiry()
+            //     })
+            // })
 
         }
 
@@ -551,7 +555,7 @@ const AllEnquires = () => {
             Name: Name, Contact: Contact, Email: email, ServiceName:
              ServiceName1, CallStatus: CallStatus1, FollowupDate: 
              FollowupDate, TimeFollowp: TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName,
-              Discussion: Discussion,EmployeeId:Counseller,
+              Discussion: Discussion,EmployeeId:Counseller,... unikqValidateObj,
              
             status: 'CallReport'
         }
@@ -589,7 +593,7 @@ const AllEnquires = () => {
     }
     const [ogList, setOgList] = useState([])
     function getEnquiry() {
-        axios.get(`${ url }/enquiryForm/all`, {
+        axios.get(`${ url }/enquiryForm/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -849,7 +853,6 @@ const AllEnquires = () => {
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                             Open qry: {result1.filter((list) =>
-                                                    list.username === username &&
                                                     moment(list.createdAt).format("MM-DD-YYYY").includes(select) 
                                                     && list.status === 'all_enquiry' && list.enquirestatus!=='notshow'
                                                 ).length}
@@ -857,8 +860,7 @@ const AllEnquires = () => {
                                         </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
-                                                Converted: {result1.filter((list) =>
-                                                    list.username === username &&
+                                                Converted: {result1.filter((list) =>                                
                                                      moment(list.createdAt).format("MM-DD-YYYY").includes(select) &&  
                                                       list.enquirestatus==='notshow'
                                                      ).length}
@@ -867,7 +869,7 @@ const AllEnquires = () => {
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Cold: {result1.filter((list) =>
-                                                    list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold'
+                                                   moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
@@ -883,21 +885,21 @@ const AllEnquires = () => {
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 FollowUps: {pros.filter((list) =>
-                                                    list.username === username && list.status === 'prospect'
+                                                     list.status === 'prospect'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Trial: {result1.filter((list) =>
-                                                    list.username === username && list.appointmentfor === 'Trial Session'
+                                                     list.appointmentfor === 'Trial Session'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Appointment: {result1.filter((list) =>
-                                                    list.username === username && list.appointmentfor === 'Appointment'
+                                                     list.appointmentfor === 'Appointment'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
@@ -913,21 +915,21 @@ const AllEnquires = () => {
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Trial Scheduled: {result1.filter((list) =>
-                                                    list.username === username && list.appointmentfor === 'Trial Session'
+                                                     list.appointmentfor === 'Trial Session'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Completed: {result1.filter((list) =>
-                                                    list.username === username && list.status === 'trailComplete'
+                                                     list.status === 'trailComplete'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Converted: {result1.filter((list) =>
-                                                    list.username === username && list.status === 'trailConverted'
+                                                     list.status === 'trailConverted'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
@@ -1026,7 +1028,7 @@ const AllEnquires = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                    (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -1043,9 +1045,9 @@ const AllEnquires = () => {
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.Department.toLowerCase() === 'sales' && 
+                                                {staff.filter((list) =>  list.Department.toLowerCase() === 'sales' && 
                                                 list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                     (
                                                         <option key={index} value={item._id}>{item.FullName}</option>
                                                     )
                                                 ))}
@@ -1162,7 +1164,7 @@ const AllEnquires = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                    (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -1180,8 +1182,8 @@ const AllEnquires = () => {
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) => list.selected === 'Select').map((item, index) => (
+                                                    (
                                                         <option key={index} value={item._id}>{item.FullName}</option>
                                                     )
                                                 ))}</CFormSelect>
@@ -1473,8 +1475,8 @@ const AllEnquires = () => {
                                                     >
 
                                                         <option>Select Staff Name</option>
-                                                        {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                            item.username === username && (
+                                                        {staff.filter((list) => list.selected === 'Select').map((item, index) => (
+                                                           (
                                                                 <option key={index}>{item.FullName}</option>
                                                             )
                                                         ))}
@@ -1598,7 +1600,7 @@ const AllEnquires = () => {
                                                     >
                                                         <option>Select Service</option>
                                                         {result.map((item, index) => (
-                                                            item.username === username && (
+                                                            (
                                                                 item.status === true && (
                                                                     <option key={index} value={item.id}>{item.selected_service}</option>
                                                                 )
@@ -1620,7 +1622,7 @@ const AllEnquires = () => {
                                                         {subservice.filter((list) =>
                                                             list.selected_service === ServiceName
                                                         ).map((item, index) => (
-                                                            item.username === username && (
+                                                             (
                                                                 item.status === true && (
                                                                     <option key={index}>{item.sub_Service_Name}</option>
                                                                 )
@@ -1714,8 +1716,8 @@ const AllEnquires = () => {
                                                         label='Counseller'
                                                     >
                                                         <option>Select Staff Name</option>
-                                                        {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                            item.username === username && (
+                                                        {staff.filter((list) =>   list.selected === 'Select').map((item, index) => (
+                                                             (
                                                                 <option key={index} value={item._id} >{item.FullName}</option>
                                                             )
                                                         ))}</CFormSelect>
@@ -1873,7 +1875,7 @@ const AllEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell style={{display:(isAdmin|| enquiryAdd)?'block':'none'}}>
+                                    <CTableDataCell style={{display:(isAdmin|| enquiryAdd)?'':'none'}}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -1921,7 +1923,7 @@ const AllEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell style={{display:(isAdmin|| enquiryAdd)?'block':'none'}}>
+                                    <CTableDataCell style={{display:(isAdmin|| enquiryAdd)?'':'none'}}>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
@@ -1951,7 +1953,7 @@ const AllEnquires = () => {
                                         <CTableDataCell>{item.appointmentfor}</CTableDataCell>
                                         <CTableDataCell>{item.CallStatus}</CTableDataCell>
                                         <CTableDataCell>{item.Message}</CTableDataCell>
-                                        <CTableDataCell style={{display:(isAdmin|| enquiryAdd)?'block':'none'}}>
+                                        <CTableDataCell style={{display:(isAdmin|| enquiryAdd)?'':'none'}}>
                                             {(isAdmin|| enquiryAdd) && <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }}
                                             onClick={() => { setEdit(item._id), handleAdmission({...item,type:'bottom'}) }} />}
                                             

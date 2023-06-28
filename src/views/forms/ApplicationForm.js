@@ -122,11 +122,12 @@ const username = user.user.username;
 
 
 function Edit() {
-        fetch(`${url}/employeeform/${data._id}`, {
+        fetch(`${url}/employeeform/update/${data._id}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body:JSON.stringify({...data,...obj})
         }).then((result) => {

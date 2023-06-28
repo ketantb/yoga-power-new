@@ -32,6 +32,8 @@ import { MdCall, MdDelete, MdEdit, MdMail } from 'react-icons/md';
 import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
+import { useAdminValidation } from '../Custom-hook/adminValidation'
+
 
 const FollowupCallReport = () => {
 
@@ -53,20 +55,22 @@ const FollowupCallReport = () => {
     const [result1, setResult1] = useState([]);
     const [paging,setPaging] = useState(0)
 
+    const pathRoute = useAdminValidation()
+
      useEffect(()=>{
       getEnquiry()
      },[])   
 
    
     function getEnquiry() {
-        axios.get(`${url}/prospect/all`, {
+        axios.get(`${url}/prospect/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                 console.log(res.data)
-                setResult1(res.data.filter((list) => list.username === username).reverse())
+                setResult1(res.data.filter((list) =>list).reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -91,7 +95,7 @@ const FollowupCallReport = () => {
                     <CCardHeader>
                         <strong className="mt-2">Call Report <span className='float-end'>Total Call Report 
                         : {result1.filter((list) =>
-                            list.username === username && list.status === 'CallReport'
+                           list.status === 'CallReport'
                         ).length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
@@ -227,11 +231,11 @@ const FollowupCallReport = () => {
                                    
                                 </CTableRow>
                                 {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                                    list.username === username && list.status === 'CallReport'
+                                    list.status === 'CallReport'
                                 ).map((item, index) => (
                                     <CTableRow key={index}>
                                         <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-                                        <CTableDataCell>{centerCode}Q{index + 10 + (paging * 10)}</CTableDataCell>
+                                        <CTableDataCell>{item.centerCodeC}Q{index + 10 + (paging * 10)}</CTableDataCell>
                                         <CTableDataCell className='text-center'>{moment(item.CallDate).format("DD-MM-YYYY")}</CTableDataCell>
                                         <CTableDataCell>{moment(item.Time, "HH:mm").format("hh:mm A")}</CTableDataCell>
                                         <CTableDataCell>{item.Name}</CTableDataCell>

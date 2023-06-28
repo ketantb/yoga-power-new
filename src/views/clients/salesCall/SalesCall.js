@@ -33,11 +33,11 @@ import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom';
 import { empLoyeeeRights } from '../../hr/Rights/rightsValue/crmRightsValue'
-
-
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 const SalesCall = () => {
     const url = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
     ?.crmEmployee?.items?.crmSalesCall1?.rights) 
@@ -50,13 +50,12 @@ const SalesCall = () => {
 
     const upgradeCallsVal =  funValidate('upgradeCalls')
     const renewalsCallsVal = funValidate('renewalsCalls')
-    const crossCellCallsVal = funValidate('paymentCalls')
+    const crossCellCallsVal = funValidate('crossCellCalls')
 
     const [activeKey, setActiveKey] = useState(
         (upgradeCallsVal&&1)||
         (renewalsCallsVal&&2)||
         (crossCellCallsVal&&3))   
-    
     
     const [uppgradeCallsData,setUppgradeCallsData] = useState([])
     const [renevalsCallData,setRenevalsCallData] = useState([])
@@ -67,6 +66,8 @@ const SalesCall = () => {
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const username = user.user.username;
+    const token = user.token;
+
 
     const {id} = useParams()
 
@@ -74,9 +75,12 @@ const SalesCall = () => {
     const  getSalesCallData = useCallback(async function() {
         try{
 
-        const response1 = await axios.get(`${url}/upgradecalls`)
-        const response2 = await axios.get(`${url}/renewalscalls`)
-        const response3 = await axios.get(`${url}/crosssalecalls`)
+        const response1 = await axios.get(`${url}/upgradecalls/${pathVal}`,{ headers:{
+            "Authorization": `Bearer ${token}`} })
+        const response2 = await axios.get(`${url}/renewalscalls/${pathVal}`,{ headers:{
+            "Authorization": `Bearer ${token}`} })
+        const response3 = await axios.get(`${url}/crosssalecalls/${pathVal}`,{ headers:{
+            "Authorization": `Bearer ${token}`} })
 
      if(!id){
         setUppgradeCallsData(response1.data)
@@ -105,7 +109,7 @@ const SalesCall = () => {
 
     async function getEmployee() {
         try {
-            const { data } = await axios.get(`${ url }/employeeform`)
+            const { data } = await axios.get(`${url}/employeeForm/${pathVal}`)
             setEmployeeData(data)
         } catch (error) {
             console.log(error)

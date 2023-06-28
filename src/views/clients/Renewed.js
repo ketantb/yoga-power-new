@@ -27,11 +27,11 @@ import { Link } from 'react-router-dom'
 import moment from 'moment'
 import { useSelector } from 'react-redux'
 import ClientEditForm from './ClientEditForm/ClientEditForm'
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 
-// const url = 'https://yog-api.herokuapp.com'
-// const url2 = 'https://yoga-power-node-api.herokuapp.com'
 
 const Renewed = () => {
+
     const [select, setSelect] = useState()
 
     const [Search1, setSearch1] = useState('')
@@ -46,6 +46,8 @@ const Renewed = () => {
     const [Search10, setSearch10] = useState('')
 
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()   
+
 
     const [showEdit,setEditForm] = useState(false)
     const [editData,setEditData] = useState({})
@@ -75,14 +77,14 @@ const Renewed = () => {
     
   
     function getEnquiry() {
-        axios.get(`${url1}/memberForm/all`, {
+        axios.get(`${url1}/memberForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                 console.log(res.data)
-                setResult1(res.data.filter((list) => list.username === username && findRenewedClient(list) ).reverse() )
+                setResult1(res.data.filter((list) =>  findRenewedClient(list) ).reverse() )
             })
             .catch((error) => {
                 console.error(error)
@@ -133,7 +135,7 @@ const Renewed = () => {
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">Renewed Clients <span className='float-end'>Total Clients
-                         : {result1.filter((list) => list.username === username).length}
+                         : {result1.filter((list) => list).length}
                          </span></strong>
                     </CCardHeader>
                     <CCardBody>

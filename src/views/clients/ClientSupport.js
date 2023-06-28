@@ -33,22 +33,31 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import {MdDelete} from 'react-icons/md'
+import { useAdminValidation} from '../Custom-hook/adminValidation'
 
+let user = JSON.parse(localStorage.getItem('user-info'))
+const token = user.token;
 
 
 const ClientSupport = () => {
     const url1 = useSelector((el)=>el.domainOfApi)
     const [clientData,setClientData] = useState([]) 
 
+    const pathVal = useAdminValidation()
+
+
   
 const getClientSupport = async ()=>{
-  const {data} = await  axios.get(`${url1}/clientSupport`)
+  const {data} = await  axios.get(`${url1}/clientSupport/${pathVal}`,{headers: {
+    "Authorization": `Bearer ${token}`,
+}})
   setClientData(data)
 }
 
 const updateStatus = async (obj)=>{
       obj.Status = !obj.Status
-     axios.put(`${url1}/clientSupport/${obj._id}`,obj,{headers: {
+     axios.post(`${url1}/clientSupport/update/${obj._id}`,obj,{headers: {
+        "Authorization": `Bearer ${token}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
     }}).then((res)=>{
@@ -57,7 +66,7 @@ const updateStatus = async (obj)=>{
 }
 
 const deleteFun = (obj)=>{
- axios.delete(`${url1}/clientSupport/${obj._id}`)
+ axios.delete(`${url1}/clientSupport/delete/${obj._id}`)
  .then((res)=>{
     getClientSupport()
 })
@@ -236,7 +245,7 @@ getClientSupport()
                                 {clientData.map((el,i)=>
                                 <CTableRow >
                                     <CTableDataCell>{i+1}</CTableDataCell>
-                                    <CTableDataCell><Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${el.memBerId}`} 
+                                    <CTableDataCell><Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${el.memBerId}/1`} 
                                             target="_black">{el.Client_Name}</Link></CTableDataCell>
 
                                     <CTableDataCell>{el.Regular_Mobile_No}</CTableDataCell>

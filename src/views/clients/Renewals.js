@@ -31,14 +31,13 @@ import { Link } from 'react-router-dom'
 const Invoice  = React.lazy(()=>import('./Invoice'))
 const AddInvoiceSlip = React.lazy(()=>import('./AddInvoiceSlip'))
 import ClientEditForm from './ClientEditForm/ClientEditForm'
-
-
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
-
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 
 
 const Renewals = () => {
+
+    const pathVal = useAdminValidation()   
+
 
     const url1 = useSelector((el)=>el.domainOfApi) 
 
@@ -96,16 +95,15 @@ function findRenevalClient(list){
     
 
     function getEnquiry() {
-        axios.get(`${url1}/memberForm/all
+        axios.get(`${url1}/memberForm/${pathVal}
         `, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
         })
             .then((res) => {
-                console.log(res.data, "data new")
                 // 4
-                setResult1(res.data.filter((list) => list.username === username && findRenevalClient(list)).reverse())
+                setResult1(res.data.filter((list) =>  findRenevalClient(list)).reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -158,7 +156,7 @@ function findRenevalClient(list){
                 'My-Custom-Header': 'foobar'
         };
         
-          await  axios.get(`${url1}/invoice/all`,{headers}).then(({data})=>{
+          await  axios.get(`${url1}/invoice/${pathVal}`,{headers}).then(({data})=>{
             setInvoiceData(data)
           })
          }

@@ -25,6 +25,9 @@ const AppSidebar = () => {
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
+  let user = JSON.parse(localStorage.getItem('user-info'))
+  const logo = user.user.brandLogo;
+
   return (
     <CSidebar
       position="fixed"
@@ -38,7 +41,7 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand to="/">
-        <CAvatar src={logo} style={{ width: '190px' }} />
+        <CAvatar src={logo}  size='xl' />
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>

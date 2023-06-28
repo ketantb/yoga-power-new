@@ -9,6 +9,7 @@ import { v4 } from 'uuid'
 import { useSelector } from 'react-redux';
 import { cilArrowCircleBottom} from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
+import { useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 
 const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
@@ -16,6 +17,7 @@ const url2 = 'https://yog-seven.vercel.app'
 const Recruitment = () => {
 
     const url1 = useSelector((el) => el.domainOfApi)
+    const valdationObj = useUniqAdminObjeact() 
     
     const [error, setError] = useState('')
     const [image, setImage] = useState('')
@@ -118,14 +120,14 @@ useEffect(()=>{
             }
             console.log(data)
 
-            fetch(`${url1}/employeeform`, {
+            fetch(`${url1}/employeeForm/create`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({...valdationObj,...data})
             }).then((resp) => {
                 resp.json().then(() => {
                     alert("successfully submitted")
@@ -385,8 +387,8 @@ useEffect(()=>{
                                                 label="Source"
                                             >
                                                 <option>Select Source</option>
-                                                {leadArr.filter((list) => list.username === username).map((item, index) => (
-                                                    item.username === username && (
+                                                {leadArr.map((item, index) => (
+                                                    (
                                                      
                                                         <option key={index}>{item.LeadSource}</option>
                                                     )
@@ -404,7 +406,7 @@ useEffect(()=>{
                                              <option>Select Department</option>
 
                                                 {result.map((el)=>{
-                                                    if(el.username === username && el.status === true){
+                                                    if(el.status === true){
                                                       return el.department.trim().toLocaleLowerCase()
                                                     }
                                                    return false
@@ -432,8 +434,8 @@ useEffect(()=>{
                                             >
                                              <option>Select Designation</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && Department === item.department.trim().toLocaleLowerCase()&&
-                                                        item.status === true && (
+                                                      Department === item.department.trim().toLocaleLowerCase()&&
+                                                         (
                                                             <option key={index} value={item.jobDesignation}>{item.jobDesignation}</option>
                                                         )                             
                                                 ))}

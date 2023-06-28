@@ -37,6 +37,7 @@ import React, { useState,useCallback,useEffect } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment  from  'moment/moment';
+import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
@@ -44,6 +45,9 @@ const username = user.user.username;
 
 
 const IrregularMemberCall = ({visible,filterObj,id}) => {
+
+    const pathVal  = useAdminValidation()
+    const uniValiObject = useUniqAdminObjeact()
 
     const url = useSelector((el)=>el.domainOfApi) 
     const [AllInvoiceData,setAllInvoiceData] = useState([])
@@ -59,7 +63,7 @@ const IrregularMemberCall = ({visible,filterObj,id}) => {
     const [staff, setStaff] = useState([])
 
     function getIrregularMemberCall() {
-        axios.get(`${url}/clientAttendance/all`, {
+        axios.get(`${url}/clientAttendance/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -99,7 +103,7 @@ const IrregularMemberCall = ({visible,filterObj,id}) => {
 
 
     function getStaff() {
-        axios.get(`${url}/employeeform`, {
+        axios.get(`${url}/employeeForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -149,6 +153,7 @@ const IrregularMemberCall = ({visible,filterObj,id}) => {
         clientName:uniqClient.ClientName,
         phone: uniqClient.contact,
         empolyeeId:emp._id,
+        ... uniValiObject
 
     }
         axios.post(`${url}/clientAttendance/update/${followupId}`,obj, { headers },

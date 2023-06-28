@@ -40,6 +40,7 @@ import ViewInvoice from 'src/components/ViewInvoice'
 import CallUpdate from 'src/components/CallUpdate'
 import ClientEditForm from './ClientEditForm/ClientEditForm'
 import { Link } from 'react-router-dom'
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 
 
 const ActiveClients = () => {
@@ -49,6 +50,8 @@ const ActiveClients = () => {
     const [edit, setEdit] = useState()
     const [visible, setVisible] = useState(false)
     const [visible1, setVisible1] = useState(false)
+    const pathVal = useAdminValidation()
+    const uniqObjectVal = useUniqAdminObjeact()
 
     const [Search1, setSearch1] = useState('')
     const [Search2, setSearch2] = useState('')
@@ -145,7 +148,7 @@ const ActiveClients = () => {
 
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url}/employeeForm/all`, {
+        axios.get(`${url}/employeeform/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -258,14 +261,14 @@ const ActiveClients = () => {
 
     const [ogList, setOgList] = useState([])
     function getEnquiry() {
-        axios.get(`${url}/memberForm/all`, {
+        axios.get(`${url}/memberForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                setResult1(res.data.filter((list) => list.username === username &&  list.status === 'active').reverse())
-                setOgList(res.data.filter((list) => list.username === username).reverse())
+                setResult1(res.data.filter((list) =>   list.status === 'active').reverse())
+                setOgList(res.data.filter((list) => list).reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -526,7 +529,7 @@ const ActiveClients = () => {
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">Active Clients <span className='float-end'>Total Active Clients : 
-                        {result1.filter((list) => list.username === username && list.plan === true && list.status === 'active').length}</span></strong>
+                        {result1.filter((list) =>  list.plan === true && list.status === 'active').length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>
@@ -618,7 +621,7 @@ const ActiveClients = () => {
                                 >
                                     <option value=''>Select</option>
                                     {arr.filter((list) => list[filterBy] != '').map((item, index) => (
-                                        item.username === username && (
+                                         (
                                             <option key={index} value={item.id}>{item[filterBy]}</option>
                                         )
                                     ))}
@@ -687,7 +690,7 @@ const ActiveClients = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                   (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -704,8 +707,8 @@ const ActiveClients = () => {
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) => list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
+                                                    (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}
@@ -822,7 +825,7 @@ const ActiveClients = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                     (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -840,8 +843,8 @@ const ActiveClients = () => {
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                                                     (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}</CFormSelect>
@@ -1193,7 +1196,7 @@ const ActiveClients = () => {
                                                     >
                                                         <option>Select Service</option>
                                                         {result.map((item, index) => (
-                                                            item.username === username && (
+                                                            (
                                                                 item.status === true && (
                                                                     <option key={index} value={item.id}>{item.selected_service}</option>
                                                                 )
@@ -1476,11 +1479,11 @@ const ActiveClients = () => {
                                     </CTableDataCell>
                                 </CTableRow>
                                 {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                                    list.username === username && list.plan === true && list.status === 'active'
-                                    && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
-                                    list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
+                                     list.plan === true && list.status === 'active'&&
+                                     list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
+                                    list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) 
                                 ).map((item, index) => (
-                                    item.username === username && (
+                                     (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{ result1.length+1  -(index + 1 + (paging * 10))}</CTableDataCell>
                                             <CTableDataCell>{item.ClientId}</CTableDataCell>
@@ -1515,18 +1518,18 @@ const ActiveClients = () => {
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
                         {result1.filter((list) =>
-                            list.username === username && list.plan === true
+                             list.plan === true
                             && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                         {result1.filter((list) =>
-                            list.username === username && list.plan === true
+                             list.plan === true
                             && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                         {result1.filter((list) =>
-                            list.username === username && list.plan === true
+                             list.plan === true
                             && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 1) * 10 ?

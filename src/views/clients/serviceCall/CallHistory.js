@@ -13,9 +13,9 @@ import React, { useState,useCallback,useEffect } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment  from  'moment/moment';
+import { useAdminValidation} from 'src/views/Custom-hook/adminValidation';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
-
 
 
 const CallHistory = ({visible,filterObj,id}) => {
@@ -27,9 +27,12 @@ const CallHistory = ({visible,filterObj,id}) => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
 
+    const pathVal =  useAdminValidation()
+
+
     function getAllMemberData() {
 
-        axios.get(`${url}/memberCallReport/all`, {headers: {'Authorization': `Bearer ${token}`}})
+        axios.get(`${url}/memberCallReport/${pathVal}`, {headers: {'Authorization': `Bearer ${token}`}})
             .then((res) => {
                if(!!id){
                 setCallHistoryData(res.data.filter((el)=>el.memberId ===id).reverse())

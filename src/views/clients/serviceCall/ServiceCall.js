@@ -38,7 +38,7 @@ import GreetingCall from './GreetingCall';
 import IrregularMemberCall from './IrregularMemberCall';
 import CallHistory from './CallHistory';
 import { empLoyeeeRights } from '../../hr/Rights/rightsValue/crmRightsValue'
-
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 
 const ServiceCall = ({id}) => {
@@ -46,6 +46,9 @@ const ServiceCall = ({id}) => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const username = user.user.username;
+
+    const pathVal = useAdminValidation()
+
 
     const [staff, setStaff] = useState([])
     const monthName =     ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -60,7 +63,7 @@ const ServiceCall = ({id}) => {
     }
 
 
-    const welcomeCallsVal =  funValidate(' welcomeCalls')
+    const welcomeCallsVal =  funValidate('welcomeCalls')
     const feedbackCallsVal = funValidate('feedbackCalls')
     const paymentCallsVal = funValidate('paymentCalls')
     const irregularMemberCallVal = funValidate('irregularMemberCall')
@@ -87,7 +90,7 @@ const ServiceCall = ({id}) => {
 
    
     function getStaff() {
-        axios.get(`${url}/employeeform`, {headers: {'Authorization': `Bearer ${token}`}})
+        axios.get(`${url}/employeeForm/${pathVal}`, {headers: {'Authorization': `Bearer ${token}`}})
             .then((res) => {
                 setStaff(res.data)
             })

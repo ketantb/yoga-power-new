@@ -34,10 +34,12 @@ import moment from 'moment';
 
 import { useSelector } from 'react-redux'
 import AdmissionForm1 from 'src/components/AdmissionForm1';
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
 
 const FollowupScheduling = () => {
 
-
+    const pathRoute = useAdminValidation()
+    const unikqValidateObj = useUniqAdminObjeact()
     
     var currentdate = new Date();
     var date = currentdate.getDay() + "-" + currentdate.getMonth()
@@ -98,7 +100,7 @@ const FollowupScheduling = () => {
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/prospect/all`, {
+        axios.get(`${url}/prospect/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -148,7 +150,7 @@ const FollowupScheduling = () => {
 
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url1}/employeeform`, {
+        axios.get(`${url1}/employeeForm/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -240,7 +242,7 @@ const FollowupScheduling = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...data2,...unikqValidateObj})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -264,7 +266,7 @@ const FollowupScheduling = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...data2,...unikqValidateObj})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -325,7 +327,7 @@ const FollowupScheduling = () => {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({...data,...unikqValidateObj})
                 }).then((resp) => {
                     resp.json().then(() => {
                         setVisible(false)
@@ -356,7 +358,7 @@ const FollowupScheduling = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...data2,...unikqValidateObj})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -378,7 +380,10 @@ const FollowupScheduling = () => {
                 + currentdate.getMinutes();
             let data = {
                 EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, 
+                AppointmentDate: appointmentDate, AppointmentTime: appointmentTime,
+                 enquiryStage: enquiryStage, CallStatus: CallStatus1, 
+                 FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
             }
 
             fetch(`${url}/prospect/update/${edit}`, {
@@ -404,7 +409,7 @@ const FollowupScheduling = () => {
 
 
     function getEnquiry() {
-        axios.get(`${url}/prospect/all`, {
+        axios.get(`${url}/prospect/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -502,7 +507,7 @@ const FollowupScheduling = () => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({...data,unikqValidateObj})
         }).then((resp) => {
             resp.json().then(() => {
                 setVisible(false)
@@ -572,7 +577,7 @@ const FollowupScheduling = () => {
                     <CCardHeader>
                         <strong className="mt-2">Prospects <span className='float-end'>Total Prospects 
                         :{result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                            list.username === username && list.status === 'prospect' && list.CallStatus !== 'Cold'
+                             list.status === 'prospect' && list.CallStatus !== 'Cold'
                         ).length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
@@ -672,7 +677,7 @@ const FollowupScheduling = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                     (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -802,7 +807,7 @@ const FollowupScheduling = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                     (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -820,8 +825,8 @@ const FollowupScheduling = () => {
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                                                     (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}</CFormSelect>
@@ -1014,7 +1019,7 @@ const FollowupScheduling = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                     (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -1032,9 +1037,9 @@ const FollowupScheduling = () => {
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select')
+                                                {staff.filter((list) =>  list.selected === 'Select')
                                                 .map((item, index) => (
-                                                    item.username === username && (
+                                                     (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}</CFormSelect>
@@ -1314,9 +1319,8 @@ const FollowupScheduling = () => {
                                 </CTableRow>
                                 {result1.slice(paging * 10, paging * 10 + 10)
                                 .filter((list) =>
-                                    list.username === username 
                                    
-                                     && list?.CallDate?.toString()?.includes(Search1) 
+                                      list?.CallDate?.toString()?.includes(Search1) 
                                      && list?.Name?.toLowerCase()?.includes(Search3.toLowerCase())
                                       && list?.Email?.toLowerCase()?.includes(Search4.toLowerCase())
                                     && list?.Contact?.toString()?.includes(Search5.toString()) &&
@@ -1329,7 +1333,7 @@ const FollowupScheduling = () => {
                               
                                   return <CTableRow key={index}>
                                         <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-                                        <CTableDataCell>{centerCode}Q{index + 10 + (paging * 10)}</CTableDataCell>
+                                        <CTableDataCell>{item.centerCodeC}Q{index + 10 + (paging * 10)}</CTableDataCell>
                                         <CTableDataCell className='text-center'>{moment(item.CallDate).format("DD-MM-YYYY")}</CTableDataCell>
                                         <CTableDataCell>{moment(item.Time, "HH:mm").format("hh:mm A")}</CTableDataCell>
                                         <CTableDataCell>{item.Name}</CTableDataCell>

@@ -87,11 +87,12 @@ console.log(obj)
 
 
 const sendDatawithSlectedData = async ()=>{
-fetch(`${url}/employeeform/${userdata._id}`, {
-        method: "PUT",
+fetch(`${url}/employeeForm/update/${userdata._id}`, {
+        method: "POST",
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(obj)
     }).then((res)=>{
@@ -198,7 +199,7 @@ return<CCard style={formRenderParentObjeact} className='Parent' onClick={toggale
                                                  placeholder="Enter Employee ID"
                                              >
                                                  <option>Select Id</option>
-                                                 <option>{`${centerCode}E${AttendenceLength}`}</option>
+                                                 <option>{`${centerCode}E${+AttendenceLength +1}`}</option>
                                              </CFormSelect>
 
                                          </CCol>
@@ -213,7 +214,7 @@ return<CCard style={formRenderParentObjeact} className='Parent' onClick={toggale
                                                  placeholder="Enter Attendance ID"
                                              >
                                                  <option>Select Id</option>
-                                                 <option>{`${centerCode}AIDE${AttendenceLength}`}</option>
+                                                 <option>{`${centerCode}AIDE${+AttendenceLength +1}`}</option>
                                              </CFormSelect>
                                          </CCol>
                                          <CCol xs={6}>

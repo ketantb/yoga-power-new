@@ -6,12 +6,16 @@ import {useEffect, useState} from'react'
 import axios from "axios"
 import { useSelector } from 'react-redux'
 import CustomSelectInput from "src/views/Fitness/CustomSelectInput/CustomSelectInput"
+import { useAdminValidation,useUniqAdminObjeact } from '../../Custom-hook/adminValidation'
+
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 
 function ClientSupportForm (){
 
+  const pathVal = useAdminValidation() 
+  const uniqObjeact =  useUniqAdminObjeact()
 
   const [clinetName,setClientName] = useState('')
   const [number,setNumber] = useState('')
@@ -40,16 +44,18 @@ function ClientSupportForm (){
     Status:true,
     Medium:medium,
     Delete:' ',
-    memBerId
+    memBerId,
+    ...uniqObjeact
   }
 
   const saveData = async  ()=>{
- if(!validation){
-  setErrorMessage("Please Fill Al details")
-  return 
- }
+//  if(!validation){
+//   setErrorMessage("Please Fill Al details")
+//   return 
+//  }
 
- axios.post(`${url1}/clientSupport`,obj,{ headers: {
+ axios.post(`${url1}/clientSupport/create`,obj,{ headers: {
+  "Authorization": `Bearer ${token}`,
   'Accept': 'application/json',
   'Content-Type': 'application/json',
 }}).then((res)=>{
@@ -61,7 +67,7 @@ alert('Successfully save')
  
 
   function getClientData() {
-    axios.get(`${url1}/memberForm/all`, {
+    axios.get(`${url1}/memberForm/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

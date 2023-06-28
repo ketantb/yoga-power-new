@@ -45,6 +45,7 @@ import { v4 } from "uuid";
 import { useReactToPrint } from 'react-to-print'
 import { useSelector } from 'react-redux'
 import moment from "moment/moment";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 const url = 'https://yog-seven.vercel.app'
 
@@ -52,6 +53,10 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     
 
     const url1 = useSelector((el)=>el.domainOfApi) 
+
+    const unikqValidateObj = useUniqAdminObjeact()
+    const pathVal = useAdminValidation()
+
 
     const clickfun =(type)=>{
         if(type.includes('btn btn-close')){
@@ -236,7 +241,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
 
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url1}/employeeform`, {
+        axios.get(`${url1}/employeeForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -267,7 +272,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     
 
     function getMem() {
-        axios.get(`${url1}/memberForm/all`, {
+        axios.get(`${url1}/memberForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -325,7 +330,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
             fitnessGoal, idealWeight, suggestion, comments, status: 'active',
             ClientId:`${centerCode}MEM${10+mem.length}`,ClientReferenceName:clientReferance,
             EnquiryId:ids._id,
-            typeOFBatchClasses
+            typeOFBatchClasses,...unikqValidateObj
             }
 
 
@@ -404,7 +409,7 @@ const headers = {
         'My-Custom-Header': 'foobar'
 };
 
-  await  axios.get(`${url1}/invoice/all`,{headers}).then(({data})=>{
+  await  axios.get(`${url1}/invoice/${pathVal}`,{headers}).then(({data})=>{
     setInvoice(data.length)
   })
  }
@@ -485,6 +490,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
             followUpDate:new Date(),
             CountryCode,
             EmployeeId:selectedStaff?._id, 
+            ...unikqValidateObj
         }
 
         const headers = {

@@ -37,6 +37,7 @@ import React, { useState,useCallback,useEffect } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment  from  'moment/moment';
+import { useUniqAdminObjeact,useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
@@ -46,7 +47,8 @@ const username = user.user.username;
 const FeedBackCall = ({visible,filterObj,id}) => {
 
     const url = useSelector((el)=>el.domainOfApi) 
-
+    const pathVal = useAdminValidation()
+    const uniValiObject =  useUniqAdminObjeact()
 
     const [feedBackCallsData,setWelcomeCallsData] = useState([])
     const [visibalCallUpdateForm,setVisibalCallUpdateForm] = useState(false)
@@ -64,7 +66,7 @@ const FeedBackCall = ({visible,filterObj,id}) => {
     
     function getAllMemberData() {
 
-        const urlPath = !id?`${url}/memberForm/all`:`${url}/memberForm/${id}`
+        const urlPath = !id?`${url}/memberForm/${pathVal}`:`${url}/memberForm/${id}`
 
         axios.get(urlPath, {
             headers: {
@@ -90,7 +92,7 @@ const FeedBackCall = ({visible,filterObj,id}) => {
 
 
     function getStaff() {
-        axios.get(`${url}/employeeform`, {
+        axios.get(`${url}/employeeForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -132,6 +134,7 @@ const obj2 = {
     clientName:uniqClient.Fullname,
     phone: uniqClient.ContactNumber,
     empolyeeId:emp._id,
+    ...uniValiObject
 }
 
         axios.post(`${url}/memberForm/update/${followupId}`,obj, { headers },

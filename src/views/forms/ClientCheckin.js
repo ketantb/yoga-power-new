@@ -16,10 +16,15 @@ import moment from 'moment/moment'
 const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
 import { useSelector } from 'react-redux'
+import { useUniqAdminObjeact,useAdminValidation } from '../Custom-hook/adminValidation'
+
 
 const ClientCheckin = () => {
 
     const url1 = useSelector((el) => el.domainOfApi)
+
+    const pathVal = useAdminValidation()
+    const uniqObjectVal = useUniqAdminObjeact()
 
     const [attendance, setAttendance] = useState(0);
     const [attendanceID, setAttendanceID] = useState('');
@@ -60,7 +65,7 @@ const ClientCheckin = () => {
     }, []);
 
     function getEnquiry() {
-        axios.get(`${ url1 }/clientAttendance/all`, {
+        axios.get(`${ url1 }/clientAttendance/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -84,7 +89,7 @@ const ClientCheckin = () => {
     async function getInnerDataToProcess() {
 
         try {
-            const response1 = await axios.get(`${ url1 }/memberForm/all`, { headers })
+            const response1 = await axios.get(`${ url1 }/memberForm/${pathVal}`, { headers })
             const response2 = await axios.get(`${ url1 }/Batch/all`, { headers })
             const data = await Promise.all([response1, response2])
 
@@ -126,7 +131,8 @@ const ClientCheckin = () => {
             contact,
             admissionBatch: bacth2,
             admissionPackageName: pakageName,
-            admissionDuration: adDuration
+            admissionDuration: adDuration,
+            ...uniqObjectVal
         }
 
         fetch(`${ url1 }/clientAttendance/create`, {

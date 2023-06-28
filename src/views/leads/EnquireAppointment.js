@@ -35,8 +35,8 @@ import { MdCall, MdDelete, MdEdit, MdMail } from 'react-icons/md'
 import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs'
 import moment from 'moment/moment'
 import AdmissionForm1 from 'src/components/AdmissionForm1'
-
 import { useSelector } from 'react-redux'
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 
 const EnquireAppointment = () => {
 
@@ -45,8 +45,7 @@ const EnquireAppointment = () => {
     var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
     var year = currentdate.getFullYear();
 
-    console.log(month + 1);
-    console.log(day);
+
     const [select, setSelect] = useState('')
     const [followForm, setFollowForm] = useState()
     const [edit, setEdit] = useState()
@@ -132,10 +131,16 @@ const EnquireAppointment = () => {
     const [updateItem, setUpdateItem] = useState([]);
 
     const [pros, setPros] = useState([])
+
+
+    const pathName = useAdminValidation()
+    const uniqObjeact  = useUniqAdminObjeact()
+
+
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/prospect/all`, {
+        axios.get(`${url}/prospect/${pathName}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -162,7 +167,7 @@ const EnquireAppointment = () => {
     }, []);
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url2}/employeeForm/all`, {
+        axios.get(`${url2}/employeeForm/${pathName}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -206,7 +211,8 @@ const EnquireAppointment = () => {
             Fullname, Emailaddress, ContactNumber, Gander, DateofBirth, address, Area, city, Profession,
             StaffName, CenterName, CallStatus, Message,
             person_Name, Relation, ContactNumber2: ContactNumber2,
-            EnquiryDate, ServiceName, Customertype, enquirytype, appointmentDate, appointmentTime, appointmentfor: appointmentfor, Counseller: Counseller, trialDate: trialDate, status: "all_enquiry",
+            EnquiryDate, ServiceName, Customertype, enquirytype, appointmentDate, 
+            appointmentTime, appointmentfor: appointmentfor, Counseller: Counseller, trialDate: trialDate, status: "all_enquiry",
         }
 
         fetch(`${url1}/enquiryForm/update/${edit}`, {
@@ -239,7 +245,7 @@ const EnquireAppointment = () => {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
+                status: 'CallReport',...uniqObjeact
             }
 
             fetch(`${url}/enquiryForm/update/${followForm}`, {
@@ -265,7 +271,7 @@ const EnquireAppointment = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...data2,...uniqObjeact})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -278,7 +284,7 @@ const EnquireAppointment = () => {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
+                status: 'CallReport',...uniqObjeact
             }
 
             fetch(`${url1}/enquiryForm/update/${followForm}`, {
@@ -303,7 +309,7 @@ const EnquireAppointment = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...data2,...uniqObjeact})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -337,13 +343,13 @@ const EnquireAppointment = () => {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'prospect'
+                status: 'prospect',...uniqObjeact
             }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
+                status: 'CallReport',...uniqObjeact
             }
             if (pros.filter((list) => list.EnquiryID === followForm).length > 0) {
                 const found = pros.filter((list) => list.EnquiryID === followForm).map((element, index) => {
@@ -440,7 +446,7 @@ const EnquireAppointment = () => {
             username: username,
             EnquiryID: followForm, CallDate: date, Time: time,
             Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-            status: 'CallReport'
+            status: 'CallReport',...uniqObjeact
         }
 
         fetch(`${url}/prospect/create`, {
@@ -474,14 +480,14 @@ const EnquireAppointment = () => {
         })
     }
     function getEnquiry() {
-        axios.get(`${url1}/enquiryForm/all`, {
+        axios.get(`${url1}/enquiryForm/${pathName}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                setResult1(res.data.filter((list) => list.username === username).reverse())
-                setOgList(res.data.filter((list) => list.username === username).reverse())
+                setResult1(res.data.filter((list) => list).reverse())
+                setOgList(res.data.filter((list) => list).reverse())
                 console.log(res.data);
             })
             .catch((error) => {
@@ -619,11 +625,7 @@ const EnquireAppointment = () => {
         setEdit(id)
         getUpdate(id)
     }
-    console.log(result1.filter((list) =>
-        list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-        list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
-    ))
-
+ 
 
 
 
@@ -633,7 +635,7 @@ const EnquireAppointment = () => {
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">Enquire Appointment <span className='float-end'>Total Member : {result1.filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                             moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                         ).length}</span></strong>
                     </CCardHeader>
@@ -728,7 +730,7 @@ const EnquireAppointment = () => {
                                 >
                                     <option value=''>Select</option>
                                     {arr.filter((list) => list[filterBy] != '').map((item, index) => (
-                                        item.username === username && (
+                                        (
                                             <option key={index} value={item.id}>{item[filterBy]}</option>
                                         )
                                     ))}
@@ -793,7 +795,7 @@ const EnquireAppointment = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                    (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -923,7 +925,7 @@ const EnquireAppointment = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                    (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -941,7 +943,7 @@ const EnquireAppointment = () => {
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
+                                                {staff.filter((list) =>list.selected === 'Select').map((item, index) => (
                                                     item.username === username && (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
@@ -1324,7 +1326,7 @@ const EnquireAppointment = () => {
                                                     >
                                                         <option>Select Service</option>
                                                         {result.map((item, index) => (
-                                                            item.username === username && (
+                                                             (
                                                                 item.status === true && (
                                                                     <option key={index} value={item.id}>{item.selected_service}</option>
                                                                 )
@@ -1425,8 +1427,8 @@ const EnquireAppointment = () => {
                                                         label='Counseller'
                                                     >
                                                         <option>Select Counseller</option>
-                                                        {staff.filter((list) => list.username === username && list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
-                                                            item.username === username && (
+                                                        {staff.filter((list) =>  list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
+                                                             (
                                                                 <option key={index}>{item.FullName}</option>
                                                             )
                                                         ))}</CFormSelect>
@@ -1638,10 +1640,10 @@ const EnquireAppointment = () => {
                                     </CTableDataCell>
                                 </CTableRow>
                                 {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                                    list.username === username  && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                                   moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                                     list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                                 ).map((item, index) => (
-                                    item.username === username && (
+                                    (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{item.EnquiryId}</CTableDataCell>
@@ -1672,16 +1674,16 @@ const EnquireAppointment = () => {
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
                         {result1.filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                             moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                         ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                         {result1.filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                             moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                         ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                         {result1.filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                             moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                         ).length > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>

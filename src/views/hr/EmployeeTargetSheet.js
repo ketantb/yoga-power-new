@@ -17,6 +17,16 @@ function EmployeeTargetSheet(){
   const [pagination, setPagination] = useState(10)
 
 
+  let user = JSON.parse(localStorage.getItem('user-info'))
+  const token = user.token;
+
+  const headers = {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    }
+}
 
 const closeForm  = ()=>{
     setActiveForm(false)
@@ -29,7 +39,7 @@ useEffect(()=>{
 
 async function getEmployeeTargetSheetData(){  
 try{  
-const {data} = await  axios.get(`${url1}/employeetargetsheet`)
+const {data} = await  axios.get(`${url1}/employeeTargetSheet/all`,headers)
 setEmployeeTargetSeetData(data.reverse())
 }catch(error){
   console.error(error)
@@ -39,7 +49,9 @@ setEmployeeTargetSeetData(data.reverse())
 let id1 = ''
 
 const DeleteParentApiData = async ()=>{
-  await axios.delete(`${url1}/employeetargetsheet/${id1}`).then(()=>{
+  console.log(`${url1}/employeeTargetSheet/delete/${id1}`,headers)
+
+  await axios.delete(`${url1}/employeeTargetSheet/delete/${id1}`,headers).then(()=>{
     getEmployeeTargetSheetData()
   })
 
@@ -47,7 +59,9 @@ const DeleteParentApiData = async ()=>{
 }
 
   const TargetDataDelete = async (id,url)=>{
-    const response1 = axios.get(url)     
+    const response1 = axios.get(`${url}/all`,headers)     
+
+
     response1.then(({data})=>{
       const Data2 = [...data].find((el)=>el.Sr_No===id)
       if(Data2===undefined){
@@ -55,9 +69,11 @@ const DeleteParentApiData = async ()=>{
         return 
       }
      
+      console.log(Data2._id)
+
      if([...data].find((el)=>el.Sr_No===id)){
       async function  Delete (){
-          const d = axios.delete(`${url}/${Data2._id}`)
+          const d = axios.delete(`${url}/delete/${Data2._id}`,headers)
           d.then((res)=>{
             DeleteParentApiData()
           }).catch((error)=>{
@@ -72,13 +88,13 @@ const DeleteParentApiData = async ()=>{
 async function deleteEmployeeData (id,TypeOfTarget,EmployeeId){
 id1 = id
 try{
-if(TypeOfTarget==="Sales Target"){TargetDataDelete(EmployeeId,`${url1}/salestarget`)}
-if(TypeOfTarget==="Client Target"){TargetDataDelete(EmployeeId,`${url1}/clienttarget`)}
-if(TypeOfTarget==='Calls Target'){TargetDataDelete(EmployeeId,`${url1}/callstarget`)}
-if(TypeOfTarget==='Lead Target'){TargetDataDelete(EmployeeId,`${url1}/leadstarget`)}
-if(TypeOfTarget==='Renewals'){TargetDataDelete(EmployeeId,`${url1}/renewalstarget`)}
-if(TypeOfTarget==='Referral Leads'){TargetDataDelete(EmployeeId,`${url1}/referralsleadstarget`)}
-if(TargetValue ==='Media Target'){TargetDataDelete(EmployeeId,`${url1}/mediatarget`)}
+if(TypeOfTarget==="Sales Target"){TargetDataDelete(EmployeeId,`${url1}/salesTarget`)}
+if(TypeOfTarget==="Client Target"){TargetDataDelete(EmployeeId,`${url1}/clientTarget`)}
+if(TypeOfTarget==='Calls Target'){TargetDataDelete(EmployeeId,`${url1}/callsTarget`)}
+if(TypeOfTarget==='Lead Target'){TargetDataDelete(EmployeeId,`${url1}/leadsTarget`)}
+if(TypeOfTarget==='Renewals'){TargetDataDelete(EmployeeId,`${url1}/renewalsTarget`)}
+if(TypeOfTarget==='Referral Leads'){TargetDataDelete(EmployeeId,`${url1}/referralsLeadstarget`)}
+if(TypeOfTarget==='Media Target'){TargetDataDelete(EmployeeId,`${url1}/mediaTarget`)}
   getEmployeeTargetSheetData()
 }catch(error){
    console.error(error)

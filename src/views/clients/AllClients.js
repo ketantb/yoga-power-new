@@ -39,9 +39,9 @@ import ViewInvoice from 'src/components/ViewInvoice'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import CallUpdate from 'src/components/CallUpdate'
 import ClientEditForm from './ClientEditForm/ClientEditForm'
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 
 const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
@@ -49,6 +49,8 @@ const url2 = 'https://yog-seven.vercel.app'
 const AllClients = () => {
     const url1 = useSelector((el)=>el.domainOfApi) 
     const navigateFitnees = useNavigate()
+    const pathVal  = useAdminValidation()
+    const uniQObjVal = useUniqAdminObjeact()
 
     const [select, setSelect] = useState()
     const [followForm, setFollowForm] = useState()
@@ -114,7 +116,7 @@ const AllClients = () => {
     }, []);
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url1}/employeeform`, {
+        axios.get(`${url1}/employeeForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -131,15 +133,15 @@ const AllClients = () => {
 
     const [ogList, setOgList] = useState([])
     function getEnquiry() {
-        axios.get(`${url1}/memberForm/all`, {
+        axios.get(`${url1}/memberForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                 console.log(res.data)
-                setResult1(res.data.filter((list) => list.username === username).reverse())
-                setOgList(res.data.filter((list) => list.username === username).reverse())
+                setResult1(res.data.filter((list) => list).reverse())
+                setOgList(res.data.filter((list) => list).reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -251,20 +253,20 @@ const saveCalls = () => {
     Type_Of_Calls:' ',
     Discussion: discussion,
     Counseller:Counseller,  
-    Member_Id:followForm
+    Member_Id:followForm,
+    ...uniQObjVal
 }
 
-console.log(data)
   if(enquiryStage==='Upgrade Calls'){
-   postRequest('upgradecalls')
+   postRequest('upgradeCalls')
   }else if(enquiryStage==='Renewals Calls'){
-    postRequest('renewalscalls')
+   postRequest('renewalsCalls')
   }else if(enquiryStage==='Cross Cell Cals'){
-    postRequest('crosssalecalls')
+   postRequest('crosssaleCalls')
   }
 
 function postRequest(path){
-axios.post(`${url1}/${path}`, data, { headers:{
+axios.post(`${url1}/${path}/create`, data, { headers:{
         "Authorization": `Bearer ${token}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -283,7 +285,7 @@ axios.post(`${url1}/${path}`, data, { headers:{
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">All Clients <span className='float-end'>Total Clients 
-                        : {result1.filter((list) => list.username === username).length}</span></strong>
+                        : {result1.filter((list) => list).length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>
@@ -375,7 +377,7 @@ axios.post(`${url1}/${path}`, data, { headers:{
                                 >
                                     <option value=''>Select</option>
                                     {arr.filter((list) => list[filterBy] != '').map((item, index) => (
-                                        item.username === username && (
+                                         (
                                             <option key={index} value={item.id}>{item[filterBy]}</option>
                                         )
                                     ))}
@@ -440,7 +442,7 @@ axios.post(`${url1}/${path}`, data, { headers:{
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                  (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -458,8 +460,8 @@ axios.post(`${url1}/${path}`, data, { headers:{
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                                                   (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}</CFormSelect>
@@ -729,15 +731,23 @@ axios.post(`${url1}/${path}`, data, { headers:{
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            style={{ minWidth: "100px" }}
+                                            type="text"
+                                            disabled
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
                                 </CTableRow>
                                 {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                                    list.username === username
-                                    && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
+                                     list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                                     list.EnquiryType.toLowerCase().includes(Search5.toLowerCase()) &&
                                      list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && 
                                      list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                                 ).map((item, index) => {
-                                   return item.username === username && (
+                                   return  (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{ result1.length  -(index+ (paging * 10))}</CTableDataCell>
                                             <CTableDataCell>{item.ClientId}</CTableDataCell>
@@ -760,7 +770,7 @@ axios.post(`${url1}/${path}`, data, { headers:{
                                             <CTableDataCell>
                                                 <Link index={-1} style={{ textDecoration: 'none' }}
                                                  to={`/clients/member-details/${item._id}/5`}
-                                                  target="_black"><BsPlusCircle id={item._id}
+                                                  ><BsPlusCircle id={item._id}
                                                    style={{ cursor: 'pointer', markerStart: '10px' }} />
                                                    </Link>
                                                    </CTableDataCell>
@@ -800,19 +810,16 @@ axios.post(`${url1}/${path}`, data, { headers:{
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
                         {result1.filter((list) =>
-                            list.username === username
-                            && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
+                             list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                         {result1.filter((list) =>
-                            list.username === username
-                            && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
+                             list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                         {result1.filter((list) =>
-                            list.username === username
-                            && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
+                             list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>

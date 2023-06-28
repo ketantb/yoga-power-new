@@ -42,11 +42,14 @@ let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const username = user.user.username;
 
+import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 
 
 const PaymentCallsTable = ({visible,filterObj,id}) => {
 
     const url = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
+    const uniqObjectVal = useUniqAdminObjeact()
 
     const [AllInvoiceData,setAllInvoiceData] = useState([])
     const [visibalCallUpdateForm,setVisibalCallUpdateForm] = useState(false)
@@ -61,7 +64,7 @@ const PaymentCallsTable = ({visible,filterObj,id}) => {
 
 const getAllInvoiceData = async ()=>{
 
-        const {data} = await axios.get(`${url}/invoice/all`,{ 
+        const {data} = await axios.get(`${url}/invoice/${pathVal}`,{ 
                   headers: {
                       'Authorization': `Bearer ${token}`
                   }})
@@ -80,7 +83,7 @@ const getAllInvoiceData = async ()=>{
   },[])
 
   function getStaff() {
-    axios.get(`${url}/employeeform`, {
+    axios.get(`${url}/employeeForm/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -119,6 +122,7 @@ const getAllInvoiceData = async ()=>{
       clientName:uniqClient.MemberName ,
       phone: uniqClient.contact ,
       empolyeeId:emp._id,
+      ...uniqObjectVal
   }
   
 

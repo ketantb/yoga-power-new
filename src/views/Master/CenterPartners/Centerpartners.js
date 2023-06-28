@@ -399,7 +399,7 @@ const handlePrint = useReactToPrint({
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                                 <CTableRow >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
-                                    <CTableHeaderCell>Profile Logo</CTableHeaderCell>
+                                    <CTableHeaderCell>Brand Logo</CTableHeaderCell>
                                     <CTableHeaderCell>Center Name</CTableHeaderCell>
                                     <CTableHeaderCell>Center Code</CTableHeaderCell>
                                     <CTableHeaderCell>Email ID</CTableHeaderCell>

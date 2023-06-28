@@ -39,6 +39,7 @@ import React, { useState,useCallback,useEffect } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment  from  'moment/moment';
+import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
@@ -46,6 +47,9 @@ const username = user.user.username;
 
 
 const GreetingCall = ({visible,filterObj,id}) => {
+    
+    const pathVal = useAdminValidation()
+    const uniObjectVal = useUniqAdminObjeact()
 
     const url = useSelector((el)=>el.domainOfApi) 
     const [greatingCallsData,setgreatingCallsData] = useState([])
@@ -63,7 +67,7 @@ const GreetingCall = ({visible,filterObj,id}) => {
 
 
     function getStaff() {
-        axios.get(`${url}/employeeform`, {
+        axios.get(`${url}/employeeForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -77,7 +81,7 @@ const GreetingCall = ({visible,filterObj,id}) => {
     }
 
     function getAllMemberData() {
-        const urlPath = !id?`${url}/memberForm/all`:`${url}/memberForm/${id}`
+        const urlPath = !id?`${url}/memberForm/${pathVal}`:`${url}/memberForm/${id}`
 
         axios.get(urlPath, {
             headers: {
@@ -90,7 +94,7 @@ const GreetingCall = ({visible,filterObj,id}) => {
                     data =  [res.data]
                 }
 
-                const data1 =  getAge(data.filter((list) => list.username === username ).reverse())
+                const data1 =  getAge(data.filter((list) => list).reverse())
                 data.sort((b,a)=>(a.allTotalOfBartDay-a.totalDaysOfBarthDay)-(b.allTotalOfBartDay-b.totalDaysOfBarthDay))
                 const dataDoneBirthDay = data1.filter((el)=>(el.allTotalOfBartDay-el.totalDaysOfBarthDay)<0)
                 const dataBirthDay = data1.filter((el)=>(el.allTotalOfBartDay-el.totalDaysOfBarthDay)>=0).reverse()
@@ -146,6 +150,7 @@ const saveCallUpDate = async ()=>{
        clientName:uniqClient.Fullname,
        phone: uniqClient.ContactNumber,
        empolyeeId:emp._id,
+       ...uniObjectVal
 }
     axios.post(`${url}/memberForm/update/${followupId}`,obj, { headers },
         )
@@ -265,7 +270,7 @@ if(0<= val && val<=7){
                onChange={(e)=>setUpdateForm(prev=>({...prev,greetingFollowupby:e.target.value}))}
                >
                           <option>Select Assign Staff</option>
-                          {staff.filter((list) => list.username === username &&
+                          {staff.filter((list) =>
                               list.selected === 'Select').map((item, index) => (
                                   <option key={index} value={item._id} >{item.FullName}</option>
                               ))}

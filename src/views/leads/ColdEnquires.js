@@ -35,10 +35,14 @@ import { MdCall, MdDelete, MdEdit, MdMail } from 'react-icons/md'
 import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs'
 import moment from 'moment/moment'
 import AdmissionForm1 from 'src/components/AdmissionForm1'
-
 import { useSelector } from 'react-redux'
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 
 const ColdEnquires = () => {
+
+    const pathRoute = useAdminValidation()
+    const unikqValidateObj = useUniqAdminObjeact()
+
     var currentdate = new Date();
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
     var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
@@ -114,7 +118,7 @@ const ColdEnquires = () => {
     const [trialDate, setTrialDate] = useState("");
     const url1 = useSelector((el) => el.domainOfApi)
     const url = useSelector((el) => el.domainOfApi)
-const url2 = useSelector((el) => el.domainOfApi)
+    const url2 = useSelector((el) => el.domainOfApi)
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -134,7 +138,7 @@ const url2 = useSelector((el) => el.domainOfApi)
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/prospect/all`, {
+        axios.get(`${url}/prospect/${pathRoute}l`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -161,7 +165,7 @@ const url2 = useSelector((el) => el.domainOfApi)
     }, []);
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url2}/employeeform`, {
+        axios.get(`${url2}/employeeForm/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -509,14 +513,14 @@ const url2 = useSelector((el) => el.domainOfApi)
         })
     }
     function getEnquiry() {
-        axios.get(`${url1}/enquiryForm/all`, {
+        axios.get(`${url1}/enquiryForm/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                setResult1(res.data.filter((list) => list.username === username && list.CallStatus === 'Cold').reverse())
-                setOgList(res.data.filter((list) => list.username === username).reverse())
+                setResult1(res.data.filter((list) =>  list.CallStatus === 'Cold').reverse())
+                setOgList(res.data.filter((list) => list).reverse())
                 console.log(res.data);
             })
             .catch((error) => {
@@ -751,7 +755,7 @@ const url2 = useSelector((el) => el.domainOfApi)
                                 >
                                     <option value=''>Select</option>
                                     {arr.filter((list) => list[filterBy] != '').map((item, index) => (
-                                        item.username === username && (
+                                       (
                                             <option key={index} value={item.id}>{item[filterBy]}</option>
                                         )
                                     ))}
@@ -813,7 +817,7 @@ const url2 = useSelector((el) => el.domainOfApi)
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                  (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -943,7 +947,7 @@ const url2 = useSelector((el) => el.domainOfApi)
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                  (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -961,9 +965,9 @@ const url2 = useSelector((el) => el.domainOfApi)
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select')
+                                                {staff.filter((list) =>  list.selected === 'Select')
                                                 .map((item, index) => (
-                                                    item.username === username && (
+                                                  (
                                                         <option key={index} value={item._id} >{item.FullName}</option>
                                                     )
                                                 ))}</CFormSelect>
@@ -1345,7 +1349,7 @@ const url2 = useSelector((el) => el.domainOfApi)
                                                     >
                                                         <option>Select Service</option>
                                                         {result.map((item, index) => (
-                                                            item.username === username && (
+                                                          (
                                                                 item.status === true && (
                                                                     <option key={index} value={item.id}>{item.selected_service}</option>
                                                                 )
@@ -1446,8 +1450,8 @@ const url2 = useSelector((el) => el.domainOfApi)
                                                         label='Counseller'
                                                     >
                                                         <option>Select Counseller</option>
-                                                        {staff.filter((list) => list.username === username && list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
-                                                            item.username === username && (
+                                                        {staff.filter((list) => list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
+                                                             (
                                                                 <option key={index} value={item._id} >{item.FullName}</option>
                                                             )
                                                         ))}</CFormSelect>
@@ -1653,14 +1657,14 @@ const url2 = useSelector((el) => el.domainOfApi)
                                     </CTableDataCell>
                                 </CTableRow>
                                 {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                                    list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) &&
+                                   moment(list.createdAt).format("MM-DD-YYYY").includes(select) &&
                                      list.CallStatus === 'Cold' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
                                     list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && 
                                     list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && 
                                     list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                                     && list.StaffName.toLowerCase().includes(Search9.toLowerCase())
                                 ).map((item, index) => (
-                                    item.username === username && (
+                                    (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{item.EnquiryId}</CTableDataCell>
@@ -1692,18 +1696,18 @@ const url2 = useSelector((el) => el.domainOfApi)
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
                         {result1.filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
+                              moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                             && list.StaffName.toLowerCase().includes(Search9.toLowerCase())
                         ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                         {result1.filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
+                              moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                             && list.StaffName.toLowerCase().includes(Search9.toLowerCase())
                         ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                         {result1.filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
+                              moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                             && list.StaffName.toLowerCase().includes(Search9.toLowerCase())
                         ).length > (paging + 1) * 10 ?

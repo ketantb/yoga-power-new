@@ -18,12 +18,17 @@ import { useNavigate } from "react-router-dom";
 import { CountryList } from "src/components/CountryList";
 import { useSelector } from 'react-redux'
 import CustomSelectInput from "../Fitness/CustomSelectInput/CustomSelectInput";
+import { useAdminValidation,useUniqAdminObjeact} from "../Custom-hook/adminValidation";
 
 const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
 
 
 const EnquiryForm = () => {
+
+   const  uniqObj  = useUniqAdminObjeact()
+   const  pathVal = useAdminValidation()
+
     const url1 = useSelector((el)=>el.domainOfApi) 
 
     const [Fullname, setFullName] = useState("");  // 
@@ -88,15 +93,6 @@ const EnquiryForm = () => {
     const [leadArr, setLeadArr] = useState([]);
     const [mem, setMem] = useState([]);
     
-    const uniqObj  = {
-    empNameC:userInfo.username,
-    employeeIDC:'',
-    employeeUniqIdC:userInfo.emailUniqId,
-    centerNameC:userInfo.center,
-    centerCodeC:userInfo.centerCode,
-    adminNameC:userInfo.createdBy,
-    emIdback:userInfo.createrId,
-    }
 
 
     useEffect(() => {
@@ -117,7 +113,7 @@ const EnquiryForm = () => {
                 console.error(error)
             })
 
-        axios.get(`${url1}/enquiryForm/all`, {
+        axios.get(`${url1}/enquiryForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -148,7 +144,7 @@ const EnquiryForm = () => {
     }
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url1}/employeeform`, {
+        axios.get(`${url1}/employeeform/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -457,8 +453,8 @@ return
                                         onChange={(e) => setStaffName(e.target.value)}
                                     >
                                         <option value={''}>Select Staff Name</option>
-                                        {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                            item.username === username && (
+                                        {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                                            (
                                                 <option key={index}>{item.FullName}</option>
                                             )
                                         ))}
@@ -476,8 +472,8 @@ return
                                         label='Counseller'
                                     >
                                         <option value={''}>Select Counseller</option>
-                                        {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                            item.username === username && (
+                                        {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                                             (
                                                 <option key={index}>{item.FullName}</option>
                                             )
                                         ))}</CFormSelect>
@@ -619,7 +615,7 @@ return
                                     >
                                         <option value={''}>Select Service</option>
                                         {result.map((item) => (
-                                            item.username === username && (item.Status=== true && (item.Service.toLocaleLowerCase().trim()))))
+                                            (item.Status=== true && (item.Service.toLocaleLowerCase().trim()))))
                                             .filter((el,i,arr)=>i===arr.indexOf(el)).map((Service,ind)=>{
                                               return   <option key={ind}>{Service }</option>                                                  
                                             })
@@ -641,7 +637,7 @@ return
                                         {result.filter((list) =>
                                             list.Service.toLocaleLowerCase().trim()=== ServiceName
                                         ).map((item, index) => (
-                                            item.username === username && (
+                                             (
                                                 item.Status === true && (
                                                     <option key={index}>{item.Package_Name }</option>
                                                 )
@@ -661,8 +657,8 @@ return
                                         label="Enquiry Source"
                                     >
                                         <option value={''}>Select Enquiry source</option>
-                                        {leadArr.filter((list) => list.username === username).map((item, index) => (
-                                            item.username === username && (
+                                        {leadArr.map((item, index) => (
+                                             (
                                                 <option key={index}>{item.LeadSource}</option>
                                             )
                                         ))}</CFormSelect>

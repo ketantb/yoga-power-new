@@ -35,8 +35,9 @@ import { MdCall, MdDelete, MdEdit, MdMail } from 'react-icons/md'
 import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs'
 import moment from 'moment/moment'
 import AdmissionForm1 from 'src/components/AdmissionForm1'
-
+useAdminValidation
 import { useSelector } from 'react-redux'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 const TrialEnquires = () => {
     const url1 = useSelector((el) => el.domainOfApi)
@@ -48,8 +49,8 @@ const TrialEnquires = () => {
     var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
     var year = currentdate.getFullYear();
 
-    console.log(month + 1);
-    console.log(day);
+    const pathRoute = useAdminValidation()
+
     const [select, setSelect] = useState('')
     const [followForm, setFollowForm] = useState()
     const [admissionForm, setAdmissionForm] = useState(false)
@@ -130,7 +131,7 @@ const TrialEnquires = () => {
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/prospect/all`, {
+        axios.get(`${url}/prospect/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -157,7 +158,7 @@ const TrialEnquires = () => {
     }, []);
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url2}/employeeForm/all`, {
+        axios.get(`${url2}/employeeForm/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -200,7 +201,8 @@ const TrialEnquires = () => {
             Fullname, Emailaddress, ContactNumber, Gander, DateofBirth, address, Area, city, Profession,
             StaffName, CenterName, CallStatus, Message,
             person_Name, Relation, ContactNumber2: ContactNumber2,
-            EnquiryDate, ServiceName, Customertype, enquirytype, appointmentDate, appointmentTime, appointmentfor: appointmentfor, Counseller: counseller, trialDate: trialDate, status: "all_enquiry",
+            EnquiryDate, ServiceName, Customertype, enquirytype, appointmentDate,
+             appointmentTime, appointmentfor: appointmentfor, Counseller: Counseller, trialDate: trialDate, status: "all_enquiry",
         }
 
         fetch(`${url1}/enquiryForm/update/${edit}`, {
@@ -259,7 +261,7 @@ const TrialEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...uniqObjeact,...data2})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -297,7 +299,7 @@ const TrialEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...uniqObjeact,...data2})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -320,7 +322,7 @@ const TrialEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...uniqObjeact,...data2})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -350,7 +352,7 @@ const TrialEnquires = () => {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({...uniqObjeact,...data})
                 }).then((resp) => {
                     resp.json().then(() => {
                         setVisible(false)
@@ -412,7 +414,7 @@ const TrialEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...uniqObjeact,...data2})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -444,7 +446,7 @@ const TrialEnquires = () => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({...uniqObjeact,...data})
         }).then((resp) => {
             resp.json().then(() => {
                 setVisible(false)
@@ -469,7 +471,7 @@ const TrialEnquires = () => {
     }
     const [ogList, setOgList] = useState([])
     function getEnquiry() {
-        axios.get(`${url1}/enquiryForm/all`, {
+        axios.get(`${url1}/enquiryForm/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

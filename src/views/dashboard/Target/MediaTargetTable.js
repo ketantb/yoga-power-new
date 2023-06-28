@@ -43,6 +43,7 @@ function MeadiaTargetTable({EmployeeData}) {
     const getLiveClasses = useCallback(async function () {
         try {
             const response7 = await axios.get(`${ url }/mediatarget`)
+            console.log(response7)
             setMediaTarget(response7.data)
         } catch (error) {
             console.error(error)

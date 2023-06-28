@@ -31,8 +31,9 @@ import {
     CFormSwitch
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
-import CustomSelectInput from 'src/views/Master/HRMaster/CustomSelectInput/CustomSelectInput'
 import axios from 'axios'
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
+
 const LoginList = ({admin}) => {
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -40,7 +41,7 @@ const LoginList = ({admin}) => {
     const {username,centerCode,center,emailUniqId,startDate,expDate,brandLogo} = user.user;
 
    const url = useSelector((el)=>el.domainOfApi) 
-
+   const pathName = useAdminValidation()
 
    const headers = {
     "Authorization": `Bearer ${token}`,
@@ -96,7 +97,7 @@ const LoginList = ({admin}) => {
 
 
   function getAllEmailIdList(){
-    axios.get(`${url}/signup/all`, {headers})
+    axios.get(`${url}/signup/${pathName}`, {headers})
         .then((res) => {
           if(res.status===200){
             console.log(res.data)
@@ -250,10 +251,21 @@ const LoginList = ({admin}) => {
                 </CCol>
                 
                 <CCol lg={4} md={6} >
-                    <CFormInput type='text'  label='Center Name' value={emailObj.center} onChange={(e)=> setEmailObj(prev=>({...prev,center:e.target.value}))} />
+                    <CFormInput type='text'  label='Center Name' value={emailObj.center} onChange={(e)=> setEmailObj(prev=>{
+                      if(!admin){
+                       return prev
+                      }
+                     return  {...prev,center:e.target.value}
+            
+                    })}/>
                 </CCol>
                 <CCol lg={4} md={6} >
-                    <CFormInput type='text' label='Center Code' value={emailObj.centerCode} onChange={(e)=> setEmailObj(prev=>({...prev,centerCode:e.target.value}))}/>
+                    <CFormInput type='text' label='Center Code' value={emailObj.centerCode} onChange={(e)=> setEmailObj(prev=>{
+                       if(!admin){
+                        return prev
+                       }
+                       return  {...prev,centerCode:e.target.value}
+                      })}/>
                 </CCol>
                 <CCol lg={4} md={6} >
                 

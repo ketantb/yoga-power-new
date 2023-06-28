@@ -37,14 +37,14 @@ import React, { useState,useCallback,useEffect } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment  from  'moment/moment';
+import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 
-let user = JSON.parse(localStorage.getItem('user-info'))
-const token = user.token;
-const username = user.user.username;
 
 
 const WelcomeCalls = ({visible,filterObj,id}) => {
     const url = useSelector((el)=>el.domainOfApi) 
+    const pathVal  =  useAdminValidation()
+    const uniObjVal = useUniqAdminObjeact()
 
 
     const [welcomecallsData,setWelcomeCallsData] = useState([])
@@ -78,7 +78,7 @@ const WelcomeCalls = ({visible,filterObj,id}) => {
  console.log(id)
 
     function getAllMemberData() {
-        const urlPath = !id?`${url}/memberForm/all`:`${url}/memberForm/${id}`
+        const urlPath = !id?`${url}/memberForm/${pathVal}`:`${url}/memberForm/${id}`
 
         axios.get(urlPath, {
             headers: {
@@ -106,7 +106,7 @@ const WelcomeCalls = ({visible,filterObj,id}) => {
 
 
     function getStaff() {
-        axios.get(`${url}/employeeform`, {
+        axios.get(`${url}/employeeForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -148,6 +148,7 @@ const WelcomeCalls = ({visible,filterObj,id}) => {
             clientName:uniqClient.Fullname,
             phone: uniqClient.ContactNumber,
             empolyeeId:emp._id,
+            ...uniObjVal
         }
 
 
@@ -214,7 +215,7 @@ const WelcomeCalls = ({visible,filterObj,id}) => {
                onChange={(e)=>setUpdateForm(prev=>({...prev,wellComeCallFollowupby:e.target.value}))}
                >
                           <option>Select Assign Staff</option>
-                          {staff.filter((list) => list.username === username &&
+                          {staff.filter((list) => 
                               list.selected === 'Select').map((item, index) => (
                                   <option key={index} value={item._id} >{item.FullName}</option>
                               ))}

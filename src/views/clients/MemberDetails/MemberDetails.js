@@ -104,8 +104,8 @@ const MemberDetails = () => {
                                 { id: '10', heading: 'Docs', com: <Documents id={id} /> },
                                 { id: '11', heading: 'T&C', com: <Teams id={id} /> },
 
-                            ].map((item, index) => (
-                                <CTabPane key={index} role="tabpanel" aria-labelledby="home-tab" visible={activeKey - 1 === index}>
+                            ].filter((el,i)=>(+el.id===+activeKey)).map((item, index) => (
+                                <CTabPane key={index} role="tabpanel" aria-labelledby="home-tab" visible={true}>
                                     {item.com}
                                 </CTabPane>
                             ))}

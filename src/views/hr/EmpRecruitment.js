@@ -32,9 +32,12 @@ import EmployeeForm from '../forms/EmployeeForm';
 import axios from 'axios';
 import moment from 'moment';
 import { useReactToPrint } from 'react-to-print';
+import { useAdminValidation} from '../Custom-hook/adminValidation';
 
 const EmpRecruitment = () => {
     const url = useSelector((el)=>el.domainOfApi) 
+
+    const pathName = useAdminValidation()
 
     const [Search1, setSearch1] = useState('')
     const [Search2, setSearch2] = useState('')
@@ -57,6 +60,15 @@ const EmpRecruitment = () => {
     const token = user.token;
     const username = user.user.username;
     const centerCode = user.user.centerCode;
+
+    const headers = {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    }
+
     const [result1, setResult1] = useState([]);
     const [paging, setPaging] = useState(0);
     useEffect(() => {
@@ -77,7 +89,7 @@ const EmpRecruitment = () => {
 
 
     function getStaff() {
-        axios.get(`${url}/employeeform`)
+        axios.get(`${url}/employeeform/${pathName}`,headers)
             .then((res) => {
                 setStaff(res.data.reverse())
                
@@ -89,12 +101,9 @@ const EmpRecruitment = () => {
 
     function deleteEnquiry(id) {
         if (confirm('Do you want to delete this')) {
-            fetch(`${url}/employeeform/${id}`, {
+            fetch(`${url}/employeeform/delete/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
+                ...headers
             }).then((result) => {
                 result.json().then((resp) => {
                     console.warn(resp)
@@ -120,11 +129,7 @@ const EmpRecruitment = () => {
 
         fetch(`${url}/employeeform/${id}`, {
             method: "PUT",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
+            ...headers,
             body: JSON.stringify({...item,...data1})
         }).then((resp) => {
             resp.json().then(() => {

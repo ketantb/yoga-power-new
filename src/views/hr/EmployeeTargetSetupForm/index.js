@@ -6,11 +6,27 @@ import {
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
 
 function EmployeeTargetSetupForm({ closeForm, getEmployeeTargetSheetData ,data }) {
+
     const url1 = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation()
+    const uniqObjVal  = useUniqAdminObjeact()
+
     let user = JSON.parse(localStorage.getItem('user-info'))
     const username = user.user.username;
+    const token = user.token;
+
+      
+
+    const headers = {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    }
 
     const [TargetValue, setTargetValue] = useState('')
     const [employeeData, setEmployeeData] = useState([])
@@ -38,7 +54,8 @@ function EmployeeTargetSetupForm({ closeForm, getEmployeeTargetSheetData ,data }
 
     async function getEmployee() {
         try {
-            const { data } = await axios.get(`${ url1 }/employeeform`)
+            const { data } = await axios.get(`${url1}/employeeform/${pathVal}`,headers)
+            console.log(data)
             setEmployeeData(data)
         } catch (error) {
             console.log(error)
@@ -55,7 +72,8 @@ function EmployeeTargetSetupForm({ closeForm, getEmployeeTargetSheetData ,data }
         "Type_Of_Target": TargetValue,
         "Year": year,
         "Id": selectedEmployee.split('---')[1],
-        "TargetValue": TargetValue
+        "TargetValue": TargetValue,
+        ...uniqObjVal
     }
 
     const MonthData = {
@@ -129,20 +147,14 @@ if(!UserData){
 async function saveTargetSheetData() {
     const SaveParentApiData = async  () =>{
         if(UserData?.TargetValue===TargetValue){
-            await axios.put(`${ url1 }/employeetargetsheet/${UserData._id}`, JSON.stringify(PostData), {
-                    headers: {
-                       'Content-Type': 'application/json'
-                   }
-            }).then((res)=>{
+            await axios.post(`${ url1 }/employeeTargetSheet/update/${UserData._id}`, JSON.stringify(PostData),headers
+            ).then((res)=>{
                 ChildApiRequest() 
                 getEmployeeTargetSheetData()
             })   
             }else{
-            await axios.post(`${ url1 }/employeetargetsheet`, JSON.stringify(PostData), {
-                 headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then((res)=>{
+            await axios.post(`${url1}/employeeTargetSheet/create`, JSON.stringify(PostData), headers
+            ).then((res)=>{
                 ChildApiRequest() 
                 getEmployeeTargetSheetData()
             })
@@ -159,15 +171,11 @@ SaveParentApiData()
 
 async function  PutRequesToNestedApi (url,data1,id){
     console.log(url,data1,id)
-   await axios.get(url).then(({data})=>{
+   await axios.get(`${url}/all`,headers).then(({data})=>{
     const Data2 = [...data].find((el)=>el.Sr_No===id)
     if(Data2){
         async function Put (){
-         await axios.put(`${url}/${Data2._id}`,JSON.stringify({...data,...data1}),{
-            headers: {
-                'Content-Type': 'application/json'
-            }        
-        }).then((res)=>{
+         await axios.post(`${url}/update/${Data2._id}`,JSON.stringify({...data,...data1}),headers).then((res)=>{
             alert('SuccessFully Save')
             arrMonthData = []
         })          
@@ -180,11 +188,7 @@ async function  PutRequesToNestedApi (url,data1,id){
         // Sales Target Api scope 
 
 async function  PostRequesToNestedApi (url,data){
-    await axios.post(url,JSON.stringify(data), {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-    }).then(({data})=>{
+    await axios.post(url,JSON.stringify(data), headers).then(({data})=>{
         alert('SuccessFully Save')
                 arrMonthData = []
     })    
@@ -209,13 +213,14 @@ function ChildApiRequest(){
                 "Achived": "0",
                 "annualTarget": [
                     ...arrMonthData
-                ]
+                ],
+                ...uniqObjVal
             }
 
             if(UserData?.TargetValue===TargetValue){
-                PutRequesToNestedApi(`${ url1 }/salestarget`,data,UserData.Id)
+                PutRequesToNestedApi(`${ url1 }/salesTarget`,data,UserData.Id)
             }else{
-                PostRequesToNestedApi(`${ url1 }/salestarget`,data)
+                PostRequesToNestedApi(`${ url1 }/salesTarget/create`,data)
                 console.log("hello")
             }
         }
@@ -237,14 +242,15 @@ function ChildApiRequest(){
                 "Achived": " ",
                 "annualTarget": [
                     ...arrMonthData
-                ]
+                ],
+                ...uniqObjVal
             }
 
           
             if(UserData?.TargetValue===TargetValue){
-                PutRequesToNestedApi(`${url1}/clienttarget`,data,UserData.Id)
+                PutRequesToNestedApi(`${url1}/clientTarget`,data,UserData.Id)
             }else{
-                PostRequesToNestedApi(`${url1}/clienttarget`,data)
+                PostRequesToNestedApi(`${url1}/clientTarget/create`,data)
             }
 
         }
@@ -263,13 +269,14 @@ function ChildApiRequest(){
                 "__v": 0,
                 "annualTarget": [
                     ...arrMonthData
-                ]
+                ],
+                ...uniqObjVal
             }
 
             if(UserData?.TargetValue===TargetValue){
-                PutRequesToNestedApi(`${url1}/callstarget`,data,UserData.Id)
+                PutRequesToNestedApi(`${url1}/callsTarget`,data,UserData.Id)
             }else{
-                PostRequesToNestedApi(`${url1}/callstarget`,data)
+                PostRequesToNestedApi(`${url1}/callsTarget/create`,data)
             }
 
         }
@@ -287,14 +294,15 @@ function ChildApiRequest(){
                 "Achived": "0",
                 "annualTarget": [
                     ...arrMonthData
-                ]
+                ],
+                ...uniqObjVal
 
             }
 
             if(UserData?.TargetValue===TargetValue){
-                PutRequesToNestedApi(`${url1}/leadstarget`,data,UserData.Id)
+                PutRequesToNestedApi(`${url1}/leadsTarget`,data,UserData.Id)
             }else{
-                PostRequesToNestedApi(`${url1}/leadstarget`,data)
+                PostRequesToNestedApi(`${url1}/leadsTarget/create`,data)
             }
 
         }
@@ -314,13 +322,14 @@ function ChildApiRequest(){
                 "Achived": "0",
                 "annualTarget": [
                     ...arrMonthData
-                ]
+                ],
+                ...uniqObjVal
             }
 
             if(UserData?.TargetValue===TargetValue){
-                PutRequesToNestedApi(`${url1}/renewalstarget`,data,UserData.Id)
+                PutRequesToNestedApi(`${url1}/renewalsTarget`,data,UserData.Id)
             }else{
-                PostRequesToNestedApi(`${url1}/renewalstarget`,data)
+                PostRequesToNestedApi(`${url1}/renewalsTarget/create`,data)
             }
 
         }
@@ -339,13 +348,14 @@ function ChildApiRequest(){
                 "Achived": "0",
                 "annualTarget": [
                     ...arrMonthData
-                ]
+                ],
+                ...uniqObjVal
             }         
 
             if(UserData?.TargetValue===TargetValue){
-                PutRequesToNestedApi(`${url1}/referralsleadstarget`,data,UserData.Id)
+                PutRequesToNestedApi(`${url1}/referralsLeadstarget`,data,UserData.Id)
             }else{
-                PostRequesToNestedApi(`${url1}/referralsleadstarget`,data)
+                PostRequesToNestedApi(`${url1}/referralsleadstarget/create`,data)
             }
 
         }
@@ -365,14 +375,15 @@ function ChildApiRequest(){
                 "__v": 0,
                 "annualTarget": [
                     ...arrMonthData
-                ]
+                ],
+                ...uniqObjVal
             }
           
 
             if(UserData?.TargetValue===TargetValue){
-                PutRequesToNestedApi(`${url1}/mediatarget`,data,UserData.Id)
+                PutRequesToNestedApi(`${url1}/mediaTarget`,data,UserData.Id)
             }else{
-                PostRequesToNestedApi(`${url1}/mediatarget`,data)
+                PostRequesToNestedApi(`${url1}/mediaTarget/create`,data)
             }
 
         }
@@ -381,21 +392,6 @@ function ChildApiRequest(){
 
         // Ton Upadte and Clear After SuccessFully Save 
         getEmployeeTargetSheetData()
-        // setMonthIput1('0')
-        // setMonthIput2('0')
-        // setMonthIput3('0')
-        // setMonthIput4('0')
-        // setMonthIput5('0')
-        // setMonthIput6('0')
-        // setMonthIput7('0')
-        // setMonthIput8('0')
-        // setMonthIput9('0')
-        // setMonthIput10('0')
-        // setMonthIput11('0')
-        // setMonthIput12('0')
-        // setTargetValue('0')
-        // setSselectedEmployee('0')
-        // setYear('0')
     }
 
 
@@ -418,8 +414,8 @@ function ChildApiRequest(){
                 >
                     <option >Select Your Employee </option>
 
-                    {employeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
+                    {employeeData.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                         (
                             <option key={index} value={`${ item.FullName }---${ item._id }`} >{item.FullName}</option>
                         )
                     ))}

@@ -33,6 +33,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 import { useSelector } from 'react-redux'
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 const EmployeeProfile = React.lazy(()=>import('./Hr-Employee-Details/Tables/EmployeeProfile'))
 
@@ -41,6 +42,8 @@ const url2 = 'https://yog-seven.vercel.app'
 
 const AllEmpProfile = () => {
     const url = useSelector((el)=>el.domainOfApi) 
+    const pathName = useAdminValidation()
+
 
     const [Search1, setSearch1] = useState('')
     const [Search2, setSearch2] = useState('')
@@ -91,6 +94,15 @@ const AllEmpProfile = () => {
     const token = user.token;
     const username = user.user.username;
     const centerCode = user.user.centerCode;
+
+    const headers = {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    }
+
     const [result1, setResult1] = useState([]);
     const [paging, setPaging] = useState(0);
     console.log(token);
@@ -100,7 +112,7 @@ const AllEmpProfile = () => {
 
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url}/employeeform`)
+        axios.get(`${url}/employeeform/${pathName}`,headers)
             .then((res) => {
                 setStaff(res.data.reverse())
             })
@@ -113,12 +125,9 @@ const AllEmpProfile = () => {
     function deleteEnquiry(id) {
 
         if (confirm('Do you want to delete this')) {
-            fetch(`${url}/employeeform/${id}`, {
+            fetch(`${url}/employeeform/delete/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
+                ...headers,
             }).then((result) => {
                 result.json().then((resp) => {
                     console.warn(resp)
@@ -132,10 +141,7 @@ const AllEmpProfile = () => {
         const data1 =  {...data,...{ status: status }}
         fetch(`${url}/employeeform/${data._id}`, {
             method: "PUT",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
+            ...headers,
             body: JSON.stringify(data1)
         }).then((resp) => {
             resp.json().then(() => {

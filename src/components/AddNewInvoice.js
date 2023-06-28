@@ -26,8 +26,11 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import logo from 'src/assets/images/avatars/icon.png'
 import { useSelector } from 'react-redux'
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 function AddNewInvoice({id,data23,viewInvoice,setViewInvoice,getDetails}){
+
+ const pathVal = useAdminValidation()   
 
  const RenewedObj  = [data23].find((list) =>{
         const time =  (new Date(data23.endDate) -new Date())
@@ -64,7 +67,7 @@ function AddNewInvoice({id,data23,viewInvoice,setViewInvoice,getDetails}){
     const [errorMessage,setErrorMessage] = useState('')
 
 
-    
+    const uniqObjeact = useUniqAdminObjeact()
 
     const [visi, setVisi] = useState(false);
     const [mem, setMem] = useState([]);
@@ -85,7 +88,7 @@ function AddNewInvoice({id,data23,viewInvoice,setViewInvoice,getDetails}){
     };
     
  const getInvoiceNoFun =async ()=>{
-      await  axios.get(`${url1}/invoice/all`,{headers}).then(({data})=>{
+      await  axios.get(`${url1}/invoice/${pathVal}`,{headers}).then(({data})=>{
         setInvoice(data.length)
       })
      }
@@ -136,7 +139,7 @@ return
         date: datetime,
         centerName: centerCode,
         InvoiceNo: `INV${invoiceNum}`,
-        id: id, MemberName:`${data23?.Fullname}`,
+        MemberId: id, MemberName:`${data23?.Fullname}`,
         ServiceName: ser1, PackageName: ser6,
         duration: ser2, fees: ser3, startDate, endDate,
         counseller: selectedStaff?.FullName, trainer: GeneralTrainer,
@@ -146,6 +149,7 @@ return
         clientId:`${data23?.ClientId}`,
         upgrade:(RenewedObj?true:false),
         EmployeeId:selectedStaff?._id, 
+        ...uniqObjeact
     }
 
     const headers = {
@@ -186,7 +190,7 @@ return
 
 const [staff, setStaff] = useState([])
 function getStaff() {
-    axios.get(`${url1}/employeeform`, {
+    axios.get(`${url1}/employeeForm/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -461,7 +465,7 @@ setServiceDays(el.Days)
                         >
                             <option>Select Fees</option>
                             {[...subService.filter((el)=>{
-            return el.username === username && el.Service=== ser1                                    
+            return   el.Service=== ser1                                    
             })].map((el,i)=><option key={i}>{el.Fees
 
                 }</option>)
