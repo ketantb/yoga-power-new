@@ -47,6 +47,7 @@ import useAttendance from './AttendanceHook/useAttendance'
 import useMonthlyReport from './AttendanceHook/useMonthlyReport'
 import useDailyBatchAtten from './AttendanceHook/useDailyBatchAtten'
 import { trainerSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 const AllBatches = () => {
      const updateAttendance = useAttendance()
@@ -57,6 +58,8 @@ const AllBatches = () => {
 
 
      const url = useSelector((el)=>el.domainOfApi) 
+     const pathVal = useAdminValidation()
+
      const [selectedMonth,setMonth] = useState(new Date().getMonth())
      const [selectedYear,setYear] = useState(new Date().getFullYear())
      const [dateOfAMonth,setDateOfMonth] = useState([])
@@ -88,8 +91,8 @@ const AllBatches = () => {
 
     const  getAllBatches = useCallback(async function() {
         try{
-        const response1 =  axios.get(`${url}/clientAttendance/all`,{ headers: {'Authorization': `Bearer ${token}`}})       
-        const response2 =  axios.get(`${url}/memberForm/all`,{ headers: {'Authorization': `Bearer ${token}`}})
+        const response1 =  axios.get(`${url}/clientAttendance/${pathVal}`,{ headers: {'Authorization': `Bearer ${token}`}})       
+        const response2 =  axios.get(`${url}/memberForm/${pathVal}`,{ headers: {'Authorization': `Bearer ${token}`}})
     
         const  data   = await  Promise.all([response1,response2])
 

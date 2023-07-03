@@ -55,9 +55,9 @@ const GuestList1 = () => {
     const token = user.token;
     const username = user.user.username;
     const centerCode = user.user.centerCode;
-    useEffect(() => {
-        getImpCall()
-    }, [])
+    // useEffect(() => {
+    //     getImpCall()
+    // }, [])
 
     function getImpCall() {
         axios.get(`${url}/stockListing/all`, {
@@ -67,7 +67,6 @@ const GuestList1 = () => {
         })
             .then((res) => {
                 setResult1(res.data)
-                console.log(res.data);
             })
             .catch((error) => {
                 console.error(error)

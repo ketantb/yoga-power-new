@@ -29,6 +29,7 @@ console.log(user);
 const token = user.token;
 const username = user.user.username;
 import axios from 'axios'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 const DSRreport = () => {
     let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     var monthNaame= ["January","February","March","April","May","June","July",
@@ -41,6 +42,7 @@ const [years,setYears]= useState([])
 const [selectedYear,setSelectedYear] = useState('')
 const [month,setMonth] = useState('')
 
+const pathVal = useAdminValidation()
 
    const allDsrReport = [] 
    let num =0
@@ -121,11 +123,11 @@ const compareData  = (startDate,breakDate)=>{
 
 
     const getDsrReportData =async ()=>{
-        const response1 =   axios.get(`${url1}/enquiryForm/all`,header)
-        const response2 =   axios.get(`${url1}/invoice/all`,header)
-        const response3 =   axios.get(`${url1}/memberForm/all`,header)
-        const response4 =   axios.get(`${url1}/employeeform`,header)
-        const response5 =   axios.get(`${url1}/dailyexpense`,header)
+        const response1 =   axios.get(`${url1}/enquiryForm/${pathVal}`,header)
+        const response2 =   axios.get(`${url1}/invoice/${pathVal}`,header)
+        const response3 =   axios.get(`${url1}/memberForm/${pathVal}`,header)
+        const response4 =   axios.get(`${url1}/employeeform/${pathVal}`,header)
+        const response5 =   axios.get(`${url1}/dailyExpence/${pathVal}`,header)
 
           
         const AllApiData = await  Promise.all([response1,response2,response3,response4,response5])
@@ -192,7 +194,7 @@ let holdRenewedInfo = [{createdAt:'',noOfRenewed:0,totalColAmount:0}]
                el.existingLeads =noOfExistingLeadsLeads
                el.noOfConversion = leadNoOfConversion
 
-// Dsr Report of All Client 
+//  of All Client 
              let noOfRenewed = 0;
              let totalColAmount = 0
              let invoiceAmount = 0

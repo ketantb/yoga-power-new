@@ -3,6 +3,8 @@ import { CCol, CFormInput, CRow, CButton, CCard,CContainer } from '@coreui/react
 import React, { useState,useCallback,useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
+import { useUniqAdminObjeact,useAdminValidation } from "../Custom-hook/adminValidation";
+
 
 const CreateTask = () => {
   const url = useSelector((el)=>el.domainOfApi) 
@@ -16,7 +18,21 @@ const CreateTask = () => {
 
   const CurrentDate = new Date()
 
+  let user = JSON.parse(localStorage.getItem('user-info'))
+  const token = user.token;
 
+  const pathVal = useAdminValidation()
+  const uniqObjVal = useUniqAdminObjeact()
+
+
+
+  const headers = {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    }
+}
 
   const [TaskData, setTaskData] = useState([
     {
@@ -27,7 +43,8 @@ const CreateTask = () => {
         userName: "Welcome! Back Let's Create a Task To Members",
         userTime: '0:00',
         selectedTask: ""
-      }]
+      }],
+      ...uniqObjVal
     }
   ])
 
@@ -36,9 +53,7 @@ const CreateTask = () => {
       try{
 
        const response = 
-       await axios.get(`${url}/calender`)
-       console.log(response)
-  
+       await axios.get(`${url}/callender/${pathVal}`,headers)  
        setTaskData(response.data)
       }catch(error) {
                 console.error(error)
@@ -52,7 +67,7 @@ const CreateTask = () => {
 
 const  sendUpdatedCalenderData =   useCallback(async function(obj,id) {
   try{
-   const response = await axios.put(`${url}/calenders/${id}`,obj)
+   const response = await axios.post(`${url}/callender/update/${id}`,obj,headers)
    if(response.statusText==="OK")
    getCalenderData()
   }catch(error) {
@@ -65,16 +80,13 @@ const  sendUpdatedCalenderData =   useCallback(async function(obj,id) {
 const  postCalenderData =   useCallback(async function(obj) {
   console.log("sendApi", obj)
   try{
-   const response = await axios.post(`${url}/calender`,obj)
-   console.log(response)
+   const response = await axios.post(`${url}/callender/create`,obj,headers)
    if(response.statusText==="OK")
    getCalenderData()
   }catch(error) {
       console.error(error)
     }
 },[])
-
-console.log(TaskData)
 
 
   const toggaleFun = () => {
@@ -269,7 +281,7 @@ console.log(TaskData)
           key={i}
         />
       }
-      ) : <h4 className='m-2' style={{ color: '#f9b115' }}>No task allocated to match this search  please enter different date</h4>}
+      ) : <h4 className='m-2' style={{ color: '#f9b115' }}>No task allocated </h4>}
 
     </>
   )

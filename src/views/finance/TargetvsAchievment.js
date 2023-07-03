@@ -23,6 +23,7 @@ import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -37,6 +38,7 @@ const allMonthName  = ["Jan","Feb","March","April","May","June","July","August",
 const TargetvsAchievment = () => {
 
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation('Master')
     const [targetVsAchiveMent,setTargetVsAchiveMent] = useState([])
 
     const centerName =  centerCode  ==='VM'?"(V-mall Thakur Complex)":''  
@@ -66,10 +68,10 @@ const TargetvsAchievment = () => {
     
     async function getRevenueTarget(){  
     try{  
-    const response1 =   axios.get(`${url1}/employeetargetsheet`,{ headers: {
+    const response1 =   axios.get(`${url1}/employeeTargetSheet/${pathVal}`,{ headers: {
         'Authorization': `Bearer ${token}`
     }})
-    const response2 =   axios.get(`${url1}/invoice/all`,{ headers: {
+    const response2 =   axios.get(`${url1}/invoice/${pathVal}`,{ headers: {
         'Authorization': `Bearer ${token}`
     }})
 

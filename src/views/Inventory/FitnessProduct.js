@@ -11,11 +11,13 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-
+import { useAdminValidation } from "../Custom-hook/adminValidation";
 const ClothesProduct = () => {
 
     
     const [result1, setResult1] = useState([])
+
+    const pathVal =  useAdminValidation()
 
     const [search1, setSearch1] = useState('')
     const [search2, setSearch2] = useState('')
@@ -39,7 +41,7 @@ const ClothesProduct = () => {
 
 
     function getImpCall() {
-        axios.get(`${url}/stockorderlist-status-received-stock/Fitness Product`, {
+        axios.get(`${url}/stockorderlist-status-received-stock/${pathVal}/Fitness Product`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

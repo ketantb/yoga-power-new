@@ -5,7 +5,7 @@ const SMSMarketing = () => {
     return (
         <CCard>
             <CCardHeader>
-                <CCardTitle>SMS Marketing</CCardTitle>
+                <CCardTitle></CCardTitle>
             </CCardHeader>
             <CCardBody>
                 <CForm>

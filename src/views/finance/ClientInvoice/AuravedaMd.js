@@ -29,12 +29,14 @@ import { useSelector,useDispatch} from 'react-redux'
 import useAddProduct from './customHook/useAddProduct';
 import useIncrementNoOfItem from './customHook/useIncrementNoOfItme';
 import useInputItemVal from './customHook/useInputItemVal';
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 
 
 const AuravedaMD = () => {
 
     const url = useSelector((el)=>el.domainOfApi)  
+    const pathVal = useAdminValidation()
     const dispatch = useDispatch()
 
 
@@ -72,7 +74,7 @@ const AuravedaMD = () => {
 
     
     function getStockListing() {
-        axios.get(`${url}/stockorderlist-status-received-stock/Ayurveda Medicine`, {
+        axios.get(`${url}/stockorderlist-status-received-stock/${pathVal}/Ayurveda Medicine`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

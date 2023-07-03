@@ -32,6 +32,8 @@ import { MdDelete } from 'react-icons/md';
 import YogaSpinnar from '../theme/YogaSpinnar';
 import {Link} from 'react-router-dom'
 import moment from 'moment/moment'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
+
 const Invoice = React.lazy(()=>import('../clients/Invoice'))
 
 
@@ -42,8 +44,9 @@ let user = JSON.parse(localStorage.getItem('user-info'))
     const username = user.user.username;
 
 
-
 const TotalInvoice = () => {
+
+    const pathVal =    useAdminValidation()
 
     let num =0
     const [AllInvoiceData,setAllInvoiceData] = useState([])
@@ -65,7 +68,7 @@ const TotalInvoice = () => {
 
 
     const getAllInvoiceData = async ()=>{
-        const {data} = await axios.get(`${url1}/invoice/all`,{ 
+        const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }})
@@ -73,22 +76,9 @@ const TotalInvoice = () => {
                 
     } 
     
+
     
-    function getEnquiry() {
-        axios.get(`${url1}/memberForm/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-               
-             setResult1(res.data.filter((list) => list.username === username).reverse())
-             getAllInvoiceData()
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
+  
 
     function getPackage() {
         axios.get(`${url1}/packagemaster`, {
@@ -107,15 +97,12 @@ const TotalInvoice = () => {
   
     useEffect(()=>{
         getPackage()
-        getEnquiry()
-        
+        getAllInvoiceData()        
     },[])
     
     useEffect(()=>{
     setPagination(10)
     },[serviceName,endDate,startDate,selectedEmployee])
-
-    console.log(AllInvoiceData)
 
     
     const getDate = (date,val) => {
@@ -146,7 +133,7 @@ const TotalInvoice = () => {
             'Content-Type': 'application/json',
         }}).then((res)=>{
             
-        getEnquiry()    
+        getAllInvoiceData()    
      })   
 
   }
@@ -160,7 +147,7 @@ const TotalInvoice = () => {
             'Content-Type': 'application/json',
         }}).then((res)=>{
             console.log(res.data)
-        getEnquiry()    
+        getAllInvoiceData()    
      })
   }
 
@@ -201,7 +188,7 @@ useEffect(() => {
 
 async function getEmployee() {
     try {
-        const { data } = await axios.get(`${ url1 }/employeeform`)
+        const { data } = await axios.get(`${ url1 }/employeeform/${pathVal}`)
         setEmployeeData(data)
     } catch (error) {
         console.log(error)
@@ -294,7 +281,7 @@ setServiceName('')
                                     >
                                     <option>Select Service</option>
                                         {result.map((item, index) => (
-                                            item.username === username && (
+                                          (
                                                item.Status=== true && (
                                                     <option key={index}>{item.Service }</option>                                                  
                                                 )

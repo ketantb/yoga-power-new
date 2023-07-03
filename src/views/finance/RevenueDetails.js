@@ -33,6 +33,8 @@ import axios from 'axios'
     var monthNaame= ["January","February","March","April","May","June","July",
             "August","September","October","November","December"];
 import YogaSpinnar from '../theme/YogaSpinnar'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
+
 const RevenueDetails = () => {
     let num =0
 
@@ -40,6 +42,7 @@ const RevenueDetails = () => {
     const [AllYearInfo,setAllYearToInfo] = useState([])
     const [pagination, setPagination] = useState(10)
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal =  useAdminValidation()
 
 
 const [years,setYears]= useState([])
@@ -51,7 +54,7 @@ useEffect(()=>{
 },[years,selectedYear,month])
     
     const getAllInvoiceData = async ()=>{
-        const {data} = await axios.get(`${url1}/invoice/all`,{ 
+        const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }})       

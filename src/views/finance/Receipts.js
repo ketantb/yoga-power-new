@@ -29,12 +29,12 @@ import axios from 'axios'
 import {BsEye } from 'react-icons/bs'
 import {MdReceiptLong} from 'react-icons/md'
 import moment from 'moment/moment'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 
 const Invoice = React.lazy(()=>import('../clients/Invoice'))
 const ViewRecepits =React.lazy(()=>import('./ViewRecepits'))
 
-const url = 'https://yog-seven.vercel.app'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -57,6 +57,7 @@ const Receipt = () => {
     const [resiptData2,setResiptData2] = useState([])
     
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
 
 
     const [startDate,setStartDate] = useState('')
@@ -87,10 +88,13 @@ const Receipt = () => {
 
 
     const getAllInvoiceData = async ()=>{
-        const {data} = await axios.get(`${url1}/invoice/all`,{ 
+        const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
                   headers: {
                       'Authorization': `Bearer ${token}`
-                  }})          
+                  }})  
+                  
+                  console.log(data)
+
           setResiptData2(data.reverse().flatMap((el)=>el.Receipts.map((el2,i)=>{
             delete el2._id
             return{...el,...el2,length:i+1}}) 
@@ -111,35 +115,18 @@ const getDate = (date,val) => {
 
 }
 
-function getEnquiry() {
-    axios.get(`${url1}/memberForm/all`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-        .then((res) => {
-           
-         setResult1(res.data.filter((list) => list.username === username).reverse())
-         getAllInvoiceData()
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-}
 
 
 
 
 useEffect(()=>{
-getEnquiry()
+getAllInvoiceData()
 },[])
 
 
 function ShowUserInvoceHandler (id,item){
     
-    const uniqClientData = result1.filter((el)=>el?.invoiceId===id)
     setAllInvoiceOfUser([item])    
-    setClient(...uniqClientData)
     setInvoceModal(true)      
 } 
 
@@ -157,7 +144,7 @@ useEffect(() => {
 
 async function getEmployee() {
     try {
-        const { data } = await axios.get(`${ url1 }/employeeform`)
+        const { data } = await axios.get(`${ url1 }/employeeform/${pathVal}`)
         setEmployeeData(data)
     } catch (error) {
         console.log(error)

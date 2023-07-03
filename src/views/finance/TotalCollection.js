@@ -23,10 +23,10 @@ import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment from 'moment/moment'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const username = user.user.username;
 const centerCode = user.user.centerCode;
 
 const headers = {
@@ -40,13 +40,15 @@ const Totalc= () => {
   const [paymentModal,setPaymentModal] = useState('')
   const [staffS,setStaffS] = useState('')
   const url1 = useSelector((el)=>el.domainOfApi) 
+  const pathVal =    useAdminValidation()
 
 
   const getInvoiceDataToTotalCollection = async  ()=>{
 
-  const {data} = await axios.get(`${url1}/invoice/all`,{headers})
+  const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{headers})
+  
   setTotalCollection(data)
-  console.log(data.map((el)=>el))
+  console.log(data,'kjnjhii')
   }
 
 
@@ -55,11 +57,10 @@ const Totalc= () => {
     getStaff()
   },[])
 
-console.log(totalCollection)
 
 const [staff, setStaff] = useState([])
 function getStaff() {
-    axios.get(`${url1}/employeeform`, {
+    axios.get(`${url1}/employeeForm/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -113,7 +114,7 @@ function clearFilter(){
                                                                                                                                
                             >
                             <option>Select By Staff</option>
-                                {staff.filter((list) => list.username === username &&
+                                {staff.filter((list) => 
                                  list.selected === 'Select').map((item, index) => (
                                     <option key={index}>{item.FullName}</option>
                                 ))}

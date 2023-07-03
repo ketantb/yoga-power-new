@@ -31,9 +31,8 @@ import { MdDelete } from 'react-icons/md';
 import YogaSpinnar from '../theme/YogaSpinnar';
 const Invoice = React.lazy(()=>import('../clients/Invoice'))
 import moment from 'moment/moment'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
-
-const url = 'https://yog-seven.vercel.app'
 let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
     const token = user.token;
@@ -44,6 +43,8 @@ let user = JSON.parse(localStorage.getItem('user-info'))
 const PaidInvoice = () => {
 
     let num =0
+    const pathVal =  useAdminValidation()
+
     const [AllInvoiceData,setAllInvoiceData] = useState([])
     const [allIvoiceOfaUser,setAllInvoiceOfUser] = useState([])
     const [ClientData,setClient] = useState([])
@@ -62,7 +63,7 @@ const PaidInvoice = () => {
 
 
     const getAllInvoiceData = async ()=>{
-        const {data} = await axios.get(`${url1}/invoice/all`,{ 
+        const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }})
@@ -71,22 +72,8 @@ const PaidInvoice = () => {
                 
     } 
     
-    
-    function getEnquiry() {
-        axios.get(`${url1}/memberForm/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-               
-             setResult1(res.data.filter((list) => list.username === username).reverse())
-             getAllInvoiceData()
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
+  
+  
 
     function getPackage() {
         axios.get(`${url1}/packagemaster`, {
@@ -102,7 +89,7 @@ const PaidInvoice = () => {
     }
     useEffect(()=>{
         getPackage()
-        getEnquiry()
+        getAllInvoiceData()
     },[])
     
     useEffect(()=>{
@@ -123,10 +110,7 @@ const PaidInvoice = () => {
     }
 
     function ShowUserInvoceHandler (id,item){
-        const uniqClientData = result1.filter((el)=>el?.invoiceId===id)
-        console.log(uniqClientData)
         setAllInvoiceOfUser([item])    
-        setClient(...uniqClientData)
         setInvoceModal(true)      
     } 
 
@@ -140,7 +124,7 @@ const PaidInvoice = () => {
             'Content-Type': 'application/json',
         }}).then((res)=>{
             
-        getEnquiry()    
+            getAllInvoiceData()    
      })   
 
   }
@@ -156,7 +140,7 @@ const PaidInvoice = () => {
             'Content-Type': 'application/json',
         }}).then((res)=>{
             
-        getEnquiry()    
+            getAllInvoiceData()    
      })   
 
  }   
@@ -174,7 +158,7 @@ const PaidInvoice = () => {
     
     async function getEmployee() {
         try {
-            const { data } = await axios.get(`${ url1 }/employeeform`)
+            const { data } = await axios.get(`${ url1 }/employeeform/${pathVal}`)
             setEmployeeData(data)
         } catch (error) {
             console.log(error)
@@ -303,7 +287,6 @@ const PaidInvoice = () => {
                                         Client Id
                                     </CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Client Name</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Receipts No</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Services</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Service Duration</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Total Amount</CTableHeaderCell>
@@ -314,12 +297,7 @@ const PaidInvoice = () => {
                                     <CTableHeaderCell scope="col">view</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Delete</CTableHeaderCell>
-                                    {/* <CTableHeaderCell scope="col">Renewls Revenue</CTableHeaderCell> */}
-                                    {/* <CTableHeaderCell scope="col">
-                                        Balance Collection
-                                    </CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">View</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Achived %</CTableHeaderCell> */}
+                                   
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -344,7 +322,6 @@ const PaidInvoice = () => {
                                     <CTableDataCell>{el.InvoiceNo}</CTableDataCell>
                                     <CTableDataCell>{el.clientId}</CTableDataCell>
                                     <CTableDataCell>{el.MemberName}</CTableDataCell>
-                                    <CTableDataCell></CTableDataCell>
                                     <CTableDataCell>{el.ServiceName}</CTableDataCell>
                                     <CTableDataCell>{el.duration}</CTableDataCell>
                                     <CTableDataCell>{el.amount}</CTableDataCell>

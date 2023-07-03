@@ -28,7 +28,7 @@ import YogaSpinnar from '../theme/YogaSpinnar';
 import { MdDelete } from 'react-icons/md';
 import moment from 'moment/moment';
 import Invoice from '../finance/ClientInvoice/Invoice/Invoice';
-
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
@@ -54,11 +54,12 @@ const ProductInvoice = () => {
     const [employeeData, setEmployeeData] = useState([])
     const [selectedEmployee, setSselectedEmployee] = useState('')
 
+    const pathVal = useAdminValidation()
 
 
 
     const getAllInvoiceData = async ()=>{
-        const {data} = await axios.get(`${url1}/productInvoice/all`,{ 
+        const {data} = await axios.get(`${url1}/productInvoice/${pathVal}`,{ 
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }})
@@ -72,14 +73,14 @@ const ProductInvoice = () => {
     
     
     function getEnquiry() {
-        axios.get(`${url1}/memberForm/all`, {
+        axios.get(`${url1}/memberForm/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                
-             setResult1(res.data.filter((list) => list.username === username).reverse())
+             setResult1(res.data.filter((list) => list).reverse())
              getAllInvoiceData()
             })
             .catch((error) => {

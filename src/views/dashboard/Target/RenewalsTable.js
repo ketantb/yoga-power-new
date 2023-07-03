@@ -24,6 +24,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import YogaSpinnar from 'src/views/theme/YogaSpinnar'
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
 
 
 function RenewalsTable({EmployeeData}) {
@@ -40,6 +41,8 @@ function RenewalsTable({EmployeeData}) {
     const username = user.user.username;
     const token = user.token;
 
+    const pathVal =useAdminValidation()
+
     let totalTarget = 0
     let noOfRenewed = 0
     let totalAmount = 0
@@ -54,9 +57,9 @@ const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','
 
     const getLiveClasses = useCallback(async function () {
         try {
-            const response1 =  axios.get(`${url}/renewalstarget`,{headers})
-            const response2 =  axios.get(`${url}/memberForm/all`,{headers})
-            const response3 =  axios.get(`${url}/invoice/all`,{headers})
+            const response1 =  axios.get(`${url}/renewalsTarget/${pathVal}`,{headers})
+            const response2 =  axios.get(`${url}/memberForm/${pathVal}`,{headers})
+            const response3 =  axios.get(`${url}/invoice/${pathVal}`,{headers})
 
 
             const data  =  await Promise.all([response1,response2,response3])
@@ -187,8 +190,8 @@ const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','
                 >
                     <option >Select Your Employee </option>
 
-                    {EmployeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
+                    {EmployeeData.filter((list) => list.selected === 'Select').map((item, index) => (
+                        (
                             <option key={index} value={item._id} >{item.FullName}</option>
                         )
                     ))}

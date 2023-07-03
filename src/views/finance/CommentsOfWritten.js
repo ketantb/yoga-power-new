@@ -26,7 +26,7 @@ import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment from 'moment/moment'
 import YogaSpinnar from '../theme/YogaSpinnar'
-
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const username = user.user.username;
@@ -36,6 +36,8 @@ const CommentOfWritten = () => {
 
     const [AllInvoiceData,setAllInvoiceData] = useState([])
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal =  useAdminValidation()
+
     const [serviceName,setServiceName] = useState('')
     const [result, setResult] = useState([]);
     const [pagination, setPagination] = useState(10)
@@ -68,7 +70,7 @@ const CommentOfWritten = () => {
 
 
     const getAllInvoiceData = async ()=>{
-        const {data} = await axios.get(`${url1}/invoice/all`,{ 
+        const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }})
@@ -91,17 +93,13 @@ const CommentOfWritten = () => {
 
     }
 
-  
-console.log(AllInvoiceData)    
-
-
 useEffect(() => {
     getEmployee()
 }, [])
 
 async function getEmployee() {
     try {
-        const { data } = await axios.get(`${ url1 }/employeeform`)
+        const { data } = await axios.get(`${ url1 }/employeeform/${pathVal}`)
         setEmployeeData(data)
     } catch (error) {
         console.log(error)
@@ -181,8 +179,8 @@ const  compareDate = (date1,date2,type)=>{
                 >
                     <option >Select Staff </option>
 
-                    {employeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
+                    {employeeData.filter((list) => list.selected === 'Select').map((item, index) => (
+                         (
                             <option key={index} value={item.FullName} >{item.FullName}</option>
                         )
                     ))}
@@ -198,7 +196,7 @@ const  compareDate = (date1,date2,type)=>{
                                     >
                                     <option>Select Service</option>
                                         {result.map((item, index) => (
-                                            item.username === username && (
+                                            (
                                                item.Status=== true && (
                                                     <option key={index}>{item.Service }</option>                                                  
                                                 )

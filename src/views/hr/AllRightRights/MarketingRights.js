@@ -14,6 +14,7 @@ import { marketingRights } from '../Rights/rightsValue/crmRightsValue'
 const MarketingRights = ({crmMarketing,setRightObject}) => {
 
     const marketingRigthFun = useRight(setRightObject,'crmMarketing')
+    
     const {crmEmailMarketing1,crmSmsMarketing1,crmOffersMaster1,superRight,
          crmPushMarketing1,crmBulkMailerData1,crmBulkCallingData1,crmCustomerReview1} = crmMarketing.items
 

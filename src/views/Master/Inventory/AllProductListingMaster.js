@@ -5,13 +5,13 @@ import {CCard,CTable,CCol,CTableHead,CTableRow,CTableHeaderCell,
   CFormSelect
 } from '@coreui/react'
 
-import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
+import { MdDelete, MdEdit} from "react-icons/md";
+import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 
 
 import { useSelector } from 'react-redux'
 import {useState,useEffect} from "react"
 import axios from 'axios'
-
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -24,6 +24,9 @@ const AllProductListingMaster = () => {
   const [activeForm,setActiveForm] = useState(false)
   const [updateActive,setUpdateActive] = useState(false)
 
+  const  uniqObjVal = useUniqAdminObjeact()
+  const  pathVal = useAdminValidation('Master')
+
   const [topostAllProductData,setToPostAllProductData] = useState({
     username:username,
     sataus:'Selected',
@@ -33,7 +36,7 @@ const AllProductListingMaster = () => {
     category:'',
     productPrize:'',
     ordersQty:'',
-    Color:''
+    Color:'',
   })
 
 const headers =   {
@@ -45,9 +48,10 @@ const headers =   {
   
  async  function getAllProductListingMaster() {
   try{
-  const response = await  axios.get(`${url}/allProductListingMaster/all`,{headers})
+  const response = await  axios.get(`${url}/allProductListingMaster/${pathVal}`,{headers})
 
   const {data} = response
+  console.log(data)
   setAllProductData(data.reverse())
   }catch(error){
     console.error(error)
@@ -69,7 +73,7 @@ const saveAllProductListingMaster = async (type)=>{
    let response ={}
   try{
     if(type==='Save'){
-      response = await  axios.post(`${url}/allProductListingMaster/create`,topostAllProductData, {headers})
+      response = await  axios.post(`${url}/allProductListingMaster/create`,{...topostAllProductData,...uniqObjVal}, {headers})
     }
     if(type==='Update'){
      response = await  axios.post(`${url}/allProductListingMaster/update/${topostAllProductData?._id}`,topostAllProductData, {headers})

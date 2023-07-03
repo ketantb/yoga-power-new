@@ -30,10 +30,10 @@ import axios from 'axios'
 import { MdDelete } from 'react-icons/md';
 import YogaSpinnar from '../theme/YogaSpinnar';
 import moment from 'moment/moment'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 const Invoice = React.lazy(()=>import('../clients/Invoice'))
 
 
-const url = 'https://yog-seven.vercel.app'
 let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
     const token = user.token;
@@ -53,6 +53,7 @@ const CancelInvoice = () => {
     const [serviceName,setServiceName] = useState('')
     const [result1,setResult1] = useState([])
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
  
     const [startDate,setStartDate] = useState('')
     const [endDate,setEndDate] = useState('')
@@ -61,7 +62,7 @@ const CancelInvoice = () => {
 
     
     const getAllInvoiceData = async ()=>{
-        const {data} = await axios.get(`${url1}/invoice/all`,{ 
+        const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }})
@@ -71,21 +72,7 @@ const CancelInvoice = () => {
     } 
     
     
-    function getEnquiry() {
-        axios.get(`${url1}/memberForm/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-               
-             setResult1(res.data.filter((list) => list.username === username).reverse())
-             getAllInvoiceData()
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
+   
 
     function getPackage() {
         axios.get(`${url1}/packagemaster`, {
@@ -104,7 +91,7 @@ const CancelInvoice = () => {
    
     useEffect(()=>{
         getPackage()
-        getEnquiry()
+        getAllInvoiceData()
     },[])
     
     useEffect(()=>{
@@ -142,7 +129,7 @@ const CancelInvoice = () => {
             'Content-Type': 'application/json',
         }}).then((res)=>{
             
-        getEnquiry()    
+        getAllInvoiceData()    
      })   
 
   }
@@ -158,7 +145,7 @@ const CancelInvoice = () => {
             'Content-Type': 'application/json',
         }}).then((res)=>{
             
-        getEnquiry()    
+        getAllInvoiceData()    
      })   
 
  }   
@@ -177,7 +164,7 @@ const CancelInvoice = () => {
     
     async function getEmployee() {
         try {
-            const { data } = await axios.get(`${ url1 }/employeeform`)
+            const { data } = await axios.get(`${ url1 }/employeeform/${pathVal}`)
             setEmployeeData(data)
         } catch (error) {
             console.log(error)

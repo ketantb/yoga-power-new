@@ -28,17 +28,17 @@ import { useSelector } from "react-redux";
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const username = user.user.username;
-
 var monthName= ["January","February","March","April","May","June","July",
 "August","September","October","November","December"];
 import YogaSpinnar from '../theme/YogaSpinnar'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 
 const ServiceRevenue = () => {
     let num =0
 
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal =  useAdminValidation()
     const [result, setResult] = useState([]);
     const [serviceRevinueData,setServiceRevenueData] = useState([])
     const [serviceName,setServiceName] = useState('')
@@ -82,8 +82,8 @@ const headers   = {
         //             'Authorization': `Bearer ${token}`
         //         }})
 
-        const response2 = axios.get(`${url1}/memberForm/all`,{headers})
-        const response3 = axios.get(`${url1}/invoice/all`,{headers})
+        const response2 = axios.get(`${url1}/memberForm/${ pathVal }`,{headers})
+        const response3 = axios.get(`${url1}/invoice/${ pathVal }`,{headers})
 
         const bothApiData = await Promise.all([response2,response3])
 
@@ -227,7 +227,7 @@ setServiceRevenueData(serviceRevenueData)
                                     >
                                     <option>Select Service</option>
                                         {serviceData.map((item, index) => (
-                                            item.username === username && (
+                                           (
                                                item.Status=== true && (
                                                     <option key={index}>{item.Service }</option>                                                  
                                                 )

@@ -26,6 +26,7 @@ import axios from "axios";
 import logo from 'src/assets/images/avatars/icon.png'
 import moment from "moment/moment";
 import {RxCross2} from 'react-icons/rx'
+import { useUniqAdminObjeact,useAdminValidation } from "src/views/Custom-hook/adminValidation";
 
 
 
@@ -38,6 +39,8 @@ const CreateInvoice = ({visible,setActiveKey1,clientReferance,toPrintInvoice}) =
 
     const [staff, setStaff] = useState([])
     const url1 = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation()
+    const uniqObjVal = useUniqAdminObjeact()
     const [invoiceNum,setInvoice] = useState([])
 
     const clothStore = useSelector((el)=>el.stockDataClothData)  
@@ -76,7 +79,7 @@ Color:el?.productDetails?.Color,
 Price:el?.productDetails.Product_Price,
 Total_Stock:el?.Total_Stock,    
 Available_Stock:el?.Available_Stock,  
-item:el?.item 
+item:el?.item,
 }
     })
 
@@ -88,7 +91,7 @@ item:el?.item
 
    async  function toGetSelectInputData(){
     try{
-   const response1 = await   axios.get(`${url1}/employeeform`, {headers})   
+   const response1 = await   axios.get(`${url1}/employeeform/${pathVal}`, {headers})   
    setStaff(response1.data)
     }catch(error){
      console.log(error)
@@ -106,7 +109,7 @@ item:el?.item
                 'My-Custom-Header': 'foobar'
         };
         
-          await  axios.get(`${url1}/productInvoice/all`,{headers}).then(({data})=>{
+          await  axios.get(`${url1}/productInvoice/${pathVal}`,{headers}).then(({data})=>{
             setInvoice(data.length +1)
           })
          }
@@ -139,6 +142,7 @@ item:el?.item
             amount: totalAmount,
             paymode:modeOfPayment, 
             pendingAmount:'0',
+            ...uniqObjVal
         }
 
            

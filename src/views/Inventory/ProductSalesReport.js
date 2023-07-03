@@ -26,10 +26,12 @@ import React, { useEffect, useState } from "react";
 import { BsWhatsapp } from "react-icons/bs";
 import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
 import { useSelector } from 'react-redux'
+import { useAdminValidation } from "../Custom-hook/adminValidation";
 
 const AllSuppilerList = () => {
     const url = useSelector((el)=>el.domainOfApi) 
     const [soldProductData,setSoldProductData] = useState([])
+    const pathVal = useAdminValidation()
     
 
 
@@ -49,9 +51,10 @@ const AllSuppilerList = () => {
 
 
     function  getSoldProductData() {
-        axios.get(`${url}/stockorderlist/sold`,{headers})
+        axios.get(`${url}/stockorderlist/sold/${pathVal}`,{headers})
        
                .then((res) => {
+                console.log(res.data)
                 setSoldProductData(res.data.reverse())
                })
                .catch((error) => {

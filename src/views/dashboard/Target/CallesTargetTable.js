@@ -24,6 +24,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import YogaSpinnar from 'src/views/theme/YogaSpinnar'
+import { useAdminValidation} from 'src/views/Custom-hook/adminValidation'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
     const username = user.user.username;
@@ -33,6 +34,8 @@ let user = JSON.parse(localStorage.getItem('user-info'))
 function CallesTargetTable({EmployeeData}) {
     let num =0;
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal  = useAdminValidation()
+
     const [callsTargetData, setCallsTarget] = useState([])
     const [pagination, setPagination] = useState(10)
     const [selectedEmployee, setSselectedEmployee] = useState('')
@@ -51,14 +54,14 @@ function CallesTargetTable({EmployeeData}) {
     const headers = {
         'Authorization': `Bearer ${token}`,
         'My-Custom-Header': 'foobar'
-};
+    };
 
     const getLiveClasses = useCallback(async function () {
         try {
 
-            const response1 =  axios.get(`${url}/callstarget`,{headers})
-            const response2 =  axios.get(`${url}/memberCallReport/all`,{headers})
-            const response3 =  axios.get(`${url}/prospect/all`,{headers})
+            const response1 =  axios.get(`${url}/callsTarget/${pathVal}`,{headers})
+            const response2 =  axios.get(`${url}/memberCallReport/${pathVal}`,{headers})
+            const response3 =  axios.get(`${url}/prospect/${pathVal}`,{headers})
             const data  =  await Promise.all([response1,response2,response3])
 
             console.log(data[0].data)

@@ -22,12 +22,10 @@ import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
-const url = 'https://yog-seven.vercel.app'
-
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const username = user.user.username;
 const centerCode = user.user.centerCode;
 
 const headers = {
@@ -44,6 +42,7 @@ const LeadReport= props => {
 
     const [leadReportData,setLeadReportData] = useState([])
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
     const [years,setYears]= useState([])
     const [selectedYear,setSelectedYear] = useState('')
     const [month,setMonth] = useState('')
@@ -53,9 +52,9 @@ const LeadReport= props => {
 
     const getAllData = async  ()=>{
         try{
-        const response1 = axios.get(`${url1}/invoice/all`,{headers})
-        const response2 = axios.get(`${url1}/memberForm/all`,{headers})
-        const response3 = axios.get(`${url1}/enquiryForm/all`,{headers})
+        const response1 = axios.get(`${url1}/invoice/${pathVal}`,{headers})
+        const response2 = axios.get(`${url1}/memberForm/${pathVal}`,{headers})
+        const response3 = axios.get(`${url1}/enquiryForm/${pathVal}`,{headers})
               
         const allApiData = await Promise.all([response1,response2,response3])
         
@@ -64,7 +63,7 @@ const LeadReport= props => {
         const enquiryData = allApiData[2].data 
 
         
-        const serviceAcordingToMonth   = ([...enquiryData.filter((list) => list.username === username)?.reverse()?.map((el)=>{
+        const serviceAcordingToMonth   = ([...enquiryData.filter((list) => list)?.reverse()?.map((el)=>{
                         return {
                            Enquiry:el?.enquirytype,
                            Month:new Date(el.createdAt).getMonth(),

@@ -24,6 +24,7 @@ const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
 import { useSelector } from "react-redux";
 import moment from "moment/moment";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 
 const BudgetingMaster = () => {
@@ -46,6 +47,9 @@ const BudgetingMaster = () => {
     const [budgetingMaster, setBudgetingMaster] = useState([]);
     const [getExpenceMaster,setExpenceMaster] = useState([])
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
+    const pathMaster =  useAdminValidation('Master')
+    const uniqObjVal = useUniqAdminObjeact()
 
 
 
@@ -75,7 +79,7 @@ const BudgetingMaster = () => {
     }, []);
 
     function getSubService() {
-        axios.get(`${url1}/budgetingMaster/all`, {
+        axios.get(`${url1}/budgetingMaster/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -195,11 +199,11 @@ return
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({...data,...uniqObjVal})
         }).then((resp) => {
-            console.warn("resp",resp);;
             resp.json().then(() => {
                 alert("successfully submitted")
+                getSubService()
                 getSubService()
             })
         })
@@ -212,15 +216,14 @@ return
 
     const subserviceClose = () => {
         setAction1(!action1)
-        setSelected_service('')
-        setSub_Service_Name('')
+  
         setFees("")
         setDuration('')
         setStatus(false)
     }
 
     function getExpress() {
-        axios.get(`${url1}/expenseMaster/all`, {
+        axios.get(`${url1}/expenseMaster/${pathMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

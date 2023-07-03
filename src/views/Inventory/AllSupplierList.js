@@ -23,7 +23,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BsWhatsapp } from "react-icons/bs";
 import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
-const url = 'https://yog-seven.vercel.app'
+import { useSelector } from "react-redux";
+import { useAdminValidation, useUniqAdminObjeact } from "../Custom-hook/adminValidation";
+
 
 const AllSuppilerList = () => {
     const [action, setAction] = useState(false)
@@ -56,19 +58,23 @@ const AllSuppilerList = () => {
     const username = user.user.username;
     const centerCode = user.user.centerCode;
     const [paging, setPaging] = useState(0);
+    const url = useSelector((el)=>el.domainOfApi)
+    const pathVal = useAdminValidation('')
+    const uniqObjVal = useUniqAdminObjeact()
+
     useEffect(() => {
         getImpCall()
     }, [])
 
     function getImpCall() {
-        axios.get(`${url}/suppilerCallList/all`, {
+        axios.get(`${url}/allSupplierList/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                 setResult1(res.data.reverse())
-                console.log(res.data);
+                console.log(res.data,'hy');
             })
             .catch((error) => {
                 console.error(error)
@@ -87,14 +93,14 @@ const AllSuppilerList = () => {
                 "company": company,
             }        
 
-        fetch(`${url}/suppilerCallList/create`, {
+        fetch(`${url}/allSupplierList/create`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({...data,...uniqObjVal})
         }).then((resp) => {
             resp.json().then(() => {
                 getImpCall()
@@ -116,7 +122,7 @@ const AllSuppilerList = () => {
                 "company": company,
             }
 
-        fetch(`${url}/suppilerCallList/update/${id}`, {
+        fetch(`${url}/allSupplierList/update/${id}`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -137,7 +143,7 @@ const AllSuppilerList = () => {
     function deleteCall(id) {
 
         if (confirm('Do you want to delete this')) {
-            fetch(`${url}/suppilerCallList/delete/${id}`, {
+            fetch(`${url}/allSupplierList/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -168,7 +174,7 @@ const AllSuppilerList = () => {
     }
 
     function getUpdate(id) {
-        axios.get(`${url}/suppilerCallList/${id}`, {
+        axios.get(`${url}/allSupplierList/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

@@ -30,6 +30,7 @@ import { useSelector,useDispatch} from 'react-redux'
 import useAddProduct from './customHook/useAddProduct';
 import useIncrementNoOfItem from './customHook/useIncrementNoOfItme';
 import useInputItemVal from './customHook/useInputItemVal';
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 
 const FitnessProduct = () => {
@@ -39,6 +40,8 @@ const FitnessProduct = () => {
     const [result1, setResult1] = useState([])
     const [noofProduct,setNoOfProduct] = useState([])
     const [activeToIncrement,setActiveToIncrement] = useState([])
+
+    const pathVal  =   useAdminValidation()
 
     const addProduct  = useAddProduct(setNoOfProduct,setActiveToIncrement)
     const incrementNoOfItem =  useIncrementNoOfItem(setNoOfProduct,setActiveToIncrement)
@@ -72,7 +75,7 @@ const FitnessProduct = () => {
 
 
     function getStockListing() {
-        axios.get(`${url}/stockorderlist-status-received-stock/Fitness Product`, {
+        axios.get(`${url}/stockorderlist-status-received-stock/${pathVal}/Fitness Product`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

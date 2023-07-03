@@ -28,7 +28,7 @@ const headers = {
 
 const AllRight = () => {
 
-    const [activeKey, setActiveKey] = useState(1)
+    const [activeKey, setActiveKey] = useState(1,Number(user.user.isAdmin))
 
 
     return (
@@ -36,14 +36,14 @@ const AllRight = () => {
 
 <CCardHeader>
     <CNav variant="tabs" role="tablist">
-     <CNavItem>
+     {user.user.isAdmin||<CNavItem>
         <CNavLink
           active={activeKey === 1}
           onClick={() =>  setActiveKey(1)}
         >
          Admin Id List
         </CNavLink>
-      </CNavItem>
+      </CNavItem>}
       <CNavItem>
         <CNavLink
           active={activeKey === 2}

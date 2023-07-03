@@ -23,9 +23,14 @@ import axios from "axios";
 import React, { useEffect, useState,useCallback } from "react";
 import { BsWhatsapp } from "react-icons/bs";
 import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
-const url = 'https://yog-seven.vercel.app'
+import { useSelector } from "react-redux";
+import { useAdminValidation,useUniqAdminObjeact } from "../Custom-hook/adminValidation";
 
-const ImpCallList = () => {
+const impCallList = () => {
+    const url = useSelector((el)=>el.domainOfApi)
+    const pathVal  =  useAdminValidation()
+    const uniqObjVal =  useUniqAdminObjeact()
+
     const [action, setAction] = useState(false)
     const [toast, setToast] = useState(false)
     const [id, setId] = useState()
@@ -55,14 +60,14 @@ const ImpCallList = () => {
    
 
    const  getImpCall = useCallback(function() {
-        axios.get(`${url}/impCallList/all`, {
+        axios.get(`${url}/impCallList/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                 setResult1(res.data.reverse())
-                console.log(res.data);
+                console.log(res.data,'kugyiigyg');
             })
             .catch((error) => {
                 console.error(error)
@@ -71,13 +76,15 @@ const ImpCallList = () => {
 
     useEffect(() => {
         getImpCall()
-    },[getImpCall])   
+    },[])   
 
     const saveImpCall = () => {
         let data = {
             username: username,
             name: name, mobile: phone, email: email, category: category, address: address, company: company,
+            ...uniqObjVal
         }
+        console.log(data)
 
         fetch(`${url}/impCallList/create`, {
             method: "POST",
@@ -376,10 +383,7 @@ const ImpCallList = () => {
                         </CTableDataCell>
                             
                     </CTableRow>
-                    {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                        list.username === username && list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
-                        && list.address.includes(search4) && list.category.includes(search5) && list.company.includes(search6)
-                    ).map((item, index) => (
+                    {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
                         <CTableRow key={index}>
                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                             <CTableDataCell>{item.name}</CTableDataCell>
@@ -426,4 +430,4 @@ const ImpCallList = () => {
 };
 
 
-export default ImpCallList;
+export default impCallList;

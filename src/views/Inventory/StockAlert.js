@@ -5,18 +5,15 @@ import {CCard,CTable,CCol,CTableHead,CTableRow,CTableHeaderCell,
  import { useSelector } from 'react-redux'
  import {useState,useEffect} from "react"
  import axios from 'axios'
-
+import { useAdminValidation } from '../Custom-hook/adminValidation'
  let user = JSON.parse(localStorage.getItem('user-info'))
  const token = user.token;
 
 function StockAlert(){
  const url = useSelector((el)=>el.domainOfApi) 
     const [result1, setResult1] = useState([])
+    const pathVal =  useAdminValidation()
     
-
-    
-
-
     const headers =   {
         "Authorization": `Bearer ${token}`,
     }
@@ -26,7 +23,7 @@ function StockAlert(){
     }, [])
 
     function getStockAssigning() {
-        axios.get(`${url}/stockorderlist-status-received-stock/all`,{headers})
+        axios.get(`${url}/stockorderlist-status-received-stock/${pathVal}`,{headers})
             .then((res) => {
                 setResult1(res.data.reverse().filter((el)=>+el.Available_Stock<=10))
                 console.log(res.data)

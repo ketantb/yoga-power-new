@@ -28,6 +28,7 @@ import useAddProduct from '../finance/ClientInvoice/customHook/useAddProduct';
 import useIncrementNoOfItem from '../finance/ClientInvoice/customHook/useIncrementNoOfItme';
 import useInputItemVal from '../finance/ClientInvoice/customHook/useInputItemVal';
 import StockOrderListRecived from './StockOrderList/StockOrderListRecived';
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
 
  
 
@@ -53,6 +54,11 @@ function StockOrderList (){
     const [error2,setError2] = useState(false)
     const [receviedProduct,setReceviedProductData]  = useState([])
 
+    const pathVal = useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
+
+    const uniqObjVal =  useUniqAdminObjeact()
+
 
 
     const headers =   {
@@ -70,7 +76,7 @@ function StockOrderList (){
     }, [])
 
      function getStockAssigning() {
-     axios.get(`${url}/allProductListingMaster/all`,{headers})
+     axios.get(`${url}/allProductListingMaster/${pathValMaster}`,{headers})
 
             .then((res) => {
                 setAllProductData(res.data.reverse())
@@ -81,7 +87,7 @@ function StockOrderList (){
     }
 
     function getStockOrderList(){
-        axios.get(`${url}/stockorderlist/all`,{headers})
+        axios.get(`${url}/stockorderlist/all-order/${pathVal}`,{headers})
         .then((res) => {
             setStockOrderList(res.data.reverse())
         })
@@ -91,7 +97,7 @@ function StockOrderList (){
 }
 
 function getStaff() {
-    axios.get(`${url}/employeeform`, {
+    axios.get(`${url}/employeeform/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -152,7 +158,7 @@ const selctedProduct =  noofProduct.filter((el)=>el._id===id).map((el)=>{
 
 })
 
-axios.post(`${url}/stockorderlist/create`, selctedProduct[0],{headers})
+axios.post(`${url}/stockorderlist/create`, {...selctedProduct[0],...uniqObjVal},{headers})
 .then((res) => {
     getStockOrderList()
     alert('successfully Save')
@@ -246,7 +252,7 @@ axios.post(`${url}/stockorderlist/update/${item._id}`, UpdateObj,{headers})
 }
 
 function getStockAssigningR() {
-    axios.get(`${url}/stockorderlist/recevied`,{headers})
+    axios.get(`${url}/stockorderlist/recevied/${pathVal}`,{headers})
    
            .then((res) => {
              setReceviedProductData(res.data.reverse())

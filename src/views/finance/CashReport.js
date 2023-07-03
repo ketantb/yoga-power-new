@@ -19,6 +19,7 @@ import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment from 'moment/moment'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const username = user.user.username;
@@ -28,6 +29,7 @@ const centerCode = user.user.centerCode;
 const CashReport = () => {
     const  [cashData,setCashData] = useState([])
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
     const [staffS,setStaffS] = useState('')
 
 
@@ -39,7 +41,7 @@ const CashReport = () => {
     const getAllInvoiceData = async  ()=>{
     
         try{
-        const response1 = await axios.get(`${url1}/invoice/all`,{headers})
+        const response1 = await axios.get(`${url1}/invoice/${pathVal}`,{headers})
 
 
        const newCashData =   response1.data.map((el)=>{
@@ -62,7 +64,7 @@ const CashReport = () => {
     
     const [staff, setStaff] = useState([])
        function getStaff() {
-      axios.get(`${url1}/employeeform`, {
+      axios.get(`${url1}/employeeform/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

@@ -14,6 +14,7 @@ import React, { useState,useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { empLoyeeeRights } from '../hr/Rights/rightsValue/crmRightsValue'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 const SalesTargetTable = React.lazy(()=>import('./Target/SalesTargetTable'))
 const ClinetTargetTabel = React.lazy(()=>import('./Target/ClientTargetDataTable'))
@@ -23,11 +24,13 @@ const RenewalsTable = React.lazy(()=>import('./Target/RenewalsTable'))
 const ReferralLeadsData = React.lazy(()=>import('./Target/ReferralLeadsData'))
 const MeadiaTargetTable = React.lazy(()=>import('./Target/MediaTargetTable'))
 
-
+let user = JSON.parse(localStorage.getItem('user-info'))
+const token = user.token;
 
 
 const SalesTarget = () => {
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation() 
     const [employeeData, setEmployeeData] = useState([])
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
@@ -38,6 +41,11 @@ const SalesTarget = () => {
     const funValidate = (val)=>{
         return (access?.includes(empLoyeeeRights[val])||isAdmin)
     }
+
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'My-Custom-Header': 'foobar'
+};
 
     const salesTargetVal =  funValidate('salesTarget')
     const clientTargetVal = funValidate('clientTarget')
@@ -61,7 +69,7 @@ const SalesTarget = () => {
 
     async function getEmployee() {
         try {
-            const { data } = await axios.get(`${ url }/employeeform`)
+            const { data } = await axios.get(`${ url }/employeeform/${pathVal}`,{headers})
             setEmployeeData(data)
         } catch (error) {
             console.log(error)

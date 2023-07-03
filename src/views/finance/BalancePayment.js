@@ -29,7 +29,6 @@ import {
 import { BsPlusCircle, BsWhatsapp,BsEye } from 'react-icons/bs'
 
 
-
 import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
 import {useEffect, useState} from 'react'
@@ -38,9 +37,9 @@ import YogaSpinnar from '../theme/YogaSpinnar';
 import { useSelector } from "react-redux";
 import logo from 'src/assets/images/avatars/icon.png'
 import moment from 'moment/moment'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 const Invoice = React.lazy(()=>import('../clients/Invoice'))
 
-const url = 'https://yog-seven.vercel.app'
 let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const username = user.user.username;
@@ -53,6 +52,7 @@ const BalancePayment = () => {
     const [serviceName,setServiceName] = useState('')
     const [result1,setResult1] = useState([])
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation() 
     const [AllInvoiceData,setAllInvoiceData] = useState([])
     const [clientInvoiceData,setClientInvoiceData] = useState('')
 
@@ -85,7 +85,7 @@ const BalancePayment = () => {
 
     }
  const getAllInvoiceData = async ()=>{
-      const {data} = await axios.get(`${url1}/invoice/all`,{ 
+      const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }})
@@ -107,28 +107,11 @@ function getPackage() {
 }
 
 
-function getEnquiry() {
-    axios.get(`${url1}/memberForm/all`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-        .then((res) => {
-           
-         setResult1(res.data.filter((list) => list.username === username).reverse())
-         getAllInvoiceData()
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-}
+
 
 
 function ShowUserInvoceHandler (id,item){
-    const uniqClientData = result1.filter((el)=>el?.invoiceId===id)
-    console.log(uniqClientData)
     setAllInvoiceOfUser([item])    
-    setClient(...uniqClientData)
     setInvoceModal(true)      
 } 
 
@@ -142,7 +125,7 @@ setClientInvoiceData(el)
 
 
 function getStaff() {
-    axios.get(`${url1}/employeeform`)
+    axios.get(`${url1}/employeeform/${pathVal}`)
         .then((res) => {
             setStaff(res.data)
         })
@@ -160,7 +143,7 @@ getStaff()
 
 useEffect(()=>{
     getPackage()
-    getEnquiry()
+    getAllInvoiceData()
 },[])
 
 useEffect(()=>{
@@ -194,7 +177,6 @@ const ClientResipt  = {
     
 }
 
-console.log(clientInvoiceData.Receipts)
 
  let obj ={
     pendingAmount:clientInvoiceData.pendingAmount-paymentAmount,
@@ -230,7 +212,7 @@ useEffect(() => {
 
 async function getEmployee() {
     try {
-        const { data } = await axios.get(`${ url1 }/employeeform`)
+        const { data } = await axios.get(`${ url1 }/employeeform/${pathVal}`)
         setEmployeeData(data)
     } catch (error) {
         console.log(error)
@@ -331,7 +313,7 @@ const  compareDate = (date1,date2,type)=>{
                             onChange={(e)=>setCounseller(e.target.value)}
                            > 
                           <option>Select staff</option>
-                           {staff.filter((list) => list.username === username &&
+                           {staff.filter((list) => 
                             list.selected === 'Select').map((item, index) => (
                                <option key={index}>{item.FullName}</option>
                            ))}
@@ -407,8 +389,8 @@ const  compareDate = (date1,date2,type)=>{
                 >
                     <option >Select Staff </option>
 
-                    {employeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
+                    {employeeData.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                         (
                             <option key={index} value={item.FullName} >{item.FullName}</option>
                         )
                     ))}
@@ -424,7 +406,7 @@ const  compareDate = (date1,date2,type)=>{
                                     >
                                     <option>Select Service</option>
                                         {result.map((item, index) => (
-                                            item.username === username && (
+                                             (
                                                item.Status=== true && (
                                                     <option key={index}>{item.Service }</option>                                                  
                                                 )

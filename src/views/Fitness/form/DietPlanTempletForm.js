@@ -28,9 +28,10 @@ function DietPlanTempletForm({ closeFormFun, getClientDietData,edit,editData }) 
         
         if(edit){
             try{
-            axios.put(`${url}/dietplantemplate/${editData?._id}`,diteplan ,{headers})
-            alert('Save successfully ')
-            getClientDietData()
+            axios.put(`${url}/dietPlanTempLate/update/${editData?._id}`,diteplan ,{headers}).then(()=>{
+                alert('Save successfully ')
+                getClientDietData()
+            })
             }catch(error){
                 console.log(error)
             }
@@ -38,8 +39,10 @@ function DietPlanTempletForm({ closeFormFun, getClientDietData,edit,editData }) 
         }
          
         try{
-         axios.post(`${url}/dietplantemplate`,diteplan ,{headers})
-        getClientDietData()
+         axios.post(`${url}/dietPlanTempLate/create`,diteplan ,{headers}).then(()=>{
+            alert('Save successfully ')
+            getClientDietData()
+        })
         alert('Save successfully ')
         }catch(error){
             console.log(error)

@@ -29,9 +29,9 @@ import axios from 'axios'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const username = user.user.username;
 const url = 'https://yog-seven.vercel.app'
 import YogaSpinnar from '../theme/YogaSpinnar'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 const NewcRevenue = () => {
     let num =0
@@ -44,6 +44,7 @@ const [serviceName,setServiceName] = useState('')
 const [serviceData,setserviceData] = useState([])
 const [pagination, setPagination] = useState(10)
 const url1 = useSelector((el)=>el.domainOfApi) 
+const pathVal =  useAdminValidation()
 
 
 var monthName= ["January","February","March","April","May","June","July",
@@ -59,9 +60,9 @@ var monthName= ["January","February","March","April","May","June","July",
 
 const getAllData = async  ()=>{
 try{
-const response1 = axios.get(`${url1}/invoice/all`,{headers})
-const response2 = axios.get(`${url1}/memberForm/all`,{headers})
-const response3 = axios.get(`${url1}/enquiryForm/all`,{headers})
+const response1 = axios.get(`${url1}/invoice/${pathVal}`,{headers})
+const response2 = axios.get(`${url1}/memberForm/${pathVal}`,{headers})
+const response3 = axios.get(`${url1}/enquiryForm/${pathVal}`,{headers})
       
 const allApiData = await Promise.all([response1,response2,response3])
 
@@ -70,7 +71,7 @@ const clientData = allApiData[1].data
 const enquiryData = allApiData[2].data 
 console.log(enquiryData)
 
-const serviceAcordingToMonth   = ([...enquiryData.filter((list) => list.username === username)?.reverse()?.map((el)=>{
+const serviceAcordingToMonth   = ([...enquiryData.filter((list) => list)?.reverse()?.map((el)=>{
                 return {
                    Service:el?.ServiceName,
                    Month:new Date(el.createdAt).getMonth(),
@@ -108,7 +109,7 @@ const classiFyAcordingToMonth = [...serviceAcordingToMonth].reduce((crr,el,i)=>{
    },{...obj})
 }) 
 
-const FilterFirstInvoiceData = [...clientData.filter((list) => list.username === username)].map((el)=>{
+const FilterFirstInvoiceData = [...clientData.filter((list) => list)].map((el)=>{
             return invoiceData.find((el1)=>el._id===el1.MemberId)
 }).filter((el)=>el)
         
@@ -227,7 +228,7 @@ useEffect(()=>{
                                     >
                                     <option>Select Service</option>
                                         {serviceData.map((item, index) => (
-                                            item.username === username && (
+                                             (
                                                item.Status=== true && (
                                                     <option key={index}>{item.Service }</option>                                                  
                                                 )

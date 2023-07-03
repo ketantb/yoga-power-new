@@ -3,21 +3,26 @@ import { useSelector } from 'react-redux'
 import { useState,useEffect } from "react"
 import CustomSelectInput from "../CustomSelectInput/CustomSelectInput"
 import axios from "axios"
-
+import { useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation"
 function AllDietClientForm({allMemberData, closeFormFun, getClientDietData,edit,editData }) {
+
+    const uniqObjVal = useUniqAdminObjeact()
+
 
     const [allDiietClientData,setAllDietClient] = useState({
         Member_Id: ' ',
         Start_Date: ' ',
         Name: ' ',
         Mobile_No:' ',
-        Gender: ' ',
+        Gender: 'Male',
         Purpose: ' ',
         EndDate: ' ',
         Package: ' ',
         DietitianName:' ',
         Action:'no action',
+        ...uniqObjVal 
     })
+
     
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -37,15 +42,16 @@ const  sumbitFormInfoHandler = async (e)=>{
         try{
 
        if(edit){
-          axios.put(`${url}/alldietclient/${editData._id}`,allDiietClientData ,{headers}).then((el)=>{
+          axios.post(`${url}/allDietClient/update/${editData._id}`,allDiietClientData ,{headers}).then((el)=>{
            alert('Successfully save')
            getClientDietData()
           })
         return 
        }
-       axios.post(`${url}/alldietclient`,allDiietClientData ,{headers})
-       alert('Successfully save')
-       getClientDietData()
+       axios.post(`${url}/allDietClient/create`,allDiietClientData ,{headers}).then((el)=>{
+        alert('Successfully save')
+        getClientDietData()
+       })
 
         }catch(error){
             console.log(error)
@@ -56,7 +62,6 @@ function clientObj(obj){
     setAllDietClient((prev)=>({...prev,Mobile_No:obj.ContactNumber}))
     setAllDietClient((prev)=>({...prev,Name:obj.Fullname}))
     setAllDietClient((prev)=>({...prev,Member_Id:obj._id}))
-
  }
 
 
@@ -123,8 +128,8 @@ function clientObj(obj){
 
 
                     >
-                        <option value="1">Male</option>
-                        <option value="2">Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
                     </CFormSelect>
                 </CCol>
 
@@ -176,7 +181,7 @@ function clientObj(obj){
                 <CCol className='d-flex justify-content-between my-2 ' lg={6} >
                     <h5 >Package</h5>
                     <CFormInput
-                        type="number"
+                        type="text"
                         className="ms-4 w-50"
                         placeholder="Enter Package"
                         value={allDiietClientData.Package}

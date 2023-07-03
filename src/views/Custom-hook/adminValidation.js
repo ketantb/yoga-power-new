@@ -1,11 +1,17 @@
 import { useEffect,useState } from "react"
 
-const useAdminValidation = () => {
+const useAdminValidation = (type) => {
     let  userInfo = JSON.parse(localStorage.getItem('user-info'))?.user
 
     function getRouteFun(userInfo){
+
+      
+
         if(userInfo.isAdmin){
          return 'all' 
+        }else if(type ==='Master' && !userInfo.isAdmin){
+         return userInfo.isAdminPatner?`filter-by-admin/${userInfo.emailUniqId}`
+            :`filter-by-admin/${userInfo.createrId}`
         }else if(!userInfo.isAdmin){
         return userInfo.isAdminPatner?`filter-by-admin/${userInfo.emailUniqId}`
         :`filter-by-employee/${userInfo.emailUniqId}`

@@ -31,9 +31,11 @@ import useAttendance from './AttendanceHook/useAttendance'
 import moment from 'moment/moment'
 import { Link } from 'react-router-dom'
 import { trainerSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 const AllMembers = () => {
     const url = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
     const updateAttendance = useAttendance()
 
     const [selectedMonth,setMonth] = useState(new Date().getMonth())
@@ -79,8 +81,8 @@ const AllMembers = () => {
 
     const  getTCC_Classes = useCallback(async function() {
         try{
-            const response1 =  axios.get(`${url}/clientAttendance/all`,{ headers: {'Authorization': `Bearer ${token}`}})     
-            const response2 =  axios.get(`${url}/memberForm/all`,{ headers: {'Authorization': `Bearer ${token}`}})
+            const response1 =  axios.get(`${url}/clientAttendance/${pathVal}`,{ headers: {'Authorization': `Bearer ${token}`}})     
+            const response2 =  axios.get(`${url}/memberForm/${pathVal}`,{ headers: {'Authorization': `Bearer ${token}`}})
         
             const  data   = await  Promise.all([response1,response2])
 

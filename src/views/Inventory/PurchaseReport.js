@@ -26,11 +26,13 @@ import React, { useEffect, useState } from "react";
 import { BsWhatsapp } from "react-icons/bs";
 import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
 import { useSelector } from 'react-redux'
+import { useAdminValidation } from "../Custom-hook/adminValidation";
 
 const AllSuppilerList = () => {
 
 
     const url = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
     
     const [action, setAction] = useState(false)
     const [toast, setToast] = useState(false)
@@ -65,11 +67,10 @@ const AllSuppilerList = () => {
     
 
     function getImpCall() {
-        axios.get(`${url}/sockreport/daily-stock-report`,{headers: {
+        axios.get(`${url}/sockreport/daily-stock-report/${pathVal}`,{headers: {
             'Authorization': `Bearer ${token}`
         }})
             .then((res) => {
-                console.log(res.data)
                 setResult1(res.data);
             })
             .catch((error) => {

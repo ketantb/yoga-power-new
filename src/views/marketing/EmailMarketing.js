@@ -5,6 +5,7 @@ import { CButton, CCard, CCardBody,
 import React, { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from 'axios';
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -20,6 +21,8 @@ console.log(token)
 
 const EmailMarketing = () => {
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal  = useAdminValidation()
+
     const [typeOfClientData,setTypeOfClientData] = useState([])
     const [slectedClient,setSelectedClient] = useState('')
     const [emailMarketingData,setEmailMarketingData] =useState([])
@@ -32,7 +35,7 @@ const EmailMarketing = () => {
 
     const getEmailMarhetingInput = async  ()=>{
         try{
-            let response = await  axios.get(`${url}/marketingEM/all`,{headers})
+            let response = await  axios.get(`${url}/marketingEM/${pathVal}`,{headers})
              if(response.status===200){
                 console.log(response.data)
                 setEmailMarketingData(response.data)
@@ -77,10 +80,6 @@ console.log(error)
 
 
 }
-
-
-
-
 
     return (
         <CCard>

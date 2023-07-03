@@ -33,11 +33,14 @@ import useDailyBatchAtten from './AttendanceHook/useDailyBatchAtten'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { trainerSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 const LiveClasses = () => {
 
      const updateAttendance = useAttendance()
      const updateMonthlyReport = useMonthlyReport()
      const updateDailyReport = useDailyBatchAtten()
+
+     const pathVal = useAdminValidation()
      
      const url = useSelector((el)=>el.domainOfApi) 
      const [selectedMonth,setMonth] = useState(new Date().getMonth())
@@ -91,8 +94,8 @@ function getDaysInMonth(month, year) {
 
 const  getLiveClasses = useCallback(async function() {
 try{
-    const response1 =  axios.get(`${url}/clientAttendance/all`,{ headers: {'Authorization': `Bearer ${token}`}})     
-    const response2 =  axios.get(`${url}/memberForm/all`,{ headers: {'Authorization': `Bearer ${token}`}})
+    const response1 =  axios.get(`${url}/clientAttendance/${pathVal}`,{ headers: {'Authorization': `Bearer ${token}`}})     
+    const response2 =  axios.get(`${url}/memberForm/${pathVal}`,{ headers: {'Authorization': `Bearer ${token}`}})
 
        const  data   = await  Promise.all([response1,response2])
 

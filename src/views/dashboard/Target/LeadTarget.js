@@ -31,6 +31,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import YogaSpinnar from 'src/views/theme/YogaSpinnar'
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
     const username = user.user.username;
@@ -40,6 +41,7 @@ let user = JSON.parse(localStorage.getItem('user-info'))
   
 
 function LeadTarget({EmployeeData}) {
+
     let totalTarget = 0
     let leadAssign = 0
     let totalAmount = 0
@@ -48,6 +50,8 @@ function LeadTarget({EmployeeData}) {
 
     let  num = 0;
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation()
+
     const [leadTargetData, setLeadTarget] = useState([])
     const [pagination, setPagination] = useState(10)
     const [selectedEmployee, setSselectedEmployee] = useState('')
@@ -65,9 +69,9 @@ const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','
     const getLiveClasses = useCallback(async function () {
         try {
 
-            const response1 =  axios.get(`${ url }/leadstarget`,{headers})
-            const response2 =  axios.get(`${url}/enquiryForm/all`,{headers})
-            const response3 =  axios.get(`${url}/invoice/all`,{headers})
+            const response1 =  axios.get(`${url}/leadsTarget/${pathVal}`,{headers})
+            const response2 =  axios.get(`${url}/enquiryForm/${pathVal}`,{headers})
+            const response3 =  axios.get(`${url}/invoice/${pathVal}`,{headers})
 
             const data  =  await Promise.all([response1,response2,response3])
 
@@ -198,7 +202,7 @@ const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','
                 >
                     <option >Select Your Employee </option>
 
-                    {EmployeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
+                    {EmployeeData.filter((list) =>  list.selected === 'Select').map((item, index) => (
                         item.username === username && (
                             <option key={index} value={item._id} >{item.FullName}</option>
                         )

@@ -44,11 +44,13 @@ const DailyWorkoutSchedulingTable =  React.lazy(() => import('./Tablels/DailyWor
 
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 
 
 const Fitness = () => {
     const url1 = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation()
 
     const [active, setActiveButton] = useState(1)
     const [allMemberData,setAllmemBerData] = useState([]) 
@@ -73,7 +75,7 @@ const Fitness = () => {
 
  const getClientMemData = ()=>{
 
-    axios.get(`${url1}/memberForm/all`, {headers: {'Authorization': `Bearer ${token}`}})
+    axios.get(`${url1}/memberForm/${pathVal}`, {headers: {'Authorization': `Bearer ${token}`}})
     .then((res) => {setAllmemBerData(res.data)})
     .catch((error) => {console.error(error)})
  }

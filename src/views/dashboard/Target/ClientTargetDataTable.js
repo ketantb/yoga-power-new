@@ -30,14 +30,16 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import YogaSpinnar from 'src/views/theme/YogaSpinnar'
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
     const username = user.user.username;
 
-
 function ClientTargetDataTable({EmployeeData}) {
     let num = 0
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation()
+
     const [clientTargetData, setClientTarget] = useState([])
     const [pagination, setPagination] = useState(10)
     const [selectedEmployee, setSselectedEmployee] = useState('')
@@ -64,8 +66,8 @@ const headers = {
 
     const getClientTargetData = useCallback(async function () {
         try {
-            const response1= axios.get(`${ url }/memberForm/all`,{headers})
-            const response2 = axios.get(`${ url }/clienttarget`,{headers})
+            const response1= axios.get(`${ url }/memberForm/${pathVal}`,{headers})
+            const response2 = axios.get(`${ url }/clientTarget/${pathVal}`,{headers})
             const data = await  Promise.all([response1,response2])
                
             

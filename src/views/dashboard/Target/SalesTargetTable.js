@@ -23,6 +23,7 @@ import {
 import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
+import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
 
 import YogaSpinnar from 'src/views/theme/YogaSpinnar'
 
@@ -33,6 +34,8 @@ const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','
 function SalesTargetTable({EmployeeData}) {
     let num = 0
     const url = useSelector((el) => el.domainOfApi)
+
+    const pathVal = useAdminValidation()
     
     const [salesTargetData, setSalesTarget] = useState([])
     const [pagination, setPagination] = useState(10)
@@ -54,12 +57,12 @@ function SalesTargetTable({EmployeeData}) {
     const headers = {
         'Authorization': `Bearer ${token}`,
         'My-Custom-Header': 'foobar'
-};
+    };
 
 
     const getLiveClasses = useCallback(async function () {
         try {
-            const response1 =  axios.get(`${ url }/salestarget`,{headers})
+            const response1 =  axios.get(`${ url }/salesTarget/${pathVal}`,{headers})
             const response2 =  axios.get(`${url}/invoice/all`,{headers})
             const data  =  await Promise.all([response1,response2])
 

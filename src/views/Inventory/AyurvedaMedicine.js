@@ -24,10 +24,12 @@ import React, { useEffect, useState } from "react";
 import { BsWhatsapp } from "react-icons/bs";
 import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
 import { useSelector } from 'react-redux'
+import { useAdminValidation } from "../Custom-hook/adminValidation";
 
 const ClothesProduct = () => {
 
     const url = useSelector((el)=>el.domainOfApi)  
+    const pathVal =  useAdminValidation()
 
     
     const [result1, setResult1] = useState([])
@@ -53,7 +55,7 @@ const ClothesProduct = () => {
    
 
        function getImpCall() {
-        axios.get(`${url}/stockorderlist-status-received-stock/Ayurveda Medicine`, {
+        axios.get(`${url}/stockorderlist-status-received-stock/${pathVal}/Ayurveda Medicine`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

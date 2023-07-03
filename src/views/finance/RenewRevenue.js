@@ -29,6 +29,7 @@ var monthName= ["January","February","March","April","May","June","July",
 "August","September","October","November","December"];
 
 import axios from "axios";
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 const RenewRevenue = () => {
 
@@ -41,6 +42,7 @@ const RenewRevenue = () => {
     const [upgradeInvoiceData,setUpgradeInvoiceData] = useState([])
     const [getRenewRevenueData,setRenewRevenueData] = useState([])
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
 
 const [years,setYears]= useState([])
 const [selectedYear,setSelectedYear] = useState('')
@@ -67,7 +69,7 @@ let num =0
     
         const time =  (new Date(list.endDate) -new Date())
         const days = Math.ceil(time/(1000*60*60*24))
-              if((days<=0 && list.username === username &&list.plan===true)){
+              if((days<=0 && list.plan===true)){
                  return true 
               }
               return false                                                                         
@@ -97,7 +99,7 @@ let num =0
 
    function getUpgradeInvoiceData (){
     
-       axios.get(`${url1}/memberForm/all`,{headers}).then(({data})=>{
+       axios.get(`${url1}/memberForm/${pathVal}`,{headers}).then(({data})=>{
 
         const serviceAcordingToMonth   = ([...data?.reverse()?.map((el)=>{
             return {
@@ -219,7 +221,7 @@ const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
 
 
    const getInvoiceInfo = async ()=>{
-    axios.get(`${url1}/invoice/all`,{headers}).then((res)=>{
+    axios.get(`${url1}/invoice/${pathVal}`,{headers}).then((res)=>{
     // console.log(res.data)
     InVoiceData = res.data
     setUpgradeInvoiceData(res.data)

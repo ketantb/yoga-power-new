@@ -31,6 +31,9 @@ const token = user.token;
 const username = user.user.username;
 import axios from 'axios';
 import { MdDelete, MdEdit } from 'react-icons/md';
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
+
+
 
 
 const PettyCash = () => {
@@ -39,6 +42,9 @@ const PettyCash = () => {
 
     const [creditdate, setCreditDate] = useState('')
     const [debitdate, setDebitDate] = useState('')
+
+
+
 
     const [expenceCategory, setCategory] = useState('')
     const [detailOfEx, setDeatilOfEx] = useState('')
@@ -51,6 +57,9 @@ const PettyCash = () => {
     const [showError, setError] = useState(false)
     const [showError2, setError2] = useState(false)
     const url1 = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation()    
+    const pathValMaster = useAdminValidation('Master')
+    const uniqObjVal = useUniqAdminObjeact()
     const [getExpenceMaster, setExpenceMaster] = useState([])
     const [creditAmount, setCreditAmount] = useState(' ')
     const [debitAmount, setDebitAmount] = useState(' ')
@@ -69,7 +78,7 @@ const PettyCash = () => {
 
 
     function getExpress() {
-        axios.get(`${ url1 }/expenseMaster/all`, {
+        axios.get(`${ url1 }/expenseMaster/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -84,7 +93,7 @@ const PettyCash = () => {
 
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${ url1 }/employeeform`, {
+        axios.get(`${ url1 }/employeeform/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -105,7 +114,7 @@ const PettyCash = () => {
     }, [])
 
     function getLengthofVoucher() {
-        axios.get(`${ url1 }/dailyexpense`, {
+        axios.get(`${ url1 }/dailyExpence/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -122,7 +131,7 @@ const PettyCash = () => {
 
     const getPittyCashDataFun = async () => {
 
-        const res = await axios.get(`${ url1 }/pettycash`, {
+        const res = await axios.get(`${ url1 }/pettyCash/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -201,7 +210,7 @@ const PettyCash = () => {
 
 
         console.log(obj)
-        axios.post(`${ url1 }/pettycash`, obj, {
+        axios.post(`${ url1 }/pettyCash/create`, {...obj,...uniqObjVal}, {
             headers: {
                 "Authorization": `Bearer ${ token }`,
                 'Accept': 'application/json',
@@ -224,7 +233,7 @@ const PettyCash = () => {
         console.log(id)
         if (!confirm('Do you Want to Delete')) return
 
-        axios.delete(`${ url1 }/pettycash/${ id }`, {
+        axios.delete(`${ url1 }/pettyCash/delete/${ id }`, {
             headers: {
                 "Authorization": `Bearer ${ token }`,
                 'Accept': 'application/json',
@@ -324,7 +333,7 @@ const ShowModalofDabit = (el) => {
             Status: false,
         }
 
-        axios.post(`${url1}/pettycash`, { ...obj }, {
+        axios.post(`${url1}/pettyCash/create`, { ...obj,...uniqObjVal }, {
             headers: {
                 "Authorization": `Bearer ${ token }`,
                 'Accept': 'application/json',
@@ -337,7 +346,7 @@ const ShowModalofDabit = (el) => {
             getPittyCashDataFun()
         })
 
-        axios.post(`${url1}/dailyexpense`, ExpenseObjeact, {
+        axios.post(`${url1}/dailyExpence/create`, {...ExpenseObjeact,...uniqObjVal}, {
             headers: {
                 "Authorization": `Bearer ${ token }`,
                 'Accept': 'application/json',

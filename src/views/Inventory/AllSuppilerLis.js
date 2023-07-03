@@ -62,7 +62,7 @@ const AllSuppilerList = () => {
         })
             .then((res) => {
                 setResult1(res.data.reverse())
-                console.log(res.data);
+                console.log(res.data,'hii');
             })
             .catch((error) => {
                 console.error(error)

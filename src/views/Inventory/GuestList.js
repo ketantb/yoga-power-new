@@ -23,9 +23,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BsWhatsapp } from "react-icons/bs";
 import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
-const url = 'https://yog-seven.vercel.app'
+import { useSelector } from "react-redux";
 
-const GuestList = () => {
+import { useAdminValidation, useUniqAdminObjeact } from "../Custom-hook/adminValidation";
+
+
+
+const guestList = () => {
     const [action, setAction] = useState(false)
     const [toast, setToast] = useState(false)
     const [id, setId] = useState()
@@ -50,20 +54,25 @@ const GuestList = () => {
     const token = user.token;
     const username = user.user.username;
     const centerCode = user.user.centerCode;
+
+    const pathVal = useAdminValidation()
+    const uniqObjVal = useUniqAdminObjeact()
+
+    const url = useSelector((el)=>el.domainOfApi)
+
+
     useEffect(() => {
         getImpCall()
     }, [])
 
     function getImpCall() {
-        axios.get(`${url}/guestCallList/all`, {
+        axios.get(`${url}/guestList/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                 setResult1(res.data.reverse())
-                console.log(res.data);
-                getImpCall()
             })
             .catch((error) => {
                 console.error(error)
@@ -73,10 +82,18 @@ const GuestList = () => {
     const saveImpCall = () => {
         let data = {
             username: username,
-            name: name, mobile: phone, email: email, category: category, address: address, event: company,
+            name: name,
+            mobile: phone,
+            email: email,
+            category: category,
+            address: address, 
+            event: company,
+            ...uniqObjVal
         }
 
-        fetch(`${url}/guestCallList/create`, {
+console.log('Workd feklnfbef')
+
+        fetch(`${url}/guestList/create`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -99,7 +116,7 @@ const GuestList = () => {
             name: name, mobile: phone, email: email, category: category, address: address, event: company,
         }
 
-        fetch(`${url}/guestCallList/update/${id}`, {
+        fetch(`${url}/guestList/update/${id}`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -122,7 +139,7 @@ const GuestList = () => {
     function deleteCall(id) {
 
         if (confirm('Do you want to delete this')) {
-            fetch(`${url}/guestCallList/delete/${id}`, {
+            fetch(`${url}/guestList/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -152,7 +169,7 @@ const GuestList = () => {
     }
 
     function getUpdate(id) {
-        axios.get(`${url}/guestCallList/${id}`, {
+        axios.get(`${url}/guestList/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -380,10 +397,7 @@ const GuestList = () => {
                         
                     </CTableRow>
 
-                    {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                        list.username === username && list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
-                        && list.address.includes(search4) && list.category.includes(search5) && list.event.includes(search6)
-                    ).map((item, index) => (
+                    {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
                         <CTableRow key={index}>
                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                             <CTableDataCell>{item.name}</CTableDataCell>
@@ -404,19 +418,12 @@ const GuestList = () => {
                     <span aria-hidden="true">&laquo;</span>
                 </CPaginationItem>
                 <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                {result1.filter((list) =>
-                    list.username === username && list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
-                    && list.address.includes(search4) && list.category.includes(search5) && list.event.includes(search6)
-                ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                {result1.filter((list) =>list).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                 {result1.filter((list) =>
-                    list.username === username && list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
-                    && list.address.includes(search4) && list.category.includes(search5) && list.event.includes(search6)
-                ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                    list).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                 {result1.filter((list) =>
-                    list.username === username && list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
-                    && list.address.includes(search4) && list.category.includes(search5) && list.event.includes(search6)
-                ).length > (paging + 1) * 10 ?
+                    list).length > (paging + 1) * 10 ?
                     <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                         <span aria-hidden="true">&raquo;</span>
                     </CPaginationItem>
@@ -431,4 +438,4 @@ const GuestList = () => {
 };
 
 
-export default GuestList;
+export default guestList;

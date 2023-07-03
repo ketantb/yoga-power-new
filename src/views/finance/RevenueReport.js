@@ -22,11 +22,10 @@ import { useSelector } from 'react-redux'
 import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
 import axios from 'axios'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const username = user.user.username;
-const centerCode = user.user.centerCode;
 
 const headers = {
     'Authorization': `Bearer ${token}`,
@@ -37,6 +36,7 @@ const headers = {
 
 const RevenueReport= () => {
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
     const [annualRevenue,setAnnualRevenue] = useState([])
     const [selectedYear,setSelectedYear] = useState('')
     const [years,setYears] = useState([])
@@ -44,7 +44,7 @@ const RevenueReport= () => {
 
     const getInvoiceDataToCollectAnualRevenue = async  ()=>{
         try{
-        const responseData = await axios.get(`${url1}/invoice/all`,{headers})
+        const responseData = await axios.get(`${url1}/invoice/${pathVal}`,{headers})
         const InvoiceData = responseData.data
 
         console.log(InvoiceData)

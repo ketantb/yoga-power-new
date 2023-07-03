@@ -23,6 +23,7 @@ import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
 import { useSelector } from "react-redux";
 import moment from "moment/moment";
 import axios from 'axios';
+import { useUniqAdminObjeact,useAdminValidation } from '../Custom-hook/adminValidation';
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const username = user.user.username;
@@ -30,8 +31,9 @@ const username = user.user.username;
 
 const CenterExpense = () => {
 
-
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const pathValMaster = useAdminValidation('Master')
+    const pathVal = useAdminValidation()
     const [centerExpense,setCenterExpense] = useState([])
     const [yearData,setYearData] = useState([])
     const [yearFilter,setYearFilter] = useState('')
@@ -42,16 +44,15 @@ const CenterExpense = () => {
 const allMonthName = [
         "Jan","Feb","Mar","Apr","May","Jun","Jul",
         "Aug","Sep","Oct","Nov","Dec"
-]
-    
+]   
 
 
 
 async function getSubService() {
  try{
- const response1 =  axios.get(`${url1}/budgetingMaster/all`, { headers: {
+ const response1 =  axios.get(`${url1}/budgetingMaster/${pathValMaster}`, { headers: {
         'Authorization': `Bearer ${token}`}})
- const response2 =  axios.get(`${url1}/dailyexpense`, { headers: {
+ const response2 =  axios.get(`${url1}/dailyExpence/${pathVal}`, { headers: {
        'Authorization': `Bearer ${token}`}})
 
  const data = await Promise.all([response1,response2])
@@ -115,13 +116,13 @@ data[1].data.forEach((el2)=>{
 setCenterExpense(budgetingExpense)
 setYearData(budgetingExpense.sort((a,b)=>a.BudgetingYear-b.BudgetingYear).map((el)=>el.BudgetingYear))
 
- }catch{
-
+ }catch(error){
+   console.log(error)
  }
     }
 
     function getExpress() {
-        axios.get(`${url1}/expenseMaster/all`, {
+        axios.get(`${url1}/expenseMaster/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

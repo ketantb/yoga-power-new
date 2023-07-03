@@ -16,21 +16,33 @@ import {
   import { useSelector } from 'react-redux'
   import { MdCall, MdMail } from "react-icons/md";
   import { BsWhatsapp } from "react-icons/bs";
-
 import AllDietClientForm from '../form/AllDietClientForm';
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
+
+
 
 function ClientDietTable ({closeFormFun,token,showForm,setForm,allMemberData,id}){
+
     const url = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation()
+
+
 
 
 const [clientDite,setClientDite] =useState([])
 const [edit,setEdit] = useState(false)
 const [editData,setEditData] = useState([])
 
+const  headers = {
+    "Authorization": `Bearer ${token}`,
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+}
+
 
 
   const getClientDietData = useCallback(async ()=>{
-    const {data} = await axios.get(`${url}/alldietclient`)
+    const {data} = await axios.get(`${url}/allDietClient/${pathVal}`,{headers})
 
     
   if(id==='all-client-fitness'){
@@ -61,7 +73,7 @@ const deleteClientDitePlanFun =(id)=>{
     }
      
     try{
-    axios.delete(`${url}/alldietclient/${id}`,{headers})
+    axios.delete(`${url}/allDietClient/delete/${id}`,{headers})
     getClientDietData()
     }catch(error){
         console.log(error)

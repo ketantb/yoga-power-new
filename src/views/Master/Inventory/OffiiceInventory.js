@@ -11,15 +11,20 @@ import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
 import { useSelector } from 'react-redux'
 import {useState,useEffect} from "react"
 import axios from 'axios'
+import { useUniqAdminObjeact,useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const username = user.user.username;
-
 const ProductAssignMaster = () => {
+
   const url = useSelector((el)=>el.domainOfApi) 
+  const uniqObjVal = useUniqAdminObjeact()
+  const pathVal =  useAdminValidation('Master')
+
+
   const [allProductData,setAllProductData] = useState([])
   const [activeForm,setActiveForm] = useState(false)
   const [updateActive,setUpdateActive] = useState(false)
@@ -35,7 +40,7 @@ const ProductAssignMaster = () => {
       productPrize:'',
       ordersQty:'',
       Color:'',
-      Available_Stock:''
+      Available_Stock:'',
     }
   )
 
@@ -48,7 +53,7 @@ const headers =   {
   
  async  function getAllProductListingMaster() {
   try{
-  const response = await  axios.get(`${url}/inventoryListingMaster/all`,{headers})
+  const response = await  axios.get(`${url}/inventoryListingMaster/${pathVal}`,{headers})
 
   const {data} = response
   setAllProductData(data.reverse())
@@ -73,7 +78,7 @@ const saveAllProductListingMaster = async (type)=>{
    let response ={}
   try{
     if(type==='Save'){
-      response = await  axios.post(`${url}/inventoryListingMaster/create`,topostAllProductData, {headers})
+      response = await  axios.post(`${url}/inventoryListingMaster/create`,{...uniqObjVal,...topostAllProductData}, {headers})
     }
     if(type==='Update'){
      response = await  axios.post(`${url}/inventoryListingMaster/update/${topostAllProductData?._id}`,topostAllProductData, {headers})
@@ -106,7 +111,7 @@ function toToggaleFrom(){
       productPrize:'',
       ordersQty:'',
       Color:'',
-      Available_Stock:''
+      Available_Stock:'',
     }
   )
 }

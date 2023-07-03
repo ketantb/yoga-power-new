@@ -29,11 +29,13 @@ import { useSelector,useDispatch} from 'react-redux'
 import useAddProduct from './customHook/useAddProduct';
 import useIncrementNoOfItem from './customHook/useIncrementNoOfItme';
 import useInputItemVal from './customHook/useInputItemVal';
-
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 const GeneralProduct = () => {
 
     const url = useSelector((el)=>el.domainOfApi)  
+    const pathVal = useAdminValidation()
+
     const [result1, setResult1] = useState([])
     const [noofProduct,setNoOfProduct] = useState([])
     const [activeToIncrement,setActiveToIncrement] = useState([])
@@ -68,7 +70,7 @@ const GeneralProduct = () => {
 
 
     function getStockListing() {
-        axios.get(`${url}/stockorderlist-status-received-stock/General Inventory`, {
+        axios.get(`${url}/stockorderlist-status-received-stock/${pathVal}/General Inventory`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

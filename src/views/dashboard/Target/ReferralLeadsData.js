@@ -24,11 +24,13 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import YogaSpinnar from 'src/views/theme/YogaSpinnar'
-
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
 
 function RenewalsTable({EmployeeData}) {
     let num = 0;
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation() 
+
     const [referralLeadsData, setReferralLeadsData] = useState([])
     const [pagination, setPagination] = useState(10)
     const [selectedEmployee, setSselectedEmployee] = useState('')
@@ -46,14 +48,16 @@ function RenewalsTable({EmployeeData}) {
 };
 
 const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','Sep','Oct','Nov','Dec']
+
 let totalTarget = 0
 let noOfRenewedLead = 0
 let convertMemeber = 0
 let totalAmount = 0
-    const getLiveClasses = useCallback(async function () {
+
+const getLiveClasses = useCallback(async function () {
         try {
 
-            const response1 =  axios.get(`${ url }/referralsleadstarget`,{headers})
+            const response1 =  axios.get(`${ url }/referralsLeadstarget/${pathVal}`,{headers})
             const response2 =  axios.get(`${url}/enquiryForm/all`,{headers})
             const response3 =  axios.get(`${url}/invoice/all`,{headers})
 

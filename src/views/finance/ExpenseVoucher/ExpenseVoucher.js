@@ -2,7 +2,8 @@ import { CCard,CCardBody,CCardHeader,CCardTitle,CFormInput,CForm,CRow ,CCol,CFor
 import {useEffect, useState} from 'react'
 import axios from "axios"
 import { useSelector } from "react-redux"
-import { data } from "autoprefixer"
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation"
+
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
@@ -23,6 +24,10 @@ const [createdBy,setCreatedBy] = useState('')
 const [errorMessage,setErrorMessage] = useState(false)
 const [showError,setError] = useState(false)
 const url1 = useSelector((el)=>el.domainOfApi) 
+const uniObjVal =  useUniqAdminObjeact()
+const pathVal = useAdminValidation()
+const pathValMaster = useAdminValidation('Master')
+
 const [getExpenceMaster,setExpenceMaster] = useState([])
 const [balanceAmount,setBalanceAmount] = useState('')
 const [eltoUPdate,setEltoUpdate] = useState(0)
@@ -48,8 +53,14 @@ Status:false,
 
 
 
+const headers =   {
+  "Authorization": `Bearer ${token}`,
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+}
+
 const getPittyCashDataFun =async ()=>{
-  const res = await axios.get(`${url1}/pettycash`, {
+  const res = await axios.get(`${url1}/pettyCash/${pathVal}`, {
       headers: {
           'Authorization': `Bearer ${token}`
       }
@@ -139,13 +150,13 @@ let obj = {
 
 
 
-axios.post(`${url1}/pettycash`,{...obj},{headers: {
+axios.post(`${url1}/pettyCash/create`,{...obj,...uniObjVal},{headers: {
   "Authorization": `Bearer ${token}`,
   'Accept': 'application/json',
   'Content-Type': 'application/json',
 }})
 
-axios.post(`${url1}/dailyexpense`,ExpenseObjeact,{headers: {
+axios.post(`${url1}/dailyExpence/create`,{...ExpenseObjeact,...uniObjVal},{headers: {
   "Authorization": `Bearer ${token}`,
   'Accept': 'application/json',
   'Content-Type': 'application/json',
@@ -158,7 +169,7 @@ getLengthofVoucher()
 
 
 function getLengthofVoucher(){
-  axios.get(`${url1}/dailyexpense`, {
+  axios.get(`${url1}/dailyExpence/${pathVal}`, {
     headers: {
         'Authorization': `Bearer ${token}`
     }
@@ -172,7 +183,7 @@ function getLengthofVoucher(){
 
 
 function getExpress() {
-  axios.get(`${url1}/expenseMaster/all`, {
+  axios.get(`${url1}/expenseMaster/${pathValMaster}`, {
       headers: {
           'Authorization': `Bearer ${token}`
       }
@@ -187,7 +198,7 @@ function getExpress() {
 
 const [staff, setStaff] = useState([])
 function getStaff() {
-    axios.get(`${url1}/employeeform`, {
+    axios.get(`${url1}/employeeform/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

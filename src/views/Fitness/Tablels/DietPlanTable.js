@@ -16,23 +16,32 @@ import {
   import { BsWhatsapp } from "react-icons/bs";
   import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
   import DietPlanTempletForm from '../form/DietPlanTempletForm';
-
-
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
+  
+  
 function DietPlanTable({closeFormFun,token,showForm,setForm}){
 
  const url = useSelector((el)=>el.domainOfApi) 
+
 
 
 const [Diteplan,setDitePlan] =useState([])
 const [edit,setEdit] = useState(true)
 const [editData,setEditData] = useState(true)
 
+const pathVal =  useAdminValidation()
+
+
+const  headers = {
+    "Authorization": `Bearer ${token}`,
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+}
 
 
   const getClientDietData = useCallback(async ()=>{
-    const {data} = await axios.get(`${url}/dietplantemplate`)
+    const {data} = await axios.get(`${url}/dietPlanTempLate/${pathVal}`,{headers})
     setDitePlan(data)
-  console.log(data)
    },[])
   
 useEffect(()=>{
@@ -50,7 +59,7 @@ const deleteClientDitePlanFun =(id)=>{
     }
      
     try{
-    axios.delete(`${url}/dietplantemplate/${id}`,{headers})
+    axios.delete(`${url}/dietPlanTempLate/delete/${id}`,{headers})
     getClientDietData()
     }catch(error){
         console.log(error)

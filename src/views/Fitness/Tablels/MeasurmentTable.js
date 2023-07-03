@@ -15,6 +15,9 @@ import {
 
   import { useSelector } from 'react-redux'
   import { MdDelete,MdEdit } from 'react-icons/md';
+  import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
+
+
 
 
 function MeasurementTable({closeFormFun,token,showForm,setForm,allMemberData,id}){
@@ -23,13 +26,14 @@ function MeasurementTable({closeFormFun,token,showForm,setForm,allMemberData,id}
     const [editData,setEditData] = useState(true)
 
     const url = useSelector((el)=>el.domainOfApi) 
+    const pathVal =   useAdminValidation()
     const headers = {
     'Authorization': `Bearer ${token}`
    }
 
   const getAllmembersData = useCallback(async ()=>{
 
-    const {data} = await axios.get(`${url}/fitnessDetail/all`,{headers})
+    const {data} = await axios.get(`${url}/fitnessDetail/${pathVal}`,{headers})
     if(id==='all-client-fitness'){
         setAllMeasurmentMembers(data)
         return 

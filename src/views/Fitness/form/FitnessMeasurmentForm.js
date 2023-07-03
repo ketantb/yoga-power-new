@@ -4,13 +4,14 @@ import { useRef,useState,useEffect } from "react"
 import { useSelector } from "react-redux"
 import axios from "axios"
 import CustomSelectInput from "../CustomSelectInput/CustomSelectInput"
-
+import { useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation"
 
 function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,edit,editData  }) {
     const url = useSelector((el)=>el.domainOfApi) 
+    const uniqObjVal = useUniqAdminObjeact()
 
     const [mesurmentData,setMesurmentData] = useState({
-        username: ' ',
+        username:'',
         Age:'',
         ArmsL:'',
         ArmsR:'',
@@ -35,6 +36,7 @@ function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,e
         createdAt:new Date(),
         updatedAt:'',
         NextFollowup_Date:'',
+        ... uniqObjVal
     })
 
 

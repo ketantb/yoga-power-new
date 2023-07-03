@@ -25,6 +25,7 @@ import { MdDelete } from "react-icons/md";
 const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
 import { useSelector } from "react-redux";
+import { useAdminValidation, useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
  const ExpressCategoryMaster = () => {
     const [action1, setAction1] = useState(false)
@@ -33,7 +34,9 @@ import { useSelector } from "react-redux";
     const [level1, setLevel1] = useState('')
     const [level2, setLevel2] = useState('')
     const url1 = useSelector((el)=>el.domainOfApi) 
-
+    const pathVal  = useAdminValidation()
+    const pathValMaster  = useAdminValidation('Master')
+    const uniqObjVal = useUniqAdminObjeact()
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -50,7 +53,7 @@ import { useSelector } from "react-redux";
     }, []);
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url1}/employeeform`, {
+        axios.get(`${url1}/employeeform/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -65,7 +68,7 @@ import { useSelector } from "react-redux";
     }
 
     function getExpress() {
-        axios.get(`${url1}/expenseMaster/all`, {
+        axios.get(`${url1}/expenseMaster/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -87,7 +90,7 @@ import { useSelector } from "react-redux";
                 ApprovalLevel1: level1,
                 ApprovalLevel2: level2,
             }
-            axios.post(`${url1}/expenseMaster/create`, data, { headers })
+            axios.post(`${url1}/expenseMaster/create`, {...data,...uniqObjVal}, { headers })
                 .then((resp) => {
                     console.log(resp.data)
                     alert('Successfully Added')

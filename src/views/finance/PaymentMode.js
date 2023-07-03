@@ -34,9 +34,11 @@ const headers = {
 import { useSelector } from 'react-redux'
 
 import axios from 'axios'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 const PaymentMode = () => {
 
 const url1 = useSelector((el)=>el.domainOfApi) 
+const pathVal = useAdminValidation()
 const [paymetData,setPaymentData] = useState([])
 const [paymentType,setPyamentType] = useState([])
 const [staffS,setStaffS] = useState('')
@@ -61,7 +63,7 @@ const getAllInvoiceData = async  ()=>{
 try{
 
 
-const response1 = await axios.get(`${url1}/invoice/all`,{headers})
+const response1 = await axios.get(`${url1}/invoice/${pathVal}`,{headers})
 console.log(response1.data)
 
 const PaymentData = response1.data.flatMap((el)=>{
@@ -93,7 +95,7 @@ console.log(error)
 
 const [staff, setStaff] = useState([])
 function getStaff() {
-    axios.get(`${url1}/employeeform`, {
+    axios.get(`${url1}/employeeform/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -116,8 +118,6 @@ function clearFilter(){
     setPyamentType('')
  }
 
-
-console.log(paymetData)
     return (
         <CRow>
             <CCol lg={12} sm={12}>
@@ -142,7 +142,7 @@ console.log(paymetData)
                                                                                                                                
                             >
                             <option>Select By Staff</option>
-                                {staff.filter((list) => list.username === username &&
+                                {staff.filter((list) => 
                                  list.selected === 'Select').map((item, index) => (
                                     <option key={index}>{item.FullName}</option>
                                 ))}

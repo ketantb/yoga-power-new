@@ -33,12 +33,15 @@ import useMonthlyReport from './AttendanceHook/useMonthlyReport'
 import { Link } from 'react-router-dom'
 import moment from 'moment/moment'
 import { trainerSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 const TtcClasses = () => {
 
         const updateAttendance = useAttendance()
         const ttCClassesDailyReport = useHandlelDailyReport()
         const ttcMonthLyReport = useMonthlyReport()
+
+        const pathVal = useAdminValidation()
 
         const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights?.
         crmTrainer?.items?.superRight) 
@@ -94,8 +97,8 @@ const TtcClasses = () => {
 
     const  getTCC_Classes = useCallback(async function() {
         try{
-            const response1 =  axios.get(`${url}/clientAttendance/all`,{ headers: {'Authorization': `Bearer ${token}`}})     
-            const response2 =  axios.get(`${url}/memberForm/all`,{ headers: {'Authorization': `Bearer ${token}`}})    
+            const response1 =  axios.get(`${url}/clientAttendance/${pathVal}`,{ headers: {'Authorization': `Bearer ${token}`}})     
+            const response2 =  axios.get(`${url}/memberForm/${pathVal}`,{ headers: {'Authorization': `Bearer ${token}`}})    
                const  data   = await  Promise.all([response1,response2])        
                const  clientAttendanceData  = data[0].data
                const  memBerData =  data[1].data               

@@ -73,7 +73,6 @@ function EmployeeTargetSetupForm({ closeForm, getEmployeeTargetSheetData ,data }
         "Year": year,
         "Id": selectedEmployee.split('---')[1],
         "TargetValue": TargetValue,
-        ...uniqObjVal
     }
 
     const MonthData = {
@@ -92,7 +91,7 @@ function EmployeeTargetSetupForm({ closeForm, getEmployeeTargetSheetData ,data }
     }
 
 
-    const PostData = { ...EmployeeData, ...MonthData }
+    const PostData = { ...EmployeeData, ...MonthData, ...uniqObjVal}
 
 
 

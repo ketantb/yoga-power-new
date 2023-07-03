@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import { BsWhatsapp } from "react-icons/bs";
 import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
 import { useSelector} from 'react-redux'
-
+import { useAdminValidation } from "../Custom-hook/adminValidation";
 
 const ClothesProduct = () => {
     const [action, setAction] = useState(false)
@@ -38,6 +38,7 @@ const ClothesProduct = () => {
     const [search8, setSearch8] = useState('')
 
     const url = useSelector((el)=>el.domainOfApi)  
+    const pathVal = useAdminValidation()
 
     function ProductCodeGenrator(num){
         const randomNo = Math.round(Math.random()*(100  +num))
@@ -56,7 +57,7 @@ const ClothesProduct = () => {
     }, [])
 
     function getImpCall() {
-        axios.get(`${url}/stockorderlist-status-received-stock/General Inventory`, {
+        axios.get(`${url}/stockorderlist-status-received-stock/${pathVal}/General Inventory`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

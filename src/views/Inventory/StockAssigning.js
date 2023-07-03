@@ -16,9 +16,12 @@ import {
  import { BsWhatsapp } from "react-icons/bs";
  import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
 
- import useAddProduct from '../finance/ClientInvoice/customHook/useAddProduct';
+
+import useAddProduct from '../finance/ClientInvoice/customHook/useAddProduct';
 import useIncrementNoOfItem from '../finance/ClientInvoice/customHook/useIncrementNoOfItme';
 import useInputItemVal from '../finance/ClientInvoice/customHook/useInputItemVal';
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
+
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -27,6 +30,12 @@ const username = user.user.username;
 
 function StockAssigning (){
     const url = useSelector((el)=>el.domainOfApi) 
+    const pathValMaster =  useAdminValidation('Master')
+    const pathVal =  useAdminValidation('')
+    const uniAdminObjVal = useUniqAdminObjeact()
+
+
+    // const pathValMaster =  useAd
     const [result1, setResult1] = useState([])
 
     const [allProductData,setAllProductData] = useState([])
@@ -62,9 +71,10 @@ function StockAssigning (){
     }, [])
 
      function getStockProduct() {
-     axios.get(`${url}/inventoryListingMaster/all`,{headers})
+     axios.get(`${url}/inventoryListingMaster/${pathValMaster}`,{headers})
 
             .then((res) => {
+                console.log(res.data)
                 setAllProductData(res.data.reverse())
             })
             .catch((error) => {
@@ -75,7 +85,7 @@ function StockAssigning (){
   
 
 function getStaff() {
-    axios.get(`${url}/employeeform`, {
+    axios.get(`${url}/employeeform/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -147,13 +157,14 @@ useEffect(()=>{
                 Assigned_By_id:selectedStaff,
                 Assigned_To_id:selectedStaff2,
                 Color:el.Color,
-                ProductId:el?._id
+                ProductId:el?._id,
             }
         
         })  
+        console.log(selctedProduct[0])
 
 axios.all([
-    axios.post(`${url}/stockassigning`,selctedProduct[0],{headers}), 
+    axios.post(`${url}/stockAssigning/create`,{...selctedProduct[0],...uniAdminObjVal},{headers}), 
     axios.post(`${url}/inventoryListingMaster/update/${id}`,{Available_Stock:
     (item.Available_Stock-selctedProduct[0].No_Of_Products)},{headers})
   ])
@@ -173,7 +184,7 @@ axios.all([
 
     
     function getStockAssigning() {
-        axios.get(`${url}/stockassigning`)
+        axios.get(`${url}/stockAssigning/${pathVal}`,{headers})
             .then((res) => {
                 setStockAssigning(res.data.reverse())
                 console.log(res.data);

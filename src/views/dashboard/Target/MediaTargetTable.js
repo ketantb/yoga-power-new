@@ -23,16 +23,28 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import YogaSpinnar from 'src/views/theme/YogaSpinnar'
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
+
 
 
 function MeadiaTargetTable({EmployeeData}) {
     let  num =0
+    let totalTarget = 0
+
     let user = JSON.parse(localStorage.getItem('user-info'))
     const username = user.user.username;
-    let totalTarget = 0
+    const token = user.token;
+
+
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'My-Custom-Header': 'foobar'
+};
 
 
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal  = useAdminValidation()
+
     const [mediaTarget, setMediaTarget] = useState([])
     const [pagination, setPagination] = useState(10)
     const [selectedEmployee, setSselectedEmployee] = useState('')
@@ -42,8 +54,7 @@ function MeadiaTargetTable({EmployeeData}) {
 
     const getLiveClasses = useCallback(async function () {
         try {
-            const response7 = await axios.get(`${ url }/mediatarget`)
-            console.log(response7)
+            const response7 = await axios.get(`${url}/mediaTarget/${pathVal}`,{ headers })
             setMediaTarget(response7.data)
         } catch (error) {
             console.error(error)

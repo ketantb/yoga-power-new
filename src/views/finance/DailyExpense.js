@@ -24,6 +24,7 @@ import { useSelector } from 'react-redux'
 import axios from 'axios'
 import moment from 'moment/moment'
 import { MdDelete } from 'react-icons/md'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 
 const DailyExpense = () => {
@@ -33,6 +34,10 @@ const DailyExpense = () => {
     const url1 = useSelector((el)=>el.domainOfApi) 
     const [categoryName,setCategory] = useState('')
     const [selectedMonth,setSelectedMonth] = useState('')
+
+    const pathValue = useAdminValidation()
+    const pathValueMaster = useAdminValidation('Master')
+
     
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -43,7 +48,7 @@ var monthNaame= ["January","February","March","April","May","June","July",
     "August","September","October","November","December"]
 
     const getExpenseData=()=>{
-        axios.get(`${url1}/dailyexpense`, {
+        axios.get(`${url1}/dailyExpence/${pathValue}`, {
           headers: {
               'Authorization': `Bearer ${token}`
           }
@@ -62,7 +67,7 @@ function deleteExpense(id){
     console.log(id)
     if(!confirm('Do you Want to Delete'))return 
 
-    axios.delete(`${url1}/dailyexpense/${id}`,{ 
+    axios.delete(`${url1}/dailyExpence/${id}`,{ 
         headers: {
             "Authorization": `Bearer ${token}`,
             'Accept': 'application/json',
@@ -77,7 +82,7 @@ function deleteExpense(id){
 
 function updateStatus(id,data){
     data.Status=true
-    axios.put(`${url1}/dailyexpense/${id}`,data,{headers: {
+    axios.post(`${url1}/dailyExpence/update/${id}`,data,{headers: {
         "Authorization": `Bearer ${token}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -88,7 +93,7 @@ function updateStatus(id,data){
 
 async function  ExpenseCategory(){
 try{    
-const response1 =   await axios.get(`${url1}/expenseMaster/all`,{headers: {"Authorization": `Bearer ${token}`}})
+const response1 =   await axios.get(`${url1}/expenseMaster/${pathValueMaster}`,{headers: {"Authorization": `Bearer ${token}`}})
 setAllExpense(response1.data)
 }catch(error){
 

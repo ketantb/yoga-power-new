@@ -2,9 +2,11 @@ import axios from 'axios';
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 import { useSelector } from 'react-redux';
+import { useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 
 const useStockReport = () => {
     const url = useSelector((el)=>el.domainOfApi)
+    const  uniqObjVal = useUniqAdminObjeact()
 
     
     const headers =   {
@@ -35,6 +37,7 @@ const useStockReport = () => {
             Status:'Sold',
             ProductId:productData.productDetails.ProductId,
             StatOfStock:'InStock',
+            ...uniqObjVal
         }
     
     

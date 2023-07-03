@@ -34,7 +34,7 @@ import useMonthlyReport from './AttendanceHook/useMonthlyReport'
 import moment from 'moment/moment'
 import { Link } from 'react-router-dom'
 import { trainerSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
-
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 
 const PtClasses = () => {
@@ -46,6 +46,7 @@ const PtClasses = () => {
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights?.
     crmTrainer?.items?.superRight) 
     const isAdmin = useSelector((el)=>el?.isAdmin) 
+    const pathVal = useAdminValidation()
 
     const dailyAttendedvalidate =  rightsData?.dailybatchAttendance?.includes(trainerSuperRight.pTClasses)
     const monthlyReportvalidate =  rightsData?.monthlyReport?.includes(trainerSuperRight.pTClasses)
@@ -98,8 +99,8 @@ function compareDateFun(date1,date2){
 
     const  getPtClasses = useCallback(async function() {
         try{
-            const response1 =  axios.get(`${url}/clientAttendance/all`,{ headers: {'Authorization': `Bearer ${token}`}})     
-            const response2 =  axios.get(`${url}/memberForm/all`,{ headers: {'Authorization': `Bearer ${token}`}})    
+            const response1 =  axios.get(`${url}/clientAttendance/${pathVal}`,{ headers: {'Authorization': `Bearer ${token}`}})     
+            const response2 =  axios.get(`${url}/memberForm/${pathVal}`,{ headers: {'Authorization': `Bearer ${token}`}})    
                const  data   = await  Promise.all([response1,response2])        
                const  clientAttendanceData  = data[0].data
                const  memBerData =  data[1].data               
