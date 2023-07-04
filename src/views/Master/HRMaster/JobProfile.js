@@ -28,6 +28,7 @@ import React, { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { MdEdit,MdDelete } from "react-icons/md";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const username = user.user.username;
@@ -45,6 +46,8 @@ const JobProfile = () =>{
     const [visible, setVisible] = useState(false)
     const [result1, setResult1] = useState([]);
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation('Master')
+    const uniqObjVal = useUniqAdminObjeact()
     const [updateActive,setUpdateActive] = useState(false)
     const [jobProfileData,setJobProfileData] = useState([])
     const [jobProfile,setJobProfile] = useState(
@@ -59,7 +62,7 @@ const JobProfile = () =>{
    
 
     function getDesignation() {
-        axios.get(`${url}/designation/all`, {
+        axios.get(`${url}/designation/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -74,7 +77,7 @@ const JobProfile = () =>{
 
 
     const getJobProfileData = ()=>{
-        axios.get(`${url}/jobProfile/all`,{headers}).then((el)=>{
+        axios.get(`${url}/jobProfile/${pathVal}`,{headers}).then((el)=>{
          if(el.status!==200){
           return 
          }
@@ -93,7 +96,7 @@ const JobProfile = () =>{
         let response ={}
         try{
           if(type==='Save'){
-            response = await  axios.post(`${url}/jobProfile/create`,jobProfile,{headers})
+            response = await  axios.post(`${url}/jobProfile/create`,{...jobProfile,...uniqObjVal},{headers})
           }
           if(type==='Update'){
            response = await  axios.post(`${url}/jobProfile/update/${jobProfile._id}`,jobProfile,{headers})

@@ -25,6 +25,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 const ServiceMaster = () => {
     const [action1, setAction1] = useState(false)
@@ -33,6 +34,9 @@ const ServiceMaster = () => {
     const [vacancy, setVacancy] = useState("")
     const [status, setStatus] = useState(false)
     const url = useSelector((el) => el.domainOfApi)
+
+    const pathVal  =  useAdminValidation('Master')
+    const uniqObjVal = useUniqAdminObjeact()
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -45,7 +49,7 @@ const ServiceMaster = () => {
     }, []);
 
     function getDesignation() {
-        axios.get(`${url}/designation/all`, {
+        axios.get(`${url}/designation/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -99,7 +103,14 @@ const ServiceMaster = () => {
     }
 
     const saveDesignation = () => {
-        let data = { username: username, jobDesignation: jobDesignation, department: department, availableVacancy: vacancy, status }
+        let data = { 
+                     username: username,
+                     jobDesignation: jobDesignation,
+                     department: department,
+                     availableVacancy: vacancy, 
+                     status,
+                     ...uniqObjVal
+                     }
         fetch(`${url}/designation/create`, {
             method: "POST",
             headers: {
@@ -109,7 +120,6 @@ const ServiceMaster = () => {
             },
             body: JSON.stringify(data)
         }).then((resp) => {
-            // console.warn("resp",resp);;
             resp.json().then(() => {
                 setStatus(false)
                 setJobDesignation('')

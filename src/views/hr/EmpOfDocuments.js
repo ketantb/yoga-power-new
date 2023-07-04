@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { useState,useEffect,useRef } from "react";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
+import { useAdminValidation } from "../Custom-hook/adminValidation";
 
 
 
@@ -23,6 +24,7 @@ const EmpOfDocuments = () => {
     const [visi1, setVisi1]= useState(false)
     const [docurl,setDocUrl]= useState('')
 
+    const pathVal = useAdminValidation()
 
     const componentRef = useRef()
 
@@ -42,7 +44,7 @@ const EmpOfDocuments = () => {
        }
 
    const getEmpDocData = ()=>{
-        axios.get(`${url}/emplDocument/all`,{headers}).then((el)=>{
+        axios.get(`${url}/emplDocument/${pathVal}`,{headers}).then((el)=>{
 
         if(!el.data){
          return 

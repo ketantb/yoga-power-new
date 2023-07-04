@@ -29,6 +29,7 @@ import axios from 'axios';
 import moment from 'moment';
 
 import { useSelector } from "react-redux";
+import { useAdminValidation} from 'src/views/Custom-hook/adminValidation';
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -45,6 +46,7 @@ const JobProfile = ({id}) => {
     const [Search2, setSearch2] = useState('')
     const [Search10, setSearch10] = useState('')
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal =  useAdminValidation('Master')
     const [jobProfileData,setJobProfileData] = useState([])
 
 
@@ -52,7 +54,7 @@ const JobProfile = ({id}) => {
     
     const getStaffJobProfile = async () => {
         try {
-            const response1 =  axios.get(`${url}/jobProfile/all`, { headers })
+            const response1 =  axios.get(`${url}/jobProfile/${pathVal}`, { headers })
             const response2 = axios.get(`${url}/employeeform/${id}`, { headers })
 
             const data = await Promise.all([response1, response2])

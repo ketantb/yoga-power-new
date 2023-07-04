@@ -20,6 +20,7 @@ const centerCode = user.user.centerCode;
 import axios from "axios";
 import { storage } from "src/firebase";
 import {getDownloadURL, ref,uploadBytesResumable } from "firebase/storage";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 
 
@@ -41,6 +42,8 @@ const handlePrint = useReactToPrint({
        }
     
     const url = useSelector((el) => el.domainOfApi)
+    const uniqObjVal =  useUniqAdminObjeact()
+    const pathVal = useAdminValidation('Master')
 
 
     const [showForm,setForm] = useState(true)
@@ -69,7 +72,7 @@ const handlePrint = useReactToPrint({
     const selectedStaff =  staff?.find((el)=>el?._id===empDocumnet?.empName)
 
     function getStaff() {
-        axios.get(`${url}/employeeform`, {
+        axios.get(`${url}/employeeform/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -90,7 +93,7 @@ const handlePrint = useReactToPrint({
 
 
     const getEmpDocData = ()=>{
-         axios.get(`${url}/emplDocument/all`,{headers}).then((res)=>{
+         axios.get(`${url}/emplDocument/${pathVal}`,{headers}).then((res)=>{
          if(!res.status===200){
           return 
          }
@@ -106,7 +109,7 @@ const handlePrint = useReactToPrint({
         try{
           if(type==='Save'){
             response = await  axios.post(`${url}/emplDocument/create`,
-            {...empDocumnet,docview:fileUploaded,empName:selectedStaff?.FullName,MemBerId:selectedStaff._id},{headers})
+            {...empDocumnet,docview:fileUploaded,empName:selectedStaff?.FullName,MemBerId:selectedStaff._id,...uniqObjVal},{headers})
           }
           if(type==='Update'){
            response = await  axios.post(`${url}/emplDocument/update/${empDocumnet?._id}`,{...empDocumnet,empName:selectedStaff?.FullName},{headers})
@@ -244,7 +247,7 @@ const handlePrint = useReactToPrint({
               onChange={(e)=>setEmpDocumnet(prev=>({...prev,empName:e.target.value}))}
               >
                 <option value=''>Select Employee</option>
-                        {staff.filter((list) => list.username === username &&
+                        {staff.filter((list) => 
                           list.selected === 'Select').map((item, index) => (
                             <option key={index} value={item._id}> {item.FullName}</option>
                           ))}
