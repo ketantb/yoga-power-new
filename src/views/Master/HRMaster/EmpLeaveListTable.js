@@ -44,6 +44,7 @@ const username = user.user.username;
 import { useState,useEffect } from 'react';
 import { useSelector } from "react-redux";
 import CustomSelectInput from './CustomSelectInput/CustomSelectInput';
+import { useUniqAdminObjeact,useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 
 const headers = {
@@ -54,6 +55,8 @@ const headers = {
 
 const EmpLeaveListTable = () => {
 
+  const uniqObjVal = useUniqAdminObjeact()
+  const pathValMaster = useAdminValidation('Master') 
 
   const obj ={
      leaveDate:'',
@@ -85,7 +88,7 @@ const EmpLeaveListTable = () => {
  async function getEmpLeaveListData  (){
 
   try{
-    const response1 = await axios.get(`${url}/empleaveList/emp-leave-info`,{headers})
+    const response1 = await axios.get(`${url}/empleaveList/emp-leave-info/${pathValMaster}`,{headers})
     if(response1.status===200){
      setStaff(response1.data)
      
@@ -131,7 +134,7 @@ const EmpLeaveListTable = () => {
 
      try{
        if(type==='Save'){
-         response = await  axios.post(`${url}/empleaveList/create`,empLeaveListObj,{headers})
+         response = await  axios.post(`${url}/empleaveList/create`,{...uniqObjVal,...empLeaveListObj},{headers})
        }
        if(response?.status===200){
         alert('successfully save')

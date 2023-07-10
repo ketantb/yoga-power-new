@@ -33,10 +33,12 @@ const token = user.token;
 
 
 import useAttendanceEmp from './useAttendanceEmployeeHook/useAttendanceEmp';
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 const AttendanceRegister = () => {
 
     const updateAttendanceData  =useAttendanceEmp()
+    const pathValMaster = useAdminValidation('Master')
 
 
     const [dateOfAMonth,setDateOfMonth] = useState([])
@@ -74,8 +76,8 @@ async function getAttendance() {
  const dateWithAttendance = getDaysInMonth(new Date().getMonth(),new Date().getFullYear())
             setDateOfMonth(dateWithAttendance)
  try{
- const response1 = axios.get(`${url1}/staffAttendance/all`, {headers: {'Authorization': `Bearer ${token}`}})
- const response2 = axios.get(`${url1}/employeeform`, {headers: {'Authorization': `Bearer ${token}`}})
+ const response1 = axios.get(`${url1}/staffAttendance/${pathValMaster}`, {headers: {'Authorization': `Bearer ${token}`}})
+ const response2 = axios.get(`${url1}/employeeform/${pathValMaster}`, {headers: {'Authorization': `Bearer ${token}`}})
 
  const data = await Promise.all([response1,response2])
  const attendanceData = data[0].data

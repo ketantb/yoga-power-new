@@ -36,7 +36,8 @@ import CIcon from '@coreui/icons-react'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch,useSelector } from 'react-redux'
+import { leadsSuperRight } from 'src/views/hr/Rights/rightsValue/crmRightsValue'
 
 const AppHeaderDropdown = () => {
    
@@ -47,6 +48,8 @@ const AppHeaderDropdown = () => {
     navigate('/login')
     disPatch({type:'clearentireStore'})
   }
+
+
 
   return (
     <CDropdown variant="nav-item">
@@ -86,6 +89,14 @@ const AppHeaderDropdown = () => {
 
 
 const AppHeaderDropdownForm = () => {
+
+
+  const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+  ?.crmLeads?.items?.superRight) 
+
+  const isAdmin = useSelector((el)=>el.isAdmin) 
+  const enquiryAdd =  rightsData?.addOn?.includes(leadsSuperRight.allEnquires)
+
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
@@ -93,7 +104,7 @@ const AppHeaderDropdownForm = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
 
-        <CDropdownItem >
+        <CDropdownItem style={{display:(isAdmin|| enquiryAdd)?'':'none'}} >
           <Link style={{ textDecoration: 'none' }} to="/forms/enquiry-form">
             <CIcon icon={cilBell} className="me-2"
               tabIndex={-1}

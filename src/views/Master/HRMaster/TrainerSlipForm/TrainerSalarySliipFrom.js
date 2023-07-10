@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
     CButton,
-    CButtonGroup,
     CCard,
     CCardBody,
     CCardHeader,
@@ -9,25 +8,11 @@ import {
     CCol,
     CFormInput,
     CFormSelect,
-    CInputGroup,
-    CInputGroupText,
-    CPagination,
-    CPaginationItem,
     CRow,
-    CTable,
-    CTableBody,
-    CTableDataCell,
-    CTableHead,
-    CTableHeaderCell,
-    CTableRow,
-    CForm,
-    CModal,
-    CModalHeader,
-    CModalBody,
-    CModalTitle
 } from '@coreui/react'
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { useAdminValidation, useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const username = user.user.username;
@@ -42,6 +27,8 @@ const headers = {
 
 const TrainerSalarySliipFrom = ({updateActive,getData}) => {
     const url = useSelector((el) => el.domainOfApi)
+    const pathValMaster = useAdminValidation('Master')
+    const uniObjVal =  useUniqAdminObjeact()
    
     
   const [trainerSlarySlipObj,setTrainerSlarySlipObj] = useState({
@@ -67,7 +54,7 @@ const [staff, setStaff] = useState([])
 const selectedStaff =  staff?.find((el)=>el?._id===trainerSlarySlipObj.trainerId)
 
 function getStaff() {
-    axios.get(`${url}/employeeform`, {
+    axios.get(`${url}/employeeform/${pathValMaster}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -103,7 +90,7 @@ const saveData = async  (type)=>{
    let response ={}
    try{
      if(type==='Save'){
-       response = await  axios.post(`${url}/trainerSalarySlip/create`,data,{headers})
+       response = await  axios.post(`${url}/trainerSalarySlip/create`,{...uniObjVal,...data},{headers})
      }
      if(type==='Update'){
       response = await  axios.post(`${url}/trainerSalarySlip/update/${updateActive.obj?._id}`,data,{headers})

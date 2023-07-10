@@ -12,6 +12,7 @@ import EmPerformanceForm from './EmPerformanceForm'
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { MdDelete, MdEdit } from 'react-icons/md';
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -29,6 +30,7 @@ const EmpPerformanceTable = ({staff}) => {
     const [updateActive,setUpdateActive] = useState({visible:false,obj:{}})
     const [employeePerformance,setEmployeePerformance] = useState([])
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal =  useAdminValidation('Master')
 
 
     useEffect(()=>{
@@ -38,7 +40,7 @@ const EmpPerformanceTable = ({staff}) => {
       
 
     function getEmpPerformance(){
-        axios.get(`${url}/employeePerformance/all`, {headers})
+        axios.get(`${url}/employeePerformance/${pathVal}`, {headers})
         .then((res) => {
           setEmployeePerformance(res.data.reverse())
         }).catch((error) => {console.error(error)})

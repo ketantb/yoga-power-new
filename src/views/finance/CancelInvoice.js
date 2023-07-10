@@ -31,8 +31,8 @@ import { MdDelete } from 'react-icons/md';
 import YogaSpinnar from '../theme/YogaSpinnar';
 import moment from 'moment/moment'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
+import { financeRight } from '../hr/Rights/rightsValue/erpRightsValue'
 const Invoice = React.lazy(()=>import('../clients/Invoice'))
-
 
 let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
@@ -59,6 +59,11 @@ const CancelInvoice = () => {
     const [endDate,setEndDate] = useState('')
     const [employeeData, setEmployeeData] = useState([])
     const [selectedEmployee, setSselectedEmployee] = useState('')
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpFinance.items
+    .erpInvoices.items.erpCancelledInvoice.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
 
     
     const getAllInvoiceData = async ()=>{
@@ -189,7 +194,9 @@ const CancelInvoice = () => {
             setServiceName('')
             }
     
-
+            const toCheckValiDate= (val)=>{
+                return  (access.includes(val)||isAdmin) ?'':'none'
+            }
 
     return (
         <CRow>
@@ -305,9 +312,9 @@ const CancelInvoice = () => {
                                     <CTableHeaderCell scope="col">Paid</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Balance</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Mode</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">view</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">status</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Delete</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:toCheckValiDate(financeRight.viewCancelInvoice)}}>view</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:toCheckValiDate(financeRight.statusCancelInvoice)}}>status</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:toCheckValiDate(financeRight.deleteCancelledInvoice)}}>Delete</CTableHeaderCell>
 
                                
                                 </CTableRow>
@@ -340,16 +347,16 @@ const CancelInvoice = () => {
                                     <CTableDataCell>{el.pendingAmount}</CTableDataCell>
                                     <CTableDataCell>{el.paymode}</CTableDataCell>
                                    
-                                    <CTableDataCell>{
+                                    <CTableDataCell style={{display:toCheckValiDate(financeRight.viewCancelInvoice)}}>{
                                         <CButton size='sm' onClick={()=>ShowUserInvoceHandler(el._id,el)}>
                                             <BsEye />
                                       </CButton>}</CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:toCheckValiDate(financeRight.statusCancelInvoice)}}>
                                         {el.status==='cancel'&&<CButton color='danger' size='sm'  onClick={()=>StatusOpration('active',el._id)} >Cancel</CButton>  }
                                         {el.status==='active'&& <CButton color='warning' size='sm' onClick={()=>StatusOpration('done',el._id)}>Panding..</CButton> }
                                         {el.status==='done'&&<CButton color='success' size='sm' onClick={()=>StatusOpration('cancel',el._id)} >Done</CButton>  }                                        
                                         </CTableDataCell>  
-                                    <CTableDataCell className='text-center' style={{cursor:'pointer'}} >{
+                                    <CTableDataCell style={{display:toCheckValiDate(financeRight.deleteCancelledInvoice),cursor:'pointer'}} className='text-center' >{
                                       <CButton size='sm' color='danger'
                                       onClick={()=>DeleteInvoice(el._id)}
                                       ><MdDelete/></CButton>  

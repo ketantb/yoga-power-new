@@ -28,12 +28,14 @@ import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs';
 import axios from 'axios';
 import moment from 'moment';
 import { useSelector } from "react-redux";
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 
 const ShiftTimingManagment = () => {
 
     const [shiftTimeingData,setShitTimeingData] = useState([])
     const url = useSelector((el) => el.domainOfApi)
+    const pathValMaster = useAdminValidation('Master')
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -63,7 +65,7 @@ const ShiftTimingManagment = () => {
     
       
       const getShitTimeData = ()=>{
-       axios.get(`${url}/shiftTimeSchedule/all`,{headers}).then((el)=>{
+       axios.get(`${url}/shiftTimeSchedule/${pathValMaster}`,{headers}).then((el)=>{
         if(!el.status){
          return 
         }

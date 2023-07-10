@@ -30,19 +30,21 @@ import   FormConecter from  './TrainerSlipForm/FormConecter'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { MdDelete, MdEdit } from 'react-icons/md'
+import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-
 const TrainerSalarySlipMaster = () => {
 
   const [trainerSalarySlipData,setTrainerSalrySlipData] = useState([])  
   const url1 = useSelector((el) => el.domainOfApi)
+  const pathValMaster =  useAdminValidation('Master')
+
   const [updateActive,setUpdateActive] = useState({visible:false,obj:{}})
 
 
 
    const getTrainerSalarySlipData = ()=>{
-    axios.get(`${url1}/trainerSalarySlip/all`, {
+    axios.get(`${url1}/trainerSalarySlip/${pathValMaster}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

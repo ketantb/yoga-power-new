@@ -1,8 +1,7 @@
 import React from 'react'
 
 const useRight = (setRightObject,Grandparnet) => {
-
-   
+ 
 return function empSubRigthFun(parent,type,val){
 if(parent){
         setRightObject(prev=>{
@@ -13,6 +12,20 @@ if(parent){
 }
 } 
 }
+
+const useRightErp = ()=>{
+    return function empSubRigthFun(parent,type,val){
+        if(parent){
+                setRightObject(prev=>{
+                    prev.erpRights[Grandparnet].items[type].value=val
+                    return {...prev}
+        }
+        )
+        }
+        }   
+}
+
+
 
 
 const useSuperRightVal =(superRight)=>{
@@ -41,4 +54,4 @@ const useSuperRightFun = (setRightObject,parent,child)=>{
 
 
 
-export {useRight,useSuperRightVal,useSuperRightFun}
+export {useRight,useSuperRightVal,useSuperRightFun,useRightErp}

@@ -10,6 +10,7 @@ import * as icon from '@coreui/icons';
 import { useSelector } from "react-redux";
 import axios from 'axios'
 import { MdEdit,MdDelete } from "react-icons/md";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 function EmpJoining (){
 
@@ -17,8 +18,9 @@ function EmpJoining (){
   const token = user.token;
   const username = user.user.username;
 
-  const centerCode = user.user.centerCode;
   const url = useSelector((el) => el.domainOfApi)
+  const pathValMaster = useAdminValidation('Master')
+  const uniqObjVal = useUniqAdminObjeact()
 
 
     const [showForm,setForm] = useState(true)
@@ -43,7 +45,7 @@ function EmpJoining (){
 
 
   const getEmpJoiningData = ()=>{
-   axios.get(`${url}/empJoining/all`,{headers}).then((el)=>{
+   axios.get(`${url}/empJoining/${pathValMaster}`,{headers}).then((el)=>{
     console.log(el.data)
     if(!el.data){
      return 
@@ -53,11 +55,11 @@ function EmpJoining (){
   }
 
   const saveData = async (type)=>{
-    console.log(empJoininSheet)
+    
     let response ={}
     try{
       if(type==='Save'){
-        response = await  axios.post(`${url}/empJoining/create`,empJoininSheet,{headers})
+        response = await  axios.post(`${url}/empJoining/create`,{...empJoininSheet,...uniqObjVal},{headers})
       }
       if(type==='Update'){
        response = await  axios.post(`${url}/empJoining/update/${empJoininSheet?._id}`,empJoininSheet,{headers})

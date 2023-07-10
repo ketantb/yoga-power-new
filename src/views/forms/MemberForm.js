@@ -44,8 +44,8 @@ import { storage } from "src/firebase";
 import logo from 'src/assets/images/avatars/icon.png'
 import { v4 } from "uuid";
 import { useReactToPrint } from 'react-to-print'
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
+import { useSelector } from "react-redux";
+
 
 const MemberForm = () => {
 
@@ -55,6 +55,8 @@ const MemberForm = () => {
         documentTitle: 'yog-power',
         onAfterPrint: () => alert('print success')
     })
+  let url = url2 = useSelector((el)=>el.domainOfApi)
+
 
     const [activeKey, setActiveKey] = useState(1)
     const [image, setImage] = useState(null)
@@ -712,7 +714,7 @@ const MemberForm = () => {
                                                     >
                                                         <option>Select Service</option>
                                                         {result1.map((item, index) => (
-                                                            item.username === username && (
+                                                            (
                                                                 item.status === true && (
                                                                     <option key={index}>{item.selected_service}</option>
                                                                 )
@@ -729,7 +731,7 @@ const MemberForm = () => {
                                                     >
                                                         <option>Select Service</option>
                                                         {result1.filter((list) => list.selected_service === serviceName).map((item, index) => (
-                                                            item.username === username && (
+                                                            (
                                                                 item.status === true && (
                                                                     <option key={index}>{item.sub_Service_Name}</option>
                                                                 )
@@ -765,8 +767,8 @@ const MemberForm = () => {
 
                                                     >
                                                         <option>Select Enquiry Type</option>
-                                                        {leadArr.filter((list) => list.username === username).map((item, index) => (
-                                                            item.username === username && (
+                                                        {leadArr.filter((list) => list).map((item, index) => (
+                                                            (
                                                                 <option key={index}>{item.LeadSource}</option>
                                                             )
                                                         ))}</CFormSelect>
@@ -785,8 +787,8 @@ const MemberForm = () => {
                                                         label="Assign Staff"
                                                     >
                                                         <option>Select Assign Staff</option>
-                                                        {staff.filter((list) => list.username === username && list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
-                                                            item.username === username && (
+                                                        {staff.filter((list) => list && list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
+                                                            (
                                                                 <option key={index}>{item.FullName}</option>
                                                             )
                                                         ))}</CFormSelect>
@@ -816,7 +818,7 @@ const MemberForm = () => {
                                                         label="Batch"
                                                     ><option>Select Batch</option>
                                                         {result.map((item, index) => (
-                                                            item.username === username && (
+                                                            (
                                                                 <option key={index} value={item.batch_timing}>{item.batch_timing} {item.Batch_Duration}</option>
                                                             )
                                                         ))}</CFormSelect>
@@ -1145,7 +1147,7 @@ const MemberForm = () => {
                                                         >
                                                             <option>Select Service</option>
                                                             {result1.filter((list) =>
-                                                                list.username === username &&
+                                                                list &&
                                                                 list.status === true).map((item, index) => (
                                                                     <option key={index} value={item.selected_service}> {item.selected_service}</option>
                                                                 ))}
@@ -1161,7 +1163,7 @@ const MemberForm = () => {
                                                         >
                                                             <option>Select Variation</option>
                                                             {result1.filter((list) =>
-                                                                list.username === username && list.selected_service === ser1 &&
+                                                                list && list.selected_service === ser1 &&
                                                                 list.status === true).map((item, index) => (
                                                                     <option key={index} value={item.sub_Service_Name}> {item.sub_Service_Name}</option>
                                                                 ))}
@@ -1177,7 +1179,7 @@ const MemberForm = () => {
                                                         >
                                                             <option>Select Package</option>
                                                             {result1.filter((list) =>
-                                                                list.username === username && list.sub_Service_Name === ser6 &&
+                                                                list && list.sub_Service_Name === ser6 &&
                                                                 list.status === true).map((item, index) => (
                                                                     <option key={index} value={item.packages}> {item.packages}</option>
                                                                 ))}
@@ -1232,7 +1234,7 @@ const MemberForm = () => {
                                                 >
                                                     <option>Select Duration</option>
                                                     {result1.filter((list) =>
-                                                        list.username === username &&
+                                                        list &&
                                                         list.status === true && list.duration !== '' && list.sub_Service_Name === ser6).map((item, index) => (
                                                             <option key={index} value={item.duration}>{item.duration}</option>
                                                         ))}
@@ -1249,7 +1251,7 @@ const MemberForm = () => {
                                                 >
                                                     <option>Select Fees</option>
                                                     {result1.filter((list) =>
-                                                        list.username === username &&
+                                                        list &&
                                                         list.status === true && list.duration.includes(ser2)).map((item, index) => (
                                                             <option key={index} value={item.fees}>{item.fees}</option>
                                                         ))}

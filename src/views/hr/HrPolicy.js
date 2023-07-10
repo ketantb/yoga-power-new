@@ -27,10 +27,12 @@ import { MdCall, MdDelete, MdEdit, MdMail } from 'react-icons/md';
 import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 const HrPolicy = () => {
 
     const url = useSelector((el)=>el.domainOfApi) 
+    const pathValMaster  = useAdminValidation('Master') 
 
 
 
@@ -51,8 +53,9 @@ const HrPolicy = () => {
         getPolicy()
     }, []);
 
+    console.log(pathValMaster,'filter-by-admin/64942d67891aeb3607fd8061')
     function getPolicy() {
-        axios.get(`${url}/hrPolicyMaster/all`, {headers})
+        axios.get(`${url}/hrPolicyMaster/${pathValMaster}`, {headers})
             .then((res) => {
                 console.log(res.data)
                 setResult1(res.data.reverse())
@@ -81,8 +84,7 @@ const HrPolicy = () => {
                             </CTableHead>
                             <CTableBody>
                                
-                                {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                                    list.username === username).map((item, index) => (
+                                {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
                                         <CTableRow style={{fontSize:'17px',fontWeight:'700'}} key={index} >
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{item.Title}</CTableDataCell>

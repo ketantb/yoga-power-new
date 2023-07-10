@@ -13,6 +13,7 @@ import {
 } from '@coreui/react'
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import {useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const username = user.user.username;
@@ -26,7 +27,9 @@ const headers = {
 
 
 const TrainerPerformanceForm = ({updateActive,getData,trainer,setUpdateActive}) => {
+
 const url = useSelector((el) => el.domainOfApi)
+const uniqObjVal = useUniqAdminObjeact()
 
     
 const [trainerObj,setTrainerObj] = useState({
@@ -107,7 +110,7 @@ const saveData = async  (type)=>{
    delete trainerObj?._id
    try{
      if(type==='Save'){
-       response = await  axios.post(`${url}/trainerPerformance/create`,trainerObj,{headers})
+       response = await  axios.post(`${url}/trainerPerformance/create`,{...trainerObj,...uniqObjVal},{headers})
      }
      if(type==='Update'){
       response = await  axios.post(`${url}/trainerPerformance/update/${id}`,trainerObj,{headers})

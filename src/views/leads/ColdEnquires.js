@@ -37,6 +37,7 @@ import moment from 'moment/moment'
 import AdmissionForm1 from 'src/components/AdmissionForm1'
 import { useSelector } from 'react-redux'
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
+import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
 
 const ColdEnquires = () => {
 
@@ -120,7 +121,6 @@ const ColdEnquires = () => {
     const url = useSelector((el) => el.domainOfApi)
     const url2 = useSelector((el) => el.domainOfApi)
 
-
     let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
     const token = user.token;
@@ -134,11 +134,23 @@ const ColdEnquires = () => {
     const [paging, setPaging] = useState(0);
     const [updateItem, setUpdateItem] = useState([]);
 
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmLeads?.items?.superRight) 
+
+
+
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+    const coldAdd =  rightsData?.addOn?.includes(leadsSuperRight.coldEnquires)
+    const coldDelete =  rightsData?.delete?.includes(leadsSuperRight.coldEnquires)
+    const coldEdit  =  rightsData?.edit?.includes(leadsSuperRight.coldEnquires)
+
+
+
     const [pros, setPros] = useState([])
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/prospect/${pathRoute}l`, {
+        axios.get(`${url}/prospect/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -1489,11 +1501,11 @@ const ColdEnquires = () => {
                                     <CTableHeaderCell>Enquiry stage</CTableHeaderCell>
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
                                     <CTableHeaderCell>Discussion</CTableHeaderCell>
-                                    <CTableHeaderCell>Add</CTableHeaderCell>
+                                    {(isAdmin|| coldAdd)&&<CTableHeaderCell>Add</CTableHeaderCell>}
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>
                                     <CTableHeaderCell>Counseller</CTableHeaderCell>
-                                    <CTableHeaderCell>Action</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit</CTableHeaderCell>
+                                    {(isAdmin|| coldAdd)&&<CTableHeaderCell>Action</CTableHeaderCell>}
+                                    {(isAdmin||coldDelete||coldEdit)&&<CTableHeaderCell>Edit</CTableHeaderCell>}
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -1607,13 +1619,14 @@ const ColdEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| coldAdd)?'':'none'}}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
                                             type="text"
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
+
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
@@ -1637,7 +1650,7 @@ const ColdEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| coldAdd)?'':'none'}} >
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -1646,7 +1659,7 @@ const ColdEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| coldEdit||coldDelete)?'':'none'}} >
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -1677,13 +1690,21 @@ const ColdEnquires = () => {
                                             <CTableDataCell>{item.appointmentfor}</CTableDataCell>
                                             <CTableDataCell>{item.CallStatus}</CTableDataCell>
                                             <CTableDataCell>{item.Message}</CTableDataCell>
-                                            <CTableDataCell><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { addForm(item._id), setEdit(item._id), handleAdmission(item._id) }} /></CTableDataCell>
+                                            <CTableDataCell style={{display:(isAdmin|| coldAdd)?'':'none'}} ><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { addForm(item._id), setEdit(item._id), handleAdmission(item._id) }} /></CTableDataCell>
                                             <CTableDataCell>{item.StaffName}</CTableDataCell>
                                             <CTableDataCell>{item.Counseller}</CTableDataCell>
-                                            <CTableDataCell className='text-center'><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
-                                            <CTableDataCell className='text-center'><MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} onClick={() => handleEnquiry(item._id)} size='20px' /> <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteEnquiry(item._id)} size='20px' /></CTableDataCell>
-                                        </CTableRow>
+                                            <CTableDataCell style={{display:(isAdmin|| coldAdd)?'':'none'}} className='text-center'><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
+                                            <CTableDataCell style={{display:(isAdmin|| coldEdit||coldDelete)?'':'none'}}
+                                             className='text-center'>
 
+                                                {coldEdit&&<MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }}
+                                                 onClick={() => handleEnquiry(item._id)} size='20px' />} 
+                                                {coldDelete && <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
+                                                onClick={() => deleteEnquiry(item._id)} size='20px' />}
+                                                
+                                            </CTableDataCell>
+                                        </CTableRow>
+ 
                                     )
                                 ))}
                             </CTableBody>

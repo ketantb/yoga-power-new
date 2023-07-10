@@ -35,6 +35,7 @@ import moment from 'moment';
 import { useSelector } from 'react-redux'
 import AdmissionForm1 from 'src/components/AdmissionForm1';
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
+import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue';
 
 const FollowupScheduling = () => {
 
@@ -83,6 +84,14 @@ const FollowupScheduling = () => {
     const [admissionForm, setAdmissionForm] = useState(false)
     const [admissionFormData,setAdmissionFormData] = useState('')
 
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmLeads?.items?.superRight) 
+
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+    const prospectAdd =  rightsData?.addOn?.includes(leadsSuperRight.prospect)
+    const prospectDelete =  rightsData?.delete?.includes(leadsSuperRight.prospect)
+    const prospectEdit  =  rightsData?.edit?.includes(leadsSuperRight.prospect)
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -1163,8 +1172,8 @@ const FollowupScheduling = () => {
                                     <CTableHeaderCell>Enquiry Stage</CTableHeaderCell>
                                     <CTableHeaderCell>Discussion</CTableHeaderCell>
                                     <CTableHeaderCell>Counseller</CTableHeaderCell>
-                                    <CTableHeaderCell>Action</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit</CTableHeaderCell>
+                                    {(isAdmin|| prospectAdd)&&<CTableHeaderCell>Action</CTableHeaderCell>}
+                                    {(isAdmin|| prospectEdit||prospectDelete)&&<CTableHeaderCell>Edit</CTableHeaderCell>}
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -1297,7 +1306,7 @@ const FollowupScheduling = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| (prospectAdd))?'':'none'}} >
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
@@ -1307,7 +1316,7 @@ const FollowupScheduling = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| (prospectEdit || prospectDelete))?'':'none'}} >
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -1345,8 +1354,20 @@ const FollowupScheduling = () => {
                                         <CTableDataCell>{item.enquiryStage}</CTableDataCell>
                                         <CTableDataCell>{item.Discussion}</CTableDataCell>
                                         <CTableDataCell>{item.Counseller}</CTableDataCell>
-                                        <CTableDataCell className='text-center'><a href={`tel:+91${item.Contact}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`https://wa.me/${item.Contact}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`mailto: ${item.Email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item.EnquiryID)} /></CTableDataCell>
-                                        <CTableDataCell className='text-center'><MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} onClick={() => handleEnquiry(item._id)} size='20px' /> <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteProspect(item._id)} size='20px' /></CTableDataCell>
+                                        <CTableDataCell  style={{display:(isAdmin|| (prospectAdd))?'':'none'}} className='text-center'><a href={`tel:+91${item.Contact}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`https://wa.me/${item.Contact}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`mailto: ${item.Email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item.EnquiryID)} /></CTableDataCell>
+                                        
+                                        <CTableDataCell  style={{display:(isAdmin|| (prospectEdit||prospectDelete))?'':'none'}} className='text-center'>
+                                           
+                                            {prospectEdit&&
+                                                <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }}
+                                             onClick={() => handleEnquiry(item._id)} size='20px' />
+                                             }
+
+                                            {prospectDelete&&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
+                                             onClick={() => deleteProspect(item._id)} size='20px' />}
+
+                                        </CTableDataCell>
+
                                     </CTableRow>
                                 })}
                             </CTableBody>

@@ -30,7 +30,6 @@ const SalarySlip = ({empData,showInvoiceModal,setInvoceModal}) => {
     })
 
 
-    console.log(empData)
   return (
 <CModal size="xl" alignment="center" scrollable visible={showInvoiceModal} onClose={() => setInvoceModal(false)}>
 <CModalHeader>

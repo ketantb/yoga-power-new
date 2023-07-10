@@ -25,13 +25,19 @@ import axios from 'axios'
 import moment from 'moment/moment'
 import { MdDelete } from 'react-icons/md'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
-
+import { financeRight } from '../hr/Rights/rightsValue/erpRightsValue'
 
 const DailyExpense = () => {
 
     const [dailyExpense,setDailyExpense] = useState([])
     const [allExpense,setAllExpense] = useState([])
+
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights?.erpFinance?.items
+    ?.erpExpense?.items?.erpDailyExpense?.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
     const [categoryName,setCategory] = useState('')
     const [selectedMonth,setSelectedMonth] = useState('')
 
@@ -109,6 +115,9 @@ const clearFunction = ()=>{
     setCategory('')
 }
 
+const toCheckValiDate= (val)=>{
+    return  (access.includes(val)||isAdmin) ?'':'none'
+}
 
     return (
         <CRow>
@@ -159,15 +168,10 @@ const clearFunction = ()=>{
                                     <CTableHeaderCell scope="col">Paid By</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Paid To</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Approved By</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Status</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Delete</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:toCheckValiDate(financeRight.dailyExpenseStatus)}}>Status</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:toCheckValiDate(financeRight.deleteDailyExpense)}}>Delete</CTableHeaderCell>
 
-                                    {/* <CTableHeaderCell scope="col">Renewls Revenue</CTableHeaderCell> */}
-                                    {/* <CTableHeaderCell scope="col">
-                                        Balance Collection
-                                    </CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">View</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Achived %</CTableHeaderCell> */}
+                             
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -187,10 +191,10 @@ const clearFunction = ()=>{
                                     <CTableDataCell>{el.Created_By}</CTableDataCell>
                                     <CTableDataCell>{el.Paid_To}</CTableDataCell>
                                     <CTableDataCell>{el.Approved_By}</CTableDataCell>
-                                    <CTableDataCell>{ el.Status?
+                                    <CTableDataCell style={{display:toCheckValiDate(financeRight.dailyExpenseStatus)}}>{ el.Status?
                                     <CButton size='sm' color='success' className='text-center'onClick={()=>{updateStatus(el._id,el)}} >Done</CButton>
                                     :<CButton size='sm' color='warning' onClick={()=>{updateStatus(el._id,el)}}>Pending...</CButton>}</CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:toCheckValiDate(financeRight.deleteDailyExpense)}}>
                                         <CButton size='sm' color='danger' className='text-center' onClick={()=>deleteExpense(el._id)} >
                                             <MdDelete/>
                                         </CButton>

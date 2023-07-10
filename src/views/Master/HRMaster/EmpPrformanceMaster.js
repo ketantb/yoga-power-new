@@ -17,9 +17,11 @@ import EmpPerformanceTable from './EmpPerformance/EmpPerformanceTable'
 import TrainerPerformance from './EmpPerformance/TrainerPerformance'
 import axios from 'axios'
 import { useSelector } from 'react-redux';
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const username = user.user.username;
+
 
 const headers = {
   "Authorization": `Bearer ${token}`
@@ -31,9 +33,10 @@ const EmpPerformance = () => {
     const [trainer, setTrainer] = useState([])
 
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation('Master')
 
     function getStaff() {
-      axios.get(`${url}/employeeform`, {headers})
+      axios.get(`${url}/employeeform/${pathVal}`, {headers})
         .then((res) => {
           const employeeData = res.data.filter((el)=>el.selected==="Select")          
           setStaff(employeeData)

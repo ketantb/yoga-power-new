@@ -38,6 +38,7 @@ import AdmissionForm1 from 'src/components/AdmissionForm1'
 useAdminValidation
 import { useSelector } from 'react-redux'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
+import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
 
 const TrialEnquires = () => {
     const url1 = useSelector((el) => el.domainOfApi)
@@ -50,6 +51,17 @@ const TrialEnquires = () => {
     var year = currentdate.getFullYear();
 
     const pathRoute = useAdminValidation()
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmLeads?.items?.superRight) 
+
+
+
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+    const trailAdd =  rightsData?.addOn?.includes(leadsSuperRight.trailUpdate)
+    const trailDelete =  rightsData?.delete?.includes(leadsSuperRight.trailUpdate)
+    const trailEdit  =  rightsData?.edit?.includes(leadsSuperRight.trailUpdate)
+
 
     const [select, setSelect] = useState('')
     const [followForm, setFollowForm] = useState()
@@ -273,7 +285,8 @@ const TrialEnquires = () => {
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, 
+                AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
                 status: 'CallReport'
             }
 
@@ -1469,13 +1482,13 @@ const TrialEnquires = () => {
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
                                     <CTableHeaderCell style={{minWidth:'100px'}}>Trial Date/Time</CTableHeaderCell>
 
-                                    <CTableHeaderCell>Trial Status</CTableHeaderCell>
+                                    {(isAdmin|| trailEdit)&&<CTableHeaderCell>Trial Status</CTableHeaderCell>}
                                     <CTableHeaderCell>Dicussion</CTableHeaderCell>
 
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>
                                     <CTableHeaderCell>Counseller</CTableHeaderCell>
-                                    <CTableHeaderCell>Action</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit</CTableHeaderCell>
+                                    {(isAdmin|| trailAdd)&&<CTableHeaderCell>Action</CTableHeaderCell>}
+                                    {(isAdmin|| (trailEdit||trailDelete))&&<CTableHeaderCell>Edit/Delete</CTableHeaderCell>}
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -1589,13 +1602,13 @@ const TrialEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| trailEdit)?'':'none'}}>
                                         <CFormInput
                                             className="mb-1"
-                                            style={{ minWidth: "100px" }}
                                             type="text"
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            style={{minWidth: "100px"}}
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
@@ -1627,28 +1640,29 @@ const TrialEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| trailAdd)?'':'none'}}>
                                         <CFormInput
                                             className="mb-1"
-                                            style={{ minWidth: "100px" }}
                                             type="text"
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            style={{minWidth: "100px"}}
+
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| (trailEdit||trailDelete))?'':'none'}}>
                                         <CFormInput
                                             className="mb-1"
-                                            style={{ minWidth: "100px" }}
                                             type="text"
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            style={{minWidth: "100px"}}
+
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
                                 {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                                    list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) 
-                                    && 
+                                     moment(list.createdAt).format("MM-DD-YYYY").includes(select) &&
                                     list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
                                      list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                                     list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) &&
@@ -1668,7 +1682,7 @@ const TrialEnquires = () => {
                                             <CTableDataCell>{item.appointmentfor}</CTableDataCell>
                                             <CTableDataCell>{item.CallStatus}</CTableDataCell>
                                             <CTableDataCell>{moment(item.appointmentDate).format("DD-MM-YYYY") != 'Invalid date' && moment(item.appointmentDate).format("DD-MM-YYYY")}<br />{moment(item.appointmentTime, "HH:mm").format("hh:mm A") != 'Invalid date' && moment(item.appointmentTime, "HH:mm").format("hh:mm A")}</CTableDataCell>
-                                            <CTableDataCell>
+                                            <CTableDataCell style={{display:(isAdmin|| trailEdit)?'':'none'}}>
                                             {item?.trailStatus?<CButton size='sm' color='success'>Done</CButton>:  
                                             <CButton size='sm' color='warning' onClick={()=>conFirmTrailStatus(item._id)} >Pending...</CButton>}   
                                             </CTableDataCell>
@@ -1677,8 +1691,11 @@ const TrialEnquires = () => {
                                           
  <CTableDataCell>{item.StaffName}</CTableDataCell>
                                             <CTableDataCell>{item.Counseller}</CTableDataCell>
-                                            <CTableDataCell className='text-center'><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
-                                            <CTableDataCell className='text-center'><MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} onClick={() => handleEnquiry(item._id)} size='20px' /> <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteEnquiry(item._id)} size='20px' /></CTableDataCell>
+                                            <CTableDataCell className='text-center' style={{display:(isAdmin|| trailAdd)?'':'none'}}><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
+                                            <CTableDataCell className='text-center'>
+                                                {(isAdmin|| trailEdit) &&<MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} 
+                                                onClick={() => handleEnquiry(item._id)} size='20px' />}
+                                         {(isAdmin||trailDelete) &&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteEnquiry(item._id)} size='20px' />}</CTableDataCell>
                                         </CTableRow>
                                     )
                                 ))}
@@ -1691,16 +1708,16 @@ const TrialEnquires = () => {
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
                         {result1.filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Trial Session' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                            list && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Trial Session' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                         ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                         {result1.filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Trial Session' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                            list && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Trial Session' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                         ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                         {result1.filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Trial Session' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                            list && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Trial Session' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                         ).length > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>

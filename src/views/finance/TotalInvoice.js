@@ -33,6 +33,7 @@ import YogaSpinnar from '../theme/YogaSpinnar';
 import {Link} from 'react-router-dom'
 import moment from 'moment/moment'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
+import { financeRight } from '../hr/Rights/rightsValue/erpRightsValue'
 
 const Invoice = React.lazy(()=>import('../clients/Invoice'))
 
@@ -47,6 +48,11 @@ let user = JSON.parse(localStorage.getItem('user-info'))
 const TotalInvoice = () => {
 
     const pathVal =    useAdminValidation()
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpFinance.items
+    .erpInvoices.items.erpTotalInvoice.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
 
     let num =0
     const [AllInvoiceData,setAllInvoiceData] = useState([])
@@ -203,6 +209,10 @@ setEndDate('')
 setServiceName('')
 }
 
+const toCheckValiDate= (val)=>{
+return  (access.includes(val)||isAdmin) ?'':'none'
+}
+
     return (
         <CRow>
             <Invoice 
@@ -306,7 +316,7 @@ setServiceName('')
                                     <CTableHeaderCell scope="col">
                                         Client Id
                                     </CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Client Name</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" >Client Name</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Invoice No</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Services</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Service Duration</CTableHeaderCell>
@@ -322,9 +332,9 @@ setServiceName('')
                                     <CTableHeaderCell scope="col">Paid</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Balance</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Pay Mode</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Invoice</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col"> Cancel Invoice</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col"> Delete</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display: toCheckValiDate(financeRight.viewTotalInvoice)}} >Invoice</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col"  style={{display:toCheckValiDate(financeRight.totalStatus) }}> Cancel Invoice</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col"  style={{display:toCheckValiDate(financeRight.deleteTotalInvoice)}} > Delete</CTableHeaderCell>
 
                                 </CTableRow>
                             </CTableHead>
@@ -344,7 +354,12 @@ setServiceName('')
                                     <CTableDataCell>{getDate(el.createdAt,true)}</CTableDataCell>
                                     <CTableDataCell>{el.centerName}</CTableDataCell>
                                     <CTableDataCell>{el.clientId}</CTableDataCell>
-<CTableDataCell><Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${el.MemberId}/1`} target="_black">{el.MemberName}</Link></CTableDataCell>
+<CTableDataCell>
+    {toCheckValiDate(financeRight.viewTotalInvoiceProfile)===''?
+    <Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${el.MemberId}/1`} target="_black">
+        {el.MemberName}</Link>:el.MemberName}
+        
+</CTableDataCell>
 
                                     <CTableDataCell>{el.InvoiceNo}</CTableDataCell>
                                     <CTableDataCell>{el.ServiceName}</CTableDataCell>
@@ -361,16 +376,17 @@ setServiceName('')
                                     <CTableDataCell>{el.paidAmount}</CTableDataCell>
                                     <CTableDataCell>{el.pendingAmount}</CTableDataCell>
                                     <CTableDataCell>{el.paymode}</CTableDataCell>
-                                    <CTableDataCell>{
+                                    <CTableDataCell style={{display:toCheckValiDate(financeRight.viewTotalInvoice)}}>{
                                         <CButton size='sm' onClick={()=>ShowUserInvoceHandler(el._id,el)}>
                                             <BsEye />
                                       </CButton>}</CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:toCheckValiDate(financeRight.totalStatus) }}>
                                         {el.status==='cancel'&&<CButton color='danger' size='sm'  onClick={()=>StatusOpration('active',el._id)} >Cancel</CButton>  }
                                         {el.status==='active'&& <CButton color='warning' size='sm' onClick={()=>StatusOpration('done',el._id)}>Panding..</CButton> }
                                         {el.status==='done'&&<CButton color='success' size='sm' onClick={()=>StatusOpration('cancel',el._id)} >Done</CButton>  }                                        
                                         </CTableDataCell>  
-                                    <CTableDataCell className='text-center' style={{cursor:'pointer'}} >{
+                                    <CTableDataCell style={{display:toCheckValiDate(financeRight.deleteTotalInvoice),cursor:'pointer'}}
+                                     className='text-center' >{
                                       <CButton size='sm' color='danger'
                                       onClick={()=>DeleteInvoice(el._id)}
                                       ><MdDelete/></CButton>  

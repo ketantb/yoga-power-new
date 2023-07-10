@@ -29,6 +29,7 @@ import { MdDelete } from 'react-icons/md';
 import moment from 'moment/moment';
 import Invoice from '../finance/ClientInvoice/Invoice/Invoice';
 import { useAdminValidation } from '../Custom-hook/adminValidation';
+import { inventoryRight } from '../hr/Rights/rightsValue/erpRightsValue';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
@@ -56,6 +57,9 @@ const ProductInvoice = () => {
 
     const pathVal = useAdminValidation()
 
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpInventory.items.erpProductInvoice.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
 
 
     const getAllInvoiceData = async ()=>{
@@ -174,37 +178,6 @@ function toPrintInvoice(data){
                         <strong className="mt-2" > Total Invoice :{AllInvoiceData.length}</strong>
                     </CCardHeader>
                     <CCardBody>
-                        {/* <CRow className='d-flex justify-content-center mb-2'>
-                            <CCol lg={3} md={6} sm={12}  className='mb-2'>
-                                <CInputGroup>
-                                    <CInputGroupText
-                                        component="label"
-                                        htmlFor="inputGroupSelect01"
-                                    >
-                                       Select Staff
-                                    </CInputGroupText>
-                                    <CFormSelect 
-                    value={selectedEmployee}
-                    onChange={(e) => setSselectedEmployee(e.target.value)}
-                >
-                    <option >Select Staff </option>
-
-                    {employeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
-                            <option key={index} value={item.FullName} >{item.FullName}</option>
-                        )
-                    ))}
-
-                </CFormSelect>
-                                </CInputGroup>
-                            </CCol>
-                          
-                        </CRow>
-                        <CRow className='mb-4'>
-                            <CCol>
-                            <CButton onClick={()=>{clearFilter()}}>Clear Filter</CButton>
-                            </CCol>
-                        </CRow> */}
                         
                         <CTable bordered style={{ borderColor: "#106103" }} responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }}>
@@ -219,8 +192,8 @@ function toPrintInvoice(data){
                                     <CTableHeaderCell scope="col">Created By</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Pay Mode</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">View</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col"> Delete</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:access.includes(inventoryRight.viewProductInvoice)?'':'none'}}>View</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:access.includes(inventoryRight.deleteProductInvoice)?'':'none'}}> Delete</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -234,8 +207,8 @@ function toPrintInvoice(data){
                                 <CTableDataCell>{el.counseller}</CTableDataCell>
                                 <CTableDataCell>{el.amount}</CTableDataCell>
                                 <CTableDataCell>{el.paymode}</CTableDataCell>
-                                <CTableDataCell><CButton size='sm' onClick={()=>toPrintInvoice(el)} >View</CButton></CTableDataCell>
-                                <CTableDataCell><MdDelete onClick={()=>deleteCall(el._id)} style={{cursor:'pointer'}}/></CTableDataCell>
+                                <CTableDataCell style={{display:access.includes(inventoryRight.viewProductInvoice)?'':'none'}}><CButton size='sm' onClick={()=>toPrintInvoice(el)} >View</CButton></CTableDataCell>
+                                <CTableDataCell style={{display:access.includes(inventoryRight.deleteProductInvoice)?'':'none'}}><MdDelete onClick={()=>deleteCall(el._id)} style={{cursor:'pointer'}}/></CTableDataCell>
                             </CTableRow>
                                 )}
                             </CTableBody>

@@ -285,17 +285,20 @@ const _nav = [
   {
     component: CNavTitle,
     name: 'ERP',
+    id:'erpRights'
   },
   {
     component: CNavGroup,
     name: 'Task',
     to: '/task',
+    id:"erpTaskList",
     icon: <CIcon icon={cilGraph} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
         name: 'Task Calender',
         to: 'task/create-a-task',
+        id:'erpTaskListCalender'
       },
     ],
   },
@@ -303,47 +306,56 @@ const _nav = [
     component: CNavGroup,
     name: 'Inventory',
     to: '/inventory',
+    id:'erpInventory',
     icon: <CIcon icon={cilGraph} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
         name:'Stock  List',
-        to:'/inventory/stock-order-list'
+        to:'/inventory/stock-order-list',
+        id:'erpStockList'
       },
       {
         component: CNavItem,
         name: 'Stock Report',
-        to: '/inventory/purchase-report ',
+        to: '/inventory/purchase-report',
+        id:'erpStockReport'
       },
       {
         component: CNavItem,
         name: 'Products List',
         to: '/inventory/stock-listing1',
+        id:'erpProductList'
       },
       {
         component: CNavItem,
         name: 'Stock Alert',
         to: '/inventory/stock-alert',
+        id:'erpStockAlert'
       },
       {
         component: CNavItem,
         name: 'Product Sales Report',
         to: '/inventory/sales-report',
+        id:'erpProductSalesReport'
       },
       {
         component: CNavItem,
         name: 'Office Inventory',
         to: '/inventory/stock-assgning',
+        id:'erpOfficeInventory'
       },
       {
         component: CNavItem,
         name: 'IMP Call List',
         to: '/inventory/all-call-list',
+        id:'erpImpCallList'
       },
       {
         component: CNavItem,
         name: 'Product Invoice',
         to: '/inventory/product-invoice',
+        id:'erpProductInvoice'
       },
       
       
@@ -353,80 +365,95 @@ const _nav = [
     component: CNavGroup,
     name: 'Finance',
     to: '/finance',
+    id:'erpFinance',
     icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
     items: [
       {
         component: CNavGroup,
         name: 'Invoices',
         to: '/inventory',
+        id:'erpInvoices',
         items: [
           {
             component: CNavItem,
             name: 'Total Invoices',
             to: '/finance/total-invoice',
+            id:'erpTotalInvoice'
           },
           {
             component: CNavItem,
             name: 'Paid Invoices',
             to: '/finance/paid-invoice',
+            id:'erpPaidInvoice'
           },
           {
             component: CNavItem,
             name: 'Balance Payment',
             to: '/finance/balance-payment',
+            id:'erpBalancePayment'
           },
           {
             component: CNavItem,
             name: 'Receipts',
             to: '/finance/receipt',
+            id:'erpReceipts'
           },
           {
             component: CNavItem,
             name: 'Cancelled Invoice',
             to: '/finance/cancel-invoice',
+            id:'erpCancelledInvoice'
           },
           {
             component: CNavItem,
             name: 'Comments Of written Off Invoice',
             to: '/finance/comment-written',
+            id:'erpCommentsOfWrittenOffInvoice'
           },
         ],
       },
       {
         component: CNavGroup,
         name: 'Revenues',
+        id:'erpRevenues',
         to: '/inventory',
         items: [
           {
             component: CNavItem,
             name: 'Revenue Details',
             to: '/finance/revenue-details',
+            id:'erpRevenueDetails'
           },
           {
             component: CNavItem,
             name: 'Services Wise Revenue',
             to: '/finance/service-revenue',
+            id:'erpServicesWiseRevenue'
           },
          
           {
             component: CNavItem,
             name: 'New Cilent Revenue',
             to: '/finance/newc-revenue',
+            id:'erpNewClientRevenue'
           },
           {
             component: CNavItem,
             name: 'Renewals Revenue',
             to: '/finance/renew-revenue',
+            id:'erpRenewalsRevenue'
           },
           {
             component: CNavItem,
             name: 'Lead Report',
             to: '/finance/l-r',
+            id:'erpLeadReport'
           },
           {
             component: CNavItem,
             name: 'Revenue Report',
             to: '/finance/revenue-report',
+            id:'erpRevenueReport'
           },
         ],
       },
@@ -435,26 +462,31 @@ const _nav = [
           component: CNavGroup,
           name: 'Collection Report',
           to: '/inventory',
+          id:'erpCollectionReport',
           items: [
             {
               component: CNavItem,
               name: 'Total Collection',
               to: '/finance/total-c',
+              id:'erpTotalCollection'
             },
             {
               component: CNavItem,
               name: 'Payment Mode',
               to: '/finance/payment-mode',
+              id:'erpPaymentMode'
             },
             {
               component: CNavItem,
               name: 'Cash Report',
               to: '/finance/cash-report',
+              id:'erpCashReport'
             },
             {
               component: CNavItem,
               name: 'Cheque Report',
               to: '/finance/cheque-report',
+              id:'erpChequeReport'
             },
           ],
         },
@@ -462,21 +494,25 @@ const _nav = [
         component: CNavGroup,
         name: 'Expense',
         to: '/inventory',
+        id:'erpExpense',
         items: [
           {
             component: CNavItem,
             name: 'Center Expense',
             to: '/finance/center-expense',
+            id:'erpCenterExpense'
           },
           {
             component: CNavItem,
             name: 'Daily Expense',
             to: '/finance/daily-expense',
+            id:'erpDailyExpense'
           },
           {
             component: CNavItem,
             name: 'Petty Cash ',
             to: '/finance/petty-cash',
+            id:'erpPettyCash'
           },
         ],
       },
@@ -484,16 +520,19 @@ const _nav = [
         component: CNavGroup,
         name: 'Sales',
         to: '/inventory',
+        id:'erpSales',
         items: [
           {
             component: CNavItem,
             name: 'DSR Report',
             to: '/finance/dsr-report',
+            id:'erpDsrReport'
           },
           {
             component: CNavItem,
             name: 'Target Vs Achievment ',
             to: '/finance/targetvs-achievment',
+            id:'erpTargetVsAchievment'
           },
         ],
       },
@@ -504,32 +543,38 @@ const _nav = [
     name: 'HR Management',
     to: '/hr',
     icon: <CIcon icon={cilContact} customClassName="nav-icon" />,
+    id:'erpHrManagement',
     items: [
       {
         component: CNavItem,
         name: 'Recuritment',
         to:'/hr/emp-recruitment',
+        id:'erpRecuritment'
         
       },
       {
         component: CNavGroup,
         name: 'Employee Profile',
         to: '/hr/EP',
+        id:'empLoyeeHrProfile',
         items:[
           {
             component: CNavItem,
             name: 'Employee Profile',
-            to: '/hr/all-emp',     
+            to: '/hr/all-emp',   
+            id:'erpEmployeeProfile'  
           },
           {
             component: CNavItem,
             name: 'Employee Documents',
             to: '/hr/emp-document',
+            id:'erpEmployeeDocuments'
           },
           {
             component: CNavItem,
             name: 'Job Profile',
             to: '/hr/job-profile',
+            id:'erpJobProfile'
           },
         ]
       },    
@@ -537,16 +582,19 @@ const _nav = [
           component: CNavGroup,
           name: 'Emp Target Sheet',
           to: '/hr/empt',
+          id:'erpHrTargetSheet',
           items: [
             {
               component: CNavItem,
               name: 'Emp Target Sheet',
-              to: '/hr/emp-target-sheet'
+              to: '/hr/emp-target-sheet',
+              id:'erpTargetSheet'
             }, 
             {
               component: CNavItem,
               name: 'Emp Performance',
               to: '/hr/emp-performance',
+              id:'erpEmpPerformance'
             },
           ],
         },
@@ -555,21 +603,25 @@ const _nav = [
         component: CNavGroup,
         name: 'Emp  Attendess',
         to: 'hr/ea',
+        id:'erpEmpAttendess',
         items: [
           {
             component: CNavItem,
             name: 'EMP Check Ins',
             to: '/hr/daily-emp-check',
+            id:'erpEmpCheckIns'
           },
           {
             component: CNavItem,
             name: 'Biometric Emp',
             to: '/hr/biometric-emp',
+            id:'erpBiometricEmp'
           },
           {
             component: CNavItem,
             name: 'EMP Attedance Register',
             to: '/hr/attendance-register',
+            id:'erpEmpAttedanceRegister'
           },
           
         ],
@@ -578,26 +630,31 @@ const _nav = [
         component: CNavGroup,
         name: 'Hr Policy',
         to: '/hr/hp',
+        id:'erpHrHrPolicy',
         items: [
           {
             component: CNavItem,
             name: 'Hr Policy',
+            id:'erpHrPolicy',
             to: '/hr/hr-Policy',
           },
           {
             component:CNavItem,
             name:'Holiday List',
+            id:'erpHolidayList',
             to:'/hr/holyday-list'
           },
           {
             component: CNavItem,
             name: 'Shift Timing ',
             to: '/hr/shift-timing-managment',
+            id:'erpShiftTiming'
           },           
           {
             component: CNavItem,
             name: 'EMP Joining',
             to: '/hr/emp-joining',
+            id:'erpEmpJoing'
           },
         ],
       },
@@ -606,27 +663,32 @@ const _nav = [
         component: CNavGroup,
         name: 'Salary Sheet',
         to: '/hr/ss',
+        id:'erpSalarySheet',
         items: [
           {
             component: CNavItem,
             name: 'Leave Setup',
             to: '/hr/leave-setup',
+            id:'erpLeaveSetup'
           },
           {
             component: CNavItem,
             name: 'Emp Salary Sheet',
             to: '/hr/salary-sheet',
+            id:'erpEmpSalarySheet'
           },
           {
             component: CNavItem,
             name: 'Trainer Salary Slip',
             to: '/hr/trainer-salary',
+            id:'erpTrainerSalarySlip'
           },          
           
           {
             component: CNavItem,
             name: 'All Trainer Report',
             to: '/hr/all-class-report',
+            id:'erpAllTrainerReport'
           },
         ],
       },
@@ -634,6 +696,7 @@ const _nav = [
         component: CNavItem,
         name: 'All-Rights',
         to: '/hr/all-righthr',
+        id:'erpAllRights'
       }
     ],
     
@@ -643,39 +706,46 @@ const _nav = [
     component: CNavGroup,
     name: 'Courses',
     to: '/course',
+    id:'erpCourse',
     icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
         name: 'TTC Clients ',
         to: '/course/ttc-client-details',
+        id:'erpTTCClients'
       },
       {
         component: CNavItem,
         name: 'TTC Videos ',
         to: '/course/ttc-videos-details',
+        id:'erpTTCVideos'
       },
       {
         component: CNavItem,
         name: 'TTC PDF ',
         to: '/course/ttc-pdf-details',
+        id:'erpTTCPdf'
       },
       {
         component: CNavItem,
         name: 'Course Completion',
         to: '/course/client-certificate-details',
+        id:'erpCourseCompletion'
       },
     ],
   },
   {
     component: CNavTitle,
     name: 'Masters',
+    id:'masterRights'
   },
   {
     component: CNavItem,
     name: 'Center Setup',
     to: '/master/center-setup',
     icon: <CIcon icon={cilCenterFocus} customClassName="nav-icon" />,
+    id:'masterCenterSetup'
   },
   {
     component: CNavItem,

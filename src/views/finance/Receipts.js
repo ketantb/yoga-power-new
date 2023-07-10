@@ -30,7 +30,7 @@ import {BsEye } from 'react-icons/bs'
 import {MdReceiptLong} from 'react-icons/md'
 import moment from 'moment/moment'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
-
+import { financeRight } from '../hr/Rights/rightsValue/erpRightsValue'
 
 const Invoice = React.lazy(()=>import('../clients/Invoice'))
 const ViewRecepits =React.lazy(()=>import('./ViewRecepits'))
@@ -57,6 +57,12 @@ const Receipt = () => {
     const [resiptData2,setResiptData2] = useState([])
     
     const url1 = useSelector((el)=>el.domainOfApi) 
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpFinance.items
+    .erpInvoices.items.erpBalancePayment.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
     const pathVal = useAdminValidation()
 
 
@@ -170,6 +176,9 @@ const clearFilter=()=>{
 }
 
 
+const toCheckValiDate= (val)=>{
+    return  (access.includes(val)||isAdmin) ?'':'none'
+}
 
 
     return (
@@ -289,8 +298,8 @@ const clearFilter=()=>{
                                     <CTableHeaderCell scope="col">Created By</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Paid Amount</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Pay Mode</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">View Invoice</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">View Receipt</CTableHeaderCell>  
+                                    <CTableHeaderCell scope="col" style={{display:toCheckValiDate(financeRight.printReceiptInvoice)}}>View Invoice</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:toCheckValiDate(financeRight.printReceiptReceipt)}}>View Receipt</CTableHeaderCell>  
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -314,10 +323,10 @@ const clearFilter=()=>{
                                             <CTableDataCell>{el.ServiceName}</CTableDataCell>
                                             <CTableDataCell>{el.Counseller}</CTableDataCell>
                                             <CTableDataCell>{el.PaidAmount}</CTableDataCell>
-                                            <CTableDataCell>{el.Pay_Mode}</CTableDataCell>
-                                            <CTableDataCell onClick={()=>ShowUserInvoceHandler(el._id,el)} className='text-center'>
+                                            <CTableDataCell >{el.Pay_Mode}</CTableDataCell>
+                                            <CTableDataCell style={{display:toCheckValiDate(financeRight.printReceiptInvoice)}} onClick={()=>ShowUserInvoceHandler(el._id,el)} className='text-center'>
                                                 <CButton size='sm'><BsEye/></CButton></CTableDataCell>
-                                            <CTableDataCell className='text-center'>
+                                            <CTableDataCell className='text-center' style={{display:toCheckValiDate(financeRight.printReceiptReceipt)}}>
                                                 <CButton onClick={()=>ViewReceiptsFun(el,el,i+1)} size='sm' className='text-white' color='info'><MdReceiptLong/></CButton>
                                             </CTableDataCell>
                                         </CTableRow>

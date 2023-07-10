@@ -52,4 +52,5 @@ const fitnessRigths = {
 }
 
 
+
 export {dashboardRights,empLoyeeeRights,trainerSuperRight,leadsSuperRight,clientManagementRights,marketingRights,fitnessRigths}

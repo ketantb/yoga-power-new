@@ -24,32 +24,25 @@ import {
 import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { useAdminValidation } from "../Custom-hook/adminValidation";
 
 const HolidaysList = () => {
-    const [action1, setAction1] = useState(false)
-    const [date, setDate] = useState('')
-    const [holiday, setHoliday] = useState('')
-    const [status, setStatus] = useState(false)
     const  url = useSelector((el) => el.domainOfApi)
-
+    const pathValMaster = useAdminValidation('Master')
+    
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
     const [result1, setResult1] = useState([]);
     const [paging, setPaging] = useState(0);
-    const headers = {
-        'Authorization': `Bearer ${token}`,
-        'My-Custom-Header': 'foobar'
-    };
+  
     useEffect(() => {
         getHolidayList()
     }, []);
 
     function getHolidayList() {
-        axios.get(`${url}/holidaysListMaster/all`, {
+        axios.get(`${url}/holidaysListMaster/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -63,65 +56,6 @@ const HolidaysList = () => {
             })
     }
 
-    function createHoliday() {
-        if (holiday != '' && date != '') {
-            const data = {
-                username: username,
-                Date: date,
-                Holiday: holiday,
-                Status: status,
-            }
-            axios.post(`${url}/holidaysListMaster/create`, data, { headers })
-                .then((resp) => {
-                    console.log(resp.data)
-                    alert('Successfully Added')
-                    getHolidayList()
-                    setAction1(false)
-                    setDate('')
-                    setHoliday('')
-                    setStatus(false)
-                })
-                .catch((error) => console.log(error))
-        } else {
-            alert('enter lead Source')
-        }
-    }
-
-    const updateStatus = (id, status) => {
-        let item = { Status: status }
-        fetch(`${url}/holidaysListMaster/update/${id}`, {
-            method: 'POST',
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(item)
-        }).then((result) => {
-            result.json().then((resp) => {
-                getHolidayList()
-            })
-        })
-    }
-
-    function deleteData(id) {
-        if (confirm('You want to delete this')) {
-            fetch(`${url}/holidaysListMaster/delete/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            }).then((result) => {
-                result.json().then((resp) => {
-                    console.warn(resp)
-                    getHolidayList()
-                })
-            })
-        }
-        return
-    }
 
 
     return (
@@ -143,8 +77,8 @@ const HolidaysList = () => {
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                                {result1.slice(paging * 10, paging * 10 + 10).filter((list) => list.username === username).map((item, index) => (
-                                    item.username === username && (
+                                {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
+                                    (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{moment(item.Date).format("MM-DD-YYYY")}</CTableDataCell>
@@ -162,10 +96,10 @@ const HolidaysList = () => {
                             <span aria-hidden="true">&laquo;</span>
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {result1.filter((list) => list.username === username).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {result1.filter((list) => list).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                        {result1.filter((list) => list.username === username).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {result1.filter((list) => list.username === username).length > (paging + 1) * 10 ?
+                        {result1.filter((list) => list).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {result1.filter((list) => list).length > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>

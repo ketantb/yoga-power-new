@@ -9,7 +9,7 @@ import {
 } from '@coreui/react'
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
@@ -21,6 +21,7 @@ const headers = {
 const EmpPerformanceTable = () => {
     const [employeePerformance,setEmployeePerformance] = useState([])
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation('Master')
 
 
     useEffect(()=>{
@@ -29,7 +30,7 @@ const EmpPerformanceTable = () => {
       
       
     function getEmpPerformance(){
-        axios.get(`${url}/employeePerformance/all`, {headers})
+        axios.get(`${url}/employeePerformance/${pathVal}`, {headers})
         .then((res) => {
           setEmployeePerformance(res.data.reverse())
         }).catch((error) => {console.error(error)})

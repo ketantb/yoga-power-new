@@ -35,7 +35,6 @@ const LeadsRight = ({crmLeads,setRightObject }) => {
   return (
     <div>
     <CRow >
-
          <h5 className='mb-4 p-2 d-flex ' >
          Leads <span className='mx-2'>
            <CFormSwitch size="lg" checked={crmLeads.value} onChange={(e)=>setRightObject(prev=>{

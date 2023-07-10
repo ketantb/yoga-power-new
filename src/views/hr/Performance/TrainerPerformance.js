@@ -9,11 +9,10 @@ import {
 } from '@coreui/react'
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-
 const headers = {
     "Authorization": `Bearer ${token}`,
    }
@@ -24,6 +23,9 @@ const TrainerPerformance = () => {
     const [trainerloyeePerformance,settrainerloyeePerformance] = useState([])
     const url = useSelector((el) => el.domainOfApi)
 
+    const pathVal = useAdminValidation('Master')
+
+
 
     useEffect(()=>{
         gettrainerPerformance()
@@ -31,7 +33,7 @@ const TrainerPerformance = () => {
       
       
     function gettrainerPerformance(){
-        axios.get(`${url}/trainerPerformance/all`, {headers})
+        axios.get(`${url}/trainerPerformance/${pathVal}`, {headers})
         .then((res) => {
             console.log(res.data)
           settrainerloyeePerformance(res.data.reverse())

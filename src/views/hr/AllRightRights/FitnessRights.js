@@ -5,6 +5,7 @@ import {
     CTabPane,
 } from '@coreui/react'
 
+
 import {useRight,useSuperRightFun,useSuperRightVal} from './useRight.js/useRight'
 import { fitnessRigths } from '../Rights/rightsValue/crmRightsValue'
 

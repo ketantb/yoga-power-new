@@ -38,6 +38,7 @@ import { useSelector } from "react-redux";
 import logo from 'src/assets/images/avatars/icon.png'
 import moment from 'moment/moment'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
+import { financeRight } from '../hr/Rights/rightsValue/erpRightsValue'
 const Invoice = React.lazy(()=>import('../clients/Invoice'))
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -52,6 +53,13 @@ const BalancePayment = () => {
     const [serviceName,setServiceName] = useState('')
     const [result1,setResult1] = useState([])
     const url1 = useSelector((el)=>el.domainOfApi) 
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpFinance.items
+    .erpInvoices.items.erpBalancePayment.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
+
     const pathVal = useAdminValidation() 
     const [AllInvoiceData,setAllInvoiceData] = useState([])
     const [clientInvoiceData,setClientInvoiceData] = useState('')
@@ -236,6 +244,11 @@ const  compareDate = (date1,date2,type)=>{
         setEndDate('')
         setServiceName('')
         }
+
+        const toCheckValiDate= (val)=>{
+            return  (access.includes(val)||isAdmin) ?'':'none'
+        }
+
     return (
         <CRow>
 
@@ -438,8 +451,8 @@ const  compareDate = (date1,date2,type)=>{
                                     <CTableHeaderCell scope="col">Paid Amount</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Balance</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Payment Mode</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Invoice</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Add Receipts</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:toCheckValiDate(financeRight.viewBalanceInvoice)}}>Invoice</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:toCheckValiDate(financeRight.addBalancePayment)}}>Add Receipts</CTableHeaderCell>
 
 
                             
@@ -471,14 +484,14 @@ const  compareDate = (date1,date2,type)=>{
                                     <CTableDataCell>{el.duration}</CTableDataCell>
                                     <CTableDataCell>{el.counseller}</CTableDataCell>
                                     <CTableDataCell>{el.amount}</CTableDataCell>
-                                    <CTableDataCell>{el.paidAmount + el?.Receipts?.reduce((crr,el2)=>crr+ +el2.PaidAmount,0)}</CTableDataCell>
+                                    <CTableDataCell >{el.paidAmount + el?.Receipts?.reduce((crr,el2)=>crr+ +el2.PaidAmount,0)}</CTableDataCell>
                                     <CTableDataCell>{el.pendingAmount}</CTableDataCell>
                                     <CTableDataCell>{el.paymode}</CTableDataCell>
-                                    <CTableDataCell>{
+                                    <CTableDataCell style={{display:toCheckValiDate(financeRight.viewBalanceInvoice)}} >{
                                         <CButton size='sm' onClick={()=>ShowUserInvoceHandler(el._id,el)}>
                                             <BsEye />
                                       </CButton>}</CTableDataCell>
-                                    <CTableDataCell className='text-center' >
+                                    <CTableDataCell style={{display:toCheckValiDate(financeRight.addBalancePayment)}} className='text-center' >
                                     <CButton   onClick={()=>ShowResiptsModal(el)}
                                     color='success' size='sm'
                                     ><BsPlusCircle/></CButton></CTableDataCell>

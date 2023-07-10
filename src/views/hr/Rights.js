@@ -55,10 +55,10 @@ const Rights = () => {
     memBerId:'',
     email:'',
     emailUniqId:'',
-    crmRights:obj1.crmRights
+    crmRights:obj1.crmRights,
+    erpRights:obj1.erpRights
     })
 
-    console.log(rightObjeact)
     function getEmpEmailData() {
       axios.get(`${url}/allRight/rights/${params.emailUniqId}`, {
           headers: {
@@ -128,6 +128,7 @@ const Rights = () => {
 }
 
 
+console.log(rightObjeact)
 
   return (<CCard style={{display:(activeUpdate==='Not found'||activeUpdate==="Successfull received")?'block':'none'}}>
     <CCardBody>
@@ -184,7 +185,7 @@ const Rights = () => {
     <CrmErpRigts rightObjeact={rightObjeact.crmRights} setRightObject={setRightObject} />
   </CTabPane>
   <CTabPane role="tabpanel" aria-labelledby="home-tab"  style={{display:activeKey2 === 2?'block':'none'}} visible={activeKey2 === 2} >
-    <ErpRigths />
+    <ErpRigths rightObjeact={rightObjeact.erpRights} setRightObject={setRightObject} />
   </CTabPane>
   <CTabPane role="tabpanel" aria-labelledby="home-tab"  style={{display:activeKey2 === 3?'block':'none'}} visible={activeKey2 === 3}>
     <MasterRights/>

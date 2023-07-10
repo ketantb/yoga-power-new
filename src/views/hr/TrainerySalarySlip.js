@@ -29,10 +29,12 @@ import axios from 'axios';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 
+
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 
 import TrainerSlip from './TrainerSlip/TrainerSlip';
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 const TrainerySalary = () => {
 
@@ -41,11 +43,11 @@ const TrainerySalary = () => {
     const url1 = useSelector((el) => el.domainOfApi)
     const [showInvoiceModal,setInvoceModal] = useState(false)
     const [empData,setEmpData] = useState([])
-  
+    const pathValMaster =  useAdminValidation('Master') 
   
   
      const getTrainerSalarySlipData = ()=>{
-      axios.get(`${url1}/trainerSalarySlip/all`, {
+      axios.get(`${url1}/trainerSalarySlip/${pathValMaster}`, {
           headers: {
               'Authorization': `Bearer ${token}`
           }

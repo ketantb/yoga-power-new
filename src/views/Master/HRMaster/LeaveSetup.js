@@ -29,6 +29,7 @@ import {
 } from "@coreui/react";
 import axios from "axios";
 import React, { useState,useEffect } from "react";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
@@ -72,13 +73,15 @@ function LeaveSetup(){
 
     const [leaveData,setLeaveData] = useState([])
     const url = useSelector((el) => el.domainOfApi)
+    const pathValMaster = useAdminValidation('Master')
+    const uniqObjVal = useUniqAdminObjeact()
 
 
 
 
     const getLeaveSetupData = async ()=>{
         try{
-           let response = await  axios.get(`${url}/leaveSetUpMaster/all`,{headers})
+           let response = await  axios.get(`${url}/leaveSetUpMaster/${pathValMaster}`,{headers})
             if(response.status===200){
                 setLeaveData(response.data?.reverse())
                 if(response?.data.length){
@@ -113,7 +116,7 @@ getLeaveSetupData()
          let response ={}
          try{
            if(type==='Save'){
-             response = await  axios.post(`${url}/leaveSetUpMaster/create`,{...leaveObj,totalLeave},{headers})
+             response = await  axios.post(`${url}/leaveSetUpMaster/create`,{...leaveObj,totalLeave,...uniqObjVal},{headers})
            }
            if(type==='Update'){
             response = await  axios.post(`${url}/leaveSetUpMaster/update/${activeUpdate}`,{...leaveObj,totalLeave},{headers})

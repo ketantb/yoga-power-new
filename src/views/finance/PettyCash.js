@@ -32,6 +32,7 @@ const username = user.user.username;
 import axios from 'axios';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
+import { financeRight } from '../hr/Rights/rightsValue/erpRightsValue';
 
 
 
@@ -57,6 +58,12 @@ const PettyCash = () => {
     const [showError, setError] = useState(false)
     const [showError2, setError2] = useState(false)
     const url1 = useSelector((el) => el.domainOfApi)
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpFinance.items
+    .erpExpense.items.erpPettyCash.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
     const pathVal = useAdminValidation()    
     const pathValMaster = useAdminValidation('Master')
     const uniqObjVal = useUniqAdminObjeact()
@@ -367,6 +374,9 @@ const clearFunction = ()=>{
     setCategory2('')
 }
 
+const toCheckValiDate= (val)=>{
+    return  (access.includes(val)||isAdmin) ?'':'none'
+}
     return (
         <CRow>
 
@@ -450,8 +460,8 @@ const clearFunction = ()=>{
                                 onChange={(e) => setApprovedByEx(e.target.value)}
                             >
                                 <option>Select Staff</option>
-                                {staff.filter((list) => list.username === username).map((item, index) => (
-                                    item.username === username && (
+                                {staff.filter((list) => list).map((item, index) => (
+                                    item&& (
                                         <option key={index}>{item.FullName}</option>
                                     )
                                 ))}
@@ -525,8 +535,8 @@ const clearFunction = ()=>{
                                                 onChange={(e) => setApprovedBy(e.target.value)}
                                             >
                                                 <option>Select Staff</option>
-                                                {staff.filter((list) => list.username === username).map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) => list).map((item, index) => (
+                                                   (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}
@@ -568,7 +578,7 @@ const clearFunction = ()=>{
                             </CCardBody>
                         </CCard>}
 
-                        <CRow>
+                        <CRow style={{display:toCheckValiDate(financeRight.addPettyCash)}} >
                             <CCol className='my-4 text-end'><CButton onClick={() => {
                                 setDeatilOfEx('')
                                 setCreditDate(' ')
@@ -635,7 +645,7 @@ const clearFunction = ()=>{
                                             Balance
                                         </CTableHeaderCell>
 
-                                        <CTableHeaderCell scope="col">Delete/Edit</CTableHeaderCell>
+                                        <CTableHeaderCell scope="col" style={{display:toCheckValiDate(financeRight.deletePettyCash)}} >Delete/Edit</CTableHeaderCell>
                                     </CTableRow>
                                 </CTableHead>
                                 <CTableBody>
@@ -666,7 +676,7 @@ const clearFunction = ()=>{
                                     }</CTableDataCell> */}
 
                                             <CTableDataCell>{el.Balance}</CTableDataCell>
-                                            <CTableDataCell className='text-center'>{
+                                            <CTableDataCell className='text-center' style={{display:toCheckValiDate(financeRight.deletePettyCash)}} >{
                                                 <>
                                                     <CButton color='danger' size='sm' onClick={() => DeletePityCash(el._id)}><MdDelete /></CButton>
                                                 </>

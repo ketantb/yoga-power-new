@@ -47,13 +47,12 @@ import { useSelector } from 'react-redux'
 import moment from "moment/moment";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
-const url = 'https://yog-seven.vercel.app'
 
 const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     
 
     const url1 = useSelector((el)=>el.domainOfApi) 
-
+    const url = url1
     const unikqValidateObj = useUniqAdminObjeact()
     const pathVal = useAdminValidation()
 
@@ -137,6 +136,8 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     const [wantToGiveMony,setWantToGiveMony] = useState(false)
     const [batchesData,setBatches] = useState([])
     const [clientReferance,setClientReferance] = useState('')
+    const [leadArr, setLeadArr] = useState([]);
+    const [staff, setStaff] = useState([])
 
 
 
@@ -159,12 +160,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
 
     const [packageArr, setPackageArr] = useState([]);
     useEffect(() => {
-        getStaff()
-        getBatch()
-        getMem()
-        getSubService()
-        getLeadSource()
-        getPackage()
+        getAdmisionRequireData()
         getImage()
         if(ids){
             getDetails(ids)
@@ -199,21 +195,42 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     }
 
 
-    
 
-    function getPackage() {
-        axios.get(`${url}/Package/all`, {
+    const getAdmisionRequireData = async  ()=>{
+       
+        const headers = {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
-        })
-            .then((res) => {
-                setPackageArr(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
+        }
+
+        const response1 =  axios.get(`${url}/Package/all`,headers)
+        const response2 =  axios.get(`${url}/leadSourceMaster/all`,headers)
+        const response3 =  axios.get(`${url1}/employeeForm/${pathVal}`,headers)
+        const response4 =  axios.get(`${url1}/packagemaster`,headers)
+        const response5 =  axios.get(`${url1}/memberForm/${pathVal}`,headers)
+        const response6 =  axios.get(`${url1}/Batch/all`,headers)
+
+
+
+        const allData = await Promise.all([response1,response2,response3,response4,response5,response6])
+        const packageData = allData[0]?.data
+        const leadSourseData = allData[1]?.data
+        const staffData = allData[2]?.data
+        const packageMaster = allData[3]?.data
+        const memberFormData = allData[4]?.data
+        const batchesData = allData[5]?.data
+
+        setLeadArr(leadSourseData)
+        setPackageArr(packageData)
+        setStaff(staffData)
+        setService(packageMaster)
+        setMem(memberFormData)
+        setBatches(batchesData)
     }
+    
+
+    
 
     function getImage() {
         listAll(imagesListRef).then((response) => {
@@ -222,83 +239,9 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     }
 
 
-    const [leadArr, setLeadArr] = useState([]);
-
-    function getLeadSource() {
-        axios.get(`${url}/leadSourceMaster/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setLeadArr(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
 
 
-    const [staff, setStaff] = useState([])
-    function getStaff() {
-        axios.get(`${url1}/employeeForm/${pathVal}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setStaff(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
 
-
-    function getSubService() {
-        axios.get(`${url1}/packagemaster`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setService(res.data)
-                console.log(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-    
-
-    function getMem() {
-        axios.get(`${url1}/memberForm/${pathVal}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setMem(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
-    function getBatch() {
-        axios.get(`${url}/Batch/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                console.log(res.data)
-                setResult(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
 
 
     const saveMember = () => {
@@ -500,7 +443,6 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
         axios.post(`${url1}/invoice/create`, data, { headers },
         )
             .then((resp) => {
-                console.log(resp.data,"ekfmkemfm new invoice no")
                 setInvId(resp.data._id);
               
                 let data1 = { invoiceId: resp.data._id, invoiceNum: resp.data.InvoiceNo, startDate,duration:ser2,
@@ -592,42 +534,18 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
     console.log(imageUrl);
 
 
-    function getBatch() {
-        axios.get(`${url1}/Batch/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                console.log(res.data)
-                setBatches(res.data.filter((el)=>
-                el?.service_variation?.toLocaleLowerCase() 
-                ===ids?.ServiceName?.toLocaleLowerCase()))
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
-   useEffect(()=>{
-      getBatch()
-   },[]) 
-   
+  
  
    useEffect(()=>{
     if(ids?.ServiceName ||serviceName){
-        subService.forEach((el)=>{
+    subService.forEach((el)=>{
         if(el?.Service=== ids?.ServiceName || el?.Service && serviceName){
         setServiceDays(el.Days)
-        }
-        })
-        }
+        }})}
     setSer1(ids?.ServiceName)
    },[ids?.ServiceName,serviceName,subService?.length])
 
 
-
-  
 
 
     return (
@@ -958,8 +876,8 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                         label="Service Name"
                                                     >
                                                         <option>Select Name</option>
-                                                        {[...subService].map((item, index) => (
-                                            item.username === username && (
+                                                        {[...subService].filter((el)=>el).map((item, index) => (
+                                            (
                                                item.Status=== true && (
                                                     <option key={index}>{item.Service }</option>                                                  
                                                 )
@@ -978,7 +896,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                             {[...subService].filter((list) =>
                                             list.Service=== serviceName
                                         ).map((item, index) => (
-                                            item.username === username && (
+                                            (
                                                 item.Status === true && (
                                                     <option key={index}>{item.Package_Name }</option>
                                                 )
@@ -1016,8 +934,8 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
 
                                                     >
                                                         <option>Select Enquiry Type</option>
-                                                        {leadArr.filter((list) => list.username === username).map((item, index) => (
-                                                            item.username === username && (
+                                                        {leadArr.filter((list) => list).map((item, index) => (
+                                                            (
                                                                 <option key={index}>{item.LeadSource}</option>
                                                             )
                                                         ))}</CFormSelect>
@@ -1035,7 +953,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                         label="Assign Staff"
                                                     >
                                                         <option>Select Assign Staff</option>
-                                                        {staff.filter((list) => list.username === username &&
+                                                        {staff.filter((list) => 
                                                          list.selected === 'Select').map((item, index) => (
                                                             <option key={index}>{item.FullName}</option>
                                                         ))}
@@ -1051,7 +969,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                         
                                                     >
                                                          <option>Select Counselor</option>
-                                                        {staff.filter((list) => list.username === username &&
+                                                        {staff.filter((list) => 
                                                          list.selected === 'Select').map((item, index) => (
                                                             <option key={index}>{item.FullName}</option>
                                                         ))}
@@ -1069,7 +987,14 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                     >
                                                      
                                                  <option>Type of Class</option>     
-                                                     {batchesData.map((el)=>el.category).filter((el,i,arr)=>i===arr.indexOf(el)).map((el)=>{
+                                                     {batchesData.filter((el)=>
+                                                     el.service_variation.trim().toLocaleLowerCase()===serviceName.trim().toLocaleLowerCase()
+                                                     )
+                                                     .map((el)=>el.category).filter((el,i,arr)=>
+                                                     i===arr.indexOf(el) 
+
+                                                     
+                                                     ).map((el)=>{
                                                            
                                                  return  <option > 
                                                      {el}
@@ -1091,7 +1016,10 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                     >
                                                      
                                                  <option>Select Class Timeing</option>     
-                                                     {batchesData.filter((el)=>el.category === typeOFBatchClasses).map((el)=>{                                                          
+                                                     {batchesData.
+                                                     filter((el)=>el.category === typeOFBatchClasses                                   
+                                                     
+                                                     ).map((el)=>{                                                          
                                                  return  <option > 
                                                     {el.batch_timing}  
                                                   </option>                           
@@ -1409,7 +1337,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                      onChange={(e) => setSer5(e.target.value)}                                                                                                        
                                                     >
                                                    <option>Select Assign Staff</option>
-                                                     {staff.filter((list) => list.username === username &&
+                                                     {staff.filter((list) => 
                                                       list.selected === 'Select').map((item, index) => (
                                                         <option key={index} value={item._id}>{item.FullName}</option>
                                                       ))}
@@ -1443,7 +1371,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                         >
                                                             <option>Select Service</option>
                                                             {[...subService.filter((el)=>{
-                                        return el.username === username                                  
+                                        return                                 
                                     })].map((el,i)=><option key={i}>{el.Service
                                     }</option>)
                                     }
@@ -1459,7 +1387,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                         >
                                                             <option>Select Package</option>
                                                             {[...subService.filter((el)=>{
-                                        return el.username === username && el.Service=== ser1                                
+                                        return el.Service=== ser1                                
                                     })].map((el,i)=><option key={i}>{el.Package_Name
                                         }</option>)
                                     }   
@@ -1516,7 +1444,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                 >
                                          <option>Select Duration</option>
                                            {[...subService.filter((el)=>{
-                                         return el.username === username && el.Service=== ser1                                  
+                                         return  el.Service=== ser1                                  
                                     })].map((el,i)=><option key={i}>{el.Duration
                                         }</option>)
                                     }   
@@ -1535,7 +1463,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                 >
                                                     <option>Select Fees</option>
                                                     {[...subService.filter((el)=>{
-                                    return el.username === username && el.Service=== ser1                                    
+                                    return  el.Service=== ser1                                    
                                     })].map((el,i)=><option key={i}>{el.Fees
 
                                         }</option>)

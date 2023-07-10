@@ -27,9 +27,8 @@ import { MdCall, MdDelete, MdEdit, MdMail } from 'react-icons/md';
 import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs';
 import axios from 'axios';
 import moment from 'moment';
-const url = 'https://yog-seven.vercel.app'
-
 import { useSelector } from "react-redux";
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -46,11 +45,12 @@ const JobProfile = () => {
     const [Search2, setSearch2] = useState('')
     const [Search10, setSearch10] = useState('')
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal =  useAdminValidation()
     const [jobProfileData,setJobProfileData] = useState([])
 
 
     const getJobProfileData = async ()=>{
-        axios.get(`${url}/jobProfile/all`,{headers}).then((el)=>{
+        axios.get(`${url}/jobProfile/${pathVal}`,{headers}).then((el)=>{
          if(el.status!==200){
           return 
          }

@@ -79,7 +79,6 @@ const PackageMaster = () => {
         })
             .then((res) => {
                 setResult(res.data)
-                console.log(res.data)
             })
             .catch((error) => {
                 console.error(error)
@@ -323,7 +322,7 @@ const PackageMaster = () => {
                     </CTableHead>
                     <CTableBody>
                         {result.map((item, index) => (
-                            item.username === username && (
+                             (
                                 <CTableRow key={index}>
                                     <CTableDataCell>{index + 1}</CTableDataCell>
                                     <CTableDataCell>{item.Service}</CTableDataCell>

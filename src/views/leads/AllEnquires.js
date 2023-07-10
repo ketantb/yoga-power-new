@@ -317,7 +317,7 @@ const AllEnquires = () => {
             })
 
         } else if (enquiryStage === 'Trial Session') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', Counseller: Counseller }
+            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', Counseller: staff.find((el)=>el._id===Counseller)?.FullName }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
@@ -761,6 +761,7 @@ const AllEnquires = () => {
         setEdit({})
     }
 
+
     
     return (
         <CRow>
@@ -770,7 +771,7 @@ const AllEnquires = () => {
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">All Enquires <span className='float-end'>Total Enquires: 
-                        {result1.filter((list) => list.username === username ).length}
+                        {result1.filter((list) => list ).length}
                         </span></strong>
                     </CCardHeader>
                     <CCardBody>
@@ -1761,8 +1762,8 @@ const AllEnquires = () => {
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px', minWidth: '100px' }} > Date/Time</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Assigned by</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Counseller</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Action</CTableHeaderCell>
-                                    {(isAdmin|| enquiryAdd)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Edit</CTableHeaderCell>}
+                                    {(isAdmin|| enquiryAdd)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Action</CTableHeaderCell>}
+                                    {(isAdmin|| enquiryEdit)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Edit</CTableHeaderCell>}
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -1914,7 +1915,7 @@ const AllEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell  style={{display:(isAdmin|| enquiryAdd)?'':'none'}}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -1923,7 +1924,7 @@ const AllEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell style={{display:(isAdmin|| enquiryAdd)?'':'none'}}>
+                                    <CTableDataCell style={{display:(isAdmin|| (enquiryEdit||enquiryDelete))?'':'none'}}>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
@@ -1971,7 +1972,7 @@ const AllEnquires = () => {
 
                                         <CTableDataCell>{item.StaffName}</CTableDataCell>
                                         <CTableDataCell>{item.Counseller}</CTableDataCell>
-                                        <CTableDataCell className='text-center'>
+                                        <CTableDataCell className='text-center' style={{display:(isAdmin|| enquiryAdd)?'':'none'}}>
                                             <a href={`tel:+${ item.CountryCode }${ item.ContactNumber }`} target="_black">
                                                 <MdCall style={{ cursor: 'pointer', markerStart: '10px' }} o
                                                     nClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' />

@@ -19,7 +19,8 @@ const username = user.user.username;
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
-
+import { useAdminValidation, useUniqAdminObjeact } from '../Custom-hook/adminValidation';
+import { course } from "../hr/Rights/rightsValue/erpRightsValue";
 
 const headers = {
     "Authorization": `Bearer ${token}`,
@@ -42,6 +43,8 @@ function TtcPdfDetails(){
     }
 
     const url = useSelector((el) => el.domainOfApi)
+    const uniqObjVal = useUniqAdminObjeact()
+    const pathVal = useAdminValidation()
 
     const [showForm,setForm] = useState(true)
     const [teacherObj,setTeacherObj] = useState({...obj})
@@ -55,17 +58,24 @@ function TtcPdfDetails(){
     const [pagination, setPagination] = useState(5)
 
 
+      const rightsData = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpCourse
+    ?.items?.erpTTCPdf?.rights) 
+      const access = rightsData?rightsData:[]
+      const isAdmin = useSelector((el)=>el.isAdmin)
+    
+      const addPDFDetails = (access.includes(course.addPDFDetails)||isAdmin)
+      const editPDFDetails = (access.includes(course.editPDFDetails)||isAdmin)
+      const deletePDFDetails = (access.includes(course.deletePDFDetails)||isAdmin)
 
 
     function getTTCPdfDetails() {
-        axios.get(`${url}/ttcPDFDetails/all`, {
+        axios.get(`${url}/ttcPDFDetails/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => { 
                 if(res.status===200){
-                    console.log(res.data)
                     setTeachersData(res.data.reverse())
                 }
             })
@@ -84,7 +94,7 @@ useEffect(()=>{
            let response ={}
            try{
              if(type==='Save'){
-               response = await  axios.post(`${url}/ttcPDFDetails/create`,teacherObj,{headers})
+               response = await  axios.post(`${url}/ttcPDFDetails/create`,{...teacherObj,...uniqObjVal},{headers})
              }
             if(response?.status===200){
              alert('successfully save')
@@ -187,7 +197,9 @@ useEffect(()=>{
              </CCardHeader>
          
          {showForm?<CCol className='text-end p-2 px-4'>
-            <CButton onClick={()=>setForm((value)=>!value)}>Add New</CButton>
+            <CButton onClick={()=>setForm((value)=>!value)}
+            style={{display:addPDFDetails?'':'none'}}
+            >Add New</CButton>
     </CCol>:
 
     <CCard className="mx-2">
@@ -198,7 +210,7 @@ useEffect(()=>{
     <div >
          <CForm className='p-4'>
             <CRow>
-                <CCol className="text-end p-2">
+                <CCol className="text-end p-2"> 
                     <CButton color="danger" onClick={()=>{
                         setForm(true)
                        setTeacherObj({...obj})                   
@@ -275,8 +287,8 @@ useEffect(()=>{
            <CTableHeaderCell>Type Of Course</CTableHeaderCell>    
            <CTableHeaderCell>Course Link</CTableHeaderCell>       
            <CTableHeaderCell>Document Type</CTableHeaderCell> 
-           <CTableHeaderCell>View</CTableHeaderCell>        
-           <CTableHeaderCell>Delete</CTableHeaderCell>    
+           <CTableHeaderCell style={{display:editPDFDetails?'':'none'}}>View</CTableHeaderCell>        
+           <CTableHeaderCell style={{display:deletePDFDetails?'':'none'}}>Delete</CTableHeaderCell>    
           </CTableRow>
       </CTableHead>
       <CTableBody>
@@ -288,8 +300,8 @@ if (pagination - 5 < i + 1 && pagination >= i + 1) {return el}}).map((el,i)=>{
         <CTableDataCell>{el.typeOfCourse}</CTableDataCell>
         <CTableDataCell style={{width:'250px'}} ><a href={el.courseLink}>{el.courseLink}</a> </CTableDataCell>
         <CTableDataCell>{el.documentType}</CTableDataCell>
-        <CTableDataCell><CButton size='sm' onClick={()=>toViewDoc(el)}> View </CButton></CTableDataCell>
-        <CTableDataCell><MdDelete onClick={()=>deleteCr(el)} /></CTableDataCell>
+        <CTableDataCell style={{display:editPDFDetails?'':'none'}}><CButton size='sm' onClick={()=>toViewDoc(el)}> View </CButton></CTableDataCell>
+        <CTableDataCell style={{display:deletePDFDetails?'':'none'}}><MdDelete onClick={()=>deleteCr(el)} /></CTableDataCell>
        </CTableRow>
 })}
       

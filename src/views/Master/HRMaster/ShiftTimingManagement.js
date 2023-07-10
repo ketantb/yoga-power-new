@@ -10,6 +10,7 @@ import * as icon from '@coreui/icons';
 import { useSelector } from "react-redux";
 import axios from 'axios'
 import { MdEdit,MdDelete } from "react-icons/md";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 function ShiftTimingManagment (){
 
@@ -19,6 +20,8 @@ function ShiftTimingManagment (){
   const username = user.user.username;
   const centerCode = user.user.centerCode;
   const url = useSelector((el) => el.domainOfApi)
+  const pathValMaster = useAdminValidation('Master')
+  const uniqObjVal= useUniqAdminObjeact()
 
 
     const [showForm,setForm] = useState(true)
@@ -45,7 +48,7 @@ function ShiftTimingManagment (){
 
   
   const getShitTimeData = ()=>{
-   axios.get(`${url}/shiftTimeSchedule/all`,{headers}).then((el)=>{
+   axios.get(`${url}/shiftTimeSchedule/${pathValMaster}`,{headers}).then((el)=>{
     console.log(el.data)
     if(!el.data){
      return 
@@ -58,7 +61,7 @@ function ShiftTimingManagment (){
     let response ={}
     try{
       if(type==='Save'){
-        response = await  axios.post(`${url}/shiftTimeSchedule/create`,shiftTimeing,{headers})
+        response = await  axios.post(`${url}/shiftTimeSchedule/create`,{...uniqObjVal,...shiftTimeing},{headers})
       }
       if(type==='Update'){
        response = await  axios.post(`${url}/shiftTimeSchedule/update/${shiftTimeing._id}`,shiftTimeing,{headers})

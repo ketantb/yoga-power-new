@@ -18,14 +18,25 @@ import { useNavigate } from "react-router-dom";
 import { CountryList } from "src/components/CountryList";
 import { useSelector } from 'react-redux'
 import moment from 'moment/moment';
+import { useAdminValidation } from '../Custom-hook/adminValidation';
+import { course } from '../hr/Rights/rightsValue/erpRightsValue';
 
 const monthName =     ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 function TtcClientDetails (){
   let num =0
 
+const rightsData = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpCourse
+  ?.items?.erpTTCClients?.rights) 
+const access = rightsData?rightsData:[]
+const isAdmin = useSelector((el)=>el.isAdmin)
+
+const viewProfileView = (access.includes(course.ttcClientCurseView)||isAdmin)
+const clientCourseAction = (access.includes(course.clientCourseAction)||isAdmin)
+
 
 const url= useSelector((el)=>el.domainOfApi) 
+const pathVal = useAdminValidation()
 const [classesData,setClassesData] = useState([])
 const [pagination, setPagination] = useState(5)
 const [filterObj,setFilterObj] = useState({
@@ -43,13 +54,10 @@ const headers = {
 };
 
 
-
-
 const getTtSClassesDetails = async ()=>{
 try{
-  const response  = await axios.get(`${url}/memberForm/classes/TTC Classes`,{headers})
+  const response  = await axios.get(`${url}/memberForm/classes/${pathVal}/TTC Classes`,{headers})
   if(response.status===200){
-    console.log(response.data)
     setClassesData(response.data)  
   }
 }catch(error){
@@ -165,7 +173,7 @@ return<CCard className=''>
         <CTableHeaderCell>End Date</CTableHeaderCell> 
         <CTableHeaderCell>Invoice No</CTableHeaderCell>    
         <CTableHeaderCell>Trainner</CTableHeaderCell>    
-        <CTableHeaderCell>Action</CTableHeaderCell>    
+        <CTableHeaderCell style={{display:clientCourseAction?'':'none'}} >Action</CTableHeaderCell>    
        </CTableRow>
    </CTableHead>
    <CTableBody>
@@ -178,7 +186,7 @@ if (pagination - 5 < i + 1 && pagination >= i + 1) {return el}}).map((el,i)=>
     <CTableRow key={i}>
      <CTableDataCell>{i+1}</CTableDataCell>
      <CTableDataCell>
-     <Link style={{textDecoration:'none'}} to={`/clients/member-details/${el._id}/1`}>{el.Fullname}</Link>
+     {viewProfileView?<Link style={{textDecoration:'none'}} to={`/clients/member-details/${el._id}/1`}>{el.Fullname}</Link>:el.Fullname}
      </CTableDataCell>
      <CTableDataCell>{el.ContactNumber}</CTableDataCell>
      <CTableDataCell>{el.Gender}</CTableDataCell>
@@ -187,7 +195,7 @@ if (pagination - 5 < i + 1 && pagination >= i + 1) {return el}}).map((el,i)=>
      <CTableDataCell>{moment(el.endDate).format('YYYY-MM-DD')}</CTableDataCell>
      <CTableDataCell>{el.invoiceNum}</CTableDataCell>
      <CTableDataCell>{el.GeneralTrainer}</CTableDataCell>
-     <CTableDataCell>{el.status === 'active' ? <><CButton className='mt-1' color='success' onClick={() => updateRec(el._id, 'inactive')} >Active</CButton></> : <CButton className='mt-1' color='danger' onClick={() => updateRec(el._id, 'active')}>Inactive</CButton>}</CTableDataCell>
+     <CTableDataCell style={{display:clientCourseAction?'':'none'}} >{el.status === 'active' ? <><CButton className='mt-1' color='success' onClick={() => updateRec(el._id, 'inactive')} >Active</CButton></> : <CButton className='mt-1' color='danger' onClick={() => updateRec(el._id, 'active')}>Inactive</CButton>}</CTableDataCell>
     </CTableRow>
     )}
     </CTableBody>

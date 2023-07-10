@@ -4,10 +4,9 @@ import {CCard,CCardTitle,CCardHeader,CTable,CTableHead,
 import React,{useState,useEffect} from 'react'   
 import YogaSpinnar from '../theme/YogaSpinnar';
 import {MdDelete} from 'react-icons/md';
-
 import { useSelector } from 'react-redux'
-
 import axios from 'axios'
+import { hrManagement } from './Rights/rightsValue/erpRightsValue';
 const  EmployeeTargetSetupForm =  React.lazy(()=>import('./EmployeeTargetSetupForm'))
   
 function EmployeeTargetSheet(){
@@ -15,6 +14,15 @@ function EmployeeTargetSheet(){
   const [activeForm,setActiveForm] = useState(false)
   const [employeeTargetSheeTdata,setEmployeeTargetSeetData] = useState([])
   const [pagination, setPagination] = useState(10)
+
+
+  const rightsData = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
+  ?.items?.empLoyeeHrProfile?.items?.erpEmployeeProfile?.rights) 
+  const access = rightsData?rightsData:[]
+  const isAdmin = useSelector((el)=>el.isAdmin)
+                                       
+  const  addEmpTargetSheet = (access.includes(hrManagement.addEmpTargetSheet)||isAdmin)
+  const  deleteEmpTargetSheet = (access.includes(hrManagement.deleteEmpTargetSheet)||isAdmin)
 
 
   let user = JSON.parse(localStorage.getItem('user-info'))
@@ -109,8 +117,8 @@ return <CCard>
             <h4>Empyolee Target Sheet</h4></CCardTitle>
      </CCardHeader>
 
-     <div className='p-4'>
-     <CCol className='pb-4 mt-3  d-flex justify-content-end '>
+     <div className='p-4' style={{display:((addEmpTargetSheet)?'':'none')}}>
+     <CCol className='pb-4 mt-3  d-flex justify-content-end ' >
   {activeForm ||<CButton onClick={()=>setActiveForm((value)=>!value)} >Add New</CButton>}
   </CCol>
   {activeForm && <EmployeeTargetSetupForm closeForm={closeForm} getEmployeeTargetSheetData={getEmployeeTargetSheetData} data={employeeTargetSheeTdata}/>}
@@ -138,7 +146,7 @@ return <CCard>
              <CTableHeaderCell className='p-3'>Oct</CTableHeaderCell>
              <CTableHeaderCell className='p-3'>Nov</CTableHeaderCell>
              <CTableHeaderCell className='p-3'>Dec</CTableHeaderCell>
-             <CTableHeaderCell className='p-3'>Delete</CTableHeaderCell>
+             <CTableHeaderCell className='p-3' style={{display:((deleteEmpTargetSheet)?'':'none')}}>Delete</CTableHeaderCell>
           </CTableHead>
           <CTableBody>
             {employeeTargetSheeTdata.
@@ -164,8 +172,10 @@ return <CCard>
              <CTableDataCell>{el.Oct}</CTableDataCell>
              <CTableDataCell>{el.Nov}</CTableDataCell>
              <CTableDataCell>{el.Dec}</CTableDataCell>
-             <CTableDataCell ><MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "40%" }} 
-                                                onClick={() => deleteEmployeeData(el._id,el.Type_Of_Target,el.Id)} size='20px' /></CTableDataCell>
+             <CTableDataCell style={{display:((deleteEmpTargetSheet)?'':'none')}} >
+              <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "40%" }} 
+                onClick={() => deleteEmployeeData(el._id,el.Type_Of_Target,el.Id)} size='20px' />
+              </CTableDataCell>
            </CTableRow>
             
             )}

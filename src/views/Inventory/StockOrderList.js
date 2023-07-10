@@ -29,9 +29,9 @@ import useIncrementNoOfItem from '../finance/ClientInvoice/customHook/useIncreme
 import useInputItemVal from '../finance/ClientInvoice/customHook/useInputItemVal';
 import StockOrderListRecived from './StockOrderList/StockOrderListRecived';
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
+import { inventoryRight } from '../hr/Rights/rightsValue/erpRightsValue';
 
  
-
 
 
 function StockOrderList (){
@@ -41,10 +41,22 @@ function StockOrderList (){
     const [noofProduct,setNoOfProduct] = useState([])
     const [activeToIncrement,setActiveToIncrement] = useState([])
 
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpInventory.items.erpStockList.rights) 
+
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
+
     const addProduct  = useAddProduct(setNoOfProduct,setActiveToIncrement)
     const incrementNoOfItem =  useIncrementNoOfItem(setNoOfProduct,setActiveToIncrement)
     const inputItemVal = useInputItemVal(setNoOfProduct)
-    const [activeKey, setActiveKey] = useState(1)
+    const [activeKey, setActiveKey] = useState(
+        ((access.includes(inventoryRight.stockListView) || isAdmin) &&1)||
+        ((access.includes(inventoryRight.orderList) || isAdmin) &&2)||
+        ((access.includes(inventoryRight.orderListreceived) || isAdmin) &&3)
+        )
+
+
     const [orderList,setStockOrderList] = useState([])
     const [staff, setStaff] = useState([])
     const [selectedStaff,setSelectedStaff] = useState('')
@@ -274,35 +286,37 @@ console.log(orderList)
            <CCardBody>
 
     <CNav variant="tabs" role="tablist" style={{cursor:'pointer'}}>
-      <CNavItem>
+      {access.includes(inventoryRight.stockListView) &&<CNavItem>
         <CNavLink
           active={activeKey === 1}
           onClick={() => setActiveKey(1)}
         >
             Stock List
         </CNavLink>
-      </CNavItem>
-      <CNavItem>
+      </CNavItem>}
+      {access.includes(inventoryRight.orderList) &&<CNavItem>
         <CNavLink
           active={activeKey === 2}
           onClick={() => setActiveKey(2)}
         >
           Order List 
         </CNavLink>
-      </CNavItem>
-      <CNavItem>
+      </CNavItem>}
+      {access.includes(inventoryRight.orderListreceived) &&<CNavItem>
         <CNavLink
           active={activeKey === 3}
           onClick={() => setActiveKey(3)}
         >
           Order received  
         </CNavLink>
-      </CNavItem>
+      </CNavItem>}
 
     </CNav>
     <CTabContent>
 
-    <CCol className='p-4 d-flex justify-content-end'  >
+    {((access.includes(inventoryRight.stockListAdd) || isAdmin)&& 
+      (access.includes(inventoryRight.receivedStatus) || isAdmin))
+    &&<CCol className='p-4 d-flex justify-content-end'  >
            <div style={{display:activeKey ===3?'none':'block' }}>
             <h6>{activeKey===1?'Order by':' Recevied by'}</h6>
            <CFormSelect 
@@ -320,9 +334,9 @@ console.log(orderList)
                 {error&&<p style={{color:'red'}}>Please select staff name first</p>}
             </div>
            </div>
-    </CCol>
+    </CCol>}
 
-      <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={activeKey ===1}>   
+      <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={activeKey ===((access.includes(inventoryRight.stockListView) || isAdmin) &&1)}>   
          
 
         <CTable className='mt-3 ' align="middle" bordered style={{ borderColor: "#0B5345"}} hover responsive>
@@ -336,7 +350,8 @@ console.log(orderList)
                                <CTableHeaderCell>Size/Kg</CTableHeaderCell>
                                <CTableHeaderCell>Color</CTableHeaderCell>
                                <CTableHeaderCell>Product Prize</CTableHeaderCell>
-                               <CTableHeaderCell>Add quantity<br/>To order</CTableHeaderCell>                      
+                               <CTableHeaderCell style={{display:(access.includes(inventoryRight.stockListAdd) || isAdmin)?'':'none'}}>
+                                Add quantity<br/>To order</CTableHeaderCell>                      
                            </CTableRow>
                        </CTableHead>
                        <CTableBody>
@@ -353,7 +368,9 @@ console.log(orderList)
                                <CTableDataCell>{item.Color}</CTableDataCell>
                                <CTableDataCell>{item.productPrize}</CTableDataCell>
 
-                               <CTableDataCell style={{width:'200px'}} className='text-center'> {
+                               <CTableDataCell style={{width:'200px',display:
+                               (access.includes(inventoryRight.stockListAdd) || isAdmin)?'':'none'
+                            }} className='text-center'> {
                            activeToIncrement.includes(item._id)?
 
                            <>
@@ -371,7 +388,8 @@ console.log(orderList)
                           </CCol>
                           </>
                           :
-                          <CButton onClick={()=>toAddProduct({...item,Available_Stock:100})} >Add </CButton>
+                          ((access.includes(inventoryRight.stockListAdd) || isAdmin)&&
+                          <CButton onClick={()=>toAddProduct({...item,Available_Stock:100})} >Add </CButton>)
                        
                        }</CTableDataCell>
                                                                                     
@@ -387,14 +405,24 @@ console.log(orderList)
       <CTabPane role="tabpanel" aria-labelledby="contact-tab" visible={activeKey === 2}>
 
         <CCol className='pt-4'>
-            <CButton onClick={()=>selectAllOption()} className='me-2'>Select all optiom</CButton>
-            <CButton onClick={()=>downloadAsExcel()}>Export to excel</CButton>
+            {
+                (access.includes(inventoryRight.orderListSelect) || isAdmin)&&
+                <CButton onClick={()=>selectAllOption()} className='me-2'>Select all optiom</CButton>
+            }   
+            {
+                (access.includes(inventoryRight.orderListExport) || isAdmin)&&
+                <CButton onClick={()=>downloadAsExcel()}>Export to excel</CButton>
+            }  
+
             {error2&&<p style={{color:'red'}}>Please select data to export</p>}
          </CCol>
       <CTable className='mt-3 ' align="middle" bordered style={{ borderColor: "#0B5345"}} hover responsive>                  
                        <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                            <CTableRow >
-                             <CTableHeaderCell>Select Option</CTableHeaderCell>
+                             <CTableHeaderCell
+                             style={{display:
+                                (access.includes(inventoryRight.orderListSelect) || isAdmin)?'':'none'}}
+                             >Select Option</CTableHeaderCell>
                                <CTableHeaderCell>Sr No</CTableHeaderCell>
                                <CTableHeaderCell>Order Date</CTableHeaderCell>
                                <CTableHeaderCell>Product Category</CTableHeaderCell>
@@ -405,7 +433,10 @@ console.log(orderList)
                                <CTableHeaderCell>Product Prize</CTableHeaderCell>
                                <CTableHeaderCell>Product quantity</CTableHeaderCell>     
                                <CTableHeaderCell>Order by</CTableHeaderCell>                      
-                               <CTableHeaderCell>Status</CTableHeaderCell>                      
+                               <CTableHeaderCell 
+                               style={{display:
+                                (access.includes(inventoryRight.receivedStatus) || isAdmin)?'':'none'}}
+                               >Status</CTableHeaderCell>                      
                            </CTableRow>
                        </CTableHead>
                        <CTableBody>
@@ -413,7 +444,13 @@ console.log(orderList)
                        {   orderList.filter((el)=>el?.Status!=='Recevied').map((item,i)=>{        
                   
                          return <CTableRow >
-                               <CTableDataCell ><CFormCheck  checked={activeCExcelCheck.includes(item._id)}  onChange={()=>toSetExcelData(item)}  /></CTableDataCell>
+                               <CTableDataCell style={{display:
+                                (access.includes(inventoryRight.orderListSelect) || isAdmin)?'':'none'}} >
+                                {(access.includes(inventoryRight.orderListSelect) || isAdmin)&&
+                                <CFormCheck  checked={activeCExcelCheck.includes(item._id)}  onChange={()=>toSetExcelData(item)}  />
+                                }
+                                </CTableDataCell>
+
                                <CTableDataCell>{i+1}</CTableDataCell>
                                <CTableDataCell>{new Date(item.Order_Date).toLocaleString()}</CTableDataCell>
                                <CTableDataCell>{item.Product_Category}</CTableDataCell>
@@ -424,7 +461,13 @@ console.log(orderList)
                                <CTableDataCell>{item.Product_Price}</CTableDataCell>
                                <CTableDataCell>{item.Orders_Quantity}</CTableDataCell>
                                <CTableDataCell>{item.EmployeeName}</CTableDataCell>  
-                               <CTableDataCell><CButton  onClick={()=>ordeReceived(item)}>Received?</CButton></CTableDataCell>                                                                                                            
+                               <CTableDataCell
+                               style={{display:
+                                (access.includes(inventoryRight.receivedStatus) || isAdmin)?'':'none'}}
+                               >
+               
+                                <CButton  onClick={()=>ordeReceived(item)}>Received?</CButton>
+                                </CTableDataCell>                                                                                                            
                            </CTableRow>                   
                        })}
                       

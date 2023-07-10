@@ -4,6 +4,8 @@ import React, { useState,useCallback,useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { useUniqAdminObjeact,useAdminValidation } from "../Custom-hook/adminValidation";
+import { taskCalender } from '../hr/Rights/rightsValue/erpRightsValue'
+
 
 
 const CreateTask = () => {
@@ -15,6 +17,13 @@ const CreateTask = () => {
   const [toggaleValue, setToggaleValue] = useState(false)
   const [filterDate, setFilterDate] = useState(false)
   const [error, setError] = useState('')
+
+  const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpTaskList.items.erpTaskListCalender.rights) 
+
+
+  console.log(rightsData)
+     const access = rightsData?rightsData:[]
+     const isAdmin = useSelector((el)=>el.isAdmin) 
 
   const CurrentDate = new Date()
 
@@ -44,9 +53,9 @@ const CreateTask = () => {
         userTime: '0:00',
         selectedTask: ""
       }],
-      ...uniqObjVal
     }
   ])
+
 
 
   const  getCalenderData = useCallback(async function() {
@@ -54,6 +63,7 @@ const CreateTask = () => {
 
        const response = 
        await axios.get(`${url}/callender/${pathVal}`,headers)  
+       console.log(response.data)
        setTaskData(response.data)
       }catch(error) {
                 console.error(error)
@@ -78,9 +88,8 @@ const  sendUpdatedCalenderData =   useCallback(async function(obj,id) {
 
 
 const  postCalenderData =   useCallback(async function(obj) {
-  console.log("sendApi", obj)
   try{
-   const response = await axios.post(`${url}/callender/create`,obj,headers)
+   const response = await axios.post(`${url}/callender/create`,{...obj,...uniqObjVal},headers)
    if(response.statusText==="OK")
    getCalenderData()
   }catch(error) {
@@ -170,7 +179,7 @@ const  postCalenderData =   useCallback(async function(obj) {
   return (
 
     <>
-      <CCard className='p-4' >
+     { (access.includes(taskCalender.addTask) || isAdmin) && <CCard className='p-4' >
 
         {toggaleValue ? <CContainer>
           <label style={{ color: 'red' }}>{error}</label>
@@ -243,7 +252,8 @@ const  postCalenderData =   useCallback(async function(obj) {
           </CCol>
         </CContainer> :
           <CButton onClick={() => toggaleFun()} className='py-1 pt-2' style={{ maxWidth: '200px', marginLeft: 'auto' }} color='primary'> <h5> Add Your Task</h5></CButton>}
-      </CCard>
+      </CCard>}
+
       <CCol className='mt-4'>
         <h5 >Filter Calender</h5>
         <CCol style={{ display: 'flex' }}>

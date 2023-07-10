@@ -21,6 +21,7 @@ import {
   import {useState,useEffect} from 'react'
   import axios from "axios";
   import CustomSelectInput from './CustomSelectInput/CustomSelectInput';
+  import { useAdminValidation } from "src/views/Custom-hook/adminValidation";
 
   let user = JSON.parse(localStorage.getItem('user-info'))
   const token = user.token;
@@ -40,6 +41,7 @@ const EmpLoyeeLeaveHistory = () => {
 
   const [empLeabveHistoryData,setEmpLeaveHistoryData] = useState([])
   const url = useSelector((el) => el.domainOfApi)
+  const pathValMaster =    useAdminValidation('Master')
   const [pagination, setPagination] = useState(10)
   const [selectedYear,setSelectedYear] = useState('')
   const [selectedMonth,setSelectedMonth] = useState('')
@@ -54,7 +56,7 @@ const EmpLoyeeLeaveHistory = () => {
 let num =0
   async function getEmpLeaveListData  (){
     try{
-      const response1 = await axios.get(`${url}/empleaveList/all`,{headers})
+      const response1 = await axios.get(`${url}/empleaveList/${pathValMaster}`,{headers})
       if(response1.status===200){
         setEmpLeaveHistoryData(response1.data.reverse())
         setYearArr(response1.data.map((el)=>new Date(el.leaveDate).getFullYear()).filter((el,i,arr)=>i==arr.indexOf(el)))

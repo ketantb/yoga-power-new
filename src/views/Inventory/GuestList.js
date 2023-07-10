@@ -29,7 +29,7 @@ import { useAdminValidation, useUniqAdminObjeact } from "../Custom-hook/adminVal
 
 
 
-const guestList = () => {
+const guestList = ({addedval,editCallval,deleteICall,action1}) => {
     const [action, setAction] = useState(false)
     const [toast, setToast] = useState(false)
     const [id, setId] = useState()
@@ -59,6 +59,8 @@ const guestList = () => {
     const uniqObjVal = useUniqAdminObjeact()
 
     const url = useSelector((el)=>el.domainOfApi)
+
+    console.log(addedval,editCallval,deleteICall,action1)
 
 
     useEffect(() => {
@@ -199,7 +201,7 @@ console.log('Workd feklnfbef')
                     </div>
                 </CToast>
             </CCol>
-            <CCol lg={3} sm={6} className='mb-2'>
+            <CCol  style={{display:(addedval?'':'none' )}} lg={3} sm={6} className='mb-2'>
                 <CButton className="float-end" onClick={() => { setAction(!action), clear() }}>{action ? 'Close' : 'Add New Guest'}</CButton>
             </CCol>
             {action &&
@@ -300,8 +302,8 @@ console.log('Workd feklnfbef')
                         <CTableHeaderCell>Address</CTableHeaderCell>
                         <CTableHeaderCell>Category</CTableHeaderCell>
                         <CTableHeaderCell>Event</CTableHeaderCell>
-                        <CTableHeaderCell>Action</CTableHeaderCell>
-                        <CTableHeaderCell>Edit/delete</CTableHeaderCell>
+                        <CTableHeaderCell style={{display:(action1?'':'none' )}}>Action</CTableHeaderCell>
+                        <CTableHeaderCell  style={{display:((editCallval ||deleteICall)?'':'none')}} >Edit/delete</CTableHeaderCell>
                      
                     </CTableRow>
                 </CTableHead>
@@ -376,7 +378,7 @@ console.log('Workd feklnfbef')
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
                         </CTableDataCell>
-                        <CTableDataCell>
+                        <CTableDataCell style={{display:(action1?'':'none' )}}>
                             <CFormInput
                                 className="mb-1"
                                 type="text"
@@ -385,7 +387,7 @@ console.log('Workd feklnfbef')
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
                         </CTableDataCell>
-                        <CTableDataCell>
+                        <CTableDataCell  style={{display:((editCallval ||deleteICall)?'':'none')}}>
                             <CFormInput
                                 className="mb-1"
                                 type="text"
@@ -406,8 +408,17 @@ console.log('Workd feklnfbef')
                             <CTableDataCell>{item.address}</CTableDataCell>
                             <CTableDataCell>{item.category}</CTableDataCell>
                             <CTableDataCell>{item.event}</CTableDataCell>
-                            <CTableDataCell className='text-center'><a href={`tel:${item.mobile}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`https://wa.me/${item.mobile}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`mailto: ${item.email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} size='20px' /></a> </CTableDataCell>
-                            <CTableDataCell className='text-center'><MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} onClick={() => handleUpdate(item._id)} size='20px' /> <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteCall(item._id)} size='20px' /></CTableDataCell>
+                            <CTableDataCell style={{display:(action1?'':'none' )}} className='text-center'><a href={`tel:${item.mobile}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`https://wa.me/${item.mobile}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`mailto: ${item.email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} size='20px' /></a> </CTableDataCell>
+                            
+                            <CTableDataCell style={{display:((editCallval ||deleteICall)?'':'none')}} className='text-center'>
+
+                                {editCallval&&<MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} 
+                                onClick={() => handleUpdate(item._id)} size='20px' />}
+
+                                {deleteICall &&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
+                                onClick={() => deleteCall(item._id)} size='20px' />}
+
+                            </CTableDataCell>
                         </CTableRow>
                     ))}
                 </CTableBody>

@@ -15,10 +15,32 @@ import {
 
 import EmpPerformanceTable from './Performance/EmpPerformanceTable'
 import TrainerPerformance from './Performance/TrainerPerformance'
+import { hrManagement } from './Rights/rightsValue/erpRightsValue'
+import { useSelector } from 'react-redux'
 
 const EmpPerformance = () => {
 
-    const [activeKey, setActiveKey] = useState(1)
+  const rightsData = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
+  ?.items?.erpHrTargetSheet?.items?.erpEmpPerformance?.rights) 
+  const access = rightsData?rightsData:[]
+  const isAdmin = useSelector((el)=>el.isAdmin)
+
+  console.log(access)
+
+  const addEmpTargetPerformance = (access.includes(hrManagement.addEmpTargetPerformance) || isAdmin)
+  const deleteEmpTargetPerformance = (access.includes(hrManagement.deleteEmpTargetPerformance) || isAdmin)
+
+    const [activeKey, setActiveKey] = useState(
+      (addEmpTargetPerformance&&1)||
+      (deleteEmpTargetPerformance&&2)
+    )
+
+
+    console.log(addEmpTargetPerformance)
+    console.log(deleteEmpTargetPerformance)
+
+  
+
 
     return (
         <CRow>
@@ -29,18 +51,20 @@ const EmpPerformance = () => {
                     </CCardHeader>
     <CCardBody>                  
     <CNav variant="tabs" role="tablist">
-      <CNavItem>
+      {<CNavItem >
         <CNavLink
+          style={{display:addEmpTargetPerformance?'':'none'}}  
           active={activeKey === 1}
           onClick={() => setActiveKey(1)}
         >
           Employee Prformance
         </CNavLink>
-      </CNavItem>
-      <CNavItem>
+      </CNavItem>}
+      <CNavItem >
         <CNavLink
           active={activeKey === 2}
           onClick={() => setActiveKey(2)}
+          style={{display:deleteEmpTargetPerformance?'':'none'}}
         >
          Trainer Prformance
         </CNavLink>

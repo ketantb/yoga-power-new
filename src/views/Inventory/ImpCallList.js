@@ -26,7 +26,7 @@ import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useAdminValidation,useUniqAdminObjeact } from "../Custom-hook/adminValidation";
 
-const impCallList = () => {
+const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
     const url = useSelector((el)=>el.domainOfApi)
     const pathVal  =  useAdminValidation()
     const uniqObjVal =  useUniqAdminObjeact()
@@ -187,7 +187,7 @@ const impCallList = () => {
                     </div>
                 </CToast>
             </CCol>
-            <CCol lg={3} sm={6} className='mb-2'>
+            <CCol lg={3} sm={6} className='mb-2' style={{display:((addedval)?'':'none')}} >
                 <CButton className="float-end" onClick={() => { setAction(!action), clear() }}>{action ? 'Close' : 'Add Importent Number'}</CButton>
             </CCol>
             {action &&
@@ -288,8 +288,8 @@ const impCallList = () => {
                         <CTableHeaderCell>Address</CTableHeaderCell>
                         <CTableHeaderCell>Category</CTableHeaderCell>
                         <CTableHeaderCell>Company Name</CTableHeaderCell>
-                        <CTableHeaderCell>Action</CTableHeaderCell>
-                        <CTableHeaderCell>Edit/Delete </CTableHeaderCell>
+                        <CTableHeaderCell  style={{display:(action1?'':'none')}}>Action</CTableHeaderCell>
+                        <CTableHeaderCell style={{display:((editCallval ||deleteICall)?'':'none')}} >Edit/Delete </CTableHeaderCell>
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -363,22 +363,23 @@ const impCallList = () => {
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
                         </CTableDataCell>
-                        <CTableDataCell>
+                        <CTableDataCell style={{display:(action1?'':'none' )}}>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "120px"}}
                                 type="text"
                                 disabled
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
                         </CTableDataCell>
-                        <CTableDataCell>
+                        <CTableDataCell style={{display:((editCallval ||deleteICall)?'':'none')}}>
                             <CFormInput
                                 className="mb-1"
                                 type="text"
                                 style={{ minWidth: "120px" }}
                                 disabled
                                 aria-describedby="exampleFormControlInputHelpInline"
+
                             />
                         </CTableDataCell>
                             
@@ -392,8 +393,16 @@ const impCallList = () => {
                             <CTableDataCell>{item.address}</CTableDataCell>
                             <CTableDataCell>{item.category}</CTableDataCell>
                             <CTableDataCell>{item.company}</CTableDataCell>
-                            <CTableDataCell className='text-center'><a href={`tel:${item.mobile}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`https://wa.me/${item.mobile}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`mailto: ${item.email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} size='20px' /></a> </CTableDataCell>
-                            <CTableDataCell className='text-center'><MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} onClick={() => handleUpdate(item._id)} size='20px' /> <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteCall(item._id)} size='20px' /></CTableDataCell>
+                            <CTableDataCell style={{display:(action1?'':'none')}} className='text-center'><a href={`tel:${item.mobile}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`https://wa.me/${item.mobile}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`mailto: ${item.email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} size='20px' /></a> </CTableDataCell>
+                            <CTableDataCell className='text-center' style={{display:((editCallval ||deleteICall)?'':'none')}}>
+
+                              {editCallval&& <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} 
+                              onClick={() => handleUpdate(item._id)} size='20px' />} 
+
+                              {deleteICall&&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteCall(item._id)} 
+                              size='20px' />}
+
+                            </CTableDataCell>
                         </CTableRow>
                     ))}
                 </CTableBody>
@@ -404,16 +413,16 @@ const impCallList = () => {
                 </CPaginationItem>
                 <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
                 {result1.filter((list) =>
-                    list.username === username && list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
+                    list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
                     && list.address.includes(search4) && list.category.includes(search5) && list.company.includes(search6)
                 ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                 {result1.filter((list) =>
-                    list.username === username && list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
+                    list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
                     && list.address.includes(search4) && list.category.includes(search5) && list.company.includes(search6)
                 ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                 {result1.filter((list) =>
-                    list.username === username && list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
+                    list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
                     && list.address.includes(search4) && list.category.includes(search5) && list.company.includes(search6)
                 ).length > (paging + 1) * 10 ?
                     <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>

@@ -22,6 +22,8 @@ import { useSelector } from 'react-redux';
 import { useState,useEffect} from 'react';
 import axios from 'axios';
 import { MdDelete } from 'react-icons/md';
+import { useAdminValidation, useUniqAdminObjeact } from '../Custom-hook/adminValidation';
+import { course } from '../hr/Rights/rightsValue/erpRightsValue';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
@@ -39,6 +41,18 @@ function TtcVideoDetails(){
     let num =0
 
     const url = useSelector((el) => el.domainOfApi)
+    const uniqObjVal = useUniqAdminObjeact()
+    const pathVal = useAdminValidation()
+
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpCourse
+  ?.items?.erpTTCVideos?.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+  
+    const addTrainingCourse = (access.includes(course.addTrainingCourse)||isAdmin)
+    const deleteCourseVideo = (access.includes(course.deleteCourseVideo)||isAdmin)
+
+
 
     const obj={
         courseName:'',
@@ -55,10 +69,9 @@ function TtcVideoDetails(){
 
 
     const getVideoDetails  = () =>{
-        axios.get(`${url}/ttcVideo/all`,{headers})
+        axios.get(`${url}/ttcVideo/${pathVal}`,{headers})
             .then((res) => { 
                 if(res.status===200){
-                    console.log(res.data)
                   setTTCVideoData(res.data.reverse())
                 }
             })
@@ -72,7 +85,7 @@ function TtcVideoDetails(){
            let response ={}
            try{
              if(type==='Save'){
-               response = await  axios.post(`${url}/ttcVideo/create`,ttcVideoDetails,{headers})
+               response = await  axios.post(`${url}/ttcVideo/create`,{...ttcVideoDetails,...uniqObjVal},{headers})
              }
        
             if(response?.status===200){
@@ -115,8 +128,9 @@ function TtcVideoDetails(){
 
      <CCardBody>
 
-     {showForm?<CCol className="bg-body d-flex justify-content-end">
-            <CButton onClick={()=>setForm((value)=>!value)}>Add New</CButton>
+     {showForm?<CCol    className="bg-body d-flex justify-content-end">
+          
+            <CButton style={{display:addTrainingCourse?'':'none'}} onClick={()=>setForm((value)=>!value)}>Add New</CButton>
     </CCol>:
     <CCard>
         <CCardHeader className="p-3" style={{ backgroundColor: '#0B5345', color: 'white' }}>
@@ -183,7 +197,7 @@ function TtcVideoDetails(){
            <CTableHeaderCell>Formal of Videos</CTableHeaderCell>    
            <CTableHeaderCell>Session No</CTableHeaderCell>    
            <CTableHeaderCell>Video Link</CTableHeaderCell> 
-           <CTableHeaderCell>Delete</CTableHeaderCell>    
+           <CTableHeaderCell style={{display:deleteCourseVideo?'':'none'}} >Delete</CTableHeaderCell>    
           </CTableRow>
       </CTableHead>
 
@@ -196,7 +210,7 @@ if (pagination - 5 < i + 1 && pagination >= i + 1) {return el}}).map((el,i)=>{
         <CTableDataCell>{el.formalOfVideos}</CTableDataCell>
         <CTableDataCell>{el.sessionNo}</CTableDataCell>
         <CTableDataCell style={{width:'300px'}} ><a target='_blank' href={el.videoLink}>{el.videoLink}</a></CTableDataCell>
-        <CTableDataCell>
+        <CTableDataCell style={{display:deleteCourseVideo?'':'none'}}>
             <MdDelete style={{cursor:'pointer'}} onClick={()=>deleteCr(el._id)}/>
         </CTableDataCell>
        </CTableRow>   

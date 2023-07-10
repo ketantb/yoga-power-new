@@ -37,6 +37,7 @@ import moment from 'moment/moment'
 import AdmissionForm1 from 'src/components/AdmissionForm1'
 import { useSelector } from 'react-redux'
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
+import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
 
 const EnquireAppointment = () => {
 
@@ -44,6 +45,14 @@ const EnquireAppointment = () => {
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
     var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
     var year = currentdate.getFullYear();
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmLeads?.items?.superRight) 
+
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+    const appointmentAdd =  rightsData?.addOn?.includes(leadsSuperRight.appointment)
+    const appointmentDelete =  rightsData?.delete?.includes(leadsSuperRight.appointment)
+    const appointmentEdit  =  rightsData?.edit?.includes(leadsSuperRight.appointment)
 
 
     const [select, setSelect] = useState('')
@@ -944,7 +953,7 @@ const EnquireAppointment = () => {
                                             >
                                                 <option>Select Counseller</option>
                                                 {staff.filter((list) =>list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                     (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}</CFormSelect>
@@ -1462,12 +1471,15 @@ const EnquireAppointment = () => {
                                     <CTableHeaderCell>Enquiry stage</CTableHeaderCell>
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
                                     <CTableHeaderCell>Last Call</CTableHeaderCell>
-                                    <CTableHeaderCell>Add</CTableHeaderCell>
+                                    {(isAdmin|| appointmentAdd)&&<CTableHeaderCell>Add</CTableHeaderCell>}
                                     <CTableHeaderCell>Appointment Date & Time</CTableHeaderCell>
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>
                                     <CTableHeaderCell>Counseller</CTableHeaderCell>
-                                    <CTableHeaderCell>Action</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit</CTableHeaderCell>
+                                    {(isAdmin|| appointmentAdd)&&<CTableHeaderCell >Action</CTableHeaderCell>}
+                                    {(isAdmin|| appointmentEdit || appointmentDelete)&&<CTableHeaderCell>
+                                        Edit/Delete
+                                        
+                                        </CTableHeaderCell>}
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -1581,7 +1593,7 @@ const EnquireAppointment = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| appointmentAdd)?'':'none'}}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -1620,7 +1632,7 @@ const EnquireAppointment = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:(isAdmin|| appointmentAdd )?'':'none'}}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -1629,7 +1641,7 @@ const EnquireAppointment = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell  style={{display:(isAdmin|| (appointmentEdit || appointmentDelete ))?'':'none'}}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -1656,12 +1668,16 @@ const EnquireAppointment = () => {
                                             <CTableDataCell>{item.appointmentfor}</CTableDataCell>
                                             <CTableDataCell>{item.CallStatus}</CTableDataCell>
                                             <CTableDataCell>{item.Message}</CTableDataCell>
-                                            <CTableDataCell><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { addForm(item._id), setEdit(item._id), handleAdmission(item._id) }} /></CTableDataCell>
+                                            <CTableDataCell style={{display:(isAdmin|| appointmentAdd)?'':'none'}} ><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { addForm(item._id), setEdit(item._id), handleAdmission(item._id) }} /></CTableDataCell>
                                             <CTableDataCell>{moment(item.appointmentDate).format("MM-DD-YYYY")}<br />{moment(item.appointmentTime, "HH:mm").format("hh:mm A")}</CTableDataCell>
                                             <CTableDataCell>{item.StaffName}</CTableDataCell>
                                             <CTableDataCell>{item.Counseller}</CTableDataCell>
-                                            <CTableDataCell className='text-center'><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
-                                            <CTableDataCell className='text-center'><MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} onClick={() => handleEnquiry(item._id)} size='20px' /> <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteEnquiry(item._id)} size='20px' /></CTableDataCell>
+                                            <CTableDataCell style={{display:(isAdmin|| appointmentAdd)?'':'none'}} className='text-center'><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
+                                            <CTableDataCell  style={{display:(isAdmin|| (appointmentEdit || appointmentDelete ))?'':'none'}} className='text-center'>
+                                                <MdEdit  style={{display:(isAdmin|| appointmentEdit)?'':'none',fontSize: '35px', cursor: 'pointer', markerStart: '10px'}} id={item._id}  
+                                                onClick={() => handleEnquiry(item._id)} size='20px' /> 
+                                                <MdDelete style={{display:(isAdmin|| appointmentDelete)?'':'none', cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
+                                                onClick={() => deleteEnquiry(item._id)} size='20px' /></CTableDataCell>
                                         </CTableRow>
                                     )
                                 ))}

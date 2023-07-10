@@ -31,6 +31,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { icons } from 'react-icons/lib';
 import SalarySheet from 'src/views/hr/SalarySheet';
+import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
@@ -39,6 +40,9 @@ const centerCode = user.user.centerCode;
 
 
 const PayrollMaster = () =>{
+
+  const pathVal = useAdminValidation('Master')
+  const uniqObjVal = useUniqAdminObjeact()
 
   const obj = {
     username:username,
@@ -95,7 +99,7 @@ const [staff, setStaff] = useState([])
 const selectedStaff =  staff?.find((el)=>el?._id===salarySheet?.empName)
 
 function getStaff() {
-    axios.get(`${url}/employeeform`, {
+    axios.get(`${url}/employeeform/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -166,7 +170,7 @@ useEffect(()=>{
 
 
 const getSalarySheetData = ()=>{
-  axios.get(`${url}/salarySheet/all`,{headers}).then((el)=>{
+  axios.get(`${url}/salarySheet/${pathVal}`,{headers}).then((el)=>{
    if(!el.status){
     return 
    }
@@ -205,7 +209,7 @@ const saveData = async (type)=>{
   let response ={}
   try{
     if(type==='Save'){
-      response = await  axios.post(`${url}/salarySheet/create`,{...salarySheet,empName:selectedStaff?.FullName,employeeID:selectedStaff._id},{headers})
+      response = await  axios.post(`${url}/salarySheet/create`,{...salarySheet,...uniqObjVal,empName:selectedStaff?.FullName,employeeID:selectedStaff._id},{headers})
     }
     if(type==='Update'){
      response = await  axios.post(`${url}/salarySheet/update/${salarySheet?._id}`,{...salarySheet,empName:selectedStaff?.FullName},{headers})
@@ -222,7 +226,7 @@ const saveData = async (type)=>{
 
  const [result, setResult] = useState([])
  function getDesignation() {
-     axios.get(`${url}/designation/all`, {
+     axios.get(`${url}/designation/${pathVal}`, {
          headers: {
              'Authorization': `Bearer ${token}`
          }

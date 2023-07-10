@@ -34,6 +34,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { useSelector } from 'react-redux'
 import { useAdminValidation } from '../Custom-hook/adminValidation';
+import { hrManagement } from './Rights/rightsValue/erpRightsValue';
 
 const EmployeeProfile = React.lazy(()=>import('./Hr-Employee-Details/Tables/EmployeeProfile'))
 
@@ -42,9 +43,25 @@ const url2 = 'https://yog-seven.vercel.app'
 
 const AllEmpProfile = () => {
     const url = useSelector((el)=>el.domainOfApi) 
+
+
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
+    ?.items?.empLoyeeHrProfile?.items?.erpEmployeeProfile?.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+                                         
+    
+
+   const  allImpProfileImportExport = access.includes(hrManagement.allImpProfileImportExport)
+   const  allImpProfileView = access.includes(hrManagement.allImpProfileView)
+   const  allImpProfileStatus = access.includes(hrManagement.allImpProfileStatus)
+   const  allImpProfileAction =  access.includes(hrManagement.allImpProfileAction)
+   const  allImpProfileEdit =  access.includes(hrManagement.allImpProfileEdit)
+   const  allImpProfileDelete = access.includes(hrManagement.allImpProfileDelete)
+
+
+
     const pathName = useAdminValidation()
-
-
     const [Search1, setSearch1] = useState('')
     const [Search2, setSearch2] = useState('')
     const [Search3, setSearch3] = useState('')
@@ -181,15 +198,15 @@ const AllEmpProfile = () => {
                         <CRow className='d-flex mb-2'>
                             <CCol lg={6} sm={12} className='mb-2'>
                                 <CButtonGroup role="group" aria-label="Basic example">
-                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Total Employee: {staff.filter((list) => list.username === username).length}</CButton>
-                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Active Employee: {staff.filter((list) => list.username === username && list.status === true).length}</CButton>
-                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Left Employee: {staff.filter((list) => list.username === username && list.status === false).length}</CButton>
+                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Total Employee: {staff.filter((list) => list).length}</CButton>
+                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Active Employee: {staff.filter((list) => list && list.status === true).length}</CButton>
+                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Left Employee: {staff.filter((list) => list && list.status === false).length}</CButton>
                                 </CButtonGroup>
                             </CCol>
                             <CCol lg={3}></CCol>
                             <CCol lg={3} sm={12}>
 
-                             <CButtonGroup className=' mb-2 float-end'>
+                             <CButtonGroup className=' mb-2 float-end' style={{display:((isAdmin||allImpProfileImportExport)?'':'none')}}>
                                     <CButton onClick={HandaleImportClick}  color="primary">
                                         <CIcon icon={cilArrowCircleBottom} />
                                         {' '}Import
@@ -226,9 +243,9 @@ const AllEmpProfile = () => {
                                     <CTableHeaderCell>Department</CTableHeaderCell>
                                     <CTableHeaderCell>Designation</CTableHeaderCell>
                                     <CTableHeaderCell>Emp Right</CTableHeaderCell>
-                                    <CTableHeaderCell>Status</CTableHeaderCell>
-                                    <CTableHeaderCell>Action</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit</CTableHeaderCell>
+                                    <CTableHeaderCell style={{display:((isAdmin||allImpProfileStatus)?'':'none')}} >Status</CTableHeaderCell>
+                                    <CTableHeaderCell style={{display:((isAdmin||allImpProfileAction)?'':'none')}} >Action</CTableHeaderCell>
+                                    <CTableHeaderCell style={{display:((isAdmin||allImpProfileDelete||allImpProfileEdit)?'':'none')}}>Edit/Delete</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -341,7 +358,7 @@ const AllEmpProfile = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:((isAdmin||allImpProfileStatus)?'':'none')}} >
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "80px" }}
@@ -351,7 +368,7 @@ const AllEmpProfile = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell       style={{display:((isAdmin||allImpProfileAction)?'':'none')}} >
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
@@ -361,7 +378,7 @@ const AllEmpProfile = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell style={{display:((isAdmin||allImpProfileDelete||allImpProfileEdit)?'':'none')}}>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
@@ -376,12 +393,18 @@ const AllEmpProfile = () => {
                                   
                                 </CTableRow>
                                 {staff.filter((list) =>
-                                    list.username === username && list.selected === 'Select' 
+                                    list && list.selected === 'Select' 
                                 ).map((item, index) => (
-                                    item.username === username && (
+                                    item && (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-                                            <CTableDataCell><Link style={{textDecoration:'none'}} to={`/hr/employee-detail/${item._id}`}>{item.FullName}</Link></CTableDataCell>
+
+                                            <CTableDataCell>
+                                             {(isAdmin|| allImpProfileView)?
+                                                <Link style={{textDecoration:'none'}} to={`/hr/employee-detail/${item._id}`}>
+                                                    {item.FullName}</Link>:item.FullName
+                                            }</CTableDataCell>
+
                                             <CTableDataCell>{item.ContactNumber}</CTableDataCell>
                                             <CTableDataCell>{item.EmailAddress}</CTableDataCell>
                                             <CTableDataCell>{moment(item.DateofBirth).format("MM-DD-YYYY")}</CTableDataCell>
@@ -391,16 +414,17 @@ const AllEmpProfile = () => {
                                             <CTableDataCell>{item.Department}</CTableDataCell>
                                             <CTableDataCell>{item.JobDesignation}</CTableDataCell>
                                             <CTableDataCell></CTableDataCell>
-                                            <CTableDataCell>{item.status ? <>
+                                            <CTableDataCell style={{display:((isAdmin||allImpProfileStatus)?'':'none')}}  >{item.status ? <>
                                             <CButton className='mt-1' color='success' onClick={() => updateRec(item, false)} >Active</CButton></>
                                                  : <CButton className='mt-1' color='danger' onClick={() => updateRec(item, true)}>Inactive</CButton>}</CTableDataCell>
-                                            <CTableDataCell className='text-center'><a href={`tel:${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`mailto: ${item.EmailAddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} size='20px' /></a></CTableDataCell>
-                                            <CTableDataCell className='text-center'>
-                                                 <MdEdit style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
-                                                onClick={() =>{allowToEdit(item._id)}} size='20px' />
-                                                <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
-                                                onClick={() => deleteEnquiry(item._id)} size='20px' />
-                                             
+                                            <CTableDataCell className='text-center'
+                                            style={{display:((isAdmin||allImpProfileAction)?'':'none')}} 
+                                            ><a href={`tel:${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`mailto: ${item.EmailAddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} size='20px' /></a></CTableDataCell>
+                                            <CTableDataCell className='text-center' style={{display:((isAdmin||allImpProfileDelete||allImpProfileEdit)?'':'none')}}>
+                                                 {allImpProfileEdit&&<MdEdit style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
+                                                onClick={() =>{allowToEdit(item._id)}} size='20px' />}
+                                                {allImpProfileDelete&&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
+                                                onClick={() => deleteEnquiry(item._id)} size='20px' />}
                                                 </CTableDataCell>
                                         </CTableRow>
                                     )

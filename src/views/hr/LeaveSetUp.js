@@ -21,6 +21,7 @@ import React, { useState,useEffect } from "react";
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 import { useSelector } from "react-redux";
+import { useAdminValidation } from "../Custom-hook/adminValidation";
 
 const headers = {
     "Authorization": `Bearer ${token}`,
@@ -33,10 +34,11 @@ const headers = {
 const LeaveSetUp= () => {
     const [leaveData,setLeaveData] = useState([])
     const url = useSelector((el) => el.domainOfApi)
+    const pathValMaster = useAdminValidation('Master')
 
     const getLeaveSetupData = async ()=>{
         try{
-           let response = await  axios.get(`${url}/leaveSetUpMaster/all`,{headers})
+           let response = await  axios.get(`${url}/leaveSetUpMaster/${pathValMaster}`,{headers})
             if(response.status===200){
                 setLeaveData(response.data)
             }

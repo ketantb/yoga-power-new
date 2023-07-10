@@ -26,9 +26,12 @@ const Courses = React.lazy(()=>import('../AllRightRights/Courses'))
 const ExportImport = React.lazy(()=>import('../AllRightRights/ExportImport'))
 
 
-const ErpRigths = () => {
+const ErpRigths = ({rightObjeact, setRightObject}) => {
 
     const [activeKey, setActiveKey] = useState(7)
+    const {erpTaskList,erpInventory,erpFinance,erpHrManagement,erpCourse} = rightObjeact
+
+    console.log(erpTaskList)
 
   return (
 
@@ -95,7 +98,7 @@ const ErpRigths = () => {
                                 Courses
                                 </CNavLink>
                             </CNavItem>
-                            
+                   
                             <CNavItem>
                                 <CNavLink
                                     href="javascript:void(0);"
@@ -112,12 +115,12 @@ const ErpRigths = () => {
                     <CCardBody>
                         <CTabContent >
                            
-                            {activeKey===7 && <TaskRight/>}      
-                            {activeKey===8 &&<InventoryRights/> }
-                            {activeKey ===9&& <FinanceRights/>}
-                            {activeKey===10 && <HrRights/>}
-                            {activeKey===11&& <Courses/>}
-                            {activeKey===12&& <ExportImport/>}
+                            {activeKey===7 && <TaskRight erpTaskList={erpTaskList} setRightObject={setRightObject}  />}      
+                            {activeKey===8 &&<InventoryRights erpInventory={erpInventory} setRightObject={setRightObject}/> }
+                            {activeKey ===9&& <FinanceRights erpFinance={erpFinance} setRightObject={setRightObject}/>}
+                            {activeKey===10 && <HrRights erpHrManagement={erpHrManagement} setRightObject={setRightObject}/>}
+                            {activeKey===11&& <Courses erpCourse={erpCourse} setRightObject={setRightObject}/>}
+                            {activeKey===12&& <ExportImport erpCourse={erpCourse} setRightObject={setRightObject}/>}
 
                         </CTabContent>
                     </CCardBody>

@@ -39,7 +39,8 @@ import { useState,useEffect} from 'react';
 import CustomSelectInput from '../Fitness/CustomSelectInput/CustomSelectInput';
 import moment from 'moment/moment';
 import { Link } from "react-router-dom";
-
+import { useAdminValidation, useUniqAdminObjeact } from "../Custom-hook/adminValidation";
+import { course } from "../hr/Rights/rightsValue/erpRightsValue";
 
 const headers = {
     "Authorization": `Bearer ${token}`,
@@ -94,6 +95,19 @@ function ClientCertificateDetails(){
     })
 
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation()
+    const uniqObjVal = useUniqAdminObjeact()
+
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpCourse
+    ?.items?.erpTTCPdf?.rights) 
+      const access = rightsData?rightsData:[]
+      const isAdmin = useSelector((el)=>el.isAdmin)
+    
+      const addClientCertificate = (access.includes(course.addClientCertificate)||isAdmin)
+      const editClientCertificate = (access.includes(course.editClientCertificate)||isAdmin)
+      const deleteClientCertificate = (access.includes(course.deleteClientCertificate)||isAdmin)
+      const viewClientCertificate = (access.includes(course.viewClientCertificate)||isAdmin)
+
 
      function clientObj(obj){
        setCertificateDetails(prev=>({...prev,MemberId:obj?._id}))
@@ -110,7 +124,7 @@ function ClientCertificateDetails(){
 
 
      function clientCertificateDetail() {
-        axios.get(`${url}/tcClientCertificate/all`, {
+        axios.get(`${url}/tcClientCertificate/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -126,7 +140,7 @@ function ClientCertificateDetails(){
             })
     }
     function getClientData() {
-        axios.get(`${url}/memberForm/classes/TTC Classes`, {
+        axios.get(`${url}/memberForm/classes/${pathVal}/TTC Classes`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -168,7 +182,7 @@ useEffect(()=>{
     let response ={}
     try{
       if(type==='Save'){
-        response = await  axios.post(`${url}/tcClientCertificate/create`,certificateDetails,{headers})
+        response = await  axios.post(`${url}/tcClientCertificate/create`,{...certificateDetails,...uniqObjVal},{headers})
       }
       if(type==='Update'){
        response = await  axios.post(`${url}/tcClientCertificate/update/${updateActive}`,certificateDetails,{headers})
@@ -377,7 +391,7 @@ useEffect(()=>{
      </CRow>
 
      {showForm?<CCol className="bg-body d-flex justify-content-end">
-            <CButton onClick={()=>setForm((value)=>!value)}>Add New</CButton>
+            <CButton  style={{display:addClientCertificate?'':'none'}} onClick={()=>setForm((value)=>!value)}>Add New</CButton>
     </CCol>:
 
     <CCard>
@@ -575,8 +589,8 @@ useEffect(()=>{
            <CTableHeaderCell>Grade</CTableHeaderCell>    
            <CTableHeaderCell>Certificat Number</CTableHeaderCell>   
            <CTableHeaderCell>Course Complition</CTableHeaderCell>    
-           <CTableHeaderCell>Certificat view</CTableHeaderCell>        
-           <CTableHeaderCell>Edit/Delete</CTableHeaderCell>   
+           <CTableHeaderCell style={{cursor:'pointer',display: viewClientCertificate?'':'none'}}>Certificat view</CTableHeaderCell>        
+           <CTableHeaderCell style={{cursor:'pointer',display:(editClientCertificate||deleteClientCertificate)?'':'none'}}>Edit/Delete</CTableHeaderCell>   
         </CTableRow>
       </CTableHead>
       <CTableBody>
@@ -596,8 +610,8 @@ if (pagination - 5 < i + 1 && pagination >= i + 1) {return el}})
 
 return <CTableRow className='text-center'>
 <CTableDataCell>{i + 1 + pagination - 5}</CTableDataCell>
-<CTableDataCell>
-<Link style={{textDecoration:'none'}} to={`/clients/member-details/${el.MemberId}/1`}>{el.name}</Link>
+<CTableDataCell>{viewClientCertificate?
+<Link style={{textDecoration:'none'}} to={`/clients/member-details/${el.MemberId}/1`}>{el.name}</Link>:el.name}
 </CTableDataCell>
 <CTableDataCell>{el.contactNo}</CTableDataCell>
 <CTableDataCell>{el.emailID}</CTableDataCell>
@@ -614,10 +628,10 @@ return <CTableRow className='text-center'>
 <CTableDataCell>{el.grade}</CTableDataCell>
 <CTableDataCell>{el.certificationNum}</CTableDataCell>
 <CTableDataCell>{satatusFun(el.certification==='Done')}</CTableDataCell>
-<CTableDataCell><CButton size='sm' onClick={()=>toViewDoc(el)}>Certificat View</CButton></CTableDataCell>
-<CTableDataCell style={{cursor:'pointer'}} >
-    <MdEdit onClick={()=>updateTheValue(el)}/>
-    <MdDelete onClick={()=>deleteCr(el)}/>
+<CTableDataCell style={{cursor:'pointer',display: viewClientCertificate?'':'none'}} ><CButton size='sm' onClick={()=>toViewDoc(el)}>Certificat View</CButton></CTableDataCell>
+<CTableDataCell style={{cursor:'pointer',display:(editClientCertificate||deleteClientCertificate)?'':'none'}} >
+    {editClientCertificate&&<MdEdit onClick={()=>updateTheValue(el)}/>}
+    {deleteClientCertificate&&<MdDelete onClick={()=>deleteCr(el)}/>}
 </CTableDataCell>
 </CTableRow>
 })}

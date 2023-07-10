@@ -14,8 +14,20 @@ import React, { useState } from 'react'
 import AllSuppilerList from './AllSupplierList'
 import GuestList from './GuestList'
 import ImpCallList from './ImpCallList'
+import { useSelector } from 'react-redux'
+import { inventoryRight } from '../hr/Rights/rightsValue/erpRightsValue'
 const AllCallList = () => {
-    const [activeKey, setActiveKey] = useState(1)
+ 
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpInventory.items.erpImpCallList.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
+    const [activeKey, setActiveKey] = useState(
+        ((access.includes("imp"+inventoryRight.viewCallList) || isAdmin) &&1)||
+        ((access.includes("all"+inventoryRight.viewCallList) || isAdmin) &&2)||
+        ((access.includes("guest"+inventoryRight.viewCallList) || isAdmin) &&3)
+    )
+
 
     return (
         <CRow>
@@ -23,7 +35,7 @@ const AllCallList = () => {
                 <CCard className="mb-3 border-success">
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
                         <CNav variant="pills" role="tablist">
-                            <CNavItem>
+                            {(access.includes("imp"+inventoryRight.viewCallList) || isAdmin)&&<CNavItem>
                                 <CNavLink
                                     style={{ color: "white" }}
                                     href="javascript:void(0);"
@@ -32,8 +44,8 @@ const AllCallList = () => {
                                 >
                                     Imp Call List
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                            {(access.includes("all"+inventoryRight.viewCallList) || isAdmin)&&<CNavItem>
                                 <CNavLink
                                     style={{ color: "white" }}
                                     href="javascript:void(0);"
@@ -43,8 +55,8 @@ const AllCallList = () => {
 
                                     All Suppiler List
                                 </CNavLink>
-                            </CNavItem>
-                            <CNavItem>
+                            </CNavItem>}
+                            {(access.includes("guest"+inventoryRight.viewCallList) || isAdmin)&&<CNavItem>
                                 <CNavLink
                                     style={{ color: "white" }}
                                     href="javascript:void(0);"
@@ -53,19 +65,34 @@ const AllCallList = () => {
                                 >
                                     Guest List
                                 </CNavLink>
-                            </CNavItem>
+                            </CNavItem>}
                         </CNav>
                     </CCardHeader>
                     <CCardBody>
                         <CTabContent>
                             <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 1}>
-                                <ImpCallList /> 
+                                <ImpCallList
+                                 addedval = {(access.includes("imp"+inventoryRight.addCall))}
+                                 editCallval = {(access.includes("imp"+inventoryRight.editCall))}
+                                 deleteICall={(access.includes("imp"+inventoryRight.deleteICall))}
+                                 action1={(access.includes("imp"+inventoryRight.action))}
+                                /> 
                             </CTabPane>
                             <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 2}>
-                                <AllSuppilerList />
+                                <AllSuppilerList
+                                 addedval = {(access.includes("all"+inventoryRight.addCall))}
+                                 editCallval = {(access.includes("all"+inventoryRight.editCall))}
+                                 deleteICall={(access.includes("all"+inventoryRight.deleteICall))}
+                                 action1={(access.includes("all"+inventoryRight.action))}
+                                />
                             </CTabPane>
                             <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 3}>
-                                <GuestList />
+                                <GuestList
+                                addedval = {(access.includes("guest"+inventoryRight.addCall))}
+                                editCallval = {(access.includes("guest"+inventoryRight.editCall))}
+                                deleteICall={(access.includes("guest"+inventoryRight.deleteICall))}
+                                action1={(access.includes("guest"+inventoryRight.action))}
+                                />
                             </CTabPane>
 
                         </CTabContent>

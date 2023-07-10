@@ -28,9 +28,11 @@ import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs';
 import axios from 'axios';
 import moment from 'moment';
 import { useSelector } from "react-redux";
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 const EmpCheck = () => {
     const url = useSelector((el) => el.domainOfApi)
+    const pathValMaster = useAdminValidation('Master')
     const [result1, setResult1] = useState([]);
 
 
@@ -43,41 +45,13 @@ const EmpCheck = () => {
     }, [])
 
     function getAttendance() {
-        axios.get(`${url}/staffAttendance/all`, {
+        axios.get(`${url}/staffAttendance/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                 console.log(res.data)  
-
-
-            //     const data = res.data.reverse().filter((el)=>el.classesId)
-
-            //     const uniqObj = []
-
-            //    data.forEach((el,i) => {
-            //      console.log(i)
-            //      if(!uniqObj.some((el2)=>el?.classesId===el2?.classesId&&el?.staffId===el2?.staffId)){
-            //         console.log(el)
-            //           uniqObj.push({classesId:el.classesId,staffId:el.staffId,
-            //             time:{hours:+el.totalWorkinghour.split(":")[0],mins:+el.totalWorkinghour.split(":")[1]},details:el
-            //         })
-            //      }else{
-            //        uniqObj.forEach((el2,i)=>{
-            //         if(el?.classesId===el2?.classesId&&el?.staffId===el2?.staffId){
-            //             el2.time.hours+=+el.totalWorkinghour.split(":")[0]
-            //             el2.time.mins+=+el.totalWorkinghour.split(":")[1]
-
-            //         }
-            //        })
-            //      }
-            //    });  
-
-
-
-            //    console.log(uniqObj)
-                
 
 
                 setResult1(res.data.reverse())

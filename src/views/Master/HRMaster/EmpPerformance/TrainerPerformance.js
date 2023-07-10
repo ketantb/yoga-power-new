@@ -11,7 +11,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import TrainerPerformanceForm from './TrainerPerformanceForm';
-
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
@@ -26,6 +26,7 @@ const TrainerPerformance = ({trainer}) => {
     const [updateActive,setUpdateActive] = useState({visible:false,obj:{}})
     const [trainerloyeePerformance,settrainerloyeePerformance] = useState([])
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal =  useAdminValidation('Master')
 
 
     useEffect(()=>{
@@ -34,7 +35,7 @@ const TrainerPerformance = ({trainer}) => {
       
       
     function gettrainerPerformance(){
-        axios.get(`${url}/trainerPerformance/all`, {headers})
+        axios.get(`${url}/trainerPerformance/${pathVal}`, {headers})
         .then((res) => {
             console.log(res.data)
           settrainerloyeePerformance(res.data.reverse())

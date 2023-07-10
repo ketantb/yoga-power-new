@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux'
 import { BsFillPersonCheckFill, BsFillPersonFill } from 'react-icons/bs'
 import { GiTeacher } from 'react-icons/gi'
 import { AiOutlineCheck, AiTwotoneCheckCircle } from 'react-icons/ai'
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 
 const StaffCheckin = () => {
     const [attendance, setAttendance] = useState(0);
@@ -37,6 +38,8 @@ const StaffCheckin = () => {
     const [result1, setResult1] = useState([]);
     const [allStaff, setAllStaff] = useState([]);
     const url1 = useSelector((el) => el.domainOfApi)
+    const uniqObjVal = useUniqAdminObjeact()
+    const pathValMaster = useAdminValidation('Master')
     const [staffId, setStaffId] = useState('')
     const [staffContact, setContact] = useState('')
     const [shiftTimeingData, setShitTimeingData] = useState([])
@@ -57,7 +60,7 @@ const StaffCheckin = () => {
     const getDataToStaffCheckIn = async () => {
         try {
             const response1 = axios.get(`${url1}/shiftTimeSchedule/all`, { headers })
-            const response2 = axios.get(`${url1}/employeeform`, { headers })
+            const response2 = axios.get(`${url1}/employeeform/${pathValMaster}`, { headers })
             const response3 = axios.get(`${url1}/Batch/all`, { headers })
 
             const data = await Promise.all([response1, response2, response3])
@@ -83,7 +86,7 @@ const StaffCheckin = () => {
 
     const getAttendance = async () => {
         try {
-            const { data } = await axios.get(`${ url1 }/staffAttendance/all`, { headers })
+            const { data } = await axios.get(`${ url1 }/staffAttendance/${pathValMaster}`, { headers })
             setResult1(data.reverse())
             console.log(data)
 
@@ -138,6 +141,7 @@ const StaffCheckin = () => {
                 minutes: new Date().getMinutes(),
                 seconds: new Date().getSeconds()
             },
+            ...uniqObjVal
         }
         fetch(`${ url1 }/staffAttendance/create`, {
             method: "POST",

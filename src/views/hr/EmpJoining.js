@@ -29,12 +29,14 @@ import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs';
 import axios from 'axios';
 import moment from 'moment';
 import { useSelector } from "react-redux";
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 
 const EmpJoining = () => {
 
     const [empJoininSheetData,setEmpJoininSheetData] = useState([])
     const url = useSelector((el) => el.domainOfApi)
+    const pathMasterVel = useAdminValidation('Master')
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -50,7 +52,7 @@ const EmpJoining = () => {
     },[])
 
     const getEmpJoiningData = ()=>{
-        axios.get(`${url}/empJoining/all`,{headers}).then((el)=>{
+        axios.get(`${url}/empJoining/${pathMasterVel}`,{headers}).then((el)=>{
          console.log(el.data)
          if(!el.data){
           return 

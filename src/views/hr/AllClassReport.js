@@ -19,6 +19,7 @@ import { cilArrowCircleBottom, cilArrowCircleTop, cilInfo } from '@coreui/icons'
 import { useSelector } from 'react-redux'
 import axios from 'axios';
 import moment from 'moment';
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 
 
@@ -26,6 +27,7 @@ const AllClassReport = () => {
 
     const [classReportData, setClassReportDta] = useState([]);
     const url = useSelector((el) => el.domainOfApi)
+    const pathValMaster = useAdminValidation('Master')
     var month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 
@@ -37,18 +39,11 @@ const AllClassReport = () => {
     }, [])
 
     function getAttendance() {
-        axios.get(`${url}/staffAttendance/report`, {
+        axios.get(`${url}/staffAttendance/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         }).then((res) => {
-
-
-     
-
-               console.log(res.data)
-
-
                 setClassReportDta(res.data.reverse())
             })
             .catch((error) => {

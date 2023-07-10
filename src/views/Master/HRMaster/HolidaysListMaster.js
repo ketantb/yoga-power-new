@@ -26,6 +26,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 const HolidaysListMaster = () => {
     const [action1, setAction1] = useState(false)
@@ -34,7 +35,8 @@ const HolidaysListMaster = () => {
     const [holidayNo, setHolidayNo] = useState('')
     const [status, setStatus] = useState(false)
     const url = useSelector((el) => el.domainOfApi)
-
+    const uniqObjVal = useUniqAdminObjeact() 
+    const pathValMaster = useAdminValidation('Master')
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -50,7 +52,7 @@ const HolidaysListMaster = () => {
     }, []);
 
     function getHolidayList() {
-        axios.get(`${url}/holidaysListMaster/all`, {
+        axios.get(`${url}/holidaysListMaster/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -71,7 +73,8 @@ const HolidaysListMaster = () => {
                 Date: date,
                 Holiday: holiday,
                 Status: status,
-                HolidayNo:holidayNo,                
+                HolidayNo:holidayNo,        
+                ...uniqObjVal        
             }
 
             console.log(data)
@@ -182,8 +185,8 @@ const HolidaysListMaster = () => {
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                                {result1.slice(paging * 10, paging * 10 + 10).filter((list) => list.username === username).map((item, index) => (
-                                    item.username === username && (
+                                {result1.slice(paging * 10, paging * 10 + 10).filter((list) => list).map((item, index) => (
+                                     (
                                         <CTableRow key={index} className="text-center">
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{moment(item.Date).format("MM-DD-YYYY")}</CTableDataCell>

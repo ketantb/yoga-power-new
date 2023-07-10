@@ -23,6 +23,7 @@ import { MdDelete } from "react-icons/md";
 const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
 import { useSelector } from "react-redux";
+import { useAdminValidation } from "src/views/Custom-hook/adminValidation";
 
 const BatchMaster = () => {
     const [action, setAction] = useState(false)
@@ -37,6 +38,7 @@ const BatchMaster = () => {
     const [typeOfTrainer,setTypeOfTrainer] = useState('')
     const [error,setError] = useState(false)
     const url1 = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation('Master')
 
 
     const batch=[
@@ -67,13 +69,14 @@ const BatchMaster = () => {
 
    async function getStaff() {
     try{
-     const {data} = await axios.get(`${url1}/employeeform`)
+     const {data} = await axios.get(`${url1}/employeeform/${pathVal}`,{ headers: {
+        'Authorization': `Bearer ${token}`
+    }})
      setStaff(data)
     }catch{
     }
     } 
 
-console.log(batch_timing)
 
     function getBatch() {
         axios.get(`${url1}/Batch/all`, {

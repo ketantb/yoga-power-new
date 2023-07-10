@@ -28,6 +28,7 @@ import { MdDelete } from "react-icons/md";
 const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
 import { useSelector } from "react-redux";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 const HRPolicy = () => {
     const [action, setAction] = useState(false)
@@ -35,6 +36,8 @@ const HRPolicy = () => {
     const [Policy, setPolicy] = useState('')
 
     const url = useSelector((el)=>el.domainOfApi) 
+    const uniqObjVal = useUniqAdminObjeact()
+    const pathValMaster = useAdminValidation('Master')
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -51,7 +54,7 @@ const HRPolicy = () => {
     }, []);
 
     function getPolicy() {
-        axios.get(`${url}/hrPolicyMaster/all`, {
+        axios.get(`${url}/hrPolicyMaster/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -70,6 +73,7 @@ const HRPolicy = () => {
             const data = {
                 username: username,
                 Title, Policy,
+                ...uniqObjVal
             }
             axios.post(`${url}/hrPolicyMaster/create`, data, { headers })
                 .then((resp) => {
@@ -110,7 +114,7 @@ const HRPolicy = () => {
             <CCol lg={12} sm={12}>
                 <CCard className="mb-3 border-success">
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
-                        <CCardTitle className="mt-2"> Master</CCardTitle>
+                        <CCardTitle className="mt-2">Hr Policy</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
                         <div className="d-flex justify-content-between">

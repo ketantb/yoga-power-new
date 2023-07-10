@@ -13,10 +13,10 @@ import {
 } from '@coreui/react'
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const username = user.user.username;
-
 
 const headers = {
     "Authorization": `Bearer ${token}`,
@@ -27,6 +27,8 @@ const headers = {
 
 const EmPerformanceForm = ({updateActive,getData,staff,setUpdateActive}) => {
     const url = useSelector((el) => el.domainOfApi)
+    const uniqObjVal =  useUniqAdminObjeact()
+
 
    
     
@@ -98,7 +100,7 @@ const saveData = async  (type)=>{
    let response ={}
    try{
      if(type==='Save'){
-       response = await  axios.post(`${url}/employeePerformance/create`,empObj,{headers})
+       response = await  axios.post(`${url}/employeePerformance/create`,{...empObj,...uniqObjVal},{headers})
      }
      if(type==='Update'){
       response = await  axios.post(`${url}/employeePerformance/update/${empObj?._id}`,empObj,{headers})
