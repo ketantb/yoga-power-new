@@ -143,7 +143,6 @@ const Support = React.lazy(()=>import('./views/Master/Support/Support'))
 const JobProfileMaster  = React.lazy(()=>import('./views/Master/HRMaster/JobProfile'))
 const LeaveSetupMaster = React.lazy(()=>import('./views/Master/HRMaster/LeaveSetup'))
 const ShiftTimingManagmentMastr = React.lazy(()=>import('./views/Master/HRMaster/ShiftTimingManagement'))
-const AllRightMaster = React.lazy(()=>import('./views/Master/HRMaster/AllRights'))
 const PayrollMaster = React.lazy(()=>import('./views/Master/HRMaster/PayrollMaster'))
 const EmpJoiningMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpJoining'))
 const EmpPerformanceMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpPrformanceMaster'))
@@ -379,7 +378,6 @@ const routes = [
   { path:'/master/hr/job-profile',name:'Job Profile',element:JobProfileMaster},
   { path:'/master/hr/leave-setup',name:'Leave Setup',element:LeaveSetupMaster},
   { path:'/master/hr/shift-timing-management',name:'Shift Timing',element:ShiftTimingManagmentMastr},
-  { path:'/master/hr/all-right',name:'All Right',element:AllRightMaster },
   { path: '/master/all-produt-Listing-Master', name: 'All Product Listing Master', element: AllProductListingMaster },
   { path: '/master/product-assign-master', name: 'Product Assign Master', element: OffiiceInventory },
   { path:'/master/hr/payrol-setup',name:'Salary Sheet',element:PayrollMaster},

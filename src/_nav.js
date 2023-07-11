@@ -39,7 +39,6 @@ const _nav = [
       text: 'NEW',
     },
   },
-
   {
     component: CNavGroup,
     name: 'Employee',
@@ -701,7 +700,6 @@ const _nav = [
     ],
     
   },
- 
   {
     component: CNavGroup,
     name: 'Courses',
@@ -749,41 +747,42 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Support',
+    name: 'Client Feedback',
     to: '/master/support',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    id:'masterClientFeedback'
   },
   {
     component: CNavGroup,
     name: 'Marketing',
     to: '/master/marketing',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    id:'masterMarketing',
     items: [
       {
         component: CNavItem,
         name: 'Lead Sources Master',
         to: '/master/marketing/leadSourceMaster',
+        id:'masterLeadSourseMaster'
       },
       {
         component: CNavItem,
         name: 'Sms, E-mail, Template Master',
         to: '/master/marketing/emailsmsTemplate',
+        id:'masterSmsEmailTemp'
       },
       {
         component: CNavItem,
         name: 'Gallery Master',
         to: '/master/marketing/galleryMaster',
+        id:'masterGallertyMaster'
       },
       {
         component: CNavItem,
         name: 'Automated Communication To staff  Master',
         to: '/base/cards',
-      },
-      {
-        component: CNavItem,
-        name: 'Automated Communication To Member  Master',
-        to: '/base/cards',
-      },
+        id:'masterAutomatedComToStaff'
+      }
     ],
   },
   {
@@ -791,55 +790,14 @@ const _nav = [
     name: 'Clients',
     to: '/master/clients',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    id:'masterClient',
     items: [
       {
         component: CNavItem,
         name: 'Client Transfer Master',
         to: '/master/clients/client-transfer',
-      },
-      {
-        component: CNavItem,
-        name: 'Appoinment Page Master',
-        to: '/master/clients/appointment-page',
-      },
-      {
-        component: CNavItem,
-        name: 'Support & Rights Master',
-        to: '/master/clients/support-rights',
-      },
-      {
-        component: CNavItem,
-        name: 'Call Setup Master',
-        to: '/master/clients/call-setup',
-      },
-      {
-        component: CNavItem,
-        name: 'Extension',
-        to: '/master/clients/extension',
-      },
-    ],
-  },
-  {
-    component: CNavGroup,
-    name: 'Fitness',
-    to: '/base',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Body Measurement ',
-        to: '/base/accordion',
-      },
-      {
-        component: CNavItem,
-        name: 'Fitness Goal',
-        to: '/base/breadcrumbs',
-      },
-      {
-        component: CNavItem,
-        name: 'Fitness Workout',
-        to: '/base/cards',
-      },
+        id:'masterClientTransferMaster'
+      }
     ],
   },
   {
@@ -847,88 +805,94 @@ const _nav = [
     name: 'HR',
     to: '/master/hr',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    id:'masterHr',
     items: [
       {
         component: CNavItem,
         name: 'Employee Designation',
         to: '/master/hr/designation',
+        id:'masterEmployeeDesignation'
       },
       {
         component: CNavItem,
         name: 'HR Policy',
         to: '/master/hr/hrPolicy',
+        id:'masterHrPolicy'
       },
       {
         component: CNavItem,
         name: 'Holidays List',
         to: '/master/hr/holiday',
+        id:'masterHolidaysList'
       },
       {
         component: CNavItem,
         name: 'EMP Joining',
         to: '/master/hr/emp-joining',
+        id:'masterEmpJoining'
       },
       {
         component: CNavItem,
         name: 'Job Profile',
         to: '/master/hr/job-profile',
+        id:'masterJobProfile'
       },
       {
         component: CNavItem,
         name: 'Employee Document',
         to: '/master/hr/emp-doc',
+        id:'masterEmployeeDocument'
       },
       {
         component: CNavItem,
         name: 'Leave Setup',
         to: '/master/hr/leave-setup',
+        id:'masterLeaveSetup'
       },
       {
         component: CNavItem,
         name: 'Salary Sheet',
         to: '/master/hr/payrol-setup',
+        id:'masterSalarySheet'
       },
       {
         component: CNavItem,
         name: 'Shift Timing ',
         to: '/master/hr/shift-timing-management ',
+        id:'masterShiftTiming'
       },
       {
         component: CNavItem,
         name: 'Trainer Salary Slip',
         to: '/master/hr/trainer-salary-slip',
-      },
-      {
-        component: CNavItem,
-        name: 'All right',
-        to: '/master/hr/all-right',
+        id:'masterTrainerSalarySlip'
       },
       {
         component: CNavItem,
         name: 'Emp Prformance',
         to: '/master/hr/emp-Prformance',
+        id:'masterEmpPrformance'
       },
     ],
   },
-
-  
-
-
   {
     component: CNavGroup,
     name: 'Inverntory',
     to: '/master',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    id:'masterInverntory',
     items: [
       {
         component: CNavItem,
         name: 'All Produst Listing Master',
         to: '/master/all-produt-Listing-Master',
+        id:'masterAllProductListingMaster'
       },
       {
         component: CNavItem,
         name: 'Office inventory',
         to: '/master/product-assign-master',
+        id:'masterOfficeInventory'
       },
 
     ],
@@ -938,42 +902,40 @@ const _nav = [
     name: 'Finance',
     to: '/master/finance',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    id:'masterFinance',
     items: [
       {
         component: CNavItem,
         name: 'Expness Category',
         to: '/master/finance/expness',
+        id:'masterExpnessCategory'
       },
       {
         component: CNavItem,
         name: 'Budgeting',
         to: '/master/finance/budgeting',
+        id:'masterBudgeting'
       },
       {
         component: CNavItem,
         name: 'Invoice Setup Master',
         to: '/master/finance/invoice',
+        id: 'masterInvoiceSetupMaster'
       },
       {
         component: CNavItem,
         name: 'Tax Setup Master',
         to: '/master/finance/tax',
+        id:'masterTaxSetupMaster'
       },
     ],
   },
   {
-    component: CNavGroup,
-    name: 'Center Partners',
-    to: '/master/center',
+    to: '/master/center-partners',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Center Partners',
-        to: '/master/center-partners',
-      },
-
-    ],
+    component: CNavItem,
+    name: 'Center Partners',   
+    id:'masterCenterPartners'
   },
 ]
 

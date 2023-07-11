@@ -13,7 +13,7 @@ function Support (){
 
        <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
            <CCardTitle className='p-2'>
-              <h4>Support Request</h4></CCardTitle>
+              <h4>Client Feedback</h4></CCardTitle>
        </CCardHeader>
   
          <CCol className='d-flex p-4'>

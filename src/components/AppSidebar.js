@@ -41,7 +41,7 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand to="/">
-        <CAvatar src={logo}  size='xl' />
+        <CAvatar src={logo}  style={{width:'200px'}} />
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>

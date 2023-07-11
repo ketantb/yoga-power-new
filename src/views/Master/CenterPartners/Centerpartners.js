@@ -429,13 +429,11 @@ const handlePrint = useReactToPrint({
                               </CTableDataCell>
                               <CTableDataCell >
                                 <div 
-                                className="border-gray rounded-circle border border-secondary"
-                                style={{width:'100px',height:'100px',overflow:'hidden'}}
+                                className="border-gray rounded-circle"
+                                style={{width:'100px'}}
                                 >
-
                                   <img
                                   width='100%'
-                                  height='100%'
                                   src={el.brandLogo}
                                   />
 
