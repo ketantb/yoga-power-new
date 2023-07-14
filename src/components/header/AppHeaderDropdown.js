@@ -39,6 +39,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
 import { leadsSuperRight } from 'src/views/hr/Rights/rightsValue/crmRightsValue'
 
+import menImage from './../../assets/images/avatars/profile_icon.png'
+
 const AppHeaderDropdown = () => {
    
   const disPatch = useDispatch()
@@ -49,29 +51,56 @@ const AppHeaderDropdown = () => {
     disPatch({type:'clearentireStore'})
   }
 
+  const profile = ()=>{
+    navigate('/profile')
+  }
+
+  let user = JSON.parse(localStorage.getItem('user-info'))
+
+  const email = user.user.email;
+  const username = user.user.username;
+
 
 
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={avatar8} size="md" />
+        <CAvatar src={''} size="md" className='border border-dark border-2' style={{
+          backgroundImage:`url(${menImage})`,
+          backgroundSize:'130%',
+          backgroundPosition:'center'
+
+          }} />
        </CDropdownToggle>
-      <CDropdownMenu className="pt-0"   placement="bottom-end" style={{inset:'50px 0px auto auto',width:'180px'}} >
+      <CDropdownMenu className="pt-0"   placement="bottom-end" style={{inset:'50px 0px auto auto',width:'fit-content'}} >
              
          <CCol className='p-4 text-center'>
-               <h6 className='mb-3' >Admin Yog Power</h6>    
-                  <CAvatar src={avatar8} size="md"  />
-               </CCol> 
-                <CDropdownItem  className='text-center'>
+               <h6 className='mb-3' >{username}</h6>    
+               <CAvatar className='border border-dark border-2'   style={{height:'100px',width:'100px', 
+                backgroundImage:`url(${menImage})`,
+                backgroundSize:'130%',
+                backgroundPosition:'center'
+               }}
+            
+               />
+         </CCol> 
+
+        <CDropdownItem  className='text-start'>
+          <CIcon icon={cilEnvelopeClosed} className="me-2" />
+         {email}
+        </CDropdownItem>       
+        {/* <CDropdownItem  className='text-start'>
                <CIcon icon={cilSettings} className="me-2 " />
                  Settings
-               </CDropdownItem>
-
-        
-
-         <CDropdownItem  className='text-center'>
+        </CDropdownItem>      */}
+         <CDropdownItem  className='text-start'  onClick={profile}>
           <CIcon icon={cilSettings} className="me-2" />
-          Profile
+         User  Profile
+        </CDropdownItem>
+
+        <CDropdownItem  className='text-start'>
+          <CIcon icon={cilSettings} className="me-2" />
+         Company  Profile
         </CDropdownItem>
        
         
@@ -225,7 +254,7 @@ const AppHeaderDropdownCheckIn = () => {
       <CDropdownMenu className="pt-0" placement="bottom-end">
 
         <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/client-checkin">
+          <Link  to="/forms/client-checkin">
             <CIcon icon={cilBell} className="me-2"
               tabIndex={-1}
             />
@@ -234,7 +263,7 @@ const AppHeaderDropdownCheckIn = () => {
         </CDropdownItem>
          
         <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/client-checkin">
+          <Link  to="/forms/client-checkin">
             <CIcon icon={cilBell} className="me-2"
               tabIndex={-1}
             />
@@ -243,7 +272,7 @@ const AppHeaderDropdownCheckIn = () => {
         </CDropdownItem>
 
         <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/staff-checkin">
+          <Link  to="/forms/staff-checkin">
             <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
             Employee CheckIn
           </Link>

@@ -21,6 +21,8 @@ let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const username = user.user.username;
 import SalarySlip from './salarySlip/SalarySlip';
+import { useAdminValidation } from '../Custom-hook/adminValidation';
+
 const SalarySheet = () => {
 
 
@@ -28,6 +30,7 @@ const SalarySheet = () => {
     const [showInvoiceModal,setInvoceModal] = useState(false)
     const [empData,setEmpData] = useState([])
     const url = useSelector((el) => el.domainOfApi)
+    const pathVal = useAdminValidation()
 
 
 

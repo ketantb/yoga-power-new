@@ -148,10 +148,9 @@ const EmpJoiningMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpJoini
 const EmpPerformanceMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpPrformanceMaster'))
 // Base
 const TrainerSalarySlipMaster = React.lazy(()=>import('./views/Master/HRMaster/TrainerSalarySlipMaster'))
-
 // const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
 const AllProductListingMaster = React.lazy(()=>import('./views/Master/Inventory/AllProductListingMaster'))
-
+const UserProfile = React.lazy(()=>import('./components/UserProfile'))
 
 
 // Buttons
@@ -188,6 +187,7 @@ const   EmpDetails  = React.lazy(()=> import('./views/hr/Hr-Employee-Details/Emp
 const routes = [
   { path: '/', exact: true, name: 'Login Page' },
   { path: '/login', name: 'Login', element: Login },
+  { path: '/profile', name: 'Profile', element: UserProfile },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   {
     path: '/employee/emp-dashboard',

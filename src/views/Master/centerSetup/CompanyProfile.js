@@ -18,11 +18,13 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CountryList } from "src/components/CountryList";
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
+import { useSelector } from 'react-redux'
+
+import {useUniqAdminObjeact,useAdminValidation} from "src/views/Custom-hook/adminValidation";
+import axios from "axios";
+
 
 const CompanyProfile = () => {
-    const [profileId, setProfileId] = useState("")
     const [brandName, setBrandName] = useState("")
     const [brandNumber, setBrandNumber] = useState("")
     const [emailAddress, setEmailAddress] = useState("")
@@ -37,32 +39,56 @@ const CompanyProfile = () => {
     const [workingDays, setWorkingDays] = useState("")
     const [halfDay, setHalfDay] = useState("")
     const [holidays, setHolidays] = useState("")
+    const [viewProfile,setProfile] = useState(false)
+    const [data,setData] = useState([])
+
+    const url = useSelector(el=>el.domainOfApi)
+    const pathVal =  useAdminValidation()
+    const uniqObjVal = useUniqAdminObjeact()
 
 
 
     const navigate = useNavigate()
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const username = user.user.username;
     const token = user.token;
-    const [result, setResult] = useState();
+
     useEffect(() => {
-        fetch(`${url}/Companyprofile/all`, {
-            method: "get",
+        axios.get(`${url}/Companyprofile/all`, {
             headers: { "Authorization": `Bearer ${token}` }
-        }).then(res => res.json()).then(json => setResult(json));
-        setProfileId(username)
+        }).then(((res)=>{
+            setProfile(res.status===200)
+            setData(res.data) 
+            console.log(res.data)  
+        }));
     }, []);
 
-    const saveProfile = () => {
-        let data = { 
+
+    useEffect(()=>{
+   if(data[0]){
+
+    const data1 = {...data[0]}
+    console.log(data1)
+    setBrandName(data1.brandName)
+    setBrandNumber(data1.brandNumber)
+    setEmailAddress(data1?.emailAddress)
+    setAreaSequerFit(data1?.areaSequerFit)
+    setCurrency(data1?.currency)
+    setBrandFullAddress(data1?.brandFullAddress)
+    setBusinessCategory(data1?.businessCategory)
+  }
+    },[data[0]])
+
+    const saveProfile = (e) => {
+        e.preventDefault()
+        let data1 = { 
                 "username": username,
                 "brandName": brandName,
                 "brandNumber": brandNumber,
                 "emailAddress": emailAddress,
                 "areaSequerFit": areaSequerFit,
                 "currency":  currency,
-                "businessCategory": brandFullAddress,
+                "businessCategory": businessCategory,
                "brandFullAddress":  brandFullAddress,
                 "city": city,
                 "state": state,
@@ -70,23 +96,27 @@ const CompanyProfile = () => {
                 "closingTime": closingTime,
                 "workingDays": workingDays,
                 "halfDay": halfDay,
-                "holidays": holidays            
+                "holidays": holidays,
             }
-        // console.warn(data);
-        fetch(`${url}/Companyprofile/create`, {
+
+           let pathVal = ``
+            if(data[0]){
+               pathVal = `${url}/Companyprofile/update/${data[0]?._id}`  
+            }else{
+                pathVal = `${url}/Companyprofile/create`
+            }
+        fetch(pathVal, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({...data1,...uniqObjVal})
         }).then((resp) => {
-            resp.json().then(() => {
+            resp.json().then((el) => {
+                console.log(el)
                 alert("successfully submitted")
-                        console.log(data);
-
-                // navigate('/master/center-setup')
             })
         })
     }
@@ -137,45 +167,7 @@ const CompanyProfile = () => {
                                 text="Must be 8-20 characters long."
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
-                            <CRow>
-                                <CCol>
-                                    <label className="mb-2">Area Sequer Fit:</label>
-                                    <CInputGroup>
-                                        <CFormInput type="number" placeholder="Sqft"
-                                            value={areaSequerFit}
-                                            onChange={(e) => setAreaSequerFit(e.target.value)} />
-                                        <CInputGroupText>sq. ft.</CInputGroupText>
-                                    </CInputGroup>
-                                </CCol>
-                                <CCol>
-                                    <CFormSelect
-                                        className="mb-1"
-                                        aria-label="Select Currency"
-                                        value={currency}
-                                        onChange={(e) => setCurrency(e.target.value)}
-                                        label="Currency"
-                                        options={[
-                                            "Select Currency",
-                                            { label: "One", value: "1" },
-                                            { label: "Two", value: "2" },
-                                            { label: "Three", value: "3" },
-                                        ]}
-                                    />
-                                </CCol>
-                            </CRow>
-                            <CFormSelect
-                                className="mb-1"
-                                aria-label="Select Currency"
-                                value={businessCategory}
-                                onChange={(e) => setBusinessCategory(e.target.value)}
-                                label="Business Category"
-                                options={[
-                                    "Select Business Category",
-                                    { label: "One", value: "1" },
-                                    { label: "Two", value: "2" },
-                                    { label: "Three", value: "3" },
-                                ]}
-                            />
+                          
                             <CFormTextarea
                                 id="exampleFormControlTextarea1"
                                 label="Branch Full Address"
@@ -186,18 +178,13 @@ const CompanyProfile = () => {
                             ></CFormTextarea>
                             <CRow>
                                 <CCol xs={6}>
-                                    <CFormSelect
+                                    <CFormInput
                                         className="mb-1"
                                         value={city}
                                         onChange={(e) => setCity(e.target.value)}
-                                        aria-label="Select City"
                                         label="City"
-                                        options={[
-                                            "Select City",
-                                            { label: "One", value: "1" },
-                                            { label: "Two", value: "2" },
-                                            { label: "Three", value: "3" },
-                                        ]}
+                                        
+                                       
                                     />
                                 </CCol>
                                 <CCol>
@@ -216,6 +203,33 @@ const CompanyProfile = () => {
                         </CCol>
 
                         <CCol lg={6} sm={12}>
+                        <CRow>
+                                <CCol>
+                                    <label className="mb-2">Area Sequer Fit:</label>
+                                    <CInputGroup>
+                                        <CFormInput type="number" placeholder="Sqft"
+                                            value={areaSequerFit}
+                                            onChange={(e) => setAreaSequerFit(e.target.value)} />
+                                        <CInputGroupText>sq. ft.</CInputGroupText>
+                                    </CInputGroup>
+                                </CCol>
+                                <CCol>
+                                    <CFormInput
+                                        className="mb-1"
+                                        value={currency}
+                                        onChange={(e) => setCurrency(e.target.value)}
+                                        label="Currency"
+                                        
+                                    />
+                                </CCol>
+                            </CRow>
+                            <CFormInput
+                                className="mb-1"
+                                value={businessCategory}
+                                onChange={(e) => setBusinessCategory(e.target.value)}
+                                label="Business Category"
+                                
+                            />
                             <CRow>
                                 <CCol xs={6}>
                                     <CFormInput
@@ -241,60 +255,30 @@ const CompanyProfile = () => {
                                 </CCol>
 
                                 <CCol xs={4}>
-                                    <CFormSelect
+                                    <CFormInput
                                         className="mb-1"
-                                        aria-label="Select Working Days"
                                         value={workingDays}
                                         onChange={(e) => setWorkingDays(e.target.value)}
                                         label="Working Days"
-                                        options={[
-                                            "Select Working Days",
-                                            { label: "One Day", value: "One Day" },
-                                            { label: "Two Day", value: "Two Day" },
-                                            { label: "Three Day", value: "Three Day" },
-                                            { label: "Four Day", value: "Four Day" },
-                                            { label: "Five Day", value: "Five Day" },
-                                            { label: "Six Day", value: "Six Day" },
-                                            { label: "Sever Day", value: "Sever Day" },
-                                        ]}
+                                        type="number"
                                     />
                                 </CCol>
                                 <CCol xs={4}>
-                                    <CFormSelect
+                                    <CFormInput
                                         className="mb-1"
-                                        aria-label="Select Half Day"
                                         value={halfDay}
                                         onChange={(e) => setHalfDay(e.target.value)}
                                         label="Half Day"
-                                        options={[
-                                            "Select Half Day",
-                                            { label: "Monday", value: "Monday" },
-                                            { label: "Tuesday", value: "Tuesday" },
-                                            { label: "Wednesday", value: "Wednesday" },
-                                            { label: "Thursday", value: "Thursday" },
-                                            { label: "Friday", value: "Friday" },
-                                            { label: "Saturday", value: "Saturday" },
-                                            { label: "Sunday", value: "Sunday" },
-                                        ]}
+                                        type="number"                                       
                                     />
                                 </CCol>
                                 <CCol xs={4}>
-                                    <CFormSelect
+                                    <CFormInput
                                         className="mb-1"
-                                        aria-label="Select Holidays"
                                         value={holidays}
                                         onChange={(e) => setHolidays(e.target.value)}
                                         label="Holidays"
-                                        options={[
-                                            "Select Holidays",
-                                            { label: "Monday", value: "Monday" },
-                                            { label: "Tuesday", value: "Tuesday" },
-                                            { label: "Wednesday", value: "Wednesday" },
-                                            { label: "Thursday", value: "Thursday" },
-                                            { label: "Friday", value: "Friday" },
-                                            { label: "Saturday", value: "Saturday" },
-                                            { label: "Sunday", value: "Sunday" },
-                                        ]}
+                                        type="number"                                                                           
                                     />
                                 </CCol>
                             </CRow>

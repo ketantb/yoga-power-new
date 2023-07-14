@@ -53,7 +53,6 @@ const HrPolicy = () => {
         getPolicy()
     }, []);
 
-    console.log(pathValMaster,'filter-by-admin/64942d67891aeb3607fd8061')
     function getPolicy() {
         axios.get(`${url}/hrPolicyMaster/${pathValMaster}`, {headers})
             .then((res) => {

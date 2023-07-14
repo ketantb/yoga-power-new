@@ -20,10 +20,8 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
 import { useSelector } from "react-redux";
-import { useAdminValidation } from "src/views/Custom-hook/adminValidation";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 const BatchMaster = () => {
     const [action, setAction] = useState(false)
@@ -38,7 +36,9 @@ const BatchMaster = () => {
     const [typeOfTrainer,setTypeOfTrainer] = useState('')
     const [error,setError] = useState(false)
     const url1 = useSelector((el) => el.domainOfApi)
+    const url = url1
     const pathVal = useAdminValidation('Master')
+    const uniqObjVal =  useUniqAdminObjeact()
 
 
     const batch=[
@@ -79,7 +79,7 @@ const BatchMaster = () => {
 
 
     function getBatch() {
-        axios.get(`${url1}/Batch/all`, {
+        axios.get(`${url1}/Batch/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -94,7 +94,7 @@ const BatchMaster = () => {
     }
 
     function getService() {
-        axios.get(`${url}/service/all`, {
+        axios.get(`${url}/service/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -108,7 +108,7 @@ const BatchMaster = () => {
             })
     }
     function getSubService() {
-        axios.get(`${url}/subservice/all`, {
+        axios.get(`${url}/subservice/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -196,7 +196,8 @@ console.log(Boolean(value))
              typeOfTrainer:typeOfTrainer,
 	         MemberId:selectedStaff?._id,
    	         trainerId:selectedStaff?.EmployeeID,
-             BatchTime:Batch_Duration
+             BatchTime:Batch_Duration,
+             ...uniqObjVal
             }
 
             
@@ -278,7 +279,7 @@ console.error(error)
                                     ><option>Select</option>
                                         <option>None</option>
                                         {result2.map((item, index) => (
-                                            item.username === username && (
+                                             (
                                                 item.status === true && (
                                                     <option key={index} >{item.selected_service} </option>
                                                 )
@@ -388,7 +389,7 @@ console.error(error)
                     </CTableHead>
                     <CTableBody>
                         {result.map((item, index) => (
-                            item.username === username && (
+                            (
                                 <CTableRow key={index}>
                                     <CTableDataCell>{index + 1}</CTableDataCell>
                                     <CTableDataCell>{item.service_variation}</CTableDataCell>

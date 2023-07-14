@@ -24,16 +24,28 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
 
 
 const PackageMaster = () => {
 
 
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const url = url1
 
+    let user = JSON.parse(localStorage.getItem('user-info'))
+    const username = user.user.username;
+    const token = user.token;
+
+
+    const headers = {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }
 
     const [action, setAction] = useState(false)
     const [Package_Name, setPackageName] = useState("");
@@ -45,11 +57,12 @@ const PackageMaster = () => {
     const [duration, setDuration] = useState("");
     const [subService,setService] = useState([])
 
-    let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
-    console.log(duration);
-    const username = user.user.username;
-    const token = user.token;
+
+
+
+    const uniqObjVal =  useUniqAdminObjeact()
+    const pathVal  = useAdminValidation('Master')
+
     const [result, setResult] = useState([]);
     useEffect(() => {
         getPackage()
@@ -57,11 +70,7 @@ const PackageMaster = () => {
     }, []);
 
     function getSubService() {
-        axios.get(`${url}/subservice/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        axios.get(`${url}/subservice/${pathVal}`, headers)
             .then((res) => {
                 setService(res.data)
                 console.log(res.data)
@@ -72,11 +81,7 @@ const PackageMaster = () => {
     }
 
     function getPackage() {
-        axios.get(`${url1}/packagemaster`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        axios.get(`${url1}/packageMaster/${pathVal}`, headers)
             .then((res) => {
                 setResult(res.data)
             })
@@ -86,16 +91,8 @@ const PackageMaster = () => {
     }
     const updateStatus = (id, item, status) => {
         let item2 = { Status: status }
-        
-        fetch(`${url1}/packagemaster/${id}`, {
-            method: 'PUT',
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({...item,...item2})
-        }).then((result) => {
+        axios.post(`${url1}/packageMaster/update/${id}`,item2,headers)
+        .then((result) => {
             result.json().then((resp) => {
                 getPackage()
             })
@@ -105,7 +102,7 @@ const PackageMaster = () => {
     function deletePackage(id) {
 
         if (confirm('Do you want to delete this')) {
-            fetch(`${url1}/packagemaster/${id}`, {
+            fetch(`${url1}/packageMaster/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -133,18 +130,15 @@ const PackageMaster = () => {
            "Fees": fees,
            "Status":status,
            "Action": "edit",
-           "username": username            
+           "username": username,
        }
         // console.warn(data);
-        fetch(`${url1}/packagemaster`, {
+        fetch(`${url1}/packageMaster/create`, {
             method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
+            ...headers,
+            body: JSON.stringify({...data,...uniqObjVal })
         }).then((resp) => {
-            // console.warn("resp",resp);;
+            console.log(resp)
             resp.json().then(() => {
                 alert("successfully submitted")
                 setPackageName('')
@@ -209,10 +203,7 @@ const PackageMaster = () => {
                                     
                                     <option>Select Service</option>
                                   
-                                     {[...subService.filter((el)=>{
-                                        return el.username === username                                   
-                                    })].map((el,i)=><option key={i}>{el.selected_service}</option>)
-                                    }  
+                                     {subService.map((el,i)=><option key={i}>{el.selected_service}</option>)}  
 
                                     </CFormSelect>
                      </CCol>
@@ -228,9 +219,7 @@ const PackageMaster = () => {
                                        
                                     >
                                    <option>Select Variation</option>
-                                    {[...subService.filter((el)=>{
-                                        return el.username === username                                   
-                                    })].map((el,i)=><option key={i}>{el.sub_Service_Name}</option>)
+                                    {subService.map((el,i)=><option key={i}>{el.sub_Service_Name}</option>)
                                     }                                                         
                                     </CFormSelect>
                                   

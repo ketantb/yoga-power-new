@@ -40,8 +40,8 @@ const AppSidebar = () => {
         dispatch({ type: 'set', sidebarShow: visible })
       }}
     >
-      <CSidebarBrand to="/">
-        <CAvatar src={logo}  style={{width:'200px'}} />
+      <CSidebarBrand to="/" style={{overflow:'hidden'}}>
+        <CAvatar src={logo}  style={{width:'90%'}} />
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>

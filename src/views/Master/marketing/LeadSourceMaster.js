@@ -22,12 +22,15 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
 const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
+import { useSelector } from 'react-redux';
+
 
 const LeadSourceMaster = () => {
     const [action1, setAction1] = useState(false)
     const [lead, setLead] = useState('')
     const [status, setStatus] = useState(false)
+
+    const url = useAdmin
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
