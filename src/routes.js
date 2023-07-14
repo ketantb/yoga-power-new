@@ -169,9 +169,7 @@ const PTClass = React.lazy(() => import('./views/forms/PTClass'))
 const ClientCheckin = React.lazy(() => import('./views/forms/ClientCheckin'))
 const StaffCheckIn = React.lazy(() => import('./views/forms/StaffCheckIn'))
 const Appointment = React.lazy(() => import('./views/forms/Appointment'))
-
-
-
+const UserCompanyProfile =  React.lazy(() => import('./components/UserCompanyProfile'))
 
 
 // Icons
@@ -184,10 +182,13 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 // Employee Details Page 
 const   EmpDetails  = React.lazy(()=> import('./views/hr/Hr-Employee-Details/EmployeeDetails'))
 
+
 const routes = [
   { path: '/', exact: true, name: 'Login Page' },
   { path: '/login', name: 'Login', element: Login },
   { path: '/profile', name: 'Profile', element: UserProfile },
+  { path: '/company-profile', name: 'Company Profile', element: UserCompanyProfile },
+
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   {
     path: '/employee/emp-dashboard',

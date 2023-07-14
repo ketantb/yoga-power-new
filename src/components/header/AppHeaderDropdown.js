@@ -55,6 +55,11 @@ const AppHeaderDropdown = () => {
     navigate('/profile')
   }
 
+  const companyProfile = ()=>{
+    navigate('/company-profile')
+  }
+
+
   let user = JSON.parse(localStorage.getItem('user-info'))
 
   const email = user.user.email;
@@ -98,7 +103,7 @@ const AppHeaderDropdown = () => {
          User  Profile
         </CDropdownItem>
 
-        <CDropdownItem  className='text-start'>
+        <CDropdownItem  className='text-start' onClick={companyProfile}>
           <CIcon icon={cilSettings} className="me-2" />
          Company  Profile
         </CDropdownItem>

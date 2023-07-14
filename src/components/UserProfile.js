@@ -63,9 +63,15 @@ const UserProfile = () => {
             }else{
               prev.aboutUser =  el?.data?.aboutUser   
             }
-            prev.linkInfoArr = el?.data?.linkInfoArr
-            prev.empName = el?.data?.empName   
-            prev.profileLogo = el?.data?.profileLogo       
+            if(el?.data?.linkInfoArr[0]){
+              prev.linkInfoArr = el?.data?.linkInfoArr
+            }
+            if(el?.data?.empName){
+              prev.empName = el?.data?.empName   
+            }
+            if(el?.data?.profileLogo){
+              prev.profileLogo = el?.data?.profileLogo       
+            }
     
 
             return {...prev}
@@ -308,7 +314,7 @@ const handleChange = event => {
             prev.aboutUser = e.target.value
             return {...prev}
           })}
-          rows={4}
+          rows={8}
           >          
 
 

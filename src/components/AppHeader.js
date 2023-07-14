@@ -51,8 +51,6 @@ const AppHeader = () => {
             <CInputGroup className="ml-3">
               <CFormInput
                 placeholder="Search.."
-                aria-label="Recipients username"
-                aria-describedby="button-addon2"
               />
               <CButton type="button" color="primary" id="button-addon2">
                 Search

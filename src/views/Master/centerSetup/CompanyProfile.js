@@ -43,7 +43,7 @@ const CompanyProfile = () => {
     const [data,setData] = useState([])
 
     const url = useSelector(el=>el.domainOfApi)
-    const pathVal =  useAdminValidation()
+    const pathVal =  useAdminValidation('Master')
     const uniqObjVal = useUniqAdminObjeact()
 
 
@@ -54,12 +54,11 @@ const CompanyProfile = () => {
     const token = user.token;
 
     useEffect(() => {
-        axios.get(`${url}/Companyprofile/all`, {
+        axios.get(`${url}/Companyprofile/${pathVal}`, {
             headers: { "Authorization": `Bearer ${token}` }
         }).then(((res)=>{
             setProfile(res.status===200)
             setData(res.data) 
-            console.log(res.data)  
         }));
     }, []);
 
@@ -76,6 +75,13 @@ const CompanyProfile = () => {
     setCurrency(data1?.currency)
     setBrandFullAddress(data1?.brandFullAddress)
     setBusinessCategory(data1?.businessCategory)
+    setOpeningTime(data1?.openingTime)
+    setClosingTime(data1?.closingTime)
+    setWorkingDays(data1?.workingDays)
+    setHalfDay(data1?.halfDay)
+    setHolidays(data1?.holidays)
+    setCity(data1?.city)
+    setState(data1?.state)
   }
     },[data[0]])
 
@@ -121,7 +127,7 @@ const CompanyProfile = () => {
         })
     }
 
-    return (
+    return (viewProfile &&
         <CCard className="mb-3 border-success">
             <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
                 <CCardTitle>Company Profile</CCardTitle>
