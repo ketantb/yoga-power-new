@@ -19,14 +19,13 @@ const CenterSetup = React.lazy(()=>import('../AllRightRights/Master/CenterSetupR
 const SupportRequest = React.lazy(()=>import('../AllRightRights/Master/SupportRequest'))
 const MarketingRigths = React.lazy(()=>import('../AllRightRights/Master/MarketingRigths'))
 const ClientSetupRights = React.lazy(()=>import('../AllRightRights/Master/ClientSetupRights'))
-const FitnessMasterRights = React.lazy(()=>import('../AllRightRights/Master/FitnessMasterRights'))
 const HrRights = React.lazy(()=>import('../AllRightRights/Master/HrRights'))
 const InventoryRights   = React.lazy(()=>import('../AllRightRights/Master/InventoryRights'))
 const FInanceRights = React.lazy(()=>import('../AllRightRights/Master/FInanceRights'))
-const IntergrationsRights = React.lazy(()=>import('../AllRightRights/Master/IntergrationsRights'))
 const CenterPartners  = React.lazy(()=>import('../AllRightRights/Master/CenterPartners'))
  
-const MasterRights = () => {
+const MasterRights = ({masterRights,setRightObject}) => {
+
 
     const [activeKey, setActiveKey] = useState(1)
 
@@ -55,7 +54,7 @@ const MasterRights = () => {
                                     onClick={() => setActiveKey(2)}
                                     className="text-white"
                                 >
-                                    Support   
+                                    Client Feedback   
                                 </CNavLink>
                             </CNavItem>
 
@@ -79,16 +78,7 @@ const MasterRights = () => {
                                     Clients
                                 </CNavLink>
                             </CNavItem>
-                            <CNavItem>
-                                <CNavLink
-                                    href="javascript:void(0);"
-                                    active={activeKey === 5}
-                                    onClick={() => setActiveKey(5)}
-                                    className="text-white"
-                                >
-                                    Fitness
-                                </CNavLink>
-                            </CNavItem>
+                            
                             <CNavItem>
                             <CNavLink
                                     href="javascript:void(0);"
@@ -119,16 +109,7 @@ const MasterRights = () => {
                                    Finance
                                 </CNavLink>
                             </CNavItem>
-                            <CNavItem>
-                                <CNavLink
-                                    href="javascript:void(0);"
-                                    active={activeKey === 9}
-                                    onClick={() => setActiveKey(9)}
-                                    className="text-white"
-                                >
-                                   Intergrations 
-                                </CNavLink>
-                            </CNavItem>
+                         
 
                             <CNavItem>
                              <CNavLink
@@ -145,18 +126,14 @@ const MasterRights = () => {
                     </CCardHeader>
                     <CCardBody>
                         <CTabContent >
-                          {activeKey===1&&<CenterSetup/>}
-                          {activeKey===2&&<SupportRequest/>}
-                          {activeKey===3&&<MarketingRigths/>}
-                          {activeKey===4&&<ClientSetupRights/>}
-                          {activeKey===5&&<FitnessMasterRights/>}
-                          {activeKey===6&&<HrRights/>}
-                          {activeKey===7&&<InventoryRights/>}
-                          {activeKey===8&&<FInanceRights/>}
-                          {activeKey===9&&<IntergrationsRights/>}
-                          {activeKey===10&&<CenterPartners/>}
-
-
+                          {activeKey===1&&<CenterSetup masterCenterSetup={masterRights.masterCenterSetup} setRightObject={setRightObject}  />}
+                          {activeKey===2&&<SupportRequest masterClientFeedback={masterRights.masterClientFeedback} setRightObject={setRightObject}/>}
+                          {activeKey===3&&<MarketingRigths masterMarketing={masterRights.masterMarketing} setRightObject={setRightObject} />}
+                          {activeKey===4&&<ClientSetupRights masterClient={masterRights.masterClient} setRightObject={setRightObject} />}
+                          {activeKey===6&&<HrRights masterHr={masterRights.masterHr} setRightObject={setRightObject}/>}
+                          {activeKey===7&&<InventoryRights masterInverntory={masterRights.masterInverntory} setRightObject={setRightObject} />}
+                          {activeKey===8&&<FInanceRights masterFinance={masterRights.masterFinance} setRightObject={setRightObject} />}
+                          {activeKey===10&&<CenterPartners masterCenterPartners={masterRights.masterCenterPartners} setRightObject={setRightObject} />}
                         </CTabContent>
                     </CCardBody>
                 </CCard>

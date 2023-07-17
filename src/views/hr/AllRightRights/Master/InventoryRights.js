@@ -5,13 +5,22 @@ import {
 } from '@coreui/react'
 
 
-const InventoryRights = () => {
+const InventoryRights = ({masterInverntory,setRightObject}) => {
     return <div >
 
     <CRow >
       <CCol>
-           <h5>Inventory</h5>
-           <CFormSwitch  size="xl" label="HR" />
+
+       <h5 className='mb-4 p-0 d-flex ' > Inventory <span className='mx-2'>
+          <CFormSwitch  size="xl"
+            checked={masterInverntory.value}
+           onChange={(e)=>setRightObject(prev=>{
+            prev.masterRights.masterInverntory.value=e.target.checked
+             return {...prev}
+           })}
+          /></span>
+        </h5>
+
        </CCol>        
     </CRow>
     

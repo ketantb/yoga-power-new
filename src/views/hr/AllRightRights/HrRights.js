@@ -81,7 +81,7 @@ checked={erpHrManagement.value}
 <h5 className='mb-4   d-flex ' >Recuritment<span className='mx-2'><CFormSwitch size="lg"
     checked={erpHrManagement.items.erpRecuritment.value}
     onChange={(e) => setRightObject(prev => {
-        prev.erpRights.erpFinance.items.erpRecuritment.value = e.target.checked
+        prev.erpRights.erpHrManagement.items.erpRecuritment.value = e.target.checked
         return { ...prev }
     })}
 /></span></h5>

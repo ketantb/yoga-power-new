@@ -6,13 +6,20 @@ import {
 
 import React from 'react'
 
-const HrRights = () => {
+const HrRights = ({masterHr,setRightObject}) => {
 return <div >
 
 <CRow >
   <CCol>
-       <h5>HR</h5>
-       <CFormSwitch  size="xl" label="HR" />
+     <h5 className='mb-4 p-0 d-flex ' > HR Management <span className='mx-2'>
+        <CFormSwitch  size="xl"
+        checked={masterHr.value}
+        onChange={(e)=>setRightObject(prev=>{
+         prev.masterRights.masterHr.value=e.target.checked
+         return {...prev}
+        })}
+       /></span>
+    </h5>
    </CCol>        
 </CRow>
 

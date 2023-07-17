@@ -10,8 +10,7 @@ function InventoryRights({erpInventory,setRightObject}){
 
     const handleRight = (val,parrent)=>{
 
-        console.log()
-        setRightObject(prev => {
+   setRightObject(prev => {
 
             const  arr = prev.erpRights.erpInventory.items[parrent].rights
             console.log(arr)

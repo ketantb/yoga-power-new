@@ -7,13 +7,22 @@ import {
 
 import React from 'react'
 
-const MarketingRigths = () => {
+const MarketingRigths = ({masterMarketing,setRightObject}) => {
     return <div >
 
 <CRow>
   <CCol>
-       <h5>Marketing</h5>
-       <CFormSwitch  size="xl" label="Support" />
+    
+
+       <h5 className='mb-4 p-0 d-flex ' > Marketing <span className='mx-2'>
+        <CFormSwitch  size="xl"
+        checked={masterMarketing.value}
+        onChange={(e)=>setRightObject(prev=>{
+         prev.masterRights.masterMarketing.value=e.target.checked
+         return {...prev}
+        })}
+       /></span>
+    </h5>
    </CCol>        
 </CRow>
 

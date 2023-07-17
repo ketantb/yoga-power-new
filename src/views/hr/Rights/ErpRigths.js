@@ -23,7 +23,6 @@ const FinanceRights = React.lazy(()=>import('../AllRightRights/FinanceRights'))
 const EmployeeRights = React.lazy(()=>import('../AllRightRights/EmployeeRights'))
 const TaskRight =  React.lazy(()=>import('../AllRightRights/TaskRight'))
 const Courses = React.lazy(()=>import('../AllRightRights/Courses'))
-const ExportImport = React.lazy(()=>import('../AllRightRights/ExportImport'))
 
 
 const ErpRigths = ({rightObjeact, setRightObject}) => {
@@ -99,17 +98,7 @@ const ErpRigths = ({rightObjeact, setRightObject}) => {
                                 </CNavLink>
                             </CNavItem>
                    
-                            <CNavItem>
-                                <CNavLink
-                                    href="javascript:void(0);"
-                                    active={activeKey === 12}
-                                    onClick={() => setActiveKey(12)}
-                                    className="text-white"
-                                >
-                                    Export / Import
-                                </CNavLink>
-                            </CNavItem>
-                       
+                        
                         </CNav>
                     </CCardHeader>
                     <CCardBody>
@@ -120,7 +109,6 @@ const ErpRigths = ({rightObjeact, setRightObject}) => {
                             {activeKey ===9&& <FinanceRights erpFinance={erpFinance} setRightObject={setRightObject}/>}
                             {activeKey===10 && <HrRights erpHrManagement={erpHrManagement} setRightObject={setRightObject}/>}
                             {activeKey===11&& <Courses erpCourse={erpCourse} setRightObject={setRightObject}/>}
-                            {activeKey===12&& <ExportImport erpCourse={erpCourse} setRightObject={setRightObject}/>}
 
                         </CTabContent>
                     </CCardBody>

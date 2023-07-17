@@ -6,8 +6,17 @@ import { BsCalendar3, BsFileText } from 'react-icons/bs'
 import { AiOutlineForm } from 'react-icons/ai'
 import { MdOutlineMiscellaneousServices } from 'react-icons/md'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+
 
 const CenterSetup = () => {
+
+
+   const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterCenterSetup) 
+   
+   console.log(rightsData)
+
+
     return (
         <CCard className="mb-3 border-success">
             <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>

@@ -56,7 +56,8 @@ const Rights = () => {
     email:'',
     emailUniqId:'',
     crmRights:obj1.crmRights,
-    erpRights:obj1.erpRights
+    erpRights:obj1.erpRights,
+    masterRights:obj1.masterRights
     })
 
     function getEmpEmailData() {
@@ -128,7 +129,6 @@ const Rights = () => {
 }
 
 
-console.log(rightObjeact)
 
   return (<CCard style={{display:(activeUpdate==='Not found'||activeUpdate==="Successfull received")?'block':'none'}}>
     <CCardBody>
@@ -188,7 +188,7 @@ console.log(rightObjeact)
     <ErpRigths rightObjeact={rightObjeact.erpRights} setRightObject={setRightObject} />
   </CTabPane>
   <CTabPane role="tabpanel" aria-labelledby="home-tab"  style={{display:activeKey2 === 3?'block':'none'}} visible={activeKey2 === 3}>
-    <MasterRights/>
+    <MasterRights  masterRights={rightObjeact.masterRights} setRightObject={setRightObject} />
   </CTabPane>
       </CTabPane>
       </CTabContent>

@@ -7,15 +7,22 @@ import {
 
 import React from 'react'
 
-const ClientSetupRights = () => {
+const ClientSetupRights = ({masterClient,setRightObject}) => {
     return <div >
 
 
 <CRow >
   <CCol>
-       <h5>Clients</h5>
-       <CFormSwitch  size="xl" label="Clients" />
-   </CCol>        
+       <h5 className='mb-4 p-0 d-flex ' > Clients <span className='mx-2'>
+        <CFormSwitch  size="xl"
+        checked={masterClient.value}
+        onChange={(e)=>setRightObject(prev=>{
+         prev.masterRights.masterClient.value=e.target.checked
+         return {...prev}
+        })}
+       /></span>
+    </h5>
+ </CCol>        
 </CRow>
 
 <CRow className='mt-5' >
