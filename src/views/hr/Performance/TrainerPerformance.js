@@ -35,7 +35,6 @@ const TrainerPerformance = () => {
     function gettrainerPerformance(){
         axios.get(`${url}/trainerPerformance/${pathVal}`, {headers})
         .then((res) => {
-            console.log(res.data)
           settrainerloyeePerformance(res.data.reverse())
         }).catch((error) => {console.error(error)})
       }

@@ -21,14 +21,24 @@ import axios from "axios";
 import { storage } from "src/firebase";
 import {getDownloadURL, ref,uploadBytesResumable } from "firebase/storage";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
 
 
 const EmpDocuments = () => {
 
-    
-const componentRef = useRef()
+const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr
+?.items?.masterEmployeeDocument?.rights) 
 
+const access = rightsData?rightsData:[]
+const isAdmin = useSelector((el)=>el.isAdmin)
+
+const aDDEmployeeDocument = (access.includes(herMasterRightVal.aDDEmployeeDocument) || isAdmin )
+const editEmployeeDocument=  (access.includes(herMasterRightVal.editEmployeeDocument) || isAdmin )
+const deleteEmployeeDocument =  (access.includes(herMasterRightVal.deleteEmployeeDocument) || isAdmin )  
+
+
+const componentRef = useRef()
 const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: 'yog-power',
@@ -229,7 +239,7 @@ const handlePrint = useReactToPrint({
                     <CCardBody>
                     
                     <CCol className='my-3 text-end'>
-                   {showForm&&<CButton onClick={()=>toToggaleFrom()}>Add New </CButton>}
+                   {showForm&&<CButton style={{display:aDDEmployeeDocument?'':'none'}} onClick={()=>toToggaleFrom()}>Add New </CButton>}
                    {showForm||<CCard className="overflow-hidden my-4 text-start"   >
         <CCardHeader className="p-4" style={{ backgroundColor: '#0B5345', color: 'white' }}>
                  <CCardTitle> <h5>Employee Document Form</h5></CCardTitle>
@@ -310,7 +320,7 @@ const handlePrint = useReactToPrint({
                                    <CTableHeaderCell >Emp Name</CTableHeaderCell>
                                    <CTableHeaderCell>Doc Name</CTableHeaderCell>
                                    <CTableHeaderCell>Doc view</CTableHeaderCell>
-                                   <CTableHeaderCell>Delete/Edit</CTableHeaderCell>
+                                   <CTableHeaderCell style={{display:(deleteEmployeeDocument||editEmployeeDocument)?'':'none'}} >Delete/Edit</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -332,9 +342,9 @@ const handlePrint = useReactToPrint({
                                         <CTableDataCell>
                                             <CButton onClick={()=>toViewDoc(el.docview)} >View</CButton>
                                         </CTableDataCell>
-                                        <CTableDataCell>
-                                           <MdEdit style={{cursor:'pointer'}} onClick={()=>updateProduct(el)} />
-                                           <MdDelete style={{cursor:'pointer'}} onClick={()=>toDeleteData(el._id)}/>   
+                                        <CTableDataCell  style={{display:(deleteEmployeeDocument||editEmployeeDocument)?'':'none'}} >
+                                           <MdEdit style={{cursor:'pointer',display:editEmployeeDocument?'':'none'}} onClick={()=>updateProduct(el)} />
+                                           <MdDelete style={{cursor:'pointer',display:deleteEmployeeDocument?'':'none'}} onClick={()=>toDeleteData(el._id)}/>   
                                         </CTableDataCell>
                                     </CTableRow>     
 

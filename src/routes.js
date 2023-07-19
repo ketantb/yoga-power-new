@@ -170,6 +170,7 @@ const ClientCheckin = React.lazy(() => import('./views/forms/ClientCheckin'))
 const StaffCheckIn = React.lazy(() => import('./views/forms/StaffCheckIn'))
 const Appointment = React.lazy(() => import('./views/forms/Appointment'))
 const UserCompanyProfile =  React.lazy(() => import('./components/UserCompanyProfile'))
+const AutomatedCommunication  =  React.lazy(() => import('./views/Master/marketing/AutomatedCommunication'))
 
 
 // Icons
@@ -256,6 +257,7 @@ const routes = [
 
   //Marketing
   { path: '/Marketing', name: 'Marketing', element: EmailMarketing, exact: true },
+  { path: '/Marketing/email-marketing', name: 'Email Marketing', element: EmailMarketing },
   { path: '/Marketing/email-marketing', name: 'Email Marketing', element: EmailMarketing },
   { path: '/Marketing/sms-marketing', name: 'SMS Marketing', element: SMSMarketing },
   { path: '/Marketing/push-marketing', name: 'App Notification', element: PushMarketing },
@@ -387,6 +389,8 @@ const routes = [
   { path:'/master/hr/trainer-salary-slip',name:'Trainer Salary Slip',element: TrainerSalarySlipMaster},
   { path:'/master/hr/emp-Prformance',name:'Employee Performance',element: EmpPerformanceMaster},
   { path:'/master/center-partners',name:'Center Partners',element: CenterPartners},
+  { path:'/master/marketing/automated-communication',name:'Center Partners',element: AutomatedCommunication},
+
 
 
 

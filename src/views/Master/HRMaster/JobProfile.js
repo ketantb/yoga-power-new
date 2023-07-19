@@ -29,12 +29,22 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { MdEdit,MdDelete } from "react-icons/md";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
-
+import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 let user = JSON.parse(localStorage.getItem('user-info'))
 const username = user.user.username;
 const token = user.token;
 
 const JobProfile = () =>{
+
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr
+    ?.items?.masterJobProfile?.rights) 
+    
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+    
+    const addJobProfile = (access.includes(herMasterRightVal.addJobProfile) || isAdmin )
+    const editJobProfile=  (access.includes(herMasterRightVal.editJobProfile) || isAdmin )
+    const deleteJobProfile =  (access.includes(herMasterRightVal.deleteJobProfile) || isAdmin )
 
     const headers = {
         "Authorization": `Bearer ${token}`,
@@ -164,7 +174,7 @@ const JobProfile = () =>{
 
                         
                     {showForm?<CCol color="primary" className="bg-body d-flex justify-content-end">
-            <CButton onClick={()=>toToggaleFrom()}>Add New Payrol Setup</CButton>
+            <CButton style={{display:(addJobProfile)?'':'none'}} onClick={()=>toToggaleFrom()}>Add New Payrol Setup</CButton>
     </CCol>:
 
     <CCard className="overflow-hidden"   >
@@ -232,7 +242,7 @@ const JobProfile = () =>{
                                     <CTableHeaderCell>Designation</CTableHeaderCell>
                                     <CTableHeaderCell>Job Profile</CTableHeaderCell>
 
-                                    <CTableHeaderCell>Edit/Delete </CTableHeaderCell>
+                                    <CTableHeaderCell style={{display:(editJobProfile||deleteJobProfile)?'':'none'}}>Edit/Delete </CTableHeaderCell>
                                  
                                 </CTableRow>
                             </CTableHead>
@@ -248,9 +258,9 @@ const JobProfile = () =>{
                                 <CTableDataCell>
                                     {el.jobProfile}
                                 </CTableDataCell>
-                                <CTableDataCell>
-                                      <MdEdit style={{cursor:'pointer'}} onClick={()=>updateProduct(el)} />
-                                      <MdDelete style={{cursor:'pointer'}} onClick={()=> deleteEnquiry(el._id)}/>       
+                                <CTableDataCell style={{display:(editJobProfile||deleteJobProfile)?'':'none'}} >
+                                      <MdEdit style={{display:editJobProfile?'':'none',cursor:'pointer'}}  onClick={()=>updateProduct(el)} />
+                                      <MdDelete style={{display:deleteJobProfile?'':'none',cursor:'pointer'}} onClick={()=> deleteEnquiry(el._id)}/>       
                                 </CTableDataCell>
                                
                             </CTableRow>

@@ -31,9 +31,21 @@ import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
+import { herMasterRightVal } from 'src/views/hr/Rights/rightsValue/masterRightsValue'
+
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const TrainerSalarySlipMaster = () => {
+
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr
+    ?.items?.masterTrainerSalarySlip?.rights) 
+    
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+    
+    const addTrainerSalarySlip = (access.includes(herMasterRightVal.addTrainerSalarySlip) || isAdmin )
+    const editTrainerSalarySlip =  (access.includes(herMasterRightVal.editTrainerSalarySlip) || isAdmin )
+    const deleteTrainerSalarySlip =  (access.includes(herMasterRightVal.deleteTrainerSalarySlip) || isAdmin )
 
   const [trainerSalarySlipData,setTrainerSalrySlipData] = useState([])  
   const url1 = useSelector((el) => el.domainOfApi)
@@ -89,7 +101,7 @@ const TrainerSalarySlipMaster = () => {
                                     <CTableHeaderCell>ADV DEC</CTableHeaderCell>      
                                     <CTableHeaderCell>Mode OF Payment</CTableHeaderCell>  
                                     <CTableHeaderCell>Net Salary</CTableHeaderCell>  
-                                    <CTableHeaderCell>Edit/Delete</CTableHeaderCell>                                    
+                                    <CTableHeaderCell style={{display:(editTrainerSalarySlip||deleteTrainerSalarySlip)?'':'none'}} >Edit/Delete</CTableHeaderCell>                                    
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -169,7 +181,14 @@ const TrainerSalarySlipMaster = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell  >
+                                        <CFormInput
+                                            className="mb-1"
+                                            style={{ minWidth: "100px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell style={{display:(editTrainerSalarySlip||deleteTrainerSalarySlip)?'':'none'}} >
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -193,9 +212,9 @@ const TrainerSalarySlipMaster = () => {
                                         <CTableDataCell>{el.advDec}</CTableDataCell>
                                         <CTableDataCell>{el.modeOfPayment}</CTableDataCell>
                                         <CTableDataCell>{el.amount}</CTableDataCell>
-                                        <CTableDataCell>
-                                            <MdEdit style={{cursor:'pointer'}} onClick={()=>setUpdateActive(()=>({visible:true,obj:el}))}/>
-                                            <MdDelete style={{cursor:'pointer'}}/>
+                                        <CTableDataCell style={{display:(editTrainerSalarySlip||deleteTrainerSalarySlip)?'':'none'}}>
+                                            <MdEdit  style={{cursor:'pointer',display:editTrainerSalarySlip?'':'none'}} onClick={()=>setUpdateActive(()=>({visible:true,obj:el}))}/>
+                                            <MdDelete style={{cursor:'pointer',display:deleteTrainerSalarySlip?'':'none'}}/>
                                         </CTableDataCell>
                                     </CTableRow>
                                 })}

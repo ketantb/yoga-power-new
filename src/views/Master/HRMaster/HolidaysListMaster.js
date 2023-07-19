@@ -27,6 +27,7 @@ import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { herMasterRightVal} from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
 const HolidaysListMaster = () => {
     const [action1, setAction1] = useState(false)
@@ -37,6 +38,17 @@ const HolidaysListMaster = () => {
     const url = useSelector((el) => el.domainOfApi)
     const uniqObjVal = useUniqAdminObjeact() 
     const pathValMaster = useAdminValidation('Master')
+
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr
+    ?.items?.masterHolidaysList?.rights) 
+    
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+    
+    const addHolidayListMaster = (access.includes(herMasterRightVal.addHolidayListMaster) || isAdmin )
+    const holidayListMasterStatus =  (access.includes(herMasterRightVal.holidayListMasterStatus) || isAdmin )
+    const deleteHolidayListMaster =  (access.includes(herMasterRightVal.deleteHolidayListMaster) || isAdmin )
+
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -139,7 +151,7 @@ const HolidaysListMaster = () => {
                         <CCardTitle className="mt-2">Holiday List Master</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
-                        <CRow className='d-flex mb-2'>
+                        <CRow  className='d-flex mb-2'>
                             <CCol lg={3} sm={6} className='mb-2'>
                                 <CFormInput
                                     type='date'
@@ -169,8 +181,8 @@ const HolidaysListMaster = () => {
                                 />
                             </CCol>
                         </CRow>
-                        <CFormSwitch size="xl" label="Status" value={status} onChange={() => setStatus(!status)} />
-                        <CButton type="button" color="primary" onClick={() => createHoliday()}>
+                        <CFormSwitch size="xl"  label="Status" value={status} onChange={() => setStatus(!status)} />
+                        <CButton  style={{display:addHolidayListMaster?'':'none'}} type="button" color="primary" onClick={() => createHoliday()}>
                             Save
                         </CButton>
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
@@ -180,8 +192,8 @@ const HolidaysListMaster = () => {
                                     <CTableHeaderCell>Date</CTableHeaderCell>
                                     <CTableHeaderCell>Enter Holiday</CTableHeaderCell>
                                     <CTableHeaderCell>Holiday No</CTableHeaderCell>
-                                    <CTableHeaderCell>Status</CTableHeaderCell>
-                                    <CTableHeaderCell>Action</CTableHeaderCell>
+                                    <CTableHeaderCell style={{display:holidayListMasterStatus?'':'none'}} >Status</CTableHeaderCell>
+                                    <CTableHeaderCell style={{display:deleteHolidayListMaster?'':'none'}} >Action</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -192,8 +204,8 @@ const HolidaysListMaster = () => {
                                             <CTableDataCell>{moment(item.Date).format("MM-DD-YYYY")}</CTableDataCell>
                                             <CTableDataCell >{item.Holiday}</CTableDataCell>
                                             <CTableDataCell >{item.HolidayNo}</CTableDataCell>
-                                            <CTableDataCell className="text-center"><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.Status} checked={item.Status} onChange={() => updateStatus(item._id, !item.Status)} /></CTableDataCell>
-                                            <CTableDataCell> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteData(item._id)} size='20px' /> </CTableDataCell>
+                                            <CTableDataCell style={{display:holidayListMasterStatus?'':'none'}} className="text-center"><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.Status} checked={item.Status} onChange={() => updateStatus(item._id, !item.Status)} /></CTableDataCell>
+                                            <CTableDataCell style={{display:deleteHolidayListMaster?'':'none'}}> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteData(item._id)} size='20px' /> </CTableDataCell>
                                         </CTableRow>
                                     )
                                 ))}

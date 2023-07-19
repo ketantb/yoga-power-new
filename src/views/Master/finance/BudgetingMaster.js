@@ -25,7 +25,7 @@ const url2 = 'https://yog-seven.vercel.app'
 import { useSelector } from "react-redux";
 import moment from "moment/moment";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
-
+import { financeMasterRights } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
 const BudgetingMaster = () => {
     const [action1, setAction1] = useState(false)
@@ -40,6 +40,16 @@ const BudgetingMaster = () => {
     const [yearData,setYearData] = useState([])
     const [yearFilter,setYearFilter] = useState('')
     const [categoryFilter,setCategoryFilter]= useState('')
+
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterFinance
+    ?.items?.masterBudgeting?.rights) 
+
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+                                         
+    
+   const  addBudgetingMaster = (access.includes(financeMasterRights.addBudgetingMaster)||isAdmin)
+   const  deleteBudgetingMaster = (access.includes(financeMasterRights.deleteBudgetingMaster)||isAdmin)
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -256,7 +266,7 @@ return
                         <div>
                             <CRow>
                                 <CCol>
-                                    <CButton className="ms-1 mt-2" onClick={subserviceClose}>{action1 ? 'close' : 'Add Budget'}</CButton>
+                                    <CButton style={{display:addBudgetingMaster?'':'none'}} className="ms-1 mt-2" onClick={subserviceClose}>{action1 ? 'close' : 'Add Budget'}</CButton>
                                 </CCol>
                             </CRow>
                         </div>
@@ -426,7 +436,7 @@ return
                             <CTableHeaderCell>Oct</CTableHeaderCell>
                             <CTableHeaderCell>Nov</CTableHeaderCell>
                             <CTableHeaderCell>Dec</CTableHeaderCell>
-                            <CTableHeaderCell>Action</CTableHeaderCell>
+                            <CTableHeaderCell style={{display:deleteBudgetingMaster?'':'none'}}>Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
@@ -434,7 +444,7 @@ return
                         (+" "+moment(el.BudgetYear).format('YYYY')).includes(yearFilter)&&
                         el.CategoryName.includes(categoryFilter)
                         ).map((item, index) => {
-                          return  item.username === username && (
+                          return   (
                             <CTableRow key={index}>
                                     <CTableDataCell>{index + 1}</CTableDataCell>
                                     <CTableDataCell>{item.CategoryName}</CTableDataCell>
@@ -451,7 +461,7 @@ return
                                     <CTableDataCell>{item.Oct}</CTableDataCell>
                                     <CTableDataCell>{item.Nov}</CTableDataCell>
                                     <CTableDataCell>{item.Dec}</CTableDataCell>
-                                    <CTableDataCell> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }}
+                                    <CTableDataCell style={{display:deleteBudgetingMaster?'':'none' }}> <MdDelete style={{ cursor: 'pointer', markerStart: '10px',}}
                                      onClick={() => deleteSubService(item._id)} size='20px' /> </CTableDataCell>
                              </CTableRow>
                             )

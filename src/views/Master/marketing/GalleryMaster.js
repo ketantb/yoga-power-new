@@ -162,7 +162,8 @@ const GalleryMaster = () => {
                 <CCardTitle>Gallery Master</CCardTitle>
             </CCardHeader>
             <CCardBody>
-                <CForm className="mb-2">
+                <p className='text-center'>Coming soon...</p>
+                {/* <CForm className="mb-2">
                     <div className="d-flex justify-content-between">
                         <div></div>
                         <div>
@@ -239,8 +240,8 @@ const GalleryMaster = () => {
                             </CRow>
                         </div>
                     }
-                </CForm>
-                <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
+                </CForm> */}
+                {/* <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                     <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                         <CTableRow >
                             <CTableHeaderCell>Sr.No</CTableHeaderCell>
@@ -272,9 +273,9 @@ const GalleryMaster = () => {
                             )
                         ))}
                     </CTableBody>
-                </CTable>
+                </CTable> */}
             </CCardBody>
-            <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+            {/* <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
                 <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
                     <span aria-hidden="true">&laquo;</span>
                 </CPaginationItem>
@@ -290,7 +291,7 @@ const GalleryMaster = () => {
                         <span aria-hidden="true">&raquo;</span>
                     </CPaginationItem>
                 }
-            </CPagination>
+            </CPagination> */}
         </CCard>
     );
 };

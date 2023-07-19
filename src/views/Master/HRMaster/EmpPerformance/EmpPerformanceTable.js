@@ -23,7 +23,7 @@ const headers = {
    }
 
 
-const EmpPerformanceTable = ({staff}) => {
+const EmpPerformanceTable = ({staff,addEmpPrformanse,deleteEmpPrformanse,editEmpPrformanse}) => {
 
 
 
@@ -67,8 +67,8 @@ const EmpPerformanceTable = ({staff}) => {
   return (
     <>
      
-     <EmPerformanceForm  updateActive={updateActive} staff={staff} setUpdateActive={setUpdateActive} getData={()=>getEmpPerformance()} />
-
+     {addEmpPrformanse&& <EmPerformanceForm   updateActive={updateActive} staff={staff} setUpdateActive={setUpdateActive} getData={()=>getEmpPerformance()} />
+}
      <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                                 <CTableRow >
@@ -81,7 +81,7 @@ const EmpPerformanceTable = ({staff}) => {
                                     <CTableHeaderCell>Productivity</CTableHeaderCell>
                                     <CTableHeaderCell>Response</CTableHeaderCell>
                                     <CTableHeaderCell>Additional Comments</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit/Delete</CTableHeaderCell>
+                                    <CTableHeaderCell style={{display:(editEmpPrformanse||deleteEmpPrformanse)?'':'none'}} >Edit/Delete</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -96,9 +96,9 @@ const EmpPerformanceTable = ({staff}) => {
                                     <CTableDataCell>{el.productivity}</CTableDataCell>
                                     <CTableDataCell>{el.response}</CTableDataCell>
                                     <CTableDataCell>{el.additionalComments}</CTableDataCell>
-                                    <CTableDataCell>
-                                        <MdEdit style={{cursor:'pointer'}}  style={{cursor:'pointer'}} onClick={()=>setUpdateActive(()=>({visible:true,obj:el}))} />
-                                        <MdDelete style={{cursor:'pointer'}} onClick={()=>deleteSalarySheet(el._id)}/>
+                                    <CTableDataCell style={{display:(editEmpPrformanse||deleteEmpPrformanse)?'':'none'}}  >
+                                        <MdEdit style={{cursor:'pointer',display:(editEmpPrformanse)?'':'none'}}  onClick={()=>setUpdateActive(()=>({visible:true,obj:el}))} />
+                                        <MdDelete style={{cursor:'pointer',display:(deleteEmpPrformanse)?'':'none'}} onClick={()=>deleteSalarySheet(el._id)}/>
                                     </CTableDataCell>
                                 </CTableRow>)}                                                               
                             </CTableBody>

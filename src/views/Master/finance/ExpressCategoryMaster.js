@@ -26,6 +26,7 @@ const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
 import { useSelector } from "react-redux";
 import { useAdminValidation, useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { financeMasterRights } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
  const ExpressCategoryMaster = () => {
     const [action1, setAction1] = useState(false)
@@ -38,7 +39,19 @@ import { useAdminValidation, useUniqAdminObjeact } from "src/views/Custom-hook/a
     const pathValMaster  = useAdminValidation('Master')
     const uniqObjVal = useUniqAdminObjeact()
 
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterFinance
+    ?.items?.masterExpnessCategor?.rights) 
+
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+                                         
+    
+   const  addExpensesCategory = (access.includes(financeMasterRights.addExpensesCategory)||isAdmin)
+   const  deleteProductListing = (access.includes(financeMasterRights.deleteExpensesCategory)||isAdmin)
+
     let user = JSON.parse(localStorage.getItem('user-info'))
+
+
     const token = user.token;
     const username = user.user.username;
     const [result1, setResult1] = useState([]);
@@ -140,7 +153,8 @@ import { useAdminValidation, useUniqAdminObjeact } from "src/views/Custom-hook/a
                         <div>
                             <CRow>
                                 <CCol>
-                                    <CButton className="ms-1 mt-2" onClick={() => setAction1(!action1)}>{action1 ? 'close' : 'Add Express'}</CButton>
+                                    <CButton style={{display:addExpensesCategory?'':'none'}} className="ms-1 mt-2"
+                                     onClick={() => setAction1(!action1)}>{action1 ? 'close' : 'Add Express'}</CButton>
                                 </CCol>
                             </CRow>
                         </div>
@@ -225,18 +239,21 @@ import { useAdminValidation, useUniqAdminObjeact } from "src/views/Custom-hook/a
                             <CTableHeaderCell >Expenses Category</CTableHeaderCell>
                             <CTableHeaderCell>Approval By</CTableHeaderCell>
                             <CTableHeaderCell>Second Approval By</CTableHeaderCell>
-                            <CTableHeaderCell>Action</CTableHeaderCell>
+                            <CTableHeaderCell style={{display:deleteProductListing?'':'none'}}> Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
                         {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
-                            item.username === username && (
+                           (
                                 <CTableRow key={index}>
                                     <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                     <CTableDataCell>{item.CategoryName}</CTableDataCell>
                                     <CTableDataCell>{item.ApprovalLevel1}</CTableDataCell>
                                     <CTableDataCell>{item.ApprovalLevel2}</CTableDataCell>
-                                    <CTableDataCell> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteData(item._id)} size='20px' /> </CTableDataCell>
+                                    <CTableDataCell style={{display:deleteProductListing?'':'none' }}> 
+                                        <MdDelete style={{ cursor: 'pointer', markerStart: '10px'}} 
+                                        onClick={() => deleteData(item._id)} size='20px' /> 
+                                    </CTableDataCell>
                                 </CTableRow>
                             )
                         ))}
@@ -248,10 +265,10 @@ import { useAdminValidation, useUniqAdminObjeact } from "src/views/Custom-hook/a
                     <span aria-hidden="true">&laquo;</span>
                 </CPaginationItem>
                 <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                {result1.filter((list) => list.username === username).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                {result1.filter((list) => list).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                {result1.filter((list) => list.username === username).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                {result1.filter((list) => list.username === username).length > (paging + 1) * 10 ?
+                {result1.filter((list) => list).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                {result1.filter((list) => list).length > (paging + 1) * 10 ?
                     <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                         <span aria-hidden="true">&raquo;</span>
                     </CPaginationItem>

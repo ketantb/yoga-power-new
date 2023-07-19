@@ -36,9 +36,6 @@ const EmpPerformance = () => {
     )
 
 
-    console.log(addEmpTargetPerformance)
-    console.log(deleteEmpTargetPerformance)
-
   
 
 

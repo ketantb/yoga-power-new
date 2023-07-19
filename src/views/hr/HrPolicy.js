@@ -34,17 +34,11 @@ const HrPolicy = () => {
     const url = useSelector((el)=>el.domainOfApi) 
     const pathValMaster  = useAdminValidation('Master') 
 
-
-
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
-    const username = user.user.username;
-    const centerCode = user.user.centerCode;
     const [result1, setResult1] = useState([]);
     const [paging, setPaging] = useState(0);
-    console.log(token);
-   
+
     const headers = {
         'Authorization': `Bearer ${token}`,
         'My-Custom-Header': 'foobar'
@@ -83,7 +77,7 @@ const HrPolicy = () => {
                             </CTableHead>
                             <CTableBody>
                                
-                                {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
+                                {result1.map((item, index) => (
                                         <CTableRow style={{fontSize:'17px',fontWeight:'700'}} key={index} >
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{item.Title}</CTableDataCell>

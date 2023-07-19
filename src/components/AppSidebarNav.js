@@ -14,8 +14,14 @@ export const AppSidebarNav = ({ items }) => {
   const [viewNav,setViewNav] = useState(false)
 
   const isAdmin = user?.user?.isAdmin;  
-  // const arr2 = data?.crmRights
   const arr2 = (data?.crmRights && data?.erpRights    ) ?{...data?.erpRights,...data?.crmRights}:{}
+
+  // const arr2 = (data?.crmRights && data?.erpRights && data?.masterRights) ?{
+  //   ...data?.erpRights,
+  //   ...data?.crmRights,
+  //   ...data?.masterRights
+  // }:{}
+
   const arr =items
 
   
@@ -44,10 +50,11 @@ items?.forEach((el,i)=>{
       })
       }
   }) 
-  }}else if(!arr2[el?.id]?.value){
+  }}else if(!arr2[el?.id]?.value && !(el?.id ==='masterCenterPartners'&& isAdmin)){
     items?.splice(i,1)
   delete arr2[el?.id]
-  }}
+  }
+}
 
   if(items.length===i+1&&!viewNav){
    setViewNav(true)

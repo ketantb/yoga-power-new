@@ -28,11 +28,26 @@ import { MdDelete } from "react-icons/md";
 
 import { useSelector } from "react-redux";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
+
+
 
 const HRPolicy = () => {
     const [action, setAction] = useState(false)
     const [Title, setTitle] = useState('')
     const [Policy, setPolicy] = useState('')
+
+
+    
+
+const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr
+?.items?.masterHrPolicy?.rights) 
+
+const access = rightsData?rightsData:[]
+const isAdmin = useSelector((el)=>el.isAdmin)
+
+const addHrPolicy = (access.includes(herMasterRightVal.addHrPolicy) || isAdmin )
+const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || isAdmin )
 
     const url = useSelector((el)=>el.domainOfApi) 
     const uniqObjVal = useUniqAdminObjeact()
@@ -121,7 +136,7 @@ const HRPolicy = () => {
                             <div>
                                 <CRow>
                                     <CCol>
-                                        <CButton className="ms-1 mt-2" onClick={() => setAction(!action)}>{action ? 'Close' : 'Add Policy'}</CButton>
+                                        <CButton style={{display:addHrPolicy?'':'none' }} className="ms-1 mt-2" onClick={() => setAction(!action)}>{action ? 'Close' : 'Add Policy'}</CButton>
                                     </CCol>
                                 </CRow>
                             </div>
@@ -164,18 +179,18 @@ const HRPolicy = () => {
                                     <CTableHeaderCell>Sno.</CTableHeaderCell>
                                     <CTableHeaderCell>Title</CTableHeaderCell>
                                     <CTableHeaderCell>Policy</CTableHeaderCell>
-                                    <CTableHeaderCell>Action</CTableHeaderCell>
+                                    <CTableHeaderCell  style={{display:deleteHrPolicy?'':'none' }} >Action</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
 
                                 {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                                    list.username === username).map((item, index) => (
+                                    list).map((item, index) => (
                                         <CTableRow style={{fontSize:'17px',fontWeight:'700'}} key={index} >
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{item.Title}</CTableDataCell>
                                             <CTableDataCell style={{maxWidth:'400px'}}>{item.Policy}</CTableDataCell>
-                                            <CTableDataCell> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' onClick={() => deleteData(item._id)} /> </CTableDataCell>
+                                            <CTableDataCell style={{display:deleteHrPolicy?'':'none' }}  > <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' onClick={() => deleteData(item._id)} /> </CTableDataCell>
                                         </CTableRow>
 
                                     ))}
@@ -187,10 +202,10 @@ const HRPolicy = () => {
                             <span aria-hidden="true">&laquo;</span>
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {result1.filter((list) => list.username === username).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {result1.filter((list) => list).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                        {result1.filter((list) => list.username === username).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {result1.filter((list) => list.username === username).length > (paging + 1) * 10 ?
+                        {result1.filter((list) => list).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {result1.filter((list) => list).length > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>

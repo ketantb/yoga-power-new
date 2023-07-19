@@ -23,14 +23,26 @@ import React, { useEffect, useState } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
 const url = 'https://yog-seven.vercel.app'
 import { useSelector } from 'react-redux';
-
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { masterMarketingRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
 const LeadSourceMaster = () => {
     const [action1, setAction1] = useState(false)
     const [lead, setLead] = useState('')
     const [status, setStatus] = useState(false)
+    const pathVal = useAdminValidation('Master')
+    const url = useSelector((el)=> el.domainOfApi)
+    const uniqObjVal = useUniqAdminObjeact()
 
-    const url = useAdmin
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterMarketing
+    ?.items?.masterLeadSourseMaster?.rights) 
+
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+
+    const leadSourceMaster = (access.includes(masterMarketingRightVal.leadSourceMaster) || isAdmin )
+    const addSourceMaster =  (access.includes(masterMarketingRightVal.addSourceMaster) || isAdmin )
+    const deleteSourceMaster =  (access.includes(masterMarketingRightVal.deleteSourceMaster) || isAdmin )
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -46,13 +58,12 @@ const LeadSourceMaster = () => {
     }, []);
 
     function getLeadSource() {
-        axios.get(`${url}/leadSourceMaster/all`, {
+        axios.get(`${url}/leadSourceMaster/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                console.log(res.data)
                 setResult1(res.data.reverse())
             })
             .catch((error) => {
@@ -66,6 +77,7 @@ const LeadSourceMaster = () => {
                 username: username,
                 LeadSource: lead,
                 Status: status,
+                ...uniqObjVal
             }
             axios.post(`${url}/leadSourceMaster/create`, data, { headers })
                 .then((resp) => {
@@ -129,7 +141,7 @@ const LeadSourceMaster = () => {
                         <div>
                             <CRow>
                                 <CCol>
-                                    <CButton className="ms-1 mt-2" onClick={() => setAction1(!action1)}>{action1 ? 'close' : 'Add Lead Source'}</CButton>
+                                    <CButton  style={{display:addSourceMaster?'':'none'}}  className="ms-1 mt-2" onClick={() => setAction1(!action1)}>{action1 ? 'close' : 'Add Lead Source'}</CButton>
                                 </CCol>
                             </CRow>
                         </div>
@@ -155,7 +167,7 @@ const LeadSourceMaster = () => {
                                         </CCol>
                                     </CRow>
 
-                                    <CButton className="mt-2" onClick={() => createLead()}>Save</CButton>
+                                    <CButton  className="mt-2" onClick={() => createLead()}>Save</CButton>
                                 </CCol>
                             </CRow>
                         </div>
@@ -165,19 +177,19 @@ const LeadSourceMaster = () => {
                     <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                         <CTableRow >
                             <CTableHeaderCell>Sr.No</CTableHeaderCell>
-                            <CTableHeaderCell>Lead Source</CTableHeaderCell>
-                            <CTableHeaderCell>Status</CTableHeaderCell>
-                            <CTableHeaderCell>Action</CTableHeaderCell>
+                            <CTableHeaderCell   >Lead Source</CTableHeaderCell>
+                            <CTableHeaderCell style={{display:leadSourceMaster?'':'none'}} >Status</CTableHeaderCell>
+                            <CTableHeaderCell style={{display:deleteSourceMaster?'':'none'}} >Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
                         {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
-                            item.username === username && (
+                            (
                                 <CTableRow key={index}>
                                     <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                     <CTableDataCell>{item.LeadSource}</CTableDataCell>
-                                    <CTableDataCell className="text-center"><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.Status} checked={item.Status} onChange={() => updateStatus(item._id, !item.Status)} /></CTableDataCell>
-                                    <CTableDataCell> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteData(item._id)} size='20px' /> </CTableDataCell>
+                                    <CTableDataCell className="text-center"  style={{display:leadSourceMaster?'':'none'}}  ><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.Status} checked={item.Status} onChange={() => updateStatus(item._id, !item.Status)} /></CTableDataCell>
+                                    <CTableDataCell  style={{display:deleteSourceMaster?'':'none'}}  > <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteData(item._id)} size='20px' /> </CTableDataCell>
                                 </CTableRow>
                             )
                         ))}
@@ -189,10 +201,10 @@ const LeadSourceMaster = () => {
                     <span aria-hidden="true">&laquo;</span>
                 </CPaginationItem>
                 <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                {result1.filter((list) => list.username === username).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                {result1.filter((list) => list).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                {result1.filter((list) => list.username === username).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                {result1.filter((list) => list.username === username).length > (paging + 1) * 10 ?
+                {result1.filter((list) => list).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                {result1.filter((list) => list).length > (paging + 1) * 10 ?
                     <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                         <span aria-hidden="true">&raquo;</span>
                     </CPaginationItem>

@@ -152,7 +152,7 @@ const EmailSmsMaster = () => {
                 <CCardTitle>Template</CCardTitle>
             </CCardHeader>
             <CCardBody>
-                <CForm className="mb-2">
+                {/* <CForm className="mb-2">
                     <div className="d-flex justify-content-between">
                         <div></div>
                         <div>
@@ -213,7 +213,7 @@ const EmailSmsMaster = () => {
                     </CTableHead>
                     <CTableBody>
                         {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
-                            item.username === username && (
+                            item (
                                 <CTableRow key={index}>
                                     <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                     <CTableDataCell>{item.templateName}</CTableDataCell>
@@ -224,17 +224,18 @@ const EmailSmsMaster = () => {
                             )
                         ))}
                     </CTableBody>
-                </CTable>
+                </CTable> */}
+                <p className="text-center">Coming soon</p>
             </CCardBody>
-            <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+            {/* <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
                 <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
                     <span aria-hidden="true">&laquo;</span>
                 </CPaginationItem>
                 <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                {result1.filter((list) => list.username === username).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                {result1.filter((list) => list).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                {result1.filter((list) => list.username === username).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                {result1.filter((list) => list.username === username).length > (paging + 1) * 10 ?
+                {result1.filter((list) => list).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                {result1.filter((list) => list).length > (paging + 1) * 10 ?
                     <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                         <span aria-hidden="true">&raquo;</span>
                     </CPaginationItem>
@@ -242,7 +243,7 @@ const EmailSmsMaster = () => {
                         <span aria-hidden="true">&raquo;</span>
                     </CPaginationItem>
                 }
-            </CPagination>
+            </CPagination> */}
         </CCard>
     );
 };

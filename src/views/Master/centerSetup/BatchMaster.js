@@ -22,6 +22,7 @@ import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { masterRightValue } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
 const BatchMaster = () => {
     const [action, setAction] = useState(false)
@@ -39,6 +40,14 @@ const BatchMaster = () => {
     const url = url1
     const pathVal = useAdminValidation('Master')
     const uniqObjVal =  useUniqAdminObjeact()
+
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterCenterSetup?.items?.masterBatchTimeMaster?.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+
+    const batchTimeMasterStatus = (access.includes(masterRightValue.batchTimeMasterStatus) || isAdmin )
+    const addBatchTimeMaster =  (access.includes(masterRightValue.addBatchTimeMaster) || isAdmin )
+    const deleteBatchTimeMaster =  (access.includes(masterRightValue.deleteBatchTimeMaster) || isAdmin )
 
 
     const batch=[
@@ -261,7 +270,7 @@ console.error(error)
                         <div>
                             <CRow>
                                 <CCol>
-                                    <CButton className="ms-1 mt-2" onClick={() => setAction(!action)}>{action ? 'close' : 'Add New Batch'}</CButton>
+                                    <CButton style={{display:deleteBatchTimeMaster?'':'none'}} className="ms-1 mt-2" onClick={() => setAction(!action)}>{action ? 'close' : 'Add New Batch'}</CButton>
                                 </CCol>
                             </CRow>
                         </div>
@@ -383,8 +392,8 @@ console.error(error)
                             <CTableHeaderCell>Batch Duration</CTableHeaderCell>
                             <CTableHeaderCell>Batch Timing</CTableHeaderCell>
                             <CTableHeaderCell>Type of Trainer</CTableHeaderCell>
-                            <CTableHeaderCell>Status</CTableHeaderCell>
-                            <CTableHeaderCell>Action</CTableHeaderCell>
+                            <CTableHeaderCell  style={{display:batchTimeMasterStatus?'':'none'}}>Status</CTableHeaderCell>
+                            <CTableHeaderCell style={{display:deleteBatchTimeMaster?'':'none'}}>Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
@@ -398,8 +407,8 @@ console.error(error)
                                     <CTableDataCell>{item.Batch_Duration}</CTableDataCell>
                                     <CTableDataCell>{item.batch_timing}</CTableDataCell>
                                     <CTableDataCell>{item.typeOfTrainer}</CTableDataCell>
-                                    <CTableDataCell><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.status} checked={item.status} onChange={() => updateStatus(item._id, !item.status)} /></CTableDataCell>
-                                    <CTableDataCell> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteBatch(item._id)} size='20px' /> </CTableDataCell>
+                                    <CTableDataCell style={{display:batchTimeMasterStatus?'':'none',}}><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.status} checked={item.status} onChange={() => updateStatus(item._id, !item.status)} /></CTableDataCell>
+                                    <CTableDataCell style={{display:deleteBatchTimeMaster?'':'none',}}> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteBatch(item._id)} size='20px' /> </CTableDataCell>
                                 </CTableRow>
                             )
                         ))}

@@ -22,7 +22,6 @@ const ClientSetupRights = React.lazy(()=>import('../AllRightRights/Master/Client
 const HrRights = React.lazy(()=>import('../AllRightRights/Master/HrRights'))
 const InventoryRights   = React.lazy(()=>import('../AllRightRights/Master/InventoryRights'))
 const FInanceRights = React.lazy(()=>import('../AllRightRights/Master/FInanceRights'))
-const CenterPartners  = React.lazy(()=>import('../AllRightRights/Master/CenterPartners'))
  
 const MasterRights = ({masterRights,setRightObject}) => {
 
@@ -109,18 +108,7 @@ const MasterRights = ({masterRights,setRightObject}) => {
                                    Finance
                                 </CNavLink>
                             </CNavItem>
-                         
-
-                            <CNavItem>
-                             <CNavLink
-                                    href="javascript:void(0);"
-                                    active={activeKey === 10}
-                                    onClick={() => setActiveKey(10)}
-                                    className="text-white"
-                                >
-                                Center Partners
-                                </CNavLink>
-                            </CNavItem>
+                        
 
                         </CNav>
                     </CCardHeader>
@@ -133,7 +121,6 @@ const MasterRights = ({masterRights,setRightObject}) => {
                           {activeKey===6&&<HrRights masterHr={masterRights.masterHr} setRightObject={setRightObject}/>}
                           {activeKey===7&&<InventoryRights masterInverntory={masterRights.masterInverntory} setRightObject={setRightObject} />}
                           {activeKey===8&&<FInanceRights masterFinance={masterRights.masterFinance} setRightObject={setRightObject} />}
-                          {activeKey===10&&<CenterPartners masterCenterPartners={masterRights.masterCenterPartners} setRightObject={setRightObject} />}
                         </CTabContent>
                     </CCardBody>
                 </CCard>

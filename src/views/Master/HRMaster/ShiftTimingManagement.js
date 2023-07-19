@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import axios from 'axios'
 import { MdEdit,MdDelete } from "react-icons/md";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
 function ShiftTimingManagment (){
 
@@ -37,6 +38,16 @@ function ShiftTimingManagment (){
     })
 
 
+    
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr
+    ?.items?.masterShiftTiming?.rights) 
+    
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+    
+    const addShiftTiming = (access.includes(herMasterRightVal.addShiftTiming) || isAdmin )
+    const editShiftTiming=  (access.includes(herMasterRightVal.editShiftTiming) || isAdmin )
+    const deleteShiftTiming =  (access.includes(herMasterRightVal.deleteShiftTiming) || isAdmin )
    
    const headers = {
     "Authorization": `Bearer ${token}`,
@@ -141,7 +152,7 @@ const toDeleteData= async (id)=>{
 
 <CCardBody>
                 <CCol className='my-3 text-end'>
-                   {showForm&&<CButton onClick={()=>toToggaleFrom()}>Add New </CButton>}
+                   {showForm&&<CButton style={{display:addShiftTiming?'':'none'}} onClick={()=>toToggaleFrom()}>Add New </CButton>}
                    {showForm||<CCard className="overflow-hidden my-4 text-start"   >
         <CCardHeader className="p-4" style={{ backgroundColor: '#0B5345', color: 'white' }}>
                  <CCardTitle> <h5>Shift Timing Form</h5></CCardTitle>
@@ -207,7 +218,7 @@ const toDeleteData= async (id)=>{
                                     <CTableHeaderCell>Shift Name</CTableHeaderCell>
                                     <CTableHeaderCell>In Time</CTableHeaderCell>
                                     <CTableHeaderCell>Out Time</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit/Delete</CTableHeaderCell>
+                                    <CTableHeaderCell  style={{display:(editShiftTiming||deleteShiftTiming)?'':'none'}}>Edit/Delete</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -228,9 +239,9 @@ const toDeleteData= async (id)=>{
                                     </CTableDataCell>
                                
 
-                                    <CTableDataCell>
-                                      <MdEdit style={{cursor:'pointer'}} onClick={()=>updateProduct(el)} />
-                                      <MdDelete style={{cursor:'pointer'}} onClick={()=>toDeleteData(el._id)}/>                                       
+                                    <CTableDataCell style={{display:(editShiftTiming||deleteShiftTiming)?'':'none'}} >
+                                      <MdEdit style={{cursor:'pointer',display:(editShiftTiming)?'':'none'}} onClick={()=>updateProduct(el)} />
+                                      <MdDelete style={{cursor:'pointer',display:(deleteShiftTiming)?'':'none'}} onClick={()=>toDeleteData(el._id)}/>                                       
                                     </CTableDataCell>
                                                                
                                 </CTableRow>

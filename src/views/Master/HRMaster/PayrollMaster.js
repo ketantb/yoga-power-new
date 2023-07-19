@@ -30,19 +30,30 @@ import { useSelector } from "react-redux";
 import axios from 'axios';
 import moment from 'moment';
 import { icons } from 'react-icons/lib';
-import SalarySheet from 'src/views/hr/SalarySheet';
 import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
+import { herMasterRightVal } from 'src/views/hr/Rights/rightsValue/masterRightsValue';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const username = user.user.username;
-const centerCode = user.user.centerCode;
 
 
 const PayrollMaster = () =>{
 
   const pathVal = useAdminValidation('Master')
   const uniqObjVal = useUniqAdminObjeact()
+
+  const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr
+  ?.items?.masterSalarySheet?.rights) 
+
+  const access = rightsData?rightsData:[]
+  const isAdmin = useSelector((el)=>el.isAdmin)
+
+  const addSalarySheet = (access.includes(herMasterRightVal.addSalarySheet) || isAdmin )
+  const editSalarySheet =  (access.includes(herMasterRightVal.editSalarySheet) || isAdmin )
+  const deleteSalarySheet2 =  (access.includes(herMasterRightVal.deleteSalarySheet) || isAdmin )  
+
+
 
   const obj = {
     username:username,
@@ -265,7 +276,9 @@ console.log(salarySheetData)
 
                      
     {showForm?<CCol className="bg-body d-flex justify-content-end">
-            <CButton onClick={()=>setForm((value)=>!value)}>Add New Salary</CButton>
+            <CButton onClick={()=>setForm((value)=>!value)}
+            style={{display:addSalarySheet?'':'none'}}
+            >Add New Salary</CButton>
     </CCol>:
 
     <CCard className="overflow-hidden">
@@ -645,7 +658,7 @@ console.log(salarySheetData)
                                     <CTableHeaderCell>Net Salary </CTableHeaderCell>
                                     <CTableHeaderCell>Made of Payment</CTableHeaderCell>
                                     <CTableHeaderCell>Remark</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit/Delete</CTableHeaderCell>
+                                    <CTableHeaderCell style={{display:(deleteSalarySheet2||editSalarySheet)?'':'none'}} >Edit/Delete</CTableHeaderCell>
 
 
                                 </CTableRow>
@@ -680,9 +693,9 @@ console.log(salarySheetData)
                                             <CTableDataCell>{item.modeOfPayment}</CTableDataCell>
                                             <CTableDataCell>{item.netSalary}</CTableDataCell>
 
-                                            <CTableDataCell>
-                                               <MdEdit style={{cursor:'pointer'}} onClick={()=>updateProduct(item)}/>
-                                               <MdDelete  style={{cursor:'pointer'}} onClick={()=>deleteSalarySheet(item._id)} />
+                                            <CTableDataCell style={{display:(deleteSalarySheet2||editSalarySheet)?'':'none'}}>
+                                               <MdEdit style={{cursor:'pointer',display:editSalarySheet?'':'none'}} onClick={()=>updateProduct(item)}/>
+                                               <MdDelete  style={{cursor:'pointer',display:deleteSalarySheet2?'':'none'}} onClick={()=>deleteSalarySheet(item._id)} />
                                             </CTableDataCell>                                       
                                         </CTableRow>
                                 ))}

@@ -23,12 +23,13 @@ import {getDownloadURL, ref,uploadBytesResumable } from "firebase/storage";
 import { useParams } from 'react-router-dom'
 import { useAdminValidation } from "src/views/Custom-hook/adminValidation";
 
-
 const EmployeeDocument = ({id}) => {
 
     
 const componentRef = useRef()
 const pathVal = useAdminValidation('Master')
+
+
 
 
 const handlePrint = useReactToPrint({

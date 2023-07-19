@@ -3,34 +3,20 @@ import React from 'react'
 import {
   CButton,
   CCard,
-  CCardBody,
-  CCardHeader,
-  CCardTitle,
+ 
   CCol,
   CFormInput,
   CRow,
   CForm,
   CFormSelect,
-  CCallout,
-  CModal,
-  CModalHeader,
-  CModalTitle,
+ 
   CTable,
   CTableHead,
   CTableRow,
   CTableHeaderCell,
   CTableBody,
   CTableDataCell,
-  CNav,
-  CNavGroup,
-  CNavItem,
-  CNavLink,
-  CTabContent,
-  CTabPane,
-  CAccordion,
-  CAccordionItem,
-  CAccordionHeader,
-  CAccordionBody,
+
   CPagination,
   CPaginationItem,
 
@@ -53,7 +39,7 @@ const headers = {
   'Content-Type': 'application/json'
  }
 
-const EmpLeaveListTable = () => {
+const EmpLeaveListTable = ({updateEmployeeLeave}) => {
 
   const uniqObjVal = useUniqAdminObjeact()
   const pathValMaster = useAdminValidation('Master') 
@@ -277,7 +263,7 @@ setClientReferance(
                    
 
                     <CCol className='text-end my-2'>
-                     { !activeForm && <CButton onClick={()=>setActiveForm(true)}>Add Leave</CButton>}
+                     { !activeForm && <CButton style={{display:updateEmployeeLeave?'':'none'}} onClick={()=>setActiveForm(true)}>Add Leave</CButton>}
                     </CCol>  
 
 

@@ -8,11 +8,6 @@ import {
     CFormInput,
     CRow,
     CForm,
-    CFormSelect,
-    CCallout,
-    CModal,
-    CModalHeader,
-    CModalTitle,
     CTable,
     CTableHead,
     CTableRow,
@@ -20,7 +15,6 @@ import {
     CTableBody,
     CTableDataCell,
     CNav,
-    CNavGroup,
     CNavItem,
     CNavLink,
     CTabContent,
@@ -43,10 +37,10 @@ const headers = {
    }
 
    import {MdDelete} from 'react-icons/md';
+import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"]
-
 
 const EmpLeaveListTable =React.lazy(()=>import("./EmpLeaveListTable"))
 const EmpLoyeeLeaveHistory = React.lazy(()=>import('./EmpLoyeeLeaveHistory'))
@@ -66,7 +60,6 @@ function LeaveSetup(){
     const [error,setError] = useState(false)
     const [showForm,setForm] = useState(true)
     const [leaveObj,setLeaveObj] = useState({...obj}) 
-    const [activeKey, setActiveKey] = useState(1)
     const [leaveSetupError,setLeaveSetupError] = useState(false) 
 
     const [activeUpdate,setActiveUpdate] = useState('')
@@ -77,6 +70,29 @@ function LeaveSetup(){
     const uniqObjVal = useUniqAdminObjeact()
 
 
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr
+    ?.items?.masterLeaveSetup?.rights) 
+
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+
+    const viewEmployeeLeave = (access.includes(herMasterRightVal.viewEmployeeLeave) || isAdmin )
+    const viewEmployeeLeaveList =  (access.includes(herMasterRightVal.viewEmployeeLeaveList) || isAdmin )
+    const viewEmployeeLeaveHistory =  (access.includes(herMasterRightVal.viewEmployeeLeaveHistory) || isAdmin )  
+    const addEmployeeLeave =  (access.includes(herMasterRightVal.addEmployeeLeave) || isAdmin )  
+    const updateEmployeeLeave =  (access.includes(herMasterRightVal.updateEmployeeLeave) || isAdmin ) 
+    const deleteEmployeeLeave =  (access.includes(herMasterRightVal.deleteEmployeeLeave) || isAdmin ) 
+    const deleteEmployeeLeaveHistory =  (access.includes(herMasterRightVal.deleteEmployeeLeaveHistory) || isAdmin )  
+ 
+
+
+
+
+    const [activeKey, setActiveKey] = useState((
+        ((viewEmployeeLeave||isAdmin)&&1)||
+        ((viewEmployeeLeaveList||isAdmin)&&2)||
+        ((viewEmployeeLeaveHistory||isAdmin)&&3)
+    ))
 
 
     const getLeaveSetupData = async ()=>{
@@ -197,7 +213,7 @@ return <div>
                     <CNavLink
                         active={activeKey === 1}
                         onClick={() => setActiveKey(1)}
-                        style={{cursor:'pointer'}}
+                        style={{cursor:'pointer',display:viewEmployeeLeave?'':'none'}}
                     >
                         Leave Setup
                     </CNavLink>
@@ -205,7 +221,7 @@ return <div>
                 <CNavItem>
                     <CNavLink
                         active={activeKey === 2}
-                        style={{cursor:'pointer'}}
+                        style={{cursor:'pointer',display:viewEmployeeLeaveList?'':'none'}}
                         onClick={() =>{
                             if(!leaveData.length){
                                 setLeaveSetupError(true)
@@ -222,7 +238,7 @@ return <div>
                     <CNavLink
                         active={activeKey === 3}
                         onClick={() =>setActiveKey(3)}
-                        style={{cursor:'pointer'}}
+                        style={{cursor:'pointer',display:viewEmployeeLeaveHistory?'':'none'}}
                     >
                         Employee Leave History
                     </CNavLink>
@@ -232,7 +248,7 @@ return <div>
             <CTabContent>
                 <CTabPane className="pt-2" role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 1}>
                 {showForm ? <CCol color="primary" className="bg-body d-flex justify-content-end">
-                <CButton onClick={() => setForm((value) => !value)}>Add New Payrol Setup</CButton>
+                <CButton   style={{cursor:'pointer',display:addEmployeeLeave?'':'none'}} onClick={() => setForm((value) => !value)}>Add New</CButton>
             </CCol> :
 
                 <CCard className="overflow-hidden"   >
@@ -322,7 +338,7 @@ return <div>
 
                                 <CTableHeaderCell>No of PL</CTableHeaderCell>
                                 <CTableHeaderCell>Total Leave</CTableHeaderCell>
-                                <CTableHeaderCell>Delete</CTableHeaderCell>
+                                <CTableHeaderCell style={{display:deleteEmployeeLeave?'':'none'}} >Delete</CTableHeaderCell>
                              
                             </CTableRow>
                         </CTableHead>
@@ -346,8 +362,11 @@ return <div>
                                 <CTableDataCell>
                                     {el.totalLeave}
                                 </CTableDataCell>  
-                                <CTableDataCell style={{cursor:'pointer'}}>
-                                        <MdDelete onClick={()=>deleteLeave(el._id)}/>
+                                <CTableDataCell style={{cursor:'pointer',display:deleteEmployeeLeave?'':'none'}}>
+                                        
+                                        <MdDelete 
+                                        style={{display:deleteEmployeeLeave?'':'none'}}
+                                        onClick={()=>deleteLeave(el._id)}/>
                                 </CTableDataCell>                            
                             </CTableRow>   
                             )}                   
@@ -356,10 +375,10 @@ return <div>
                 </CTabPane>
 
                 <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={true}>
-                   {activeKey === 2&&<EmpLeaveListTable/>}
+                   {activeKey === 2&&<EmpLeaveListTable  updateEmployeeLeave={updateEmployeeLeave}  />}
                 </CTabPane>
                 <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={true}>
-                   {activeKey === 3&&<EmpLoyeeLeaveHistory/>}
+                   {activeKey === 3&&<EmpLoyeeLeaveHistory deleteEmployeeLeaveHistory={deleteEmployeeLeaveHistory}/>}
                 </CTabPane>
             </CTabContent>
 

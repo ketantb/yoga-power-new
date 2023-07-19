@@ -25,14 +25,16 @@ import { useEffect } from "react";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
-
+import { masterRightValue } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
 
 const PackageMaster = () => {
 
+c
 
     const url1 = useSelector((el)=>el.domainOfApi) 
     const url = url1
+
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const username = user.user.username;
@@ -179,7 +181,7 @@ const PackageMaster = () => {
                         <div>
                             <CRow>
                                 <CCol>
-                                    <CButton className="ms-1 mt-2" onClick={() => setAction(!action)}>{action ? 'close' : 'Add New Package'}</CButton>
+                                    <CButton style={{display:addPackageMaste?'':'none'}}  className="ms-1 mt-2" onClick={() => setAction(!action)}>{action ? 'close' : 'Add New Package'}</CButton>
                                 </CCol>
                             </CRow>
                         </div>
@@ -305,8 +307,8 @@ const PackageMaster = () => {
                             <CTableHeaderCell>Package Name</CTableHeaderCell>
                             <CTableHeaderCell>Duration</CTableHeaderCell>
                             <CTableHeaderCell>Fees</CTableHeaderCell>
-                            <CTableHeaderCell>Status</CTableHeaderCell>
-                            <CTableHeaderCell>Action</CTableHeaderCell>
+                            <CTableHeaderCell  style={{display:packageStatus?'':'none'}} >Status</CTableHeaderCell>
+                            <CTableHeaderCell  style={{display:deletePackageMaster?'':'none'}} >Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
@@ -318,11 +320,18 @@ const PackageMaster = () => {
                                     <CTableDataCell>{item.Variation}</CTableDataCell>
                                     <CTableDataCell>{item.Package_Name}</CTableDataCell>
                                     <CTableDataCell>{item.Duration}</CTableDataCell>
-                                    <CTableDataCell>{item.Fees}</CTableDataCell>
                                     <CTableDataCell>
+                                        {item.Fees}
+                                    </CTableDataCell>
+                                    <CTableDataCell  style={{display:packageStatus?'':'none'}} >
                                         <CFormSwitch size="xl" style={{ cursor: 'pointer' }}
-                                         id={item._id} value={item.Status} checked={item.Status} onChange={() => updateStatus(item._id,item, !item.Status)} /></CTableDataCell>
-                                    <CTableDataCell> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deletePackage(item._id)} size='20px' /> </CTableDataCell>
+                                         id={item._id} value={item.Status} checked={item.Status}
+                                          onChange={() => updateStatus(item._id,item, !item.Status)} />
+                                    </CTableDataCell>
+                                    <CTableDataCell style={{display:deletePackageMaster?'':'none'}} >
+                                         <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} 
+                                         onClick={() => deletePackage(item._id)} size='20px' />
+                                    </CTableDataCell>
                                 </CTableRow>
                             )
                         ))}

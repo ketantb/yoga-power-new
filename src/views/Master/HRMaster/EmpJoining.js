@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import axios from 'axios'
 import { MdEdit,MdDelete } from "react-icons/md";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
 function EmpJoining (){
 
@@ -21,6 +22,16 @@ function EmpJoining (){
   const url = useSelector((el) => el.domainOfApi)
   const pathValMaster = useAdminValidation('Master')
   const uniqObjVal = useUniqAdminObjeact()
+
+  const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr
+  ?.items?.masterEmpJoining?.rights) 
+  
+  const access = rightsData?rightsData:[]
+  const isAdmin = useSelector((el)=>el.isAdmin)
+  
+  const addEmployeeJoining = (access.includes(herMasterRightVal.addEmployeeJoining) || isAdmin )
+  const editEmployeeJoining=  (access.includes(herMasterRightVal.editEmployeeJoining) || isAdmin )
+  const deleteEmployeeJoining =  (access.includes(herMasterRightVal.deleteEmployeeJoining) || isAdmin )
 
 
     const [showForm,setForm] = useState(true)
@@ -127,7 +138,7 @@ const toDeleteData= async (id)=>{
 
 <CCardBody>
           <CCol className='my-3 text-end'>
-                   {showForm&&<CButton onClick={()=>toToggaleFrom()}>Add New </CButton>}
+                   {showForm&&<CButton style={{display:addEmployeeJoining?'':'none'}} onClick={()=>toToggaleFrom()}>Add New </CButton>}
                    {showForm||<CCard className="overflow-hidden my-4 text-start"   >
         <CCardHeader className="p-4" style={{ backgroundColor: '#0B5345', color: 'white' }}>
                  <CCardTitle> <h5>Employee Joining Form</h5></CCardTitle>
@@ -183,7 +194,7 @@ const toDeleteData= async (id)=>{
                                    <CTableHeaderCell>Sr.No</CTableHeaderCell>
                                    <CTableHeaderCell style={{width:'200px'}}>Document Name</CTableHeaderCell>
                                    <CTableHeaderCell>Document Details</CTableHeaderCell>
-                                   <CTableHeaderCell>Edit/Delete</CTableHeaderCell>
+                                   <CTableHeaderCell style={{display:(deleteEmployeeJoining||editEmployeeJoining)?'':'none'}}>Edit/Delete</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -201,9 +212,9 @@ const toDeleteData= async (id)=>{
                                     <CTableDataCell>
                                         {el.documentDetails}
                                     </CTableDataCell>
-                                    <CTableDataCell>
-                                      <MdEdit style={{cursor:'pointer'}} onClick={()=>updateProduct(el)} />
-                                      <MdDelete style={{cursor:'pointer'}} onClick={()=>toDeleteData(el._id)}/>                                       
+                                    <CTableDataCell style={{display:(deleteEmployeeJoining||editEmployeeJoining)?'':'none'}}>
+                                      <MdEdit style={{cursor:'pointer',display:(editEmployeeJoining)?'':'none'}} onClick={()=>updateProduct(el)} />
+                                      <MdDelete style={{cursor:'pointer',display:(deleteEmployeeJoining)?'':'none'}} onClick={()=>toDeleteData(el._id)}/>                                       
                                     </CTableDataCell>
                                                                
                                 </CTableRow>

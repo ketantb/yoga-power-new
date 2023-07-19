@@ -13,7 +13,7 @@ const ClientSetupRights = ({masterClient,setRightObject}) => {
 
 <CRow >
   <CCol>
-       <h5 className='mb-4 p-0 d-flex ' > Clients <span className='mx-2'>
+    <h5 className='mb-4 p-0 d-flex ' > Clients <span className='mx-2'>
         <CFormSwitch  size="xl"
         checked={masterClient.value}
         onChange={(e)=>setRightObject(prev=>{
@@ -28,28 +28,20 @@ const ClientSetupRights = ({masterClient,setRightObject}) => {
 <CRow className='mt-5' >
 
    <CCol>
-       <h5>Client Tranfer Master</h5>
-       <CFormSwitch  size="xl" label="Client Tranfer Master" />
-       <CFormSwitch  size="xl" label="Add Client Tranfer Master" />
-       <CFormSwitch  size="xl" label="Delete Client Tranfer Master" />
-   </CCol>
-   <CCol>
-       <h5>Appoinment Page Master</h5>
-       <CFormSwitch size="xl" label="Appoinment Page Master"  />
-   </CCol>
-   <CCol>
-       <h5>Support && Rights Master </h5>
-       <CFormSwitch size="xl" label="Support && Rights Master"  />
-   </CCol>
-</CRow>
 
-<CRow className='mt-5' >
-   <CCol>
-       <h5>Extension</h5>
-       <CFormSwitch size="xl" label="Extension" />
-   </CCol>
-</CRow>
+       <h5 className='mb-4 p-0 d-flex ' > Client Tranfer Master <span className='mx-2'>
+        <CFormSwitch  size="xl"
+        checked={masterClient.items.masterClientTransferMaster.value}
+        onChange={(e)=>setRightObject(prev=>{
+         prev.masterRights.masterClient.items.masterClientTransferMaster.value=e.target.checked
+         return {...prev}
+        })}
+       /></span>
+    </h5>
 
+   </CCol>
+
+</CRow>
 
 </div> 
 }

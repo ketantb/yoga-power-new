@@ -31,11 +31,13 @@ import { useSelector } from "react-redux";
 import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 
+
 const ShiftTimingManagment = () => {
 
     const [shiftTimeingData,setShitTimeingData] = useState([])
     const url = useSelector((el) => el.domainOfApi)
     const pathValMaster = useAdminValidation('Master')
+
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))

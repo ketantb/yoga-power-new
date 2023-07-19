@@ -12,10 +12,10 @@ import { useSelector } from 'react-redux'
 const CenterSetup = () => {
 
 
-   const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterCenterSetup) 
-   
-   console.log(rightsData)
+   const rightsDataObj = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterCenterSetup?.items) 
+   const isAdmin = useSelector((el)=>el.isAdmin)
 
+   
 
     return (
         <CCard className="mb-3 border-success">
@@ -25,14 +25,16 @@ const CenterSetup = () => {
             </CCardHeader>
             <CCardBody style={{ padding: '25px' }}>
                 {[
-                    { color: 'primary', icon: <FaImage style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Company Logo Setup', subtitle: 'Brand logo', link: '/master/center-setup/logo-setup' },
-                    { color: 'secondary', icon: <BsFileText style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Company Profile Setup', subtitle: 'Set Up Branch Profile', link: '/master/center-setup/company-profile' },
-                    { color: 'success', icon: <MdOutlineMiscellaneousServices style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Services Master', subtitle: 'Set Up Branch Profile', link: '/master/center-setup/service-master' },
-                    { color: 'danger', icon: <HiCurrencyRupee style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Package Master', subtitle: 'Set Up Branch Profile', link: '/master/center-setup/package-master' },
-                    { color: 'warning', icon: <BsCalendar3 style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Batch time Master', subtitle: 'Brand logo', link: '/master/center-setup/batch-master' },
-                    { color: 'info', icon: <AiOutlineForm style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Form Master', subtitle: 'Brand logo', link: '/master/center-setup/form-master' },
-                    { color: 'dark', icon: <FaFileInvoiceDollar style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Invoice Master', subtitle: 'Brand logo' },
-                ].map((item, index) => (
+                    { id:'masterCompanyLogoSetup', color: 'primary', icon: <FaImage style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Company Logo Setup', subtitle: 'Brand logo', link: '/master/center-setup/logo-setup' },
+                    { id:'masterCompanyProfileSetup', color: 'secondary', icon: <BsFileText style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Company Profile Setup', subtitle: 'Set Up Branch Profile', link: '/master/center-setup/company-profile' },
+                    { id:'masterServicesMaster', color: 'success', icon: <MdOutlineMiscellaneousServices style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Services Master', subtitle: 'Set Up Branch Profile', link: '/master/center-setup/service-master' },
+                    { id:'masterPackageMaster', color: 'danger', icon: <HiCurrencyRupee style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Package Master', subtitle: 'Set Up Branch Profile', link: '/master/center-setup/package-master' },
+                    { id:'masterBatchTimeMaster',color: 'warning', icon: <BsCalendar3 style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Batch time Master', subtitle: 'Brand logo', link: '/master/center-setup/batch-master' },
+                    { id:'masterFormMaster', color: 'info', icon: <AiOutlineForm style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Form Master', subtitle: 'Brand logo', link: '/master/center-setup/form-master' },
+                    { id:'masterInvoiceMaster', color: 'dark', icon: <FaFileInvoiceDollar style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Invoice Master', subtitle: 'Brand logo' },
+                ].filter((el)=>{
+                return (rightsDataObj[el?.id]?.value || isAdmin)
+                }).map((item, index) => (
                     <CCard
                         color={item.color}
                         textColor='white'

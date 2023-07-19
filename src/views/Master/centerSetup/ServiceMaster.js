@@ -22,8 +22,10 @@ import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import {useAdminValidation, useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { masterRightValue } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
 const ServiceMaster = () => {
+
     const [action1, setAction1] = useState(false)
     const [sub_Service_Name, setSub_Service_Name] = useState("")
     const [selected_service, setSelected_service] = useState("")
@@ -40,6 +42,19 @@ const ServiceMaster = () => {
     const token = user.token;
     const username = user.user.username;
     const [result1, setResult1] = useState([]);
+
+
+
+    
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterCenterSetup?.items?.masterServicesMaster?.rights) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+
+    const serviceMasterStatus = (access.includes(masterRightValue.servicesMaster) || isAdmin )
+    const addServiceMaster =  (access.includes(masterRightValue.addServicesMaster) || isAdmin )
+    const deleteServiceMaster =  (access.includes(masterRightValue.deleteServicesMaster) || isAdmin )
+
+
 
     const headers ={
         headers: {
@@ -126,7 +141,7 @@ const ServiceMaster = () => {
                         <div>
                             <CRow>
                                 <CCol>
-                                    <CButton className="ms-1 mt-2" onClick={subserviceClose}>{action1 ? 'close' : 'Add Service'}</CButton>
+                                    <CButton style={{display:addServiceMaster?'':'none'}} className="ms-1 mt-2" onClick={subserviceClose}>{action1 ? 'close' : 'Add Service'}</CButton>
                                 </CCol>
                             </CRow>
                         </div>
@@ -174,7 +189,7 @@ const ServiceMaster = () => {
                                         </CCol>
                                     </CRow>
 
-                                    <CButton className="mt-2" onClick={saveSubservice}>Save</CButton>
+                                    <CButton  className="mt-2" onClick={saveSubservice}>Save</CButton>
                                 </CCol>
 
 
@@ -188,8 +203,8 @@ const ServiceMaster = () => {
                             <CTableHeaderCell>Sr.No</CTableHeaderCell>
                             <CTableHeaderCell>Service Name</CTableHeaderCell>
                             <CTableHeaderCell>Service Variation</CTableHeaderCell>
-                            <CTableHeaderCell>Status</CTableHeaderCell>
-                            <CTableHeaderCell>Action</CTableHeaderCell>
+                            <CTableHeaderCell  style={{display:serviceMasterStatus?'':'none'}} >Status</CTableHeaderCell>
+                            <CTableHeaderCell  style={{display:deleteServiceMaster?'':'none'}}>Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
@@ -199,8 +214,8 @@ const ServiceMaster = () => {
                                     <CTableDataCell>{index + 1}</CTableDataCell>
                                     <CTableDataCell>{item.selected_service}</CTableDataCell>
                                     <CTableDataCell className="text-center">{item.sub_Service_Name ? item.sub_Service_Name : '-'}</CTableDataCell>
-                                    <CTableDataCell><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.status} checked={item.status} onChange={() => updateStatus2(item._id, !item.status)} /></CTableDataCell>
-                                    <CTableDataCell> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteSubService(item._id)} size='20px' /> </CTableDataCell>
+                                    <CTableDataCell style={{display:serviceMasterStatus?'':'none'}} ><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.status} checked={item.status} onChange={() => updateStatus2(item._id, !item.status)} /></CTableDataCell>
+                                    <CTableDataCell style={{display:deleteServiceMaster?'':'none'}}> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteSubService(item._id)} size='20px' /> </CTableDataCell>
                                 </CTableRow>
                             )
                         ))}

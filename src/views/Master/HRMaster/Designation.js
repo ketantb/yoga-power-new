@@ -26,6 +26,7 @@ import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 
 const ServiceMaster = () => {
     const [action1, setAction1] = useState(false)
@@ -37,6 +38,16 @@ const ServiceMaster = () => {
 
     const pathVal  =  useAdminValidation('Master')
     const uniqObjVal = useUniqAdminObjeact()
+
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr
+    ?.items?.masterEmployeeDesignation?.rights) 
+
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+
+    const addDesignationMaster = (access.includes(herMasterRightVal.addDesignationMaster) || isAdmin )
+    const deleteDesignationMaster =  (access.includes(herMasterRightVal.deleteDesignationMaster) || isAdmin )
+    const designationMasterStatus =  (access.includes(herMasterRightVal.designationMasterStatus) || isAdmin )
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -148,7 +159,7 @@ const ServiceMaster = () => {
                         <div>
                             <CRow>
                                 <CCol>
-                                    <CButton className="ms-1 mt-2" onClick={subserviceClose}>{action1 ? 'close' : 'Add Vacancy'}</CButton>
+                                    <CButton style={{display:addDesignationMaster?'':'none'}} className="ms-1 mt-2" onClick={subserviceClose}>{action1 ? 'close' : 'Add Vacancy'}</CButton>
                                 </CCol>
                             </CRow>
                         </div>
@@ -207,20 +218,20 @@ const ServiceMaster = () => {
                             <CTableHeaderCell>Job Designation</CTableHeaderCell>
                             <CTableHeaderCell>Department</CTableHeaderCell>
                             <CTableHeaderCell>Available Vacancy</CTableHeaderCell>
-                            <CTableHeaderCell>Status</CTableHeaderCell>
-                            <CTableHeaderCell>Action</CTableHeaderCell>
+                            <CTableHeaderCell style={{display:designationMasterStatus?'':'none'}}>Status</CTableHeaderCell>
+                            <CTableHeaderCell style={{display:deleteDesignationMaster?'':'none'}}>Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
                         {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
-                            item.username === username && (
+                           (
                                 <CTableRow key={index}>
                                     <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                     <CTableDataCell>{item.jobDesignation}</CTableDataCell>
                                     <CTableDataCell>{item.department}</CTableDataCell>
                                     <CTableDataCell>{item.availableVacancy}</CTableDataCell>
-                                    <CTableDataCell><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.status} checked={item.status} onChange={() => updateStatus2(item._id, !item.status)} /></CTableDataCell>
-                                    <CTableDataCell><MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteDesignation(item._id)} size='20px' /> </CTableDataCell>
+                                    <CTableDataCell style={{display:designationMasterStatus?'':'none'}}><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.status} checked={item.status} onChange={() => updateStatus2(item._id, !item.status)} /></CTableDataCell>
+                                    <CTableDataCell style={{display:deleteDesignationMaster?'':'none'}}><MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteDesignation(item._id)} size='20px' /> </CTableDataCell>
                                 </CTableRow>
                             )
                         ))}
@@ -232,10 +243,10 @@ const ServiceMaster = () => {
                     <span aria-hidden="true">&laquo;</span>
                 </CPaginationItem>
                 <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                {result1.filter((list) => list.username === username).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                {result1.filter((list) => list).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                {result1.filter((list) => list.username === username).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                {result1.filter((list) => list.username === username).length > (paging + 1) * 10 ?
+                {result1.filter((list) => list).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                {result1.filter((list) => list).length > (paging + 1) * 10 ?
                     <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                         <span aria-hidden="true">&raquo;</span>
                     </CPaginationItem>

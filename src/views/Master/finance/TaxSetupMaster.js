@@ -22,14 +22,28 @@ import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
-
+import { useSelector } from "react-redux";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { financeMasterRights } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 const TaxSetupMaster = () => {
     const [action1, setAction1] = useState(false)
     const [name, setName] = useState('')
     const [tax, setTax] = useState('')
     const [status, setStatus] = useState(false)
+
+    const pathVal = useAdminValidation('Master')
+    const uniqObjVal = useUniqAdminObjeact()
+
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterFinance
+    ?.items?.masterInvoiceSetupMaster?.rights)
+
+    const url = useSelector((el)=>el.domainOfApi) 
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+
+        
+   const  adddTax = (access.includes(financeMasterRights.adddTax)||isAdmin)
+   const  deleteTax = (access.includes(financeMasterRights.deleteTax)||isAdmin)
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -45,7 +59,7 @@ const TaxSetupMaster = () => {
     }, []);
 
     function getTax() {
-        axios.get(`${url}/taxMaster/all`, {
+        axios.get(`${url}/taxMaster/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -64,6 +78,7 @@ const TaxSetupMaster = () => {
             const data = {
                 username: username,
                 TaxName: name, Tax: tax, Status: status,
+                ...uniqObjVal
             }
             axios.post(`${url}/taxMaster/create`, data, { headers })
                 .then((resp) => {
@@ -127,7 +142,7 @@ const TaxSetupMaster = () => {
                         <div>
                             <CRow>
                                 <CCol>
-                                    <CButton className="ms-1 mt-2" onClick={() => setAction1(!action1)}>{action1 ? 'close' : 'Add Tax'}</CButton>
+                                    <CButton style={{display:adddTax?'':'none'}} className="ms-1 mt-2" onClick={() => setAction1(!action1)}>{action1 ? 'close' : 'Add Tax'}</CButton>
                                 </CCol>
                             </CRow>
                         </div>
@@ -177,20 +192,20 @@ const TaxSetupMaster = () => {
                             <CTableHeaderCell>Date</CTableHeaderCell>
                             <CTableHeaderCell>Tax Name</CTableHeaderCell>
                             <CTableHeaderCell>Tax %</CTableHeaderCell>
-                            <CTableHeaderCell>Status</CTableHeaderCell>
-                            <CTableHeaderCell>Action</CTableHeaderCell>
+                            <CTableHeaderCell style={{display:adddTax?'':'none'}}>Status</CTableHeaderCell>
+                            <CTableHeaderCell  style={{display:deleteTax?'':'none'}}>Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
                         {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
-                            item.username === username && (
+                            item && (
                                 <CTableRow key={index}>
                                     <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                     <CTableDataCell>{moment(item.createdAt).format("MM-DD-YYYY")}</CTableDataCell>
                                     <CTableDataCell className="text-center">{item.TaxName}</CTableDataCell>
                                     <CTableDataCell>{item.Tax}</CTableDataCell>
-                                    <CTableDataCell><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.Status} checked={item.Status} onChange={() => updateStatus(item._id, !item.Status)} /></CTableDataCell>
-                                    <CTableDataCell> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteData(item._id)} size='20px' /> </CTableDataCell>
+                                    <CTableDataCell  style={{display:adddTax?'':'none'}}><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.Status} checked={item.Status} onChange={() => updateStatus(item._id, !item.Status)} /></CTableDataCell>
+                                    <CTableDataCell  style={{display:deleteTax?'':'none'}}> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteData(item._id)} size='20px' /> </CTableDataCell>
                                 </CTableRow>
                             )
                         ))}
@@ -202,10 +217,10 @@ const TaxSetupMaster = () => {
                     <span aria-hidden="true">&laquo;</span>
                 </CPaginationItem>
                 <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                {result1.filter((list) => list.username === username).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                {result1.filter((list) => list).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                {result1.filter((list) => list.username === username).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                {result1.filter((list) => list.username === username).length > (paging + 1) * 10 ?
+                {result1.filter((list) => list).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                {result1.filter((list) => list).length > (paging + 1) * 10 ?
                     <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                         <span aria-hidden="true">&raquo;</span>
                     </CPaginationItem>

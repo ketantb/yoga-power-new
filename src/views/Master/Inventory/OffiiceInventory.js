@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux'
 import {useState,useEffect} from "react"
 import axios from 'axios'
 import { useUniqAdminObjeact,useAdminValidation } from 'src/views/Custom-hook/adminValidation';
+import { inventoryMasterRights } from 'src/views/hr/Rights/rightsValue/masterRightsValue';
 
 
 
@@ -23,6 +24,17 @@ const ProductAssignMaster = () => {
   const url = useSelector((el)=>el.domainOfApi) 
   const uniqObjVal = useUniqAdminObjeact()
   const pathVal =  useAdminValidation('Master')
+
+  const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterInverntory
+  ?.items?.masterOfficeInventory?.rights) 
+
+  const access = rightsData?rightsData:[]
+  const isAdmin = useSelector((el)=>el.isAdmin)
+                                       
+  
+ const  addProductListing = (access.includes(inventoryMasterRights.addOfficeInventory)||isAdmin)
+ const  deleteProductListing = (access.includes(inventoryMasterRights.deleteOfficeInventory)||isAdmin)
+ const  editProductListing = (access.includes(inventoryMasterRights.editOfficeInventory)|| isAdmin)
 
 
   const [allProductData,setAllProductData] = useState([])
@@ -123,8 +135,6 @@ const updateProduct = async (item)=>{
  
 }
 
-
-
 const toDeleteData= async (id)=>{
 if(!confirm('Do u want to delete this')){
 return
@@ -134,9 +144,9 @@ const response = await  axios.delete(`${url}/inventoryListingMaster/delete/${id}
 if(response.status===200){
    getAllProductListingMaster()
 }
-
 }
-console.log(topostAllProductData)
+
+
 
 return (
     <CCard>
@@ -148,7 +158,7 @@ return (
 
          <CCardBody>    
                 <CCol className='my-3 text-end'>
-                  {!activeForm&&<CButton onClick={()=>toToggaleFrom()} >ADD Product</CButton>}
+                  {!activeForm&&<CButton style={{display:addProductListing?'':'none'}} onClick={()=>toToggaleFrom()} >ADD Product</CButton>}
                 </CCol>
      
                <CCol>
@@ -266,7 +276,7 @@ return (
                                 <CTableHeaderCell>Product Prize</CTableHeaderCell>
                                 <CTableHeaderCell>Available Stock</CTableHeaderCell>
                                
-                                <CTableHeaderCell>Edit/Delete</CTableHeaderCell>
+                                <CTableHeaderCell style={{display:(editProductListing||deleteProductListing)?'':'none'}}>Edit/Delete</CTableHeaderCell>
                             </CTableRow>
                         </CTableHead>
                         <CTableBody>
@@ -281,20 +291,14 @@ return (
                            <CTableDataCell>{el.Color}</CTableDataCell>
                            <CTableDataCell>{el.productPrize}</CTableDataCell>
                            <CTableDataCell>{el.Available_Stock}</CTableDataCell>
-                               <CTableDataCell className='text-center'>
-                                  <MdEdit style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} size='20px' onClick={()=>updateProduct(el)} />
-                                  <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }}  size='20px'  onClick={()=>toDeleteData(el._id)} />
-                              </CTableDataCell>                                                   
-                       </CTableRow>
-                           
-                           )}
-                  
-                          
+                               <CTableDataCell className='text-center' style={{display:(editProductListing||deleteProductListing)?'':'none'}}>
+                                  <MdEdit style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px',display:editProductListing?'':'none' }} size='20px' onClick={()=>updateProduct(el)} />
+                                  <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px",display:deleteProductListing?'':'none'}}  size='20px'  onClick={()=>toDeleteData(el._id)} />
+                               </CTableDataCell>                                                   
+                     </CTableRow>)}    
                         </CTableBody>
                     </CTable>
-
-      </CCardBody>
-        
+      </CCardBody>  
     </CCard>
   )
 }

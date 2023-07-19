@@ -36,9 +36,11 @@ import {
   "July", "August", "September", "October", "November", "December"
 ];
 
-const EmpLoyeeLeaveHistory = () => {
+const EmpLoyeeLeaveHistory = ({deleteEmployeeLeaveHistory}) => {
 
 
+
+  
   const [empLeabveHistoryData,setEmpLeaveHistoryData] = useState([])
   const url = useSelector((el) => el.domainOfApi)
   const pathValMaster =    useAdminValidation('Master')
@@ -179,7 +181,7 @@ onChange={(e)=>setSelectedMonth
             <CTableHeaderCell>Emp Id</CTableHeaderCell>
             <CTableHeaderCell>Emp Name</CTableHeaderCell>
             <CTableHeaderCell>Use Leave</CTableHeaderCell>
-            <CTableHeaderCell>Delete</CTableHeaderCell>
+            <CTableHeaderCell style={{display:deleteEmployeeLeaveHistory?'':'none'}}>Delete</CTableHeaderCell>
         </CTableRow>
     </CTableHead>
     <CTableBody>
@@ -201,7 +203,7 @@ onChange={(e)=>setSelectedMonth
          <CTableDataCell>{el.empId}</CTableDataCell>
          <CTableDataCell>{el.empName}</CTableDataCell>
          <CTableDataCell>{el.useLeave}</CTableDataCell>
-         <CTableDataCell><MdDelete onClick={()=> deleteLeave(el._id)} style={{cursor:'pointer'}}/></CTableDataCell>
+         <CTableDataCell style={{display:deleteEmployeeLeaveHistory?'':'none'}} ><MdDelete onClick={()=> deleteLeave(el._id)} style={{cursor:'pointer'}}/></CTableDataCell>
       </CTableRow>
         )}  
     </CTableBody>

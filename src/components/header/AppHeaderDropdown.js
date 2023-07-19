@@ -64,13 +64,14 @@ const AppHeaderDropdown = () => {
 
   const email = user.user.email;
   const username = user.user.username;
+  const imgUrl = user.user.profileLogo
 
 
 
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={''} size="md" className='border border-dark border-2' style={{
+        <CAvatar src={imgUrl} size="md" className='border border-dark border-2' style={{
           backgroundImage:`url(${menImage})`,
           backgroundSize:'130%',
           backgroundPosition:'center'
@@ -81,7 +82,7 @@ const AppHeaderDropdown = () => {
              
          <CCol className='p-4 text-center'>
                <h6 className='mb-3' >{username}</h6>    
-               <CAvatar className='border border-dark border-2'   style={{height:'100px',width:'100px', 
+               <CAvatar src={imgUrl} className='border border-dark border-2'   style={{height:'100px',width:'100px', 
                 backgroundImage:`url(${menImage})`,
                 backgroundSize:'130%',
                 backgroundPosition:'center'

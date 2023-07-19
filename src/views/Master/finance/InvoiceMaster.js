@@ -19,8 +19,9 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
+import { financeMasterRights } from "src/views/hr/Rights/rightsValue/masterRightsValue";
+import { useUniqAdminObjeact,useAdminValidation } from "src/views/Custom-hook/adminValidation";
+import { useSelector } from "react-redux";
 
 const InvoiceMaster = () => {
     const [action1, setAction1] = useState(false)
@@ -30,6 +31,21 @@ const InvoiceMaster = () => {
     const [status, setStatus] = useState(false)
     const [packages, setPackages] = useState("")
     const [duration, setDuration] = useState("")
+    const url = useSelector((el)=>el.domainOfApi) 
+
+    const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterFinance
+    ?.items?.masterInvoiceSetupMaster?.rights) 
+
+    const access = rightsData?rightsData:[]
+    const isAdmin = useSelector((el)=>el.isAdmin)
+
+    const pathVal = useAdminValidation('Master')
+    const uniqObjVal = useUniqAdminObjeact()
+
+                                         
+    
+   const  adddTax = (access.includes(financeMasterRights.addInvoice)||isAdmin)
+   const  deleteTax = (access.includes(financeMasterRights.deleteInvoice)||isAdmin)
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -40,7 +56,7 @@ const InvoiceMaster = () => {
     }, []);
 
     function getSubService() {
-        axios.get(`${url}/subservice/all`, {
+        axios.get(`${url}/subservice/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -90,8 +106,7 @@ const InvoiceMaster = () => {
     }
 
     const saveSubservice = () => {
-        let data = { username: username, sub_Service_Name, selected_service: selected_service, fees, packages, duration, status }
-        // console.warn(data);
+        let data = { username: username, sub_Service_Name, selected_service: selected_service, fees, packages, duration, status,... uniqObjVal }
         fetch(`${url}/subservice/create`, {
             method: "POST",
             headers: {
@@ -101,7 +116,6 @@ const InvoiceMaster = () => {
             },
             body: JSON.stringify(data)
         }).then((resp) => {
-            // console.warn("resp",resp);;
             resp.json().then(() => {
                 setSelected_service('')
                 setFees("")
@@ -135,7 +149,7 @@ const InvoiceMaster = () => {
                         <div>
                             <CRow>
                                 <CCol>
-                                    <CButton className="ms-1 mt-2" onClick={subserviceClose}>{action1 ? 'close' : 'Add Express'}</CButton>
+                                    <CButton style={{display:adddTax?'':'none'}} className="ms-1 mt-2" onClick={subserviceClose}>{action1 ? 'close' : 'Add Express'}</CButton>
                                 </CCol>
                             </CRow>
                         </div>
@@ -185,20 +199,20 @@ const InvoiceMaster = () => {
                             <CTableHeaderCell>Date</CTableHeaderCell>
                             <CTableHeaderCell>Tax Name</CTableHeaderCell>
                             <CTableHeaderCell>Tax %</CTableHeaderCell>
-                            <CTableHeaderCell>Status</CTableHeaderCell>
-                            <CTableHeaderCell>Action</CTableHeaderCell>
+                            <CTableHeaderCell style={{display:adddTax?'':'none'}} >Status</CTableHeaderCell>
+                            <CTableHeaderCell  style={{display:deleteTax?'':'none'}}>Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
                         {result1.map((item, index) => (
-                            item.username === username && (
+                            (
                                 <CTableRow key={index}>
                                     <CTableDataCell>{index + 1}</CTableDataCell>
                                     <CTableDataCell>{item.selected_service}</CTableDataCell>
                                     <CTableDataCell className="text-center">{item.sub_Service_Name ? item.sub_Service_Name : '-'}</CTableDataCell>
                                     <CTableDataCell>{item.packages}</CTableDataCell>
-                                    <CTableDataCell><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.status} checked={item.status} onChange={() => updateStatus2(item._id, !item.status)} /></CTableDataCell>
-                                    <CTableDataCell> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteSubService(item._id)} size='20px' /> </CTableDataCell>
+                                    <CTableDataCell style={{display:adddTax?'':'none'}}><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.status} checked={item.status} onChange={() => updateStatus2(item._id, !item.status)} /></CTableDataCell>
+                                    <CTableDataCell style={{display:deleteTax?'':'none'}}> <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteSubService(item._id)} size='20px' /> </CTableDataCell>
                                 </CTableRow>
                             )
                         ))}

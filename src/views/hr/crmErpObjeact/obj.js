@@ -579,10 +579,13 @@ const obj =  {
             value:false,
             items:{
                 masterAllProductListingMaster:{
-                    value:false
+                    value:false,
+                    rights:[]  
+
                 },
                 masterOfficeInventory:{
-                    value:false
+                    value:false,
+                    rights:[]  
                 }
             } 
     },

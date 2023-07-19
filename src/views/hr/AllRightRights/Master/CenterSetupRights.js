@@ -97,7 +97,7 @@ const toCheckRightVal = (val,parrent)=>{
         })}
        /></span>
     </h5>
-       <CFormSwitch size="xl" label="Services Master" 
+       <CFormSwitch size="xl" label="Services Master Status" 
          checked={toCheckRightVal(masterRightValue.servicesMaster,'masterServicesMaster')}
          onChange={()=>handleRight(masterRightValue.servicesMaster,'masterServicesMaster')}
        />
@@ -124,6 +124,10 @@ const toCheckRightVal = (val,parrent)=>{
        /></span>
     </h5>
 
+      <CFormSwitch size="xl" label="Package Master Status" 
+         checked={toCheckRightVal(masterRightValue.packageStatus,'masterPackageMaster')}
+         onChange={()=>handleRight(masterRightValue.packageStatus,'masterPackageMaster')}
+       />
        <CFormSwitch size="xl" label="Add Package Master"
          checked={toCheckRightVal(masterRightValue.addPackageMaste,'masterPackageMaster')}
          onChange={()=>handleRight(masterRightValue.addPackageMaste,'masterPackageMaster')}
@@ -131,10 +135,6 @@ const toCheckRightVal = (val,parrent)=>{
        <CFormSwitch size="xl" label="Delete Package Master" 
          checked={toCheckRightVal(masterRightValue.deletePackageMaster,'masterPackageMaster')}
          onChange={()=>handleRight(masterRightValue.deletePackageMaster,'masterPackageMaster')}
-       />
-       <CFormSwitch size="xl" label="Status" 
-         checked={toCheckRightVal(masterRightValue.packageStatus,'masterPackageMaster')}
-         onChange={()=>handleRight(masterRightValue.packageStatus,'masterPackageMaster')}
        />
    </CCol>
    <CCol>
