@@ -9,7 +9,7 @@ import { TbPlayerTrackNext, TbPlayerTrackPrev} from 'react-icons/tb';
 import {BsLink} from 'react-icons/bs';
 import { storage } from "src/firebase";
 import {getDownloadURL, ref,uploadBytesResumable } from "firebase/storage";
-
+import { useParams } from 'react-router-dom'
 
 const UserProfile = () => {
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -18,6 +18,7 @@ const UserProfile = () => {
     const email = user.user.email;
     const emailUniqId = user.user.emailUniqId;
     const brandLogo = user.user.brandLogo;
+    const {userId} = useParams()
 
 
     const url =useSelector(el=>el.domainOfApi)
@@ -50,7 +51,7 @@ const UserProfile = () => {
   
 
    const getEmailFullData = async  ()=>{
-     axios.get(`${url}/signup/emailId/${emailUniqId}`)
+     axios.get(`${url}/signup/emailId/${(userId||emailUniqId)}`)
     .then((el)=>{
         if(el.status===200){
 
@@ -68,6 +69,8 @@ const UserProfile = () => {
             }
             if(el?.data?.empName){
               prev.empName = el?.data?.empName   
+              prev.email = el?.data?.email
+
             }
             if(el?.data?.profileLogo){
               prev.profileLogo = el?.data?.profileLogo       
@@ -156,12 +159,12 @@ const handleChange = event => {
                </div>
                        
             <h5 className='mb-3' >{socalMeadiaInfoArr.empName}</h5>   
-            <h5 className='mb-3' style={{fontWeight:'lighter'}} >{email}</h5>   
+            <h5 className='mb-3' style={{fontWeight:'lighter'}} >{userId?.trim()?socalMeadiaInfoArr.email:email}</h5>   
 
                
-               {<CButton style={{display:!toEdit?'block':'none'}} onClick={()=>setEdit(true)} color='dark' variant='outline'>Edit Profile</CButton>} 
+               {<CButton style={{display:(!toEdit &&!userId)?'block':'none'}} onClick={()=>setEdit(true)} color='dark' variant='outline'>Edit Profile</CButton>} 
 
-               {<div style={{display:toEdit?'block':'none'}} className='mt-2' className='text-start'> 
+               {<div style={{display:toEdit?'block':'none'}}  className='text-start'> 
                 <CFormInput
                  label={`User Name`}
                  value={socalMeadiaInfoArr.empName}

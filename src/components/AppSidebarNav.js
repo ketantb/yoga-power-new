@@ -9,71 +9,90 @@ export const AppSidebarNav = ({ items }) => {
   let user = JSON.parse(localStorage.getItem('user-info'))
 
   const data = useSelector((el)=>el.empLoyeeRights)  
-  const disPatch = useDispatch()
+  const viewNav = useSelector((el)=>el.viewNav)  
+  const  setViewNav =  useDispatch()
+
+console.log(viewNav)
+
   const [arr1,setArr1] = useState([...items])
-  const [viewNav,setViewNav] = useState(false)
 
   const isAdmin = user?.user?.isAdmin;  
-  const arr2 = (data?.crmRights && data?.erpRights    ) ?{...data?.erpRights,...data?.crmRights}:{}
 
-  // const arr2 = (data?.crmRights && data?.erpRights && data?.masterRights) ?{
-  //   ...data?.erpRights,
-  //   ...data?.crmRights,
-  //   ...data?.masterRights
-  // }:{}
+  const objVal = (data?.crmRights && data?.erpRights && data?.masterRights) ?{
+    ...data?.erpRights,
+    ...data?.crmRights,
+    ...data?.masterRights
+  }:{}
 
-  const arr =items
 
-  
+  let arr12 = items
 
 const updatete = ()=>{
-if(!isAdmin){
-items?.forEach((el,i)=>{
+  const uniqNavStopId =  ['crm4ty943','erpRights','masterRights']
 
-  if(!!arr2[el?.id]){// // lavel 1
-    const secondObj = arr2[el?.id]
-
-  if(secondObj?.value){
-  if(secondObj?.items && el?.items){ 
-     el?.items?.forEach((el2,i2)=>{
-     const secondObj2 = secondObj?.items[el2?.id]?.items
-      if(!secondObj?.items[el2?.id]?.value){      // lavel 2
-            el?.items?.splice(i2,1)
-            delete secondObj?.items[el2?.id]
-      }  
-      if(el2?.items&&secondObj2){   // lavel 3
-        el2?.items?.forEach((el3,i3)=>{
-          if(!secondObj2[el3?.id]?.value){
-            el2?.items?.splice(i3,1)
-            delete secondObj2[el3?.id]
-          }    
-      })
-      }
-  }) 
-  }}else if(!arr2[el?.id]?.value && !(el?.id ==='masterCenterPartners'&& isAdmin)){
-    items?.splice(i,1)
-  delete arr2[el?.id]
-  }
+if(!isAdmin){  
+ arr12 = items.filter((el)=>uniqNavStopId.includes(el?.id)?true:objVal?.[el?.id]?.value)
+                   .map((el)=>{
+                    const newEl = {...el}
+                     newEl.items = newEl?.items?.map((el2)=>{
+                      const newEl2 = {...el2}
+                      const lavel2path = objVal?.[el?.id]?.items?.[el2.id]
+                      if(lavel2path?.value){
+                        newEl2.items = newEl2?.items?.filter(el3 => lavel2path?.items?.[el3.id]?.value)
+                        return newEl2
+                      }
+                   }
+                    ).filter((el)=>el)
+                    return newEl
+                   })        
 }
 
-  if(items.length===i+1&&!viewNav){
-   setViewNav(true)
-  }
+if(!viewNav){
+  setViewNav({type:'setViewNavActive',payload:true})
 }
-)} else if(!viewNav){
-  setViewNav(true)
-  items = arr
+
+
+// if(!isAdmin){
+// items?.forEach((el,i)=>{
+
+//   if(!!objVal[el?.id]){// // lavel 1
+//     const secondObj = objVal[el?.id]
+
+//   if(secondObj?.value){
+//   if(secondObj?.items && el?.items){ 
+//      el?.items?.forEach((el2,i2)=>{
+//      const secondObj2 = secondObj?.items[el2?.id]?.items
+//       if(!secondObj?.items[el2?.id]?.value){      // lavel 2
+//             el?.items?.splice(i2,1)
+//             delete secondObj?.items[el2?.id]
+//       }  
+//       if(el2?.items&&secondObj2){   // lavel 3
+//         el2?.items?.forEach((el3,i3)=>{
+//           if(!secondObj2[el3?.id]?.value){
+//             el2?.items?.splice(i3,1)
+//             delete secondObj2[el3?.id]
+//           }    
+//       })
+//       }
+//   }) 
+//   }}else if(!objVal[el?.id]?.value && !(el?.id ==='masterCenterPartners'&& isAdmin)){
+//     items?.splice(i,1)
+//   delete objVal[el?.id]
+//   }
+// }
+
+
 }
-}
+
 
 
 useEffect(()=>{
-  if(items.length&& arr2){
-    updatete()
-    setArr1([...items])
-  }
-},[user?.emailUniqId,items?.length,arr2?.length])
 
+  if(items.length&& objVal){
+    updatete()
+    setArr1([...arr12])
+  }
+},[user?.emailUniqId,items?.length,Object.keys(objVal)?.length])
 
   const location = useLocation()
   const navLink = (name, icon, badge) => {

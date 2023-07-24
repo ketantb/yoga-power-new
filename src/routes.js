@@ -172,7 +172,6 @@ const Appointment = React.lazy(() => import('./views/forms/Appointment'))
 const UserCompanyProfile =  React.lazy(() => import('./components/UserCompanyProfile'))
 const AutomatedCommunication  =  React.lazy(() => import('./views/Master/marketing/AutomatedCommunication'))
 
-
 // Icons
 
 // Notifications
@@ -187,7 +186,7 @@ const   EmpDetails  = React.lazy(()=> import('./views/hr/Hr-Employee-Details/Emp
 const routes = [
   { path: '/', exact: true, name: 'Login Page' },
   { path: '/login', name: 'Login', element: Login },
-  { path: '/profile', name: 'Profile', element: UserProfile },
+  { path: '/profile/:userId', name: 'Profile', element: UserProfile },
   { path: '/company-profile', name: 'Company Profile', element: UserCompanyProfile },
 
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },

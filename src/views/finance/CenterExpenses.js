@@ -101,8 +101,6 @@ return yearBudgetingExpense
 budgetingExpense.forEach((el,i)=>{
 data[1].data.forEach((el2)=>{
     if(el.ExpensesCategory ===el2.Expense_Category && el.BudgetingYear=== new Date(el2.Date).getFullYear()){
-        console.log(el,"parnet")
-        console.log(el2)
     el.BudgetEx.forEach((el3)=>{
      const keysName = Object.keys(el3)
      if(keysName[0]===allMonthName[new Date(el2.Date).getMonth()]){

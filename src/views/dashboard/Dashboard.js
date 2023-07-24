@@ -19,48 +19,36 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CInputGroupText,
+  CFormInput,
+  CNav,
+  CNavItem,
+  CNavLink,
+  CFormCheck
 } from '@coreui/react'
 import { CChartBar, CChartLine, CChartPie } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
 import CIcon from '@coreui/icons-react'
 import { useSelector } from 'react-redux'
+import { FaEye,FaEyeSlash } from 'react-icons/fa'
 
 import {
-  cibCcAmex,
-  cibCcApplePay,
-  cibCcMastercard,
-  cibCcPaypal,
-  cibCcStripe,
-  cibCcVisa,
-  cibGoogle,
-  cibFacebook,
-  cibLinkedin,
-  cifBr,
-  cifEs,
-  cifFr,
-  cifIn,
-  cifPl,
-  cifUs,
-  cibTwitter,
+
   cilCloudDownload,
   cilUser,
   cilUserFemale,
-  cilPeople,
 } from '@coreui/icons'
 
-import avatar1 from 'src/assets/images/avatars/1.jpg'
-import avatar2 from 'src/assets/images/avatars/2.jpg'
-import avatar3 from 'src/assets/images/avatars/3.jpg'
-import avatar4 from 'src/assets/images/avatars/4.jpg'
-import avatar5 from 'src/assets/images/avatars/5.jpg'
-import avatar6 from 'src/assets/images/avatars/6.jpg'
 
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { dashboardRights } from '../hr/Rights/rightsValue/crmRightsValue'
-
-
+import axios from 'axios';
+import useLoginHook from './DirectLoginHook/useLoginHook'
+import moment from 'moment'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
+const ServiceDashboard = React.lazy(()=>import('./ServiceDashboard'))
 
 const Dashboard = () => {
 
@@ -68,11 +56,34 @@ const Dashboard = () => {
   const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights?.crmDashboard?.rights) 
   const access = rightsData?rightsData:[]
   const isAdmin = useSelector((el)=>el.isAdmin) 
+  const url = useSelector((el) => el.domainOfApi)
+  const pathVal =   useAdminValidation('Master')
+  const [dashborddata,setDashbordData] = useState({
+    allEnquiry:{},
+    invoice:{},
+    client:{},
+    service:{}
+  })
   
+ 
+  const [centerPartnerData,setCenterPartnerData] = useState([])
+  const [dateFilterObj,setDteFilterObj] = useState({
+    startDate:moment(new Date(new Date().getFullYear(),new Date().getMonth(),1)).format('YYYY-MM-DD'),
+    endDate:moment(new Date()).format('YYYY-MM-DD')
+  })
+
+  const functionToDirectLogin = useLoginHook()
+
   
-
-
   const user = JSON.parse(localStorage.getItem('user-info'))
+  const token = user.token;
+
+  const headers = {
+    "Authorization": `Bearer ${token}`,
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+   }
+
   useEffect(() => {
     if (user == null) {
       navigate('/login')
@@ -84,26 +95,48 @@ const Dashboard = () => {
   }, [])
 
 
-  const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-  const [active, setActive] = useState('Today')
+  const getDasCenterPartner = ()=>{
+    axios.get(`${url}/signup/center-patner`,{headers}).then((el)=>{
+      setCenterPartnerData(el.data)
+     if(el.status!==200){
+      return 
+     }
+   }).catch((error)=>{console.log(error)})
+   axios.get(`${'http://localhost:8000'}/serviceOverview/all`,{headers}).then((el)=>{
+    setDashbordData(prev=>({...prev,...el.data}))
 
-  const progressExample = [
-    { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
-    { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
-    {
-      title: 'Pageviews',
-      value: '78.706 Views',
-      percent: 60,
-      color: 'warning',
-    },
-    { title: 'New Users', value: '22.123 Users', percent: 80, color: 'danger' },
-    {
-      title: 'Bounce Rate',
-      value: 'Average Rate',
-      percent: 40.15,
-      color: 'primary',
-    },
-  ]
+   if(el.status!==200){
+    return 
+   }
+ }).catch((error)=>{console.log(error)})
+
+   }
+
+   
+   useEffect(()=>{
+    getDasCenterPartner()
+   },[])
+
+   const getDasBoardData = ()=>{
+ 
+   axios.get(`${url}/leadDashBoard/${dateFilterObj.startDate}/${dateFilterObj.endDate}/${pathVal}`,{headers})
+   .then((el)=>{
+    if(el.status!==200){
+      return 
+     }
+   setDashbordData(prev=>({...prev,...el?.data}))
+
+ }).catch((error)=>{console.log(error)})
+
+   }
+
+   
+   useEffect(()=>{
+    getDasBoardData()
+   },[])
+
+
+
 
   const progressGroupExample1 = [
     { title: 'Monday', value1: 34, value2: 78 },
@@ -121,133 +154,62 @@ const Dashboard = () => {
   ]
 
   const progressGroupExample3 = [
-    { title: 'Organic Search', icon: cibGoogle, percent: 56, value: '191,235' },
-    { title: 'Facebook', icon: cibFacebook, percent: 15, value: '51,223' },
-    { title: 'Twitter', icon: cibTwitter, percent: 11, value: '37,564' },
-    { title: 'LinkedIn', icon: cibLinkedin, percent: 8, value: '27,319' },
+    { title: 'Male',  value: 53 },
+    { title: 'Female',  value: 43 },
   ]
 
-  const tableExample = [
-    // {
-    //   avatar: { src: avatar1, status: 'success' },
-    //   user: {
-    //     name: 'Yiorgos Avraamu',
-    //     new: true,
-    //     registered: 'Jan 1, 2021',
-    //   },
-    //   country: { name: 'USA', flag: cifUs },
-    //   usage: {
-    //     value: 50,
-    //     period: 'Jun 11, 2021 - Jul 10, 2021',
-    //     color: 'success',
-    //   },
-    //   payment: { name: 'Mastercard', icon: cibCcMastercard },
-    //   activity: '10 sec ago',
-    // },
-    // {
-    //   avatar: { src: avatar2, status: 'danger' },
-    //   user: {
-    //     name: 'Avram Tarasios',
-    //     new: false,
-    //     registered: 'Jan 1, 2021',
-    //   },
-    //   country: { name: 'Brazil', flag: cifBr },
-    //   usage: {
-    //     value: 22,
-    //     period: 'Jun 11, 2021 - Jul 10, 2021',
-    //     color: 'info',
-    //   },
-    //   payment: { name: 'Visa', icon: cibCcVisa },
-    //   activity: '5 minutes ago',
-    // },
-    // {
-    //   avatar: { src: avatar3, status: 'warning' },
-    //   user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2021' },
-    //   country: { name: 'India', flag: cifIn },
-    //   usage: {
-    //     value: 74,
-    //     period: 'Jun 11, 2021 - Jul 10, 2021',
-    //     color: 'warning',
-    //   },
-    //   payment: { name: 'Stripe', icon: cibCcStripe },
-    //   activity: '1 hour ago',
-    // },
-    // {
-    //   avatar: { src: avatar4, status: 'secondary' },
-    //   user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2021' },
-    //   country: { name: 'France', flag: cifFr },
-    //   usage: {
-    //     value: 98,
-    //     period: 'Jun 11, 2021 - Jul 10, 2021',
-    //     color: 'danger',
-    //   },
-    //   payment: { name: 'PayPal', icon: cibCcPaypal },
-    //   activity: 'Last month',
-    // },
-    // {
-    //   avatar: { src: avatar5, status: 'success' },
-    //   user: {
-    //     name: 'Agapetus Tadeáš',
-    //     new: true,
-    //     registered: 'Jan 1, 2021',
-    //   },
-    //   country: { name: 'Spain', flag: cifEs },
-    //   usage: {
-    //     value: 22,
-    //     period: 'Jun 11, 2021 - Jul 10, 2021',
-    //     color: 'primary',
-    //   },
-    //   payment: { name: 'Google Wallet', icon: cibCcApplePay },
-    //   activity: 'Last week',
-    // },
-    {
-      avatar: { src: avatar6, status: 'danger' },
-      user: {
-        name: 'Friderik Dávid',
-        new: true,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'Poland', flag: cifPl },
-      usage: {
-        value: 43,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'success',
-      },
-      payment: { name: 'Amex', icon: cibCcAmex },
-      activity: 'Last week',
-    },
-  ]
+
 
   return (
     <>
       <CCard className="mb-4">
         <CCardBody>
-          <CInputGroup style={{ width: '250px' }} className="left mb-2">
-            <CFormSelect id="inputGroupSelect01" value={active}>
-              <option onClick={() => setAction('Today')}>Today</option>
-              <option onClick={() => setAction('Last 7 day')}>Last 7 day</option>
-              <option value="2">1 Month</option>
-              <option value='4'>Year</option>
-              <option>Custom Date</option>
-            </CFormSelect>
+        
+          <div className='d-flex justify-content-between mb-2'>
+                            <CInputGroup style={{ width: "500px" }}>
 
-            <CButton type="button" color="primary" id="button-addon2">
-              Go
-            </CButton>
-          </CInputGroup>
+                                <CInputGroupText
+                                    component="label"
+                                    htmlFor="inputGroupSelect01"
+                                >
+                                    Form
+                                </CInputGroupText>
+                                <CFormInput
+                                    type="date"
+                                    value={dateFilterObj.startDate}
+                                    onChange={(e)=>setDteFilterObj((prev)=>({...prev,startDate:e.target.value}))}
+
+                                  
+                                /><CInputGroupText
+                                    component="label"
+                                    htmlFor="inputGroupSelect01"
+
+                                >
+                                    To
+                                </CInputGroupText>
+                                <CFormInput
+                                    type="date"
+                                    value={dateFilterObj.endDate}
+                                    onChange={(e)=>setDteFilterObj((prev)=>({...prev,endDate:e.target.value}))}
+                                                                   />
+                                <CButton type="button" color="primary" onClick={()=>getDasBoardData()} >
+                                    Go
+                                </CButton>
+                            </CInputGroup>
+                        </div>
 
           <CRow>
 
-            {(access?.includes(dashboardRights.allEnquiry)||isAdmin)  &&<CCol lg={3} sm={6}>
-              <CCard className="mb-4">
-                <CCardHeader>All Enquiries</CCardHeader>
-                <CCardBody>
+            {(access?.includes(dashboardRights.allEnquiry)||isAdmin)  &&<CCol lg={4} sm={8}>
+              <CCard className="mb-4 text-white">
+                <CCardHeader style={{ backgroundColor: '#0B5345' }} >All Enquiries</CCardHeader>
+                <CCardBody className='p-1'>
                   <CChartPie
                     data={{
-                      labels: ['ENQUIRE', 'TRIALS', 'NEW', 'CONVERTED ', 'PROSPECT', 'COLD '],
+                      labels: [...Object.keys(dashborddata.allEnquiry)],
                       datasets: [
                         {
-                          data: [30, 50, 100, 60, 80],
+                          data: [...Object.values(dashborddata.allEnquiry)],
                           backgroundColor: ['red', 'yellow', 'green', 'orange', 'blue'],
                           hoverBackgroundColor: [
                             '#E74C3C',
@@ -264,20 +226,16 @@ const Dashboard = () => {
               </CCard>
             </CCol>}
 
-            {(access?.includes(dashboardRights.totalSales)||isAdmin)  && <CCol lg={3} sm={6}>
-              <CCard className="mb-4">
-                <CCardHeader>Total Sales</CCardHeader>
-                <CCardBody>
+            {(access?.includes(dashboardRights.totalSales)||isAdmin)  && <CCol lg={4} sm={8}>
+              <CCard className="mb-4 text-white " >
+                <CCardHeader style={{ backgroundColor: '#0B5345' }} >Total Sales</CCardHeader>
+                <CCardBody  >
                   <CChartPie
-                    data={{
-                      labels: [
-                        'TOTAL SALES',
-                        'PAYMENT RECEIVED',
-                        'BALANCE PAYMENT',
-                      ],
+                    data={{                   
+                      labels: [...Object.keys(dashborddata.invoice)],
                       datasets: [
                         {
-                          data: [300, 50, 100],
+                          data: [...Object.values(dashborddata.invoice)],
                           backgroundColor: ['darkblue', 'green', 'red'],
                           hoverBackgroundColor: [
                             'blue',
@@ -291,23 +249,16 @@ const Dashboard = () => {
                 </CCardBody>
               </CCard>
             </CCol>}
-            {(access?.includes(dashboardRights.totalClients)||isAdmin)&&<CCol lg={3} sm={6}>
-              <CCard className="mb-4">
-                <CCardHeader>Total Clients</CCardHeader>
-                <CCardBody>
+            {(access?.includes(dashboardRights.totalClients)||isAdmin)&&<CCol lg={4} sm={8}>
+              <CCard className="mb-4 text-white">
+                <CCardHeader style={{ backgroundColor: '#0B5345' }} >Total Clients</CCardHeader>
+                <CCardBody className='p-2'>
                   <CChartPie
                     data={{
-                      labels: [
-                        'ALL CLIENT',
-                        'ACTIVE',
-                        'NEW',
-                        'RENEWAL',
-                        'RENEWED',
-                        'LEFT',
-                      ],
+                      labels: [...Object.keys(dashborddata.client)],
                       datasets: [
                         {
-                          data: [30, 40, 50, 100, 80, 50],
+                          data: [...Object.values(dashborddata.client)],
                           backgroundColor: ['red', 'pink', 'green', 'yellow', 'orange', 'blue',],
                           hoverBackgroundColor: [
                             '#FF6384',
@@ -325,43 +276,24 @@ const Dashboard = () => {
               </CCard>
             </CCol>}
 
-            {(access?.includes(dashboardRights.totalService)||isAdmin)&&<CCol lg={3} sm={6}>
-
-              <CCard className="mb-4">
-                <CCardHeader>Total Services</CCardHeader>
-                <CCardBody>
-                  <CChartPie
-                    data={{
-                      labels: ['YOGA', 'ZOOMBA', 'PT', 'TTC', 'DIET'],
-                      datasets: [
-                        {
-                          data: [30, 50, 100, 80, 50],
-                          backgroundColor: ['orange', 'red', 'yellow', 'blue', 'green',],
-                          hoverBackgroundColor: [
-                            '#F5B041',
-                            '#EC7063',
-                            '#F7DC6F',
-                            '#5499C7',
-                            '#52BE80',
-                          ],
-                        },
-                      ],
-                    }}
-                  />
-                </CCardBody>
-              </CCard>
-            </CCol>}
+           
           </CRow>
 
 
         </CCardBody>
       </CCard>
 
+
+
       <WidgetsDropdown 
       data={access}
       isAdmin={isAdmin}
       />
       <CRow>
+
+        <ServiceDashboard/>
+
+    
 
         {(access?.includes(dashboardRights.income)||isAdmin)&&<CCol lg={6} sm={12}>
           <CCard className="mb-4">
@@ -444,6 +376,7 @@ const Dashboard = () => {
             </CCardBody>
           </CCard>
         </CCol>}
+
         {(access?.includes(dashboardRights.attendance)||isAdmin)&&<CCol lg={6} sm={12}>
           <CCard className="mb-4">
 
@@ -517,7 +450,7 @@ const Dashboard = () => {
         </CCol>}
 
       
-        {(access?.includes(dashboardRights.socialMedia)||isAdmin)&&<CCol lg={12} sm={12}>
+        {(access?.includes(dashboardRights.socialMedia)||isAdmin)&&<CCol lg={6} sm={6}>
           <CCard className="mb-4">
 
             <CCardBody>
@@ -587,101 +520,80 @@ const Dashboard = () => {
         </CCol>}
 
       </CRow>
-      {/* <WidgetsBrand 
-      withCharts
-      data={access}
-      isAdmin={isAdmin}
-      /> */}
+     
 
       <CRow>
-        {(access?.includes(dashboardRights.socialMedia)||isAdmin) && <CCol >
+        {(isAdmin) && <CCol >
           <CCard className="mb-4">
             <CCardHeader>Admin panel</CCardHeader>
             <CCardBody>
               <CTable align="middle" bordered style={{ borderColor: "#106103" }} hover responsive>
-                <CTableHead style={{ backgroundColor: "#106103", color: "white" }} >
-                  <CTableRow>
-                    <CTableHeaderCell className="text-center">
-                      <CIcon icon={cilPeople} />
-                    </CTableHeaderCell>
+                <CTableHead style={{ backgroundColor: '#0B5345',color: "white"}}  >
+                  <CTableRow>                 
+                    <CTableHeaderCell>Sr.No</CTableHeaderCell>
+                    <CTableHeaderCell>Brand Logo</CTableHeaderCell>
                     <CTableHeaderCell>Center Name</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">
-                      Location
-                    </CTableHeaderCell>
-                    <CTableHeaderCell>Proformance</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">
-                      Royalty Percent
-                    </CTableHeaderCell>
-                    <CTableHeaderCell>Details</CTableHeaderCell>
+                    <CTableHeaderCell>Partner Profile</CTableHeaderCell>
+                    <CTableHeaderCell>Types Of Partner</CTableHeaderCell>
+                    <CTableHeaderCell>Location</CTableHeaderCell>
+                    <CTableHeaderCell>City</CTableHeaderCell>
+                    <CTableHeaderCell>Country</CTableHeaderCell>
+                    <CTableHeaderCell>Packege</CTableHeaderCell>
+                    <CTableHeaderCell>EXP. Date</CTableHeaderCell>
+                    <CTableHeaderCell>View</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {tableExample.map((item, index) => (
-                    <CTableRow v-for="item in tableItems" key={index}>
-                      <CTableDataCell className="text-center">
-                        <CAvatar
-                          size="md"
-                          src={item.avatar.src}
-                          status={item.avatar.status}
-                        />
-                      </CTableDataCell>
+                  {centerPartnerData.map((el, index) => (
+                      <CTableRow className="text-center"  >
                       <CTableDataCell>
-                        <div>{item.user.name}</div>
-                        <div className="small text-medium-emphasis">
-                          <span>{item.user.new ? 'New' : 'Recurring'}</span> |
-                          Registered: {item.user.registered}
-                        </div>
+                        {index+1}
                       </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        <CIcon
-                          size="xl"
-                          icon={item.country.flag}
-                          title={item.country.name}
-                        />
-                      </CTableDataCell>
-                      <CTableDataCell>
+                      <CTableDataCell >
+                        <div 
+                        className="border-gray rounded-circle"
+                        style={{width:'100px'}}
+                        >
+                          <img
+                          width='100%'
+                          src={el.brandLogo}
+                          />
 
-                        <div className="clearfix">
-                          <div className="float-start">
-                            <strong>Total Target :100000</strong>
-                          </div>
-                          <div className="float-end">
-                            <small className="text-medium-emphasis">
-                              Complated : 60000
-                            </small>
-                          </div>
-                        </div>
-
-                        <div className="clearfix">
-                          <div className="float-start">
-                            <strong>{item.usage.value}%</strong>
-                          </div>
-                          <div className="float-end">
-                            <small className="text-medium-emphasis">
-                              {item.usage.period}
-                            </small>
-                          </div>
-                        </div>
-                        <CProgress
-                          thin
-                          color={item.usage.color}
-                          value={item.usage.value}
-                        />
-                      </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        <div>
-                          <strong>12%</strong>
-                        </div>
-                        <div>
-                          <small className="text-medium-emphasis">
-                            72000 Received
-                          </small>
                         </div>
                       </CTableDataCell>
-                      <CTableDataCell>
-                        <CButton color='success'>view</CButton>
+                      <CTableDataCell>   
+                        {el.center}                                 
                       </CTableDataCell>
-                    </CTableRow>
+                    
+                      <CTableDataCell>  
+                        <Link to={`/profile/${el._id}`}> {el.username}   </Link>                                                                    
+                      </CTableDataCell>   
+                    
+                      <CTableDataCell>     
+                        {el.typeOfPartner}                                                                   
+                      </CTableDataCell> 
+                      <CTableDataCell>     
+                        {el.location}        
+                      </CTableDataCell>
+                      <CTableDataCell>   
+                        {el.city}                                                                     
+                      </CTableDataCell>  
+                      <CTableDataCell>   
+                        {el.country}          
+                     
+                      </CTableDataCell>
+                      <CTableDataCell>    
+                        {el.packege}                                                                    
+                      </CTableDataCell>                                                
+                                          
+                      <CTableDataCell>    
+                         {new Date(el.expDate).toDateString()}                                                                               
+                      </CTableDataCell>
+                      <CTableDataCell>    
+                        <CButton onClick={()=>functionToDirectLogin(el.email,el.password)} >View </CButton>
+                      </CTableDataCell>
+                    
+                  </CTableRow>
                   ))}
                 </CTableBody>
               </CTable>

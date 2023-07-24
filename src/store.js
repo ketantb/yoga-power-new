@@ -2,7 +2,6 @@ import { createStore,applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import obj from './views/hr/crmErpObjeact/obj';
 
-let user = JSON.parse(localStorage.getItem('user-info'))
 
 
 import axios from 'axios';
@@ -16,7 +15,7 @@ const initialState = {
   activeToCall:'',
   empLoyeeRights:obj,
   sidebarShow: true,
-  domainOfApi:'https://yog-power-api.vercel.app',
+  domainOfApi:'https://yogpower-api-0np7.onrender.com',
   stockDataClothData:[],
   clothStockDataClearFun:()=>{},
   stockDataAuravedaData:[],
@@ -27,7 +26,8 @@ const initialState = {
   foodProductDataClearFun:()=>{},
   genralProduct:[],
   genralProductDataClearFun:()=>{},
-  getUserRight:()=>{}
+  getUserRight:()=>{},
+  viewNav:false
 }
 
 function toConfirmBooking(state,id){
@@ -59,26 +59,30 @@ const store = createStore(changeState,applyMiddleware(thunkMiddleware))
 
 
 function functionUser(token,emailUniqId){
+  let user = JSON.parse(localStorage.getItem('user-info'))
+
+
   return function(dispatch){
-    axios.get(`${'https://yog-power-api.vercel.app'}/allRight/rights/${emailUniqId}`, {
+    axios.get(`${'https://yogpower-api-0np7.onrender.com'}/allRight/rights/${emailUniqId}`, {
       headers: {
           'Authorization': `Bearer ${token}`
       }
   })
       .then((res) => {
+        if(user.user.isAdmin){
+          return
+         }
         if(res.status===200){
-          console.log('Hello I am Rights',res?.data?.data)
           dispatch({type:'activeToCall',payload:true})
           dispatch({type:'getRigtsData',payload:res?.data?.data})
         }
       })
       .catch((error) => {
-          console.error(error)
+
       })
   }
 }
 
-// store.dispatch(functionUser())
 
 function getUserRight(token,emailUniqId){
   store.dispatch(functionUser(token,emailUniqId))
@@ -176,13 +180,18 @@ function changeState (state = initialState, { type, ...rest }){
     case 'dispatchIsAdmin':
     state.isAdmin = true
     state.isEmployee =true
-
     return  { ...state, ...rest }
     case 'showHomePage':
     state.showHomePage = rest.payload 
     return  { ...state, ...rest }
     case 'clearentireStore':
-    return {...initialState}
+    return {...initialState,viewNav:true}
+    case 'setViewNavActive':
+    state.viewNav = rest.payload 
+    return  { ...state, ...rest }
+    case 'setViewNavFalse':
+    state.viewNav = rest.payload 
+    return  { ...state, ...rest }
     default:
 
      return state

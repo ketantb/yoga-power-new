@@ -124,6 +124,7 @@ const _nav = [
   {
     component: CNavTitle,
     name: 'CRM',
+    id:'crm4ty943'
   },
   {
     component: CNavGroup,

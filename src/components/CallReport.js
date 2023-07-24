@@ -143,7 +143,7 @@ const CallReport = ({ add, clickfun, id }) => {
                             >
                                 <option>Select Service</option>
                                 {result.map((item, index) => (
-                                    item.username === username && (
+                                     (
                                         item.status === true && (
                                             <option key={index} value={item.id}>{item.selected_service} {item.sub_Service_Name}</option>
                                         )

@@ -491,10 +491,9 @@ const TrialEnquires = () => {
         })
             .then((res) => {
                 setResult1(res.data.filter((list) => 
-                            list.username === username&&
                             list.appointmentfor === 'Trial Session' &&
                             list.enquirestatus!=='notshow').reverse())
-                setOgList(res.data.filter((list) => list.username === username).reverse())
+                setOgList(res.data.filter((list) => list).reverse())
                 console.log(res.data);
             })
             .catch((error) => {

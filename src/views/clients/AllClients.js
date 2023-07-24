@@ -42,6 +42,7 @@ import { useNavigate } from 'react-router-dom'
 import CallUpdate from 'src/components/CallUpdate'
 import ClientEditForm from './ClientEditForm/ClientEditForm'
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
+import { clientManagementRights } from '../hr/Rights/rightsValue/crmRightsValue'
 
 const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
@@ -51,6 +52,14 @@ const AllClients = () => {
     const navigateFitnees = useNavigate()
     const pathVal  = useAdminValidation()
     const uniQObjVal = useUniqAdminObjeact()
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmLeads?.items?.superRight) 
+
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+    // const enquiryAdd =  (rightsData?.addOn?.includes(clientManagementRights)||isAdmin)
+    // const enquiryDelete = (rightsData?.delete?.includes(clientManagementRights)||isAdmin)
+    // const enquiryEdit  =  (rightsData?.edit?.includes(clientManagementRights)||isAdmin)
 
     const [select, setSelect] = useState()
     const [followForm, setFollowForm] = useState()

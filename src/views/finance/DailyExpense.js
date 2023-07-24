@@ -22,7 +22,6 @@ import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-import moment from 'moment/moment'
 import { MdDelete } from 'react-icons/md'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
 import { financeRight } from '../hr/Rights/rightsValue/erpRightsValue'
@@ -59,6 +58,7 @@ var monthNaame= ["January","February","March","April","May","June","July",
               'Authorization': `Bearer ${token}`
           }
       }) .then((res) => {
+        console.log(res.data)
         setDailyExpense(res.data.reverse())
       })
       .catch((error) => {

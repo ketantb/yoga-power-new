@@ -48,9 +48,11 @@ let user = JSON.parse(localStorage.getItem('user-info'))
 const TotalInvoice = () => {
 
     const pathVal =    useAdminValidation()
+    const pathValMaster =    useAdminValidation('Master')
 
-    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpFinance.items
-    .erpInvoices.items.erpTotalInvoice.rights) 
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights?.erpFinance?.items
+    ?.erpInvoices?.items?.erpTotalInvoice?.rights) 
     const access = rightsData?rightsData:[]
     const isAdmin = useSelector((el)=>el.isAdmin) 
 
@@ -78,6 +80,7 @@ const TotalInvoice = () => {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }})
+                console.log(data)
         setAllInvoiceData(data.reverse())     
                 
     } 
@@ -87,12 +90,11 @@ const TotalInvoice = () => {
   
 
     function getPackage() {
-        axios.get(`${url1}/packagemaster`, {
+        axios.get(`${url1}/packageMaster/${pathValMaster}`, {
     
         })
             .then((res) => {
                 setResult(res.data)
-                console.log(res.data)
             })
             .catch((error) => {
                 console.error(error)
@@ -194,7 +196,9 @@ useEffect(() => {
 
 async function getEmployee() {
     try {
-        const { data } = await axios.get(`${ url1 }/employeeform/${pathVal}`)
+        const { data } = await axios.get(`${url1}/employeeform/${pathVal}`,{headers: {
+            'Authorization': `Bearer ${token}`
+        }})
         setEmployeeData(data)
     } catch (error) {
         console.log(error)
@@ -274,8 +278,8 @@ return  (access.includes(val)||isAdmin) ?'':'none'
                 >
                     <option >Select Staff </option>
 
-                    {employeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
+                    {employeeData.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                         (
                             <option key={index} value={item.FullName} >{item.FullName}</option>
                         )
                     ))}
@@ -373,7 +377,7 @@ return  (access.includes(val)||isAdmin) ?'':'none'
                                     <CTableDataCell>{el.discount}</CTableDataCell>
                                     <CTableDataCell>{el.tax}</CTableDataCell>
                                     <CTableDataCell>{el.amount}</CTableDataCell>
-                                    <CTableDataCell>{el.paidAmount}</CTableDataCell>
+                                    <CTableDataCell>{+el.paidAmount + +el.Receipts.reduce((crr,el)=>crr+ (+el.PaidAmount),0)}</CTableDataCell>
                                     <CTableDataCell>{el.pendingAmount}</CTableDataCell>
                                     <CTableDataCell>{el.paymode}</CTableDataCell>
                                     <CTableDataCell style={{display:toCheckValiDate(financeRight.viewTotalInvoice)}}>{

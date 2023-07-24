@@ -18,7 +18,7 @@ const ClientRights = ({crmCientManagment,setRightObject}) => {
     const totoggaleRights = useSuperRightFun(setRightObject,'crmRights','crmCientManagment')
     const checkDashRights = useSuperRightVal(superRight)
     
-
+    
 
   return (
     <div >

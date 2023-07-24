@@ -33,7 +33,7 @@ const CenterSetup = () => {
                     { id:'masterFormMaster', color: 'info', icon: <AiOutlineForm style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Form Master', subtitle: 'Brand logo', link: '/master/center-setup/form-master' },
                     { id:'masterInvoiceMaster', color: 'dark', icon: <FaFileInvoiceDollar style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Invoice Master', subtitle: 'Brand logo' },
                 ].filter((el)=>{
-                return (rightsDataObj[el?.id]?.value || isAdmin)
+                return (rightsDataObj?.[el?.id]?.value || isAdmin)
                 }).map((item, index) => (
                     <CCard
                         color={item.color}

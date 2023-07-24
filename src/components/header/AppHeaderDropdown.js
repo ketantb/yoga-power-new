@@ -71,24 +71,46 @@ const AppHeaderDropdown = () => {
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={imgUrl} size="md" className='border border-dark border-2' style={{
-          backgroundImage:`url(${menImage})`,
-          backgroundSize:'130%',
-          backgroundPosition:'center'
+        
 
-          }} />
+<div className='border border-dark border-2'   style={{height:'40px',width:'40px', 
+                backgroundImage:`url(${menImage})`,
+                backgroundSize:'130%',
+                backgroundPosition:'center',
+                margin:'auto',
+                borderRadius:'50%',
+                overflow:'hidden'
+               }}
+               >
+                <img src={imgUrl} alt="image not loaded" style={{
+                  width:'100%',
+                  height:'100%',
+                  objectFit:'fill'
+                  }} />
+               </div>
+
+
        </CDropdownToggle>
       <CDropdownMenu className="pt-0"   placement="bottom-end" style={{inset:'50px 0px auto auto',width:'fit-content'}} >
              
          <CCol className='p-4 text-center'>
                <h6 className='mb-3' >{username}</h6>    
-               <CAvatar src={imgUrl} className='border border-dark border-2'   style={{height:'100px',width:'100px', 
+             <div className='border border-dark border-2'   style={{height:'100px',width:'100px', 
                 backgroundImage:`url(${menImage})`,
                 backgroundSize:'130%',
-                backgroundPosition:'center'
+                backgroundPosition:'center',
+                margin:'auto',
+                borderRadius:'50%',
+                overflow:'hidden'
                }}
-            
-               />
+               >
+                <img src={imgUrl} alt="image not loaded" style={{
+                  width:'100%',
+                  height:'100%',
+                  objectFit:'fill'
+                  }} />
+               </div>
+
          </CCol> 
 
         <CDropdownItem  className='text-start'>

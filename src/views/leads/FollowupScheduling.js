@@ -425,7 +425,7 @@ const FollowupScheduling = () => {
         })
             .then((res) => {
                 console.log(res.data)
-                setResult1(res.data.filter((list) => list.enquiryStage === "Prospect").reverse())
+                setResult1(res.data.reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -585,9 +585,7 @@ const FollowupScheduling = () => {
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">Prospects <span className='float-end'>Total Prospects 
-                        :{result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                             list.status === 'prospect' && list.CallStatus !== 'Cold'
-                        ).length}</span></strong>
+                        :{result1.length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
                         <div className='d-flex justify-content-between mb-2'>
@@ -620,18 +618,9 @@ const FollowupScheduling = () => {
                                     Go
                                 </CButton>
                             </CInputGroup>
-
                         </div>
                         <div className='d-flex justify-content-between mb-2'>
-                            {/* <div className='d-flex justify-content-between float-end'>
-                                <CButtonGroup style={{ fontSize: '11px' }} role="group" aria-label="Basic example">
-                                    <CButton style={{ fontSize: '11px' }} color="dark" variant="outline">Scheduled: 0</CButton>
-                                    <CButton style={{ fontSize: '11px' }} color="dark" variant="outline">Attented: 0</CButton>
-                                    <CButton style={{ fontSize: '11px' }} color="dark" variant="outline">Rescheduled:0</CButton>
-                                    <CButton style={{ fontSize: '11px' }} color="dark" variant="outline">Prospect: 0</CButton>
-                                    <CButton style={{ fontSize: '11px' }} color="dark" variant="outline">Missed: 0</CButton>
-                                </CButtonGroup>
-                            </div> */}
+                           
                         </div>
                         <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={callReport} color='' onClose={() => setCallReport(false)} >
                             <CModalHeader  >
@@ -1326,7 +1315,7 @@ const FollowupScheduling = () => {
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
-                                {result1.slice(paging * 10, paging * 10 + 10)
+                                {result1
                                 .filter((list) =>
                                    
                                       list?.CallDate?.toString()?.includes(Search1) 
@@ -1334,8 +1323,6 @@ const FollowupScheduling = () => {
                                       && list?.Email?.toLowerCase()?.includes(Search4.toLowerCase())
                                     && list?.Contact?.toString()?.includes(Search5.toString()) &&
                                     list?.ServiceName?.toLowerCase()?.includes(Search6.toLowerCase())
-
-                                     && list?.CallStatus !== 'Cold'
                                 )
                                 .map((item, index) =>{ 
                                     console.log(item)

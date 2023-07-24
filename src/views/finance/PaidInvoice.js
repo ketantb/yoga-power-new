@@ -47,8 +47,8 @@ const PaidInvoice = () => {
     let num =0
     const pathVal =  useAdminValidation()
 
-    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpFinance.items
-    .erpInvoices.items.erpPaidInvoice.rights) 
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights?.erpFinance?.items
+    ?.erpInvoices?.items?.erpPaidInvoice?.rights) 
     const access = rightsData?rightsData:[]
     const isAdmin = useSelector((el)=>el.isAdmin) 
 

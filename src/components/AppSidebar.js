@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import {
@@ -11,7 +11,6 @@ import {
 
 import { AppSidebarNav } from './AppSidebarNav'
 
-import logo from 'src/assets/images/avatars/YPI-Logo-2022.png'
 
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
@@ -28,6 +27,12 @@ const AppSidebar = () => {
   let user = JSON.parse(localStorage.getItem('user-info'))
   const logo = user.user.brandLogo;
 
+  const [logoImg,setLogo] = useState(logo)
+
+  useEffect(()=>{
+    setLogo(logo)
+  },[user.user.emailUniqId])
+
   return (
     <CSidebar
       position="fixed"
@@ -41,7 +46,7 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand to="/" style={{overflow:'hidden'}}>
-        <CAvatar src={logo}  style={{width:'90%'}} />
+        <CAvatar src={logoImg}  style={{width:'90%'}} />
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>

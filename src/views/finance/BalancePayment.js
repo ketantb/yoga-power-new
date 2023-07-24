@@ -54,13 +54,18 @@ const BalancePayment = () => {
     const [result1,setResult1] = useState([])
     const url1 = useSelector((el)=>el.domainOfApi) 
 
-    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpFinance.items
-    .erpInvoices.items.erpBalancePayment.rights) 
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights?.erpFinance?.items
+    ?.erpInvoices?.items?.erpBalancePayment?.rights) 
+    const rightsData2 = useSelector((el)=>el.empLoyeeRights) 
+
+    console.log(rightsData2)
     const access = rightsData?rightsData:[]
     const isAdmin = useSelector((el)=>el.isAdmin) 
 
 
     const pathVal = useAdminValidation() 
+    const pathValMaster = useAdminValidation('Master') 
+
     const [AllInvoiceData,setAllInvoiceData] = useState([])
     const [clientInvoiceData,setClientInvoiceData] = useState('')
 
@@ -102,8 +107,10 @@ const BalancePayment = () => {
 }   
 
 function getPackage() {
-    axios.get(`${url1}/packagemaster`, {
-
+    axios.get(`${url1}/packageMaster/${pathValMaster}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
     })
         .then((res) => {
             setResult(res.data)
@@ -133,7 +140,9 @@ setClientInvoiceData(el)
 
 
 function getStaff() {
-    axios.get(`${url1}/employeeform/${pathVal}`)
+    axios.get(`${url1}/employeeform/${pathValMaster}`,{headers: {
+        'Authorization': `Bearer ${token}`
+    }})
         .then((res) => {
             setStaff(res.data)
         })
@@ -220,7 +229,9 @@ useEffect(() => {
 
 async function getEmployee() {
     try {
-        const { data } = await axios.get(`${ url1 }/employeeform/${pathVal}`)
+        const { data } = await axios.get(`${ url1 }/employeeform/${pathValMaster}`,{headers: {
+            'Authorization': `Bearer ${token}`
+        }})
         setEmployeeData(data)
     } catch (error) {
         console.log(error)

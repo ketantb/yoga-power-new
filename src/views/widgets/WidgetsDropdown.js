@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import {
   CRow,
   CCol,
@@ -7,6 +7,10 @@ import {
   CDropdownItem,
   CDropdownToggle,
   CWidgetStatsA,
+  CInputGroup,
+  CInputGroupText,
+  CFormInput,
+  CButton
 } from '@coreui/react'
 import { getStyle } from '@coreui/utils'
 import { CChartBar, CChartLine } from '@coreui/react-chartjs'
@@ -14,21 +18,109 @@ import CIcon from '@coreui/icons-react'
 import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 import { FaEye } from 'react-icons/fa'
 import { dashboardRights } from '../hr/Rights/rightsValue/crmRightsValue'
-
+import { useSelector } from 'react-redux'
+import axios from 'axios'
 const WidgetsDropdown = ({data,isAdmin}) => {
-  console.log(data,isAdmin)
+
+  const user = JSON.parse(localStorage.getItem('user-info'))
+  const token = user.token;
+  
+  const url = useSelector((el) => el.domainOfApi)
+
+
+  const [dashborddata,setDashbordData] = useState({
+    memBerActivity:{
+      month:{}
+    },
+    dailyExpense:{
+      month:{}
+    },
+    collection:{
+      month:{}
+    }
+  })
+  const [selectedYear,setSelectedYear] = useState(new Date().getFullYear())
+
+  const month = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+
+
+  const headers = {
+    "Authorization": `Bearer ${token}`,
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+   }
+  
+    const getDasCenterPartner = ()=>{
+      console.log('hello')
+       axios.get(`${url}/serviceActivity/${selectedYear}/all`,{headers}).then((el)=>{
+        console.log(el.data)
+        setDashbordData(el.data)
+       if(el.status!==200){
+        return 
+       }
+     }).catch((error)=>{console.log(error)})
+    
+       }
+    
+       
+       useEffect(()=>{
+        getDasCenterPartner()
+       },[])
+
+
+
   return (
+    <>
+    <CRow className='my-2'>
+    <CInputGroup style={{ width: "500px" }}>
+
+   <CInputGroupText
+    component="label"
+    htmlFor="inputGroupSelect01"
+    >
+    Enter Year 
+   </CInputGroupText>
+
+   <CFormInput
+    type="number"
+    value={selectedYear}
+    onChange={(e)=>setSelectedYear(e.target.value)}
+  />
+<CButton type="button" color="primary" onClick={()=> getDasCenterPartner()} >
+    Go
+</CButton>
+</CInputGroup>
+    </CRow>
     <CRow>
 
-      {(data.includes(dashboardRights.members)||isAdmin)&& <CCol sm={6} lg={3}>
+      {(data.includes(dashboardRights.members)||isAdmin)&& <CCol sm={8} lg={4}>
         <CWidgetStatsA
           className="mb-4"
           style={{ backgroundColor: 'red', color: "white" }}
           value={
             <>
-              26K{' '}
+              {selectedYear}
               <span className="fs-6 fw-normal">
-                (-12.4% <CIcon icon={cilArrowBottom} />)
+                ({ " "+month[new Date().getMonth()]} <CIcon icon={
+
+              (Math.max(...Object.values(dashborddata?.memBerActivity?.month))=== 
+              dashborddata?.memBerActivity?.month[month[new Date().getMonth()]]?cilArrowTop:
+                 cilArrowBottom)
+                  
+                  } />)
               </span>
             </>
           }
@@ -58,22 +150,14 @@ const WidgetsDropdown = ({data,isAdmin}) => {
               className="mt-3 mx-3"
               style={{ height: '70px' }}
               data={{
-                labels: [
-                  'January',
-                  'February',
-                  'March',
-                  'April',
-                  'May',
-                  'June',
-                  'July',
-                ],
+                labels: [...Object.keys(dashborddata?.memBerActivity?.month)],
                 datasets: [
                   {
                     label: 'My First dataset',
-                    backgroundColor: 'transparent',
-                    borderColor: 'rgba(255,255,255,.55)',
+                    backgroundColor: 'white',
+                    borderColor: 'rgba(255,255,255)',
                     pointBackgroundColor: getStyle('--cui-red'),
-                    data: [65, 59, 84, 84, 51, 55, 40],
+                    data: [...Object.values(dashborddata?.memBerActivity?.month)],
                   },
                 ],
               }}
@@ -95,8 +179,10 @@ const WidgetsDropdown = ({data,isAdmin}) => {
                     },
                   },
                   y: {
-                    min: 30,
-                    max: 89,
+                    min: (Math.min(...Object.values(dashborddata?.memBerActivity?.month))-
+                    Math.max(...Object.values(dashborddata?.memBerActivity?.month))/100*10),
+                    max: (Math.max(...Object.values(dashborddata?.memBerActivity?.month))
+                    +Math.max(...Object.values(dashborddata?.memBerActivity?.month))/100*10),
                     display: false,
                     grid: {
                       display: false,
@@ -113,7 +199,7 @@ const WidgetsDropdown = ({data,isAdmin}) => {
                   },
                   point: {
                     radius: 4,
-                    hitRadius: 10,
+                    hitRadius: 4,
                     hoverRadius: 4,
                   },
                 },
@@ -121,16 +207,24 @@ const WidgetsDropdown = ({data,isAdmin}) => {
             />
           }
         />
+        
       </CCol>}
-      {(data.includes(dashboardRights.collection)||isAdmin)&& <CCol sm={6} lg={3}>
+      {(data.includes(dashboardRights.collection)||isAdmin)&& <CCol sm={8} lg={4}>
         <CWidgetStatsA
           className="mb-4"
           color="info"
           value={
+           
             <>
-              $6.200{' '}
+              {selectedYear}
               <span className="fs-6 fw-normal">
-                (40.9% <CIcon icon={cilArrowTop} />)
+                ({ " "+month[new Date().getMonth()]} <CIcon icon={
+
+              (Math.max(...Object.values(dashborddata?.collection?.month))=== 
+              dashborddata?.collection?.month[month[new Date().getMonth()]]?cilArrowTop:
+                 cilArrowBottom)
+                  
+                  } />)
               </span>
             </>
           }
@@ -160,22 +254,14 @@ const WidgetsDropdown = ({data,isAdmin}) => {
               className="mt-3 mx-3"
               style={{ height: '70px' }}
               data={{
-                labels: [
-                  'January',
-                  'February',
-                  'March',
-                  'April',
-                  'May',
-                  'June',
-                  'July',
-                ],
+                labels: [...Object.keys(dashborddata?.collection?.month)],
                 datasets: [
                   {
                     label: 'My First dataset',
                     backgroundColor: 'transparent',
                     borderColor: 'rgba(255,255,255,.55)',
                     pointBackgroundColor: getStyle('--cui-info'),
-                    data: [1, 18, 9, 17, 34, 22, 11],
+                    data: [...Object.values(dashborddata?.collection?.month)],
                   },
                 ],
               }}
@@ -197,8 +283,12 @@ const WidgetsDropdown = ({data,isAdmin}) => {
                     },
                   },
                   y: {
-                    min: -9,
-                    max: 39,
+
+                    min: (Math.min(...Object.values(dashborddata?.collection?.month))-
+                    Math.max(...Object.values(dashborddata?.collection?.month))/100*10),
+                    max: (Math.max(...Object.values(dashborddata?.collection?.month))
+                    +Math.max(...Object.values(dashborddata?.collection?.month))/100*10),
+
                     display: false,
                     grid: {
                       display: false,
@@ -223,15 +313,22 @@ const WidgetsDropdown = ({data,isAdmin}) => {
           }
         />
       </CCol>}
-      {(data.includes(dashboardRights.expense)||isAdmin)&& <CCol sm={6} lg={3}>
+      {(data.includes(dashboardRights.expense)||isAdmin)&& <CCol sm={8} lg={4}>
         <CWidgetStatsA
           className="mb-4"
           color="warning"
           value={
+            
             <>
-              2.49{' '}
+              {selectedYear}
               <span className="fs-6 fw-normal">
-                (84.7% <CIcon icon={cilArrowTop} />)
+                ({ " "+month[new Date().getMonth()]} <CIcon icon={
+
+              (Math.max(...Object.values(dashborddata?.dailyExpense?.month))=== 
+              dashborddata?.dailyExpense?.month[month[new Date().getMonth()]]?cilArrowTop:
+                 cilArrowBottom)
+                  
+                  } />)
               </span>
             </>
           }
@@ -261,21 +358,13 @@ const WidgetsDropdown = ({data,isAdmin}) => {
               className="mt-3"
               style={{ height: '70px' }}
               data={{
-                labels: [
-                  'January',
-                  'February',
-                  'March',
-                  'April',
-                  'May',
-                  'June',
-                  'July',
-                ],
+                labels: [...Object.keys(dashborddata?.dailyExpense?.month)],
                 datasets: [
                   {
                     label: 'My First dataset',
                     backgroundColor: 'rgba(255,255,255,.2)',
                     borderColor: 'rgba(255,255,255,.55)',
-                    data: [78, 81, 80, 45, 34, 12, 40],
+                    data: [...Object.values(dashborddata?.dailyExpense?.month)],
                     fill: true,
                   },
                 ],
@@ -292,6 +381,10 @@ const WidgetsDropdown = ({data,isAdmin}) => {
                     display: false,
                   },
                   y: {
+                    min: (Math.min(...Object.values(dashborddata?.dailyExpense?.month))-
+                    Math.max(...Object.values(dashborddata?.dailyExpense?.month))/100*10),
+                    max: (Math.max(...Object.values(dashborddata?.dailyExpense?.month))
+                    +Math.max(...Object.values(dashborddata?.dailyExpense?.month))/100*10),
                     display: false,
                   },
                 },
@@ -311,7 +404,7 @@ const WidgetsDropdown = ({data,isAdmin}) => {
           }
         />
       </CCol>}
-      {(data.includes(dashboardRights.profit)||isAdmin)&& <CCol sm={6} lg={3}>
+      {/* {(data.includes(dashboardRights.profit)||isAdmin)&& <CCol sm={6} lg={3}>
         <CWidgetStatsA
           className="mb-4"
           color="success"
@@ -412,8 +505,9 @@ const WidgetsDropdown = ({data,isAdmin}) => {
             />
           }
         />
-      </CCol>}
+      </CCol>} */}
     </CRow>
+    </>
   )
 }
 

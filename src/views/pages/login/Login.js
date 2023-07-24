@@ -73,7 +73,7 @@ useEffect(()=>{
       setError(null)
       let item = { email, password }
 
-      let result = await fetch(`${url}/login`, {
+      let result = await fetch(`${url}/login/no-direct-login`, {
         method: "POST",
         headers: {
           'Accept': 'application/json',

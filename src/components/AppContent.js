@@ -8,7 +8,6 @@ const AppContent = ({params }) => {
 
   const Page500 = React.lazy(() => import('../../src/views/pages/page500/Page500'))
 
-  console.log(params)
 
   const routesEl = routes.map((route, idx) => {
     return (

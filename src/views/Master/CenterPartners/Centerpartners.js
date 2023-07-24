@@ -27,6 +27,7 @@ function Centerpartners (){
 
 
 
+
   const url = useSelector((el) => el.domainOfApi)
 
 
@@ -70,16 +71,21 @@ const handlePrint = useReactToPrint({
 
    
 
+
+   const getCenterPartner = ()=>{
+    axios.get(`${url}/signup/center-patner`,{headers}).then((el)=>{
+      setCenterPartnerData(el.data)
+     if(el.status!==200){
+      return 
+     }
+   }).catch((error)=>{console.log(error)})
+   }
+
+   useEffect(()=>{
+    getCenterPartner()
+   },[])
   
-  const getCenterPartner = ()=>{
-   axios.get(`${url}/signup/center-patner`,{headers}).then((el)=>{
-    console.log(el.data)
-    if(!el.data){
-     return 
-    }
-    setCenterPartnerData(el.data)
-  }).catch((error)=>{console.log(error)})
-  }
+
 
   const saveData = async (type)=>{
     let response ={}
