@@ -51,7 +51,7 @@ const UserProfile = () => {
   
 
    const getEmailFullData = async  ()=>{
-     axios.get(`${url}/signup/emailId/${(userId||emailUniqId)}`)
+     axios.get(`${url}/signup/emailId/${(userId?.trim()||emailUniqId)}`)
     .then((el)=>{
         if(el.status===200){
 
@@ -80,6 +80,8 @@ const UserProfile = () => {
             return {...prev}
           })
         }         
+    }).catch((er)=>{
+     console.log(er)
     })
    }
 
@@ -138,7 +140,7 @@ const handleChange = event => {
     profile&& <CCard className='p-2'>
      <CRow>
      
-     <CCol style={{maxWidth:'fit-content'}} style={{maxWidth:'400px'}}>
+     <CCol style={{maxWidth:'fit-content'}} >
 
      <CCol className='text-center' style={{ minWidth:'350px'}}>
             <CCard className='p-4'>
@@ -240,7 +242,7 @@ const handleChange = event => {
                   return <CCard className='my-2 text-start '>
                     <div className='d-flex px-2'>
                     <BsLink style={{fontSize:'30px'}}/>
-                    <a style={{fontSize:'25px'}} className='m-0 mx-4 p-0' href={el.link} style={{textDecoration:'none'}}>
+                    <a style={{fontSize:'25px'}} className='m-0 mx-4 p-0' href={el.link} >
                       {el.linkName}
                     </a>
                     </div>

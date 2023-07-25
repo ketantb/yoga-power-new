@@ -63,6 +63,7 @@ import useLoginHook from './DirectLoginHook/useLoginHook'
 import moment from 'moment'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
 
+
 const ServiceDashboard = () => {
 
   const user = JSON.parse(localStorage.getItem('user-info'))
@@ -80,7 +81,7 @@ const ServiceDashboard = () => {
   const access = rightsData?rightsData:[]
   const isAdmin = useSelector((el)=>el.isAdmin) 
   const url = useSelector((el) => el.domainOfApi)
-  const pathVal =   useAdminValidation('Master')
+  const pathVal =   useAdminValidation()
   const [activeKey, setActiveKey] = useState(1)
   const [eye,setEye] = useState(false)
   const [serviceType,setServiceType] = useState('in')
@@ -91,7 +92,7 @@ const ServiceDashboard = () => {
   })
   
     const getDasCenterPartner = ()=>{
-       axios.get(`${'http://localhost:8000'}/serviceOverview/all`,{headers}).then((el)=>{
+       axios.get(`${url}/serviceOverview/${pathVal}`,{headers}).then((el)=>{
         console.log(el.data)
         setDashbordData(prev=>({...prev,...el.data}))
     

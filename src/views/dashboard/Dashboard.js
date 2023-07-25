@@ -24,9 +24,9 @@ import {
   CNav,
   CNavItem,
   CNavLink,
-  CFormCheck
+  CFormCheck,
 } from '@coreui/react'
-import { CChartBar, CChartLine, CChartPie } from '@coreui/react-chartjs'
+import { CChartBar, CChartLine, CChartPie,  CChart} from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
 import CIcon from '@coreui/icons-react'
 import { useSelector } from 'react-redux'
@@ -49,6 +49,7 @@ import useLoginHook from './DirectLoginHook/useLoginHook'
 import moment from 'moment'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
 const ServiceDashboard = React.lazy(()=>import('./ServiceDashboard'))
+const AttendenceDashBord = React.lazy(()=>import('./AttendenceDashBord'))
 
 const Dashboard = () => {
 
@@ -102,13 +103,6 @@ const Dashboard = () => {
       return 
      }
    }).catch((error)=>{console.log(error)})
-   axios.get(`${'http://localhost:8000'}/serviceOverview/all`,{headers}).then((el)=>{
-    setDashbordData(prev=>({...prev,...el.data}))
-
-   if(el.status!==200){
-    return 
-   }
- }).catch((error)=>{console.log(error)})
 
    }
 
@@ -210,13 +204,14 @@ const Dashboard = () => {
                       datasets: [
                         {
                           data: [...Object.values(dashborddata.allEnquiry)],
-                          backgroundColor: ['red', 'yellow', 'green', 'orange', 'blue'],
+                          backgroundColor: ['red', 'yellow', 'green', 'orange','#00d4ff', '#3535ff',],
                           hoverBackgroundColor: [
-                            '#E74C3C',
+                            '#ef6052',
                             '#F4D03F',
                             '#2ECC71',
                             '#F8C471',
-                            'skyblue',
+                            '#0ff9fc',
+                            '#1d7bff',
                           ],
                         },
                       ],
@@ -377,76 +372,69 @@ const Dashboard = () => {
           </CCard>
         </CCol>}
 
+        {(access?.includes(dashboardRights.profit)||isAdmin)&&<CCol lg={6} sm={12}>
+         <CCard>
+          <CCardHeader>
+            <h5>Profite</h5>
+          </CCardHeader>
+          <CCardBody>
+          <CChart
+          type="line" 
+  data={{
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [
+      {
+        label: "My First dataset",
+        backgroundColor: "rgba(220, 220, 220, 0.2)",
+        borderColor: "rgba(220, 220, 220, 1)",
+        pointBackgroundColor: "rgba(220, 220, 220, 1)",
+        pointBorderColor: "#fff",
+        data: [40, 20, 12, 39, 10, 40, 39, 80, 40]
+      },
+      {
+        label: "My Second dataset",
+        backgroundColor: "rgba(151, 187, 205, 0.2)",
+        borderColor: "rgba(151, 187, 205, 1)",
+        pointBackgroundColor: "rgba(151, 187, 205, 1)",
+        pointBorderColor: "#fff",
+        data: [50, 12, 28, 29, 7, 25, 12, 70, 60]
+      },
+    ],
+  }}
+  options={{
+    plugins: {
+      legend: {
+        labels: {
+          color: getStyle('--cui-body-color'),
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          color: getStyle('--cui-border-color-translucent'),
+        },
+        ticks: {
+          color: getStyle('--cui-body-color'),
+        },
+      },
+      y: {
+        grid: {
+          color: getStyle('--cui-border-color-translucent'),
+        },
+        ticks: {
+          color: getStyle('--cui-body-color'),
+        },
+      },
+    },
+            }}/>
+          </CCardBody>
+         </CCard>
+        </CCol>}
+
         {(access?.includes(dashboardRights.attendance)||isAdmin)&&<CCol lg={6} sm={12}>
-          <CCard className="mb-4">
 
-            <CCardBody>
-
-              <CRow >
-                <CCol sm={4}>
-                  <h4 id="traffic" className="card-title mb-0">
-                    Attendance
-                  </h4>
-                  <div className="small text-medium-emphasis mb-3">
-                    Weekly
-                  </div>
-                </CCol>
-                <CCol sm={4}>
-                  <div className="border-start border-start-4 border-start-info py-1 px-3">
-                    <div className="text-medium-emphasis small">
-                      Attented Clients
-                    </div>
-                    <div className="fs-5 fw-semibold">9,123</div>
-                  </div>
-                </CCol>
-                <CCol sm={4}>
-                  <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
-                    <div className="text-medium-emphasis small">
-                      Total Active Clients
-                    </div>
-                    <div className="fs-5 fw-semibold">22,643</div>
-                  </div>
-                </CCol>
-              </CRow>
-
-              <CRow>
-                <CCol xs={12} md={12} xl={12}>
-
-
-                  <hr className="mt-0" />
-                  {progressGroupExample1.map((item, index) => (
-                    <div className="progress-group mb-3" key={index}>
-                      <div className="progress-group-prepend">
-                        <span className="text-medium-emphasis small">
-                          {item.title}
-                        </span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress >
-                          <CProgressBar color="success" value={item.value1} />
-                          <CProgressBar color="info" value={item.value2} />
-                        </CProgress>
-                      </div>
-                      <div className="progress-group-prepend">
-                        <span className="ms-auto fw-semibold">
-                          {item.value1}
-                          <span className="text-medium-emphasis small">
-                            ({item.percent}%)
-                          </span>
-                        </span>/
-                        <span className="ms-auto fw-semibold">
-                          {item.value2}
-                          <span className="text-medium-emphasis small">
-                            ({item.percent}%)
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </CCol>
-              </CRow>
-            </CCardBody>
-          </CCard>
+           < AttendenceDashBord />
         </CCol>}
 
       
