@@ -101,24 +101,26 @@ function EmployeeTargetSetupForm({ closeForm, getEmployeeTargetSheetData ,data }
 
 
 const UserData =  [...data].find((el,i)=> el.Id ===selectedEmployee.split('---')[1]
- && el.Type_Of_Target===TargetValue)
+ && el.Type_Of_Target===TargetValue && +el.Year===+year
+ 
+ )
 console.log( UserData,"ejkndjnefjefej")
 useEffect(()=>{
 
 if(!UserData){
-        setMonthIput1('0')
-        setMonthIput2('0')
-        setMonthIput3('0')
-        setMonthIput4('0')
-        setMonthIput5('0')
-        setMonthIput6('0')
-        setMonthIput7('0')
-        setMonthIput8('0')
-        setMonthIput9('0')
-        setMonthIput10('0')
-        setMonthIput11('0')
-        setMonthIput12('0')
-        setYear('0')  
+        // setMonthIput1('0')
+        // setMonthIput2('0')
+        // setMonthIput3('0')
+        // setMonthIput4('0')
+        // setMonthIput5('0')
+        // setMonthIput6('0')
+        // setMonthIput7('0')
+        // setMonthIput8('0')
+        // setMonthIput9('0')
+        // setMonthIput10('0')
+        // setMonthIput11('0')
+        // setMonthIput12('0')
+        // setYear('0')  
     return
 }
   setMonthIput1(UserData.Jan)
@@ -135,8 +137,7 @@ if(!UserData){
   setMonthIput12(UserData.Dec)
   setTargetValue(UserData.TargetValue)
   setYear(UserData.Year)
-
-},[selectedEmployee?.split('---')[1],TargetValue])
+},[selectedEmployee?.split('---')[1],TargetValue,year])
 
 
 

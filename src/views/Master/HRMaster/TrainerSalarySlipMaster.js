@@ -8,11 +8,6 @@ import {
     CCardTitle,
     CCol,
     CFormInput,
-    CFormSelect,
-    CInputGroup,
-    CInputGroupText,
-    CPagination,
-    CPaginationItem,
     CRow,
     CTable,
     CTableBody,
@@ -20,11 +15,7 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
-    CNav,
-    CNavItem,
-    CNavLink,
-    CTabContent,
-    CTabPane
+
 } from '@coreui/react'
 import   FormConecter from  './TrainerSlipForm/FormConecter'
 import { useSelector } from 'react-redux'
@@ -35,6 +26,7 @@ import { herMasterRightVal } from 'src/views/hr/Rights/rightsValue/masterRightsV
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
+
 const TrainerSalarySlipMaster = () => {
 
     const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr

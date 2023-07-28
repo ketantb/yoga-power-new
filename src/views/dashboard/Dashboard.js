@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef} from 'react'
 import {
   CAvatar,
   CButton,
@@ -25,6 +25,7 @@ import {
   CNavItem,
   CNavLink,
   CFormCheck,
+
 } from '@coreui/react'
 import { CChartBar, CChartLine, CChartPie,  CChart} from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
@@ -48,8 +49,14 @@ import axios from 'axios';
 import useLoginHook from './DirectLoginHook/useLoginHook'
 import moment from 'moment'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
+
+const CenterPartner = React.lazy(()=>import('./CenterPartner'))
+
 const ServiceDashboard = React.lazy(()=>import('./ServiceDashboard'))
 const AttendenceDashBord = React.lazy(()=>import('./AttendenceDashBord'))
+const Income = React.lazy(()=>import('./Income'))
+const Profite = React.lazy(()=>import('./Profite'))
+
 
 const Dashboard = () => {
 
@@ -66,14 +73,16 @@ const Dashboard = () => {
     service:{}
   })
   
- 
   const [centerPartnerData,setCenterPartnerData] = useState([])
   const [dateFilterObj,setDteFilterObj] = useState({
     startDate:moment(new Date(new Date().getFullYear(),new Date().getMonth(),1)).format('YYYY-MM-DD'),
     endDate:moment(new Date()).format('YYYY-MM-DD')
   })
 
+  const [selectedYear,setSelectedYear] = useState(new Date().getFullYear())
   const functionToDirectLogin = useLoginHook()
+  const inputRef = useRef()
+
 
   
   const user = JSON.parse(localStorage.getItem('user-info'))
@@ -288,150 +297,29 @@ const Dashboard = () => {
 
         <ServiceDashboard/>
 
-    
+  <CRow className='my-2'>
+    <CInputGroup style={{ width: "300px" }}>
 
-        {(access?.includes(dashboardRights.income)||isAdmin)&&<CCol lg={6} sm={12}>
-          <CCard className="mb-4">
-            <CCardBody>
-              <CRow>
-                <CCol sm={5} className='mb-2'>
-                  <h4 id="traffic" className="card-title mb-0">
-                    Income
-                  </h4>
-                  <div className="small text-medium-emphasis">
-                    January - July 2021
-                  </div>
-                </CCol>
-                <CCol sm={7} className="d-none d-md-block">
-                  <CButton color="primary" className="float-end">
-                    <CIcon icon={cilCloudDownload} />
-                  </CButton>
-                  <CButtonGroup className="float-end me-3">
-                    {['Day', 'Month', 'Year'].map((value) => (
-                      <CButton
-                        color="outline-secondary"
-                        key={value}
-                        className="mx-0"
-                        active={value === 'Month'}
-                      >
-                        {value}
-                      </CButton>
-                    ))}
-                  </CButtonGroup>
-                </CCol>
-              </CRow>
-              <CChartBar
-                data={{
-                  labels: [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                    'July',
-                    'August',
-                    'Sep',
-                  ],
-                  value: [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                    'July',
-                    'August',
-                    'Sep',
-                  ],
-                  datasets: [
-                    {
-                      label: 'Monthly Sales',
-                      backgroundColor: 'darkgreen',
-                      data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 100],
-                    },
-                  ],
-                }}
-                labels="months"
-                value="value"
-              />
-              <CCard style={{ marginRight: '10px', marginLeft: '40px', backgroundColor: 'darkgreen', color: 'white', paddingLeft: '10px', paddingRight: '10px' }}>
-                <div className='d-flex justify-content-between'>
-                  <label>40</label>
-                  <label>20</label>
-                  <label>12</label>
-                  <label>39</label>
-                  <label>10</label>
-                  <label>40</label>
-                  <label>39</label>
-                  <label>80</label>
-                  <label>40</label>
-                </div>
-              </CCard>
-            </CCardBody>
-          </CCard>
-        </CCol>}
+    <CInputGroupText
+    component="label"
+    htmlFor="inputGroupSelect01"
+    >
+    Enter Year 
+   </CInputGroupText>
 
-        {(access?.includes(dashboardRights.profit)||isAdmin)&&<CCol lg={6} sm={12}>
-         <CCard>
-          <CCardHeader>
-            <h5>Profite</h5>
-          </CCardHeader>
-          <CCardBody>
-          <CChart
-          type="line" 
-  data={{
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-      {
-        label: "My First dataset",
-        backgroundColor: "rgba(220, 220, 220, 0.2)",
-        borderColor: "rgba(220, 220, 220, 1)",
-        pointBackgroundColor: "rgba(220, 220, 220, 1)",
-        pointBorderColor: "#fff",
-        data: [40, 20, 12, 39, 10, 40, 39, 80, 40]
-      },
-      {
-        label: "My Second dataset",
-        backgroundColor: "rgba(151, 187, 205, 0.2)",
-        borderColor: "rgba(151, 187, 205, 1)",
-        pointBackgroundColor: "rgba(151, 187, 205, 1)",
-        pointBorderColor: "#fff",
-        data: [50, 12, 28, 29, 7, 25, 12, 70, 60]
-      },
-    ],
-  }}
-  options={{
-    plugins: {
-      legend: {
-        labels: {
-          color: getStyle('--cui-body-color'),
-        }
-      }
-    },
-    scales: {
-      x: {
-        grid: {
-          color: getStyle('--cui-border-color-translucent'),
-        },
-        ticks: {
-          color: getStyle('--cui-body-color'),
-        },
-      },
-      y: {
-        grid: {
-          color: getStyle('--cui-border-color-translucent'),
-        },
-        ticks: {
-          color: getStyle('--cui-body-color'),
-        },
-      },
-    },
-            }}/>
-          </CCardBody>
-         </CCard>
-        </CCol>}
+   <CFormInput
+    type="number"
+    ref={inputRef}
+  />
+<CButton type="button" color="primary"  onClick={(()=>setSelectedYear(inputRef.current.value))}  >
+    Go
+</CButton>
+</CInputGroup>
+    </CRow>
 
+        <Income  year={selectedYear}/>
+        <Profite   year={selectedYear}/>
+        
         {(access?.includes(dashboardRights.attendance)||isAdmin)&&<CCol lg={6} sm={12}>
 
            < AttendenceDashBord />
@@ -508,87 +396,10 @@ const Dashboard = () => {
         </CCol>}
 
       </CRow>
-     
+      
+      <CenterPartner />
 
-      <CRow>
-        {(isAdmin) && <CCol >
-          <CCard className="mb-4">
-            <CCardHeader>Admin panel</CCardHeader>
-            <CCardBody>
-              <CTable align="middle" bordered style={{ borderColor: "#106103" }} hover responsive>
-                <CTableHead style={{ backgroundColor: '#0B5345',color: "white"}}  >
-                  <CTableRow>                 
-                    <CTableHeaderCell>Sr.No</CTableHeaderCell>
-                    <CTableHeaderCell>Brand Logo</CTableHeaderCell>
-                    <CTableHeaderCell>Center Name</CTableHeaderCell>
-                    <CTableHeaderCell>Partner Profile</CTableHeaderCell>
-                    <CTableHeaderCell>Types Of Partner</CTableHeaderCell>
-                    <CTableHeaderCell>Location</CTableHeaderCell>
-                    <CTableHeaderCell>City</CTableHeaderCell>
-                    <CTableHeaderCell>Country</CTableHeaderCell>
-                    <CTableHeaderCell>Packege</CTableHeaderCell>
-                    <CTableHeaderCell>EXP. Date</CTableHeaderCell>
-                    <CTableHeaderCell>View</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {centerPartnerData.map((el, index) => (
-                      <CTableRow className="text-center"  >
-                      <CTableDataCell>
-                        {index+1}
-                      </CTableDataCell>
-                      <CTableDataCell >
-                        <div 
-                        className="border-gray rounded-circle"
-                        style={{width:'100px'}}
-                        >
-                          <img
-                          width='100%'
-                          src={el.brandLogo}
-                          />
-
-                        </div>
-                      </CTableDataCell>
-                      <CTableDataCell>   
-                        {el.center}                                 
-                      </CTableDataCell>
-                    
-                      <CTableDataCell>  
-                        <Link to={`/profile/${el._id}`}> {el.username}   </Link>                                                                    
-                      </CTableDataCell>   
-                    
-                      <CTableDataCell>     
-                        {el.typeOfPartner}                                                                   
-                      </CTableDataCell> 
-                      <CTableDataCell>     
-                        {el.location}        
-                      </CTableDataCell>
-                      <CTableDataCell>   
-                        {el.city}                                                                     
-                      </CTableDataCell>  
-                      <CTableDataCell>   
-                        {el.country}          
-                     
-                      </CTableDataCell>
-                      <CTableDataCell>    
-                        {el.packege}                                                                    
-                      </CTableDataCell>                                                
-                                          
-                      <CTableDataCell>    
-                         {new Date(el.expDate).toDateString()}                                                                               
-                      </CTableDataCell>
-                      <CTableDataCell>    
-                        <CButton onClick={()=>functionToDirectLogin(el.email,el.password)} >View </CButton>
-                      </CTableDataCell>
-                    
-                  </CTableRow>
-                  ))}
-                </CTableBody>
-              </CTable>
-            </CCardBody>
-          </CCard>
-        </CCol>}
-      </CRow>
+  
     </>
   )
 }

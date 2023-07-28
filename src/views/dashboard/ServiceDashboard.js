@@ -24,7 +24,9 @@ import {
   CNav,
   CNavItem,
   CNavLink,
-  CFormCheck
+  CFormCheck,
+  CPagination,
+  CPaginationItem,
 } from '@coreui/react'
 import { CChartBar, CChartLine, CChartPie } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
@@ -85,6 +87,8 @@ const ServiceDashboard = () => {
   const [activeKey, setActiveKey] = useState(1)
   const [eye,setEye] = useState(false)
   const [serviceType,setServiceType] = useState('in')
+  const [pagination, setPagination] = useState(3)
+
   const [dashborddata,setDashbordData] = useState({
     service:{},
     serviceIncome:{
@@ -302,9 +306,13 @@ const ServiceDashboard = () => {
               <CRow>
                 <CCol xs={12} md={12} xl={12} >
 
-
                   <hr className="mt-0" />
-                  {dashborddata.serviceIncome?.allServiceIncomeData?.map((item, index) => (
+                  {dashborddata.serviceIncome?.allServiceIncomeData?.
+            filter((el, i) => {
+                  if (pagination - 3 < i + 1 && pagination >= i + 1) {
+                        return el
+                      }
+              })?.map((item, index) => (
                     <div className=" mb-1" key={index}>
                       <div className="progress-group-prepend">
                         <h6 className="text-medium-emphasis ">
@@ -312,7 +320,7 @@ const ServiceDashboard = () => {
                         </h6>
                       </div>
                       <div className="progress-group-bars">
-                        <CProgress >
+                        <CProgress  >
                           <CProgressBar color="success" value={(item.colectedAmount/item.amount)*100} />
                           <CProgressBar color="info" value={100} />
                         </CProgress>
@@ -328,6 +336,19 @@ const ServiceDashboard = () => {
                     </div>
                   ))}
                 </CCol>
+                <div className='d-flex justify-content-center mt-3' >
+                        <CPagination size='sm' aria-label="Page navigation example" style={{cursor:'pointer'}}>
+                            <CPaginationItem aria-label="Previous" onClick={() => setPagination((val) => val > 3 ? val - 3 : 3)}>
+                                <span aria-hidden="true" >&laquo;</span>
+                            </CPaginationItem>
+                            <CPaginationItem active >{pagination / 3}</CPaginationItem>
+                            {dashborddata.serviceIncome?.allServiceIncomeData?.length > pagination / 3 * 3 && <CPaginationItem onClick={() => setPagination((val) => val < dashborddata.serviceIncome?.allServiceIncomeData?.length ? val + 3 : val)}>{pagination / 3 + 1}</CPaginationItem>}
+                            {dashborddata.serviceIncome?.allServiceIncomeData?.length > pagination / 3* 6 && <CPaginationItem onClick={() => setPagination((val) => val < dashborddata.serviceIncome?.allServiceIncomeData?.length ? val + 3 : val)}>{pagination / 3 + 2}</CPaginationItem>}
+                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < dashborddata.serviceIncome?.allServiceIncomeData?.length ? val + 3 : val)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        </CPagination>
+               </div>
               </CRow>
             </CCardBody>
           </CCard>

@@ -84,8 +84,9 @@ const WidgetsDropdown = ({data,isAdmin}) => {
 
   return (
     <>
-    <CRow className='my-2'>
-    <CInputGroup style={{ width: "500px" }}>
+  
+   <CRow className='my-2'>
+    <CInputGroup style={{ width: "300px" }}>
 
    <CInputGroupText
     component="label"
@@ -112,7 +113,7 @@ const WidgetsDropdown = ({data,isAdmin}) => {
           style={{ backgroundColor: 'red', color: "white" }}
           value={
             <>
-              {selectedYear}
+              {dashborddata?.memBerActivity?.year}
               <span className="fs-6 fw-normal">
                 ({ " "+month[new Date().getMonth()]} <CIcon icon={
 
@@ -216,7 +217,8 @@ const WidgetsDropdown = ({data,isAdmin}) => {
           value={
            
             <>
-              {selectedYear}
+              {dashborddata?.collection?.year}
+
               <span className="fs-6 fw-normal">
                 ({ " "+month[new Date().getMonth()]} <CIcon icon={
 
@@ -320,7 +322,7 @@ const WidgetsDropdown = ({data,isAdmin}) => {
           value={
             
             <>
-              {selectedYear}
+              {dashborddata?.dailyExpense?.year}
               <span className="fs-6 fw-normal">
                 ({ " "+month[new Date().getMonth()]} <CIcon icon={
 

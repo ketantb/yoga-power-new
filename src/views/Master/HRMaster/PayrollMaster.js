@@ -334,7 +334,7 @@ console.log(salarySheetData)
               onChange={(e)=>setSalarySheet(prev=>({...prev,empName:e.target.value}))}
               >
                 <option value=''>Select Employee</option>
-                        {staff.filter((list) => list.username === username &&
+                        {staff.filter((list) => 
                           list.selected === 'Select').map((item, index) => (
                             <option key={index} value={item._id}> {item.FullName}</option>
                           ))}
@@ -413,7 +413,7 @@ console.log(salarySheetData)
                         <option>Select Department</option>
 
                         {result.map((item, index) => (
-                          item.username === username && (
+                         (
                             item.status === true && (
                               <option key={index} >{item.department}</option>
                             )
@@ -665,7 +665,7 @@ console.log(salarySheetData)
                             </CTableHead>
                             <CTableBody>
                               
-                                {salarySheetData.filter((el)=>el.username === username).map((item, index) => (
+                                {salarySheetData.filter((el)=>el).map((item, index) => (
                                         <CTableRow key={index} className='text-center'>
                                             <CTableDataCell>{index + 1 }</CTableDataCell>
                                             <CTableDataCell>{new Date(item.month).toDateString()}</CTableDataCell>
