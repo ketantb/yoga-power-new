@@ -34,7 +34,7 @@ import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 const GeneralProduct = () => {
 
     const url = useSelector((el)=>el.domainOfApi)  
-    const pathVal = useAdminValidation()
+    const pathVal = useAdminValidation('Master')
 
     const [result1, setResult1] = useState([])
     const [noofProduct,setNoOfProduct] = useState([])

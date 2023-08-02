@@ -91,7 +91,7 @@ return <CRow>
               }).map((el, index) => (
                 <CTableRow className="text-center"  >
                 <CTableDataCell>
-                  {index+1}
+                  {index+1 +(pagination-5)}
                 </CTableDataCell>
                 <CTableDataCell >
                   <div 
@@ -141,11 +141,8 @@ return <CRow>
             ))}
           </CTableBody>
         </CTable>
-      </CCardBody>
-    </CCard>
-  </CCol>}
 
-     <div className='d-flex justify-content-center mt-3' >
+        <div className='d-flex justify-content-center mt-3' >
                         <CPagination aria-label="Page navigation example" style={{cursor:'pointer'}}>
                             <CPaginationItem aria-label="Previous" onClick={() => setPagination((val) => val > 5 ? val - 5 : 5)}>
                                 <span aria-hidden="true" >&laquo;</span>
@@ -158,6 +155,11 @@ return <CRow>
                             </CPaginationItem>
                         </CPagination>
       </div>
+      </CCardBody>
+    </CCard>
+  </CCol>}
+
+   
 </CRow>
 }
 

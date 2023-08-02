@@ -190,8 +190,7 @@ const handlePrint = useReactToPrint({
 
 
     function toUppdateSwitch(val,id,el){
-      el.status = !val
-      axios.post(`${url}/signup/update/${id}`,el,{headers}).then((res)=>{
+      axios.patch(`${url}/signup/update/logo/${id}`,{status:!val},{headers}).then((res)=>{
         if(res.status===200){
           getCenterPartner()
         }

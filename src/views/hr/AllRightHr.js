@@ -36,7 +36,7 @@ const AllRight = () => {
 
 <CCardHeader>
     <CNav variant="tabs" role="tablist">
-     {user.user.isAdmin||<CNavItem>
+     {user.user.isAdmin&&<CNavItem>
         <CNavLink
           active={activeKey === 1}
           onClick={() =>  setActiveKey(1)}

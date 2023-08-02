@@ -53,6 +53,7 @@ const EnquireAppointment = () => {
     const appointmentAdd =  rightsData?.addOn?.includes(leadsSuperRight.appointment)
     const appointmentDelete =  rightsData?.delete?.includes(leadsSuperRight.appointment)
     const appointmentEdit  =  rightsData?.edit?.includes(leadsSuperRight.appointment)
+    
 
 
     const [select, setSelect] = useState('')
@@ -75,10 +76,7 @@ const EnquireAppointment = () => {
     const [Search10, setSearch10] = useState('')
 
     const [ogList, setOgList] = useState([])
-    const [filter1, setfilter1] = useState("Select");
-    const [filter2, setfilter2] = useState("Select");
-    const [filter3, setfilter3] = useState("Select");
-    const [filter4, setfilter4] = useState("Select");
+ 
 
     const [Name, setName] = useState("");
     const [Contact, setContact] = useState("");
@@ -132,8 +130,7 @@ const EnquireAppointment = () => {
     console.log(user);
     const token = user.token;
     const username = user.user.username;
-    const centerCode = user.user.centerCode;
-    const dashboardAccess = user.user.dashboardAccess;
+
     const [result1, setResult1] = useState([]);
     console.log(token);
     const [result, setResult] = useState([]);
@@ -142,14 +139,16 @@ const EnquireAppointment = () => {
     const [pros, setPros] = useState([])
 
 
-    const pathName = useAdminValidation()
+    const pathNameMaster = useAdminValidation('Master')
+
+
     const uniqObjeact  = useUniqAdminObjeact()
 
 
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/prospect/${pathName}`, {
+        axios.get(`${url}/prospect/${pathNameMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -161,7 +160,7 @@ const EnquireAppointment = () => {
             .catch((error) => {
                 console.error(error)
             })
-        axios.get(`${url}/subservice/all`, {
+        axios.get(`${url}/subservice/${pathNameMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -176,7 +175,7 @@ const EnquireAppointment = () => {
     }, []);
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url2}/employeeForm/${pathName}`, {
+        axios.get(`${url2}/employeeform/${pathNameMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -489,7 +488,7 @@ const EnquireAppointment = () => {
         })
     }
     function getEnquiry() {
-        axios.get(`${url1}/enquiryForm/${pathName}`, {
+        axios.get(`${url1}/enquiryForm/${pathNameMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -497,7 +496,6 @@ const EnquireAppointment = () => {
             .then((res) => {
                 setResult1(res.data.filter((list) => list).reverse())
                 setOgList(res.data.filter((list) => list).reverse())
-                console.log(res.data);
             })
             .catch((error) => {
                 console.error(error)
@@ -643,10 +641,7 @@ const EnquireAppointment = () => {
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
-                        <strong className="mt-2">Enquire Appointment <span className='float-end'>Total Member : {result1.filter((list) =>
-                             moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
-                        ).length}</span></strong>
+                        <strong className="mt-2">Enquire Appointment <span className='float-end'>Total Member : {result1.filter((list) => list.appointmentfor === 'Appointment').length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>
@@ -661,8 +656,7 @@ const EnquireAppointment = () => {
                                         <option value={day}>Today</option>
                                         <option value={month}>Last Month</option>
                                         <option value={year}>This Year</option>
-                                        {/* <option>Last Week</option>
-                                        <option>Custom Date</option> */}
+                                       
                                     </CFormSelect>
                                     {select === 'Custom Date' && (
                                         <CInputGroup className='mt-2 mb-2' >
@@ -1651,10 +1645,10 @@ const EnquireAppointment = () => {
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
-                                {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
+                                {result1.filter((list) =>
                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                                     list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
-                                ).map((item, index) => (
+                                ).slice(paging * 10, paging * 10 + 10).map((item, index) => (
                                     (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>

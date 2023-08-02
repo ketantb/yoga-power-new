@@ -109,7 +109,7 @@ function StockOrderList (){
 }
 
 function getStaff() {
-    axios.get(`${url}/employeeform/${pathVal}`, {
+    axios.get(`${url}/employeeform/${pathValMaster}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -325,7 +325,7 @@ console.log(orderList)
             onChange={(e)=>setSelectedStaff(e.target.value)}
             >
                <option value=''>Select Assign Staff</option>
-                                {staff.filter((list) => list.username === username &&
+                                {staff.filter((list) => 
                                  list.selected === 'Select').map((item, index) => (
                                     <option key={index} value={item._id}>{item.FullName}</option>
                                 ))}

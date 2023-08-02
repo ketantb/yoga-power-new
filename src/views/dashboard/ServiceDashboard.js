@@ -83,7 +83,7 @@ const ServiceDashboard = () => {
   const access = rightsData?rightsData:[]
   const isAdmin = useSelector((el)=>el.isAdmin) 
   const url = useSelector((el) => el.domainOfApi)
-  const pathVal =   useAdminValidation()
+  const pathVal =   useAdminValidation('Master')
   const [activeKey, setActiveKey] = useState(1)
   const [eye,setEye] = useState(false)
   const [serviceType,setServiceType] = useState('in')
@@ -97,9 +97,7 @@ const ServiceDashboard = () => {
   
     const getDasCenterPartner = ()=>{
        axios.get(`${url}/serviceOverview/${pathVal}`,{headers}).then((el)=>{
-        console.log(el.data)
         setDashbordData(prev=>({...prev,...el.data}))
-    
        if(el.status!==200){
         return 
        }

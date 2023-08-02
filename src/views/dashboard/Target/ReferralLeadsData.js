@@ -30,6 +30,8 @@ function RenewalsTable({EmployeeData}) {
     let num = 0;
     const url = useSelector((el) => el.domainOfApi)
     const pathVal = useAdminValidation() 
+    const pathValMas = useAdminValidation('Master') 
+
 
     const [referralLeadsData, setReferralLeadsData] = useState([])
     const [pagination, setPagination] = useState(10)
@@ -38,7 +40,6 @@ function RenewalsTable({EmployeeData}) {
     const [selectedYear,setSelectedYear] = useState('')
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    const username = user.user.username;
     const token = user.token;
 
 
@@ -57,16 +58,16 @@ let totalAmount = 0
 const getLiveClasses = useCallback(async function () {
         try {
 
-            const response1 =  axios.get(`${ url }/referralsLeadstarget/${pathVal}`,{headers})
-            const response2 =  axios.get(`${url}/enquiryForm/all`,{headers})
-            const response3 =  axios.get(`${url}/invoice/all`,{headers})
+            const response1 =  axios.get(`${ url }/referralsLeadstarget/${pathValMas}`,{headers})
+            const response2 =  axios.get(`${url}/enquiryForm/${pathVal}`,{headers})
+            const response3 =  axios.get(`${url}/invoice/${pathVal}`,{headers})
 
             const data  =  await Promise.all([response1,response2,response3])
 
 
              data[0].data?.forEach(el => {
                 const LeadData = data[1].data.filter((el2)=>el2.invEmployeeId===el.Sr_No  && el2.enquirytype=== "Referred") 
-                const InvoiceData = data[2].data.filter((el2)=>el2.EmployeeId===el.Sr_No )   
+                const InvoiceData = data[2].data.filter((el2)=>el2.employeeMongoId===el.Sr_No )   
 
                 
                el.annualTarget.forEach((el3)=>{
@@ -187,8 +188,8 @@ const getLiveClasses = useCallback(async function () {
                 >
                     <option >Select Your Employee </option>
 
-                    {EmployeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
+                    {EmployeeData.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                        (
                             <option key={index} value={item._id} >{item.FullName}</option>
                         )
                     ))}

@@ -36,7 +36,7 @@ import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 const AuravedaMD = () => {
 
     const url = useSelector((el)=>el.domainOfApi)  
-    const pathVal = useAdminValidation()
+    const pathVal = useAdminValidation('Master')
     const dispatch = useDispatch()
 
 

@@ -33,13 +33,12 @@ import YogaSpinnar from 'src/views/theme/YogaSpinnar'
 import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
-    const username = user.user.username;
 
 function ClientTargetDataTable({EmployeeData}) {
     let num = 0
     const url = useSelector((el) => el.domainOfApi)
     const pathVal = useAdminValidation()
-
+    const pathvalMaster = useAdminValidation('Master')
     const [clientTargetData, setClientTarget] = useState([])
     const [pagination, setPagination] = useState(10)
     const [selectedEmployee, setSselectedEmployee] = useState('')
@@ -55,9 +54,7 @@ function ClientTargetDataTable({EmployeeData}) {
     const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','Sep','Oct','Nov','Dec']
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    const username = user.user.username;
     const token = user.token;
-    const centerCode = user.user.centerCode;
 
 const headers = {
         'Authorization': `Bearer ${token}`,
@@ -67,12 +64,12 @@ const headers = {
     const getClientTargetData = useCallback(async function () {
         try {
             const response1= axios.get(`${ url }/memberForm/${pathVal}`,{headers})
-            const response2 = axios.get(`${ url }/clientTarget/${pathVal}`,{headers})
+            const response2 = axios.get(`${ url }/clientTarget/${pathvalMaster}`,{headers})
             const data = await  Promise.all([response1,response2])
                
             
             data[1].data.forEach((el)=>{
-              const ClientFilterData =   data[0].data.filter((el2)=>el2.EmployeeId===el.Sr_No)
+              const ClientFilterData =   data[0].data.filter((el2)=>el2.employeeMongoId===el.Sr_No)
                 
               el.annualTarget.forEach((el3)=>{
                 el3.New_Sales = 0
@@ -196,8 +193,8 @@ const headers = {
                 >
                     <option >Select Your Employee </option>
 
-                    {EmployeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
+                    {EmployeeData.filter((list) => list.selected === 'Select').map((item, index) => (
+                        (
                             <option key={index} value={item._id} >{item.FullName}</option>
                         )
                     ))}

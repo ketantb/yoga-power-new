@@ -7,17 +7,20 @@ import {MdDelete} from 'react-icons/md';
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { hrManagement } from './Rights/rightsValue/erpRightsValue';
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 const  EmployeeTargetSetupForm =  React.lazy(()=>import('./EmployeeTargetSetupForm'))
   
 function EmployeeTargetSheet(){
   const url1 = useSelector((el)=>el.domainOfApi) 
+  const pathVal = useAdminValidation('Master')
   const [activeForm,setActiveForm] = useState(false)
   const [employeeTargetSheeTdata,setEmployeeTargetSeetData] = useState([])
   const [pagination, setPagination] = useState(10)
 
 
   const rightsData = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
-  ?.items?.empLoyeeHrProfile?.items?.erpEmployeeProfile?.rights) 
+  ?.items?.erpHrTargetSheet?.items?.erpTargetSheet?.rights) 
+
   const access = rightsData?rightsData:[]
   const isAdmin = useSelector((el)=>el.isAdmin)
                                        
@@ -47,7 +50,7 @@ useEffect(()=>{
 
 async function getEmployeeTargetSheetData(){  
 try{  
-const {data} = await  axios.get(`${url1}/employeeTargetSheet/all`,headers)
+const {data} = await  axios.get(`${url1}/employeeTargetSheet/${pathVal}`,headers)
 setEmployeeTargetSeetData(data.reverse())
 }catch(error){
   console.error(error)

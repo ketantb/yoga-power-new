@@ -523,20 +523,6 @@ const AllEnquires = () => {
                     })
                 })
             }
-            // fetch(`${ url }/prospect/create`, {
-            //     method: "POST",
-            //     headers: {
-            //         "Authorization": `Bearer ${ token }`,
-            //         'Accept': 'application/json',
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(data2)
-            // }).then((resp) => {
-            //     resp.json().then(() => {
-            //         setCallReport(false)
-            //         getEnquiry()
-            //     })
-            // })
 
         }
 
@@ -761,6 +747,7 @@ const AllEnquires = () => {
         setEdit({})
     }
 
+    console.log(result1)
 
     
     return (

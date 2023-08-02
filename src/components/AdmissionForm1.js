@@ -54,7 +54,8 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     const url1 = useSelector((el)=>el.domainOfApi) 
     const url = url1
     const unikqValidateObj = useUniqAdminObjeact()
-    const pathVal = useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
+
 
 
     const clickfun =(type)=>{
@@ -204,12 +205,12 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
             }
         }
 
-        const response1 =  axios.get(`${url}/Package/all`,headers)
-        const response2 =  axios.get(`${url}/leadSourceMaster/all`,headers)
-        const response3 =  axios.get(`${url1}/employeeForm/${pathVal}`,headers)
-        const response4 =  axios.get(`${url1}/packagemaster`,headers)
-        const response5 =  axios.get(`${url1}/memberForm/${pathVal}`,headers)
-        const response6 =  axios.get(`${url1}/Batch/all`,headers)
+        const response1 =  axios.get(`${url}/Package/${pathValMaster}`,headers)
+        const response2 =  axios.get(`${url}/leadSourceMaster/${pathValMaster}`,headers)
+        const response3 =  axios.get(`${url1}/employeeForm/${pathValMaster}`,headers)
+        const response4 =  axios.get(`${url1}/packageMaster/${pathValMaster}`,headers)
+        const response5 =  axios.get(`${url1}/memberForm/${pathValMaster}`,headers)
+        const response6 =  axios.get(`${url1}/Batch/${pathValMaster}`,headers)
 
 
 
@@ -274,7 +275,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
             ClientId:`${centerCode}MEM${10+mem.length}`,ClientReferenceName:clientReferance,
             EnquiryId:ids._id,
             typeOFBatchClasses,...unikqValidateObj
-            }
+        }
 
 
 const headers = {
@@ -352,7 +353,7 @@ const headers = {
         'My-Custom-Header': 'foobar'
 };
 
-  await  axios.get(`${url1}/invoice/${pathVal}`,{headers}).then(({data})=>{
+  await  axios.get(`${url1}/invoice/${pathValMaster}`,{headers}).then(({data})=>{
     setInvoice(data.length)
   })
  }

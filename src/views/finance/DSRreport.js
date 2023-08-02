@@ -99,7 +99,7 @@ const pathVal = useAdminValidation()
         return days;   
 }
 
-const dSrReportAllDate =  createDailyDsrReport(new Date(2023,1,15),new Date())
+const dSrReportAllDate =  createDailyDsrReport(new Date(2023,4,1),new Date())
 
 
 dSrReportAllDate.forEach((el)=>{
@@ -176,10 +176,7 @@ let holdRenewedInfo = [{createdAt:'',noOfRenewed:0,totalColAmount:0}]
                         if(el2.enquirytype==="Referred"){
                             el.referral =++noOfReferd
                         }
-                        if(el2?.enquirestatus==="notshow"){
-                            el.leadConverted = ++leadConverted 
-                            ++leadNoOfConversion
-                        }
+                        
                         if(el2?.appointmentfor==="Trial Session"){
                           el.trialScheduled =++scheduledTrail
                         }
@@ -189,6 +186,11 @@ let holdRenewedInfo = [{createdAt:'',noOfRenewed:0,totalColAmount:0}]
                         if(el2?.appointmentfor==="Appointment"){
                             el.trialNoOfApointment =++trailNoOfAppointment
                         }  
+                      }
+
+                      if(compareData(el.date,el2.enquiryConvertedDate) && el2?.enquirestatus==="notshow" ){
+                        el.leadConverted = ++leadConverted 
+                        ++leadNoOfConversion
                       }
                })
                el.existingLeads =noOfExistingLeadsLeads

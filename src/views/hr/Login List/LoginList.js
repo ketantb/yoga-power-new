@@ -33,7 +33,7 @@ import {
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
-
+import CustomSelectinput from '../CustomSelectinput'
 const LoginList = ({admin}) => {
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -42,6 +42,8 @@ const LoginList = ({admin}) => {
 
    const url = useSelector((el)=>el.domainOfApi) 
    const pathName = useAdminValidation()
+   const masterPtahVal = useAdminValidation('Master')
+
 
    const headers = {
     "Authorization": `Bearer ${token}`,
@@ -55,6 +57,7 @@ const LoginList = ({admin}) => {
   const [activeUpdate,setActiveUpdate] = useState('')
   const [allEmailData,setAllEmailData] = useState([])
   const [isAdimn,setIsAdmin] = useState(admin)
+  const  [emailVaidationEr,setEmailValidationError] = useState('')
   
   const [clientReferance,setClientReferance] = useState({
     clientName:'',
@@ -109,13 +112,11 @@ const LoginList = ({admin}) => {
         })
   }
 
-
   function getStaff() {
-      axios.get(`${url}/employeeform`, { headers})
+      axios.get(`${url}/employeeform/${masterPtahVal}`, { headers})
           .then((res) => {
             if(res.status===200){
-                console.log(res.data)
-                setStaff(res.data.filter((list) => list.username === username &&
+                setStaff(res.data.filter((list) => 
                 list.selected === 'Select'))
             }
           })
@@ -130,23 +131,26 @@ const LoginList = ({admin}) => {
         getAllEmailIdList()
     }
     if(Object.values(slectedStaffObj).length){
-        console.log(slectedStaffObj)
         setEmailObj(prev=>({...prev,mobNo:slectedStaffObj.ContactNumber}))
         setEmailObj(prev=>({...prev,empId:slectedStaffObj.EmployeeID}))
         setEmailObj(prev=>({...prev,Designation:slectedStaffObj.JobDesignation}))
         setEmailObj(prev=>({...prev,empName:slectedStaffObj.FullName}))
         setEmailObj(prev=>({...prev,username:slectedStaffObj.FullName}))
         setEmailObj(prev=>({...prev,email:slectedStaffObj.EmailAddress}))
-        setEmailObj(prev=>({...prev,MemBerId:slectedStaffObj._id}))
+        setEmailObj(prev=>({...prev,memBerId:slectedStaffObj._id}))
+        setEmailObj(prev=>({...prev,city:slectedStaffObj.city}))
+        setEmailObj(prev=>({...prev,location:slectedStaffObj.address}))
     }
 
   },[slectedStaffObj._id])
 
-
   function clientObj(obj){
     setSelectedStaffObj({...obj})
-    setEmailObj((prev)=>({...prev,empName:obj.FullName}))
  }
+
+ useEffect(()=>{
+setEmailValidationError('')
+ },[emailObj.email?.trim()])
 
 
 
@@ -167,6 +171,9 @@ const LoginList = ({admin}) => {
       alert('successfully save')
      }
       }catch(error){
+        if(error.response.status===400){
+          setEmailValidationError('This Email Already Exist Please Enter Different Email')
+        }
         console.error(error)
       }
   }
@@ -195,7 +202,7 @@ const LoginList = ({admin}) => {
   }
 
   function toUppdateSwitch(val,id,el){
-    axios.post(`${url}/signup/update/${id}`,{...el,status:!val},{headers}).then((res)=>{
+    axios.patch(`${url}/signup/update/logo/${id}`,{status:!val},{headers}).then((res)=>{
       if(res.status===200){
         getAllEmailIdList()
       }
@@ -218,7 +225,7 @@ const LoginList = ({admin}) => {
     empName:el.empName,
     empId:el.empId,
     mobNo:el.mobNo,
-    MemBerId:el.MemBerId,
+    memBerId:el.memBerId,
     createdBy:el.createdBy,
     createrId:el.createrId,
     isAdmin:el.isAdmin,
@@ -240,6 +247,10 @@ const LoginList = ({admin}) => {
         <CForm className='p-4'>
 
             <CRow className='p-0'>
+
+              <CCol>
+                <p className='text-danger'>{emailVaidationEr}</p>
+              </CCol>
 
               <CCol className='text-end' lg={12} md={12} sm={12} sx={12}>
                 <CButton color='danger' onClick={()=>{
@@ -267,31 +278,10 @@ const LoginList = ({admin}) => {
                        return  {...prev,centerCode:e.target.value}
                       })}/>
                 </CCol>
-                <CCol lg={4} md={6} >
-                
-                                  {/* <label className="mb-2">Select Employee </label> */}
-                                    {/* <CustomSelectInput data={staff} 
-                                    title={clientReferance.clientName?.trim()?clientReferance.clientName:"Select Employee Name"}
-                                     getData={clientObj}/> */}
-                                     <label className='mb-1'>User Name</label>
-
-<CDropdown  className="secondary p-0 m- w-100 border-0" style={{height:'fit-content'}} >
-  <CDropdownToggle className="secondary p-0 m-0 h-100 w-100 border-0" style={{background:'transparent'}}> 
-  <CFormInput
-    value={emailObj.empName}
-    onChange={(e)=>setEmailObj(prev=>({...prev,empName:e.target.value,username:e.target.value}))}
-                                     
-/></CDropdownToggle>
-<CDropdownMenu style={{ height:'fit-content',marginTop:'70px'}}  className="secondary p-0 w-100 " >
-    <div style={{maxHeight:'250px' ,overflowY:'scroll'}}>
-    {staff.filter((el)=>el.FullName?.toLocaleLowerCase()?.trim()?.includes(emailObj?.empName?.toLocaleLowerCase()?.trim())).map((el,i)=>
-      <CDropdownItem key={i} onClick={()=>clientObj(el)} >{el.FullName}<br/>{el.EmployeeID}</CDropdownItem>
-    )}
-    </div>
-
-</CDropdownMenu>
-</CDropdown>
-
+                <CCol lg={4} md={6} >                   
+               <label className='mb-1'>User Name</label>
+               <CustomSelectinput data={staff} getData={clientObj}/>
+                                  
                                      
                          </CCol>
                          <CCol lg={4} md={6} > 

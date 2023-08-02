@@ -14,7 +14,7 @@ const useAdminValidation = (type) => {
             :`filter-by-admin/${userInfo.createrId}`
         }else if(!userInfo.isAdmin){
         return userInfo.isAdminPatner?`filter-by-admin/${userInfo.emailUniqId}`
-        :`filter-by-employee/${userInfo.emailUniqId}`
+        :`filter-by-employee/${(userInfo?.memBerId?userInfo.memBerId:userInfo.emailUniqId)}`
         }
 
     } 
@@ -35,8 +35,8 @@ const useUniqAdminObjeact = ()=>{
 
     const uniqObj  = {
         empNameC:userInfo.username,
-        employeeIDC:'',
-        employeeMongoId:userInfo.emailUniqId,
+        employeeIDC:userInfo.emailUniqId,
+        employeeMongoId:(userInfo.isEmployee?userInfo.memBerId:userInfo.emailUniqId),
         centerNameC:userInfo.center,
         centerCodeC:userInfo.centerCode,
         adminNameC:userInfo.createdBy,

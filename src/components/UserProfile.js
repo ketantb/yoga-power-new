@@ -51,7 +51,7 @@ const UserProfile = () => {
   
 
    const getEmailFullData = async  ()=>{
-     axios.get(`${url}/signup/emailId/${(userId?.trim()||emailUniqId)}`)
+     axios.get(`${url}/signup/emailId/${(userId==='user'?emailUniqId:userId)}`)
     .then((el)=>{
         if(el.status===200){
 
@@ -161,10 +161,10 @@ const handleChange = event => {
                </div>
                        
             <h5 className='mb-3' >{socalMeadiaInfoArr.empName}</h5>   
-            <h5 className='mb-3' style={{fontWeight:'lighter'}} >{userId?.trim()?socalMeadiaInfoArr.email:email}</h5>   
+            <h5 className='mb-3' style={{fontWeight:'lighter'}} >{socalMeadiaInfoArr.email}</h5>   
 
                
-               {<CButton style={{display:(!toEdit &&!userId)?'block':'none'}} onClick={()=>setEdit(true)} color='dark' variant='outline'>Edit Profile</CButton>} 
+               {<CButton style={{display:(!toEdit &&userId==='user')?'block':'none'}} onClick={()=>setEdit(true)} color='dark' variant='outline'>Edit Profile</CButton>} 
 
                {<div style={{display:toEdit?'block':'none'}}  className='text-start'> 
                 <CFormInput
@@ -242,7 +242,7 @@ const handleChange = event => {
                   return <CCard className='my-2 text-start '>
                     <div className='d-flex px-2'>
                     <BsLink style={{fontSize:'30px'}}/>
-                    <a style={{fontSize:'25px'}} className='m-0 mx-4 p-0' href={el.link} >
+                    <a style={{fontSize:'18px'}} className='m-0 mx-4 p-0' href={el.link} >
                       {el.linkName}
                     </a>
                     </div>

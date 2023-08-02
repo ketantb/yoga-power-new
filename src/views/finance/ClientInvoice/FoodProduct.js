@@ -40,7 +40,7 @@ const FoodProduct = () => {
     const [noofProduct,setNoOfProduct] = useState([])
     const [activeToIncrement,setActiveToIncrement] = useState([])
 
-    const pathVal = useAdminValidation()
+    const pathVal = useAdminValidation('Master')
 
     const addProduct  = useAddProduct(setNoOfProduct,setActiveToIncrement)
     const incrementNoOfItem =  useIncrementNoOfItem(setNoOfProduct,setActiveToIncrement)

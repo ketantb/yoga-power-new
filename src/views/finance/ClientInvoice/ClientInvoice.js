@@ -44,11 +44,10 @@ import CustomSelectInput from "src/views/Fitness/CustomSelectInput/CustomSelectI
 import GeneralProduct from "./GeneralProduct";
 import GeneralProductTable from "./customTableComponent.js/GeneralProductTable";
 import Invoice from "./Invoice/Invoice";
-
+import { useAdminValidation } from "src/views/Custom-hook/adminValidation";
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const username = user.user.username;
 function ClientInvoice(){
     const [activeKey, setActiveKey] = useState(1)
     const [activeKey2, setActiveKey2] = useState(1)
@@ -59,7 +58,7 @@ function ClientInvoice(){
     const foodProduct = useSelector((el)=>el.stockDataFoodProduct)
     const genralProduct = useSelector((el)=>el.genralProduct) 
  
-
+    const pathValMaster= useAdminValidation('Master')
 
     const [clientData,setClientData]= useState([])
     const [enquiryData,setEnquiryData] = useState([])
@@ -135,9 +134,9 @@ if(selectedStaffId.trim()){
 
 async  function toGetSelectInputData(){
 try{
-const response1 =     axios.get(`${url}/memberForm/all`, {headers})   
-const response2 =    axios.get(`${url}/enquiryForm/all`, {headers})  
-const response3 = axios.get(`${url}/employeeform`,{headers}) 
+const response1 =     axios.get(`${url}/memberForm/${pathValMaster}`, {headers})   
+const response2 =    axios.get(`${url}/enquiryForm/${pathValMaster}`, {headers})  
+const response3 = axios.get(`${url}/employeeform/${pathValMaster}`,{headers}) 
 
 const data = await Promise.all([response1,response2,response3])
 setClientData(data[0].data)
@@ -359,7 +358,7 @@ return   <>
                                     >
                                 <option >Select Staff</option>
 
-                                        {staff.filter((list) => list.username === username &&
+                                        {staff.filter((list) => 
                                             list.selected === 'Select').map((item, index) => (
                                                 <option key={index} value={item._id}>{item.FullName}</option>
                                             ))}

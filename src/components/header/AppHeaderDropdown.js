@@ -52,7 +52,7 @@ const AppHeaderDropdown = () => {
   }
 
   const profile = ()=>{
-    navigate('/profile')
+    navigate('/profile/user')
   }
 
   const companyProfile = ()=>{

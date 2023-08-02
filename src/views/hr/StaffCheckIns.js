@@ -201,7 +201,7 @@ const StaffCheckIns = () => {
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                                {result1.filter((list) => list.username === username).map((item, index) => (
+                                {result1.map((item, index) => (
                                     <CTableRow key={index}>
                                         <CTableDataCell>{index + 1}</CTableDataCell>
                                         <CTableDataCell>{item.StaffName}</CTableDataCell>

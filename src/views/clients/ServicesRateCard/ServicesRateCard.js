@@ -30,6 +30,7 @@ import {
 import React, { useState,useCallback,useEffect } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -40,6 +41,7 @@ const ServicesRateCard = () => {
     const [activeKey, setActiveKey] = useState(1)
     const url = useSelector((el)=>el.domainOfApi)  
     const [servicesRateCard,setServicesRateCard] = useState([])
+    const pathVal = useAdminValidation('Master')
 
 
     const  getSalesCallData = useCallback(async function() {

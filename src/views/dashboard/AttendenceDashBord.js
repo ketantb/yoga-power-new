@@ -53,7 +53,7 @@ const attndedData =Object.entries(dashborddata.weekly).map((el)=>{
 
 
    const getDasCenterPartner = ()=>{
-    axios.get(`${'http://localhost:8000'}/attendanceActivity/${pathVal}`,{headers}).then((el)=>{
+    axios.get(`${url}/attendanceActivity/${pathVal}`,{headers}).then((el)=>{
      console.log(el.data)
      setDashbordData(el.data)
  

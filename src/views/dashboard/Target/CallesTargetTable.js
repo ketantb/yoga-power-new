@@ -35,6 +35,9 @@ function CallesTargetTable({EmployeeData}) {
     let num =0;
     const url = useSelector((el) => el.domainOfApi)
     const pathVal  = useAdminValidation()
+    const pathValMaster  = useAdminValidation('Master')
+
+
 
     const [callsTargetData, setCallsTarget] = useState([])
     const [pagination, setPagination] = useState(10)
@@ -59,7 +62,7 @@ function CallesTargetTable({EmployeeData}) {
     const getLiveClasses = useCallback(async function () {
         try {
 
-            const response1 =  axios.get(`${url}/callsTarget/${pathVal}`,{headers})
+            const response1 =  axios.get(`${url}/callsTarget/${pathValMaster}`,{headers})
             const response2 =  axios.get(`${url}/memberCallReport/${pathVal}`,{headers})
             const response3 =  axios.get(`${url}/prospect/${pathVal}`,{headers})
             const data  =  await Promise.all([response1,response2,response3])

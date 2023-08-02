@@ -32,18 +32,17 @@ function MeadiaTargetTable({EmployeeData}) {
     let totalTarget = 0
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    const username = user.user.username;
     const token = user.token;
 
 
-    const headers = {
+const headers = {
         'Authorization': `Bearer ${token}`,
         'My-Custom-Header': 'foobar'
 };
 
 
     const url = useSelector((el) => el.domainOfApi)
-    const pathVal  = useAdminValidation()
+    const pathVal  = useAdminValidation('Master')
 
     const [mediaTarget, setMediaTarget] = useState([])
     const [pagination, setPagination] = useState(10)
@@ -143,8 +142,8 @@ function MeadiaTargetTable({EmployeeData}) {
                 >
                     <option >Select Your Employee </option>
 
-                    {EmployeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
+                    {EmployeeData.filter((list) => list.selected === 'Select').map((item, index) => (
+                        (
                             <option key={index} value={item._id} >{item.FullName}</option>
                         )
                     ))}
@@ -176,23 +175,6 @@ function MeadiaTargetTable({EmployeeData}) {
 
             <CTableBody>
 
-                {/* {
-                    mediaTarget.filter((el, i) => {
-                        if (pagination - 10 < i + 1 && pagination >= i + 1) {
-                              return el
-                            }
-                    }).map((el, i) =>
-                        <CTableRow>
-                            <CTableDataCell>{i + 1 + pagination - 10}</CTableDataCell>
-                            <CTableDataCell>{el.Employee}</CTableDataCell>
-                            <CTableDataCell>{el.Google_Reviews}</CTableDataCell>
-                            <CTableDataCell>{el.Facebook}</CTableDataCell>
-                            <CTableDataCell>{el.Instagram}</CTableDataCell>
-                            <CTableDataCell>{el.Linkedin}</CTableDataCell>
-                            <CTableDataCell>{el.Justdial}</CTableDataCell>
-                            <CTableDataCell>{el.Achived}</CTableDataCell>
-                        </CTableRow>
-                    )} */}
                     {[... mediaTarget.filter((el4)=>{
     if(selectedYear){
      return el4.Year===selectedYear

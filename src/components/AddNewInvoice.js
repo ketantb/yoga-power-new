@@ -30,7 +30,7 @@ import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/ad
 
 function AddNewInvoice({id,data23,viewInvoice,setViewInvoice,getDetails}){
 
- const pathVal = useAdminValidation()   
+ const pathVal = useAdminValidation('Master')   
 
  const RenewedObj  = [data23].find((list) =>{
         const time =  (new Date(data23.endDate) -new Date())
@@ -190,7 +190,7 @@ return
 
 const [staff, setStaff] = useState([])
 function getStaff() {
-    axios.get(`${url1}/employeeForm/${pathVal}`, {
+    axios.get(`${url1}/employeeform/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -205,7 +205,7 @@ function getStaff() {
 
 
 function getSubService() {
-    axios.get(`${url1}/packagemaster`, {
+    axios.get(`${url1}/packageMaster/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -271,20 +271,23 @@ const getCurrentDateInput = () => {
 
 useEffect(()=>{
 if(startDate&& serviceDays){
-console.log(startDate)
 setEndDate(getCurrentDateInput())
 }
-},[startDate])
+console.log(getCurrentDateInput())
+console.log(serviceDays)
+
+
+},[startDate,ser2,serviceDays])
 
 useEffect(()=>{
 if(ser1){
 subService.forEach((el)=>{
-if(el.Service=== ser1){
+if(el.Duration=== ser2){
 setServiceDays(el.Days)
 }
 })
 }
-},[ser1])
+},[ser2])
 
 
 
@@ -323,7 +326,7 @@ setServiceDays(el.Days)
                              onChange={(e) => setSer5(e.target.value)}                                 
                             >
                             <option>Select Assign Staff</option>
-                                {staff.filter((list) => list.username === username &&
+                                {staff.filter((list) => 
                                  list.selected === 'Select').map((item, index) => (
                                     <option key={index} value={item._id}>{item.FullName}</option>
                                 ))}
@@ -361,10 +364,9 @@ setServiceDays(el.Days)
 
                                 >
                                     <option>Select Service</option>
-                                    {[...subService.filter((el)=>{
-                return el.username === username                                  
-            })].map((el,i)=><option key={i}>{el.Service
-            }</option>)
+                                    {subService.map((item) => (
+                                (item.Status=== true && (item.Service.toLocaleLowerCase().trim()))))
+                            .filter((el,i,arr)=>i===arr.indexOf(el)).map((el,i)=><option key={i}>{el}</option>)
             }
                                 </CFormSelect>
                             </CCol>
@@ -380,7 +382,7 @@ setServiceDays(el.Days)
                                 >
                                     <option>Select Package</option>
                                     {[...subService.filter((el)=>{
-                return el.username === username && el.Service=== ser1                                
+                return  el.Service.toLocaleLowerCase().trim()=== ser1                                
             })].map((el,i)=><option key={i}>{el.Package_Name
                 }</option>)
             }   
@@ -444,7 +446,7 @@ setServiceDays(el.Days)
                  <option>Select Duration</option>
                    {[...subService.filter((el)=>{
                   
-                 return el.username === username && el.Service=== ser1                                  
+                 return  el.Service.toLocaleLowerCase().trim()=== ser1                                  
             })].map((el,i)=><option key={i}>{el.Duration
                 }</option>)
             }   
@@ -465,7 +467,7 @@ setServiceDays(el.Days)
                         >
                             <option>Select Fees</option>
                             {[...subService.filter((el)=>{
-            return   el.Service=== ser1                                    
+            return   el.Service.toLocaleLowerCase().trim()=== ser1                                    
             })].map((el,i)=><option key={i}>{el.Fees
 
                 }</option>)

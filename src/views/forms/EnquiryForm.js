@@ -20,16 +20,18 @@ import { useSelector } from 'react-redux'
 import CustomSelectInput from "../Fitness/CustomSelectInput/CustomSelectInput";
 import { useAdminValidation,useUniqAdminObjeact} from "../Custom-hook/adminValidation";
 
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
+
 
 
 const EnquiryForm = () => {
 
    const  uniqObj  = useUniqAdminObjeact()
    const  pathVal = useAdminValidation()
+   const  pathValMaster = useAdminValidation('Master')
+
 
     const url1 = useSelector((el)=>el.domainOfApi) 
+    const url = url1
 
     const [Fullname, setFullName] = useState("");  // 
     const [Emailaddress, setEmailAddress] = useState(""); //
@@ -99,14 +101,13 @@ const EnquiryForm = () => {
         getStaff()
         getLeadSource()
         getClientData()
-        axios.get(`${url1}/packagemaster`, {
+        axios.get(`${url1}/packageMaster/${pathValMaster}`, {
         
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                console.log(res.data)
                 setResult(res.data)
             })
             .catch((error) => {
@@ -119,7 +120,6 @@ const EnquiryForm = () => {
             }
         })
             .then((res) => {
-                console.log(res.data)
                 setResult1(res.data)
             })
             .catch((error) => {
@@ -129,14 +129,13 @@ const EnquiryForm = () => {
     }, []);
 
     function getLeadSource() {
-        axios.get(`${url}/leadSourceMaster/all`, {
+        axios.get(`${url}/leadSourceMaster/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                console.log(res.data)
-                setLeadArr(res.data)
+                setLeadArr(res.data.filter((el)=>el.Status))
             })
             .catch((error) => {
                 console.error(error)
@@ -144,7 +143,7 @@ const EnquiryForm = () => {
     }
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url1}/employeeform/${pathVal}`, {
+        axios.get(`${url1}/employeeform/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -159,7 +158,7 @@ const EnquiryForm = () => {
     }
 
     function getClientData() {
-        axios.get(`${url1}/memberForm/all`, {
+        axios.get(`${url1}/memberForm/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

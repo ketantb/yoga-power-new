@@ -38,10 +38,11 @@ function RenewalsTable({EmployeeData}) {
     const [selectedYear,setSelectedYear] = useState('')
     let num =0
     let user = JSON.parse(localStorage.getItem('user-info'))
-    const username = user.user.username;
     const token = user.token;
 
     const pathVal =useAdminValidation()
+    const pathValMaster =useAdminValidation('Master')
+
 
     let totalTarget = 0
     let noOfRenewed = 0
@@ -57,7 +58,7 @@ const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','
 
     const getLiveClasses = useCallback(async function () {
         try {
-            const response1 =  axios.get(`${url}/renewalsTarget/${pathVal}`,{headers})
+            const response1 =  axios.get(`${url}/renewalsTarget/${pathValMaster}`,{headers})
             const response2 =  axios.get(`${url}/memberForm/${pathVal}`,{headers})
             const response3 =  axios.get(`${url}/invoice/${pathVal}`,{headers})
 
@@ -66,8 +67,8 @@ const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','
             console.log(data[1].data)
 
             data[0].data?.forEach(el => {
-                const memBerData = data[1].data.filter((el2)=>el2.EmployeeId   ===el.Sr_No&&el2.renewed===true ) 
-                const InvoiceData = data[2].data.filter((el2)=>el2.EmployeeId===el.Sr_No )   
+                const memBerData = data[1].data.filter((el2)=>el2.employeeMongoId   ===el.Sr_No&&el2.renewed===true ) 
+                const InvoiceData = data[2].data.filter((el2)=>el2.employeeMongoId===el.Sr_No )   
 
                 
                  console.log(InvoiceData)

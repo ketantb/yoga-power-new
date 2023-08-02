@@ -73,9 +73,8 @@ const Dashboard = () => {
     service:{}
   })
   
-  const [centerPartnerData,setCenterPartnerData] = useState([])
   const [dateFilterObj,setDteFilterObj] = useState({
-    startDate:moment(new Date(new Date().getFullYear(),new Date().getMonth(),1)).format('YYYY-MM-DD'),
+    startDate:moment(new Date(new Date().getFullYear(),0,1)).format('YYYY-MM-DD'),
     endDate:moment(new Date()).format('YYYY-MM-DD')
   })
 
@@ -83,8 +82,6 @@ const Dashboard = () => {
   const functionToDirectLogin = useLoginHook()
   const inputRef = useRef()
 
-
-  
   const user = JSON.parse(localStorage.getItem('user-info'))
   const token = user.token;
 
@@ -105,21 +102,6 @@ const Dashboard = () => {
   }, [])
 
 
-  const getDasCenterPartner = ()=>{
-    axios.get(`${url}/signup/center-patner`,{headers}).then((el)=>{
-      setCenterPartnerData(el.data)
-     if(el.status!==200){
-      return 
-     }
-   }).catch((error)=>{console.log(error)})
-
-   }
-
-   
-   useEffect(()=>{
-    getDasCenterPartner()
-   },[])
-
    const getDasBoardData = ()=>{
  
    axios.get(`${url}/leadDashBoard/${dateFilterObj.startDate}/${dateFilterObj.endDate}/${pathVal}`,{headers})
@@ -129,9 +111,7 @@ const Dashboard = () => {
      }
    setDashbordData(prev=>({...prev,...el?.data}))
 
- }).catch((error)=>{console.log(error)})
-
-   }
+ }).catch((error)=>{console.log(error)})}
 
    
    useEffect(()=>{
@@ -140,16 +120,6 @@ const Dashboard = () => {
 
 
 
-
-  const progressGroupExample1 = [
-    { title: 'Monday', value1: 34, value2: 78 },
-    { title: 'Tuesday', value1: 56, value2: 94 },
-    { title: 'Wednesday', value1: 12, value2: 67 },
-    { title: 'Thursday', value1: 43, value2: 91 },
-    { title: 'Friday', value1: 22, value2: 73 },
-    { title: 'Saturday', value1: 53, value2: 82 },
-    { title: 'Sunday', value1: 9, value2: 69 },
-  ]
 
   const progressGroupExample2 = [
     { title: 'Male', icon: cilUser, value: 53 },
@@ -297,28 +267,8 @@ const Dashboard = () => {
 
         <ServiceDashboard/>
 
-  <CRow className='my-2'>
-    <CInputGroup style={{ width: "300px" }}>
 
-    <CInputGroupText
-    component="label"
-    htmlFor="inputGroupSelect01"
-    >
-    Enter Year 
-   </CInputGroupText>
 
-   <CFormInput
-    type="number"
-    ref={inputRef}
-  />
-<CButton type="button" color="primary"  onClick={(()=>setSelectedYear(inputRef.current.value))}  >
-    Go
-</CButton>
-</CInputGroup>
-    </CRow>
-
-        <Income  year={selectedYear}/>
-        <Profite   year={selectedYear}/>
         
         {(access?.includes(dashboardRights.attendance)||isAdmin)&&<CCol lg={6} sm={12}>
 
@@ -394,6 +344,29 @@ const Dashboard = () => {
             </CCardBody>
           </CCard>
         </CCol>}
+
+        <CRow className='my-2'>
+    <CInputGroup style={{ width: "300px" }}>
+
+    <CInputGroupText
+    component="label"
+    htmlFor="inputGroupSelect01"
+    >
+    Enter Year 
+   </CInputGroupText>
+
+   <CFormInput
+    type="number"
+    ref={inputRef}
+  />
+<CButton type="button" color="primary"  onClick={(()=>setSelectedYear(inputRef.current.value))}  >
+    Go
+</CButton>
+</CInputGroup>
+    </CRow>
+
+        <Income  year={selectedYear}/>
+        <Profite   year={selectedYear}/>
 
       </CRow>
       
