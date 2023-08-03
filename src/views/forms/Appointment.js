@@ -20,12 +20,10 @@ import {
     CTableRow,
 } from '@coreui/react'
 import axios from 'axios'
-const url = 'https://yog-seven.vercel.app'
 import { useSelector } from 'react-redux'
 import { MdDelete } from "react-icons/md";
 import YogaSpinnar from '../theme/YogaSpinnar'
-
-
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 
 const optionAppointmentTyep = [
@@ -40,6 +38,8 @@ const optionAppointmentTyep = [
 
 const Appointment = () => {
     const url1 = useSelector((el) => el.domainOfApi)
+    const url=url1
+    const pathValMaster = useAdminValidation('Master')
 
     const [appointment, setAppointment] = useState(false)
     const [Enquiry, setEnquiry] = useState([])
@@ -79,14 +79,13 @@ const Appointment = () => {
         getStaff()
     }, [])
     function getEnquiry() {
-        axios.get(`${url1}/memberForm/all`, {
+        axios.get(`${url1}/memberForm/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
         })
             .then((res) => {
-                console.log(res.data.filter((list) => list.username === username).reverse())
-                setEnquiry(res.data.filter((list) => list.username === username).reverse())
+                setEnquiry(res.data.reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -96,13 +95,12 @@ const Appointment = () => {
     const selectedOption = (e) => {
         setClientName(e.target.textContent)
         setMemberId(e.target.id)
-        console.log(Enquiry.filter((el) => el._id === e.target.id)[0].ContactNumber)
         setMobileno(Enquiry.filter((el) => el._id === e.target.id)[0].ContactNumber || '')
         setActive(false)
     }
 
     function getStaff() {
-        axios.get(`${url1}/employeeform`, {
+        axios.get(`${url1}/employeeform/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -157,8 +155,7 @@ const Appointment = () => {
         "Staff": staffValue,
         "Cancel": 'Not'
     }
-    console.log(AppointmentObj)
-    console.log(appointmentData)
+
 
 
     const sendAppointmentData = async () => {

@@ -12,7 +12,6 @@ import {
     CModalFooter,
     CModalHeader,
     CModalTitle,
-
     CRow,
     CTable,
     CTableBody,

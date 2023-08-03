@@ -128,6 +128,8 @@ const AllEnquires = () => {
     
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
+    const username = user.user.username;
+
     const dashboardAccess = user.user.dashboardAccess;
     const [result1, setResult1] = useState([]);
     const [result, setResult] = useState([]);
@@ -138,7 +140,6 @@ const AllEnquires = () => {
 
 
     const hiddenXLimportFileInput = useRef('')
-    const hiddenXLExportFileInput = useRef('')
 
 
     useEffect(() => {
@@ -166,30 +167,11 @@ const AllEnquires = () => {
 
 
     // Export 
-    const HandaleExportClick = () => {
-        hiddenXLExportFileInput.current.click()
-    }
-    const HandaleExportChange = (event) => {
-        const importXlFile = event.target.files[0];
-    }
-
-
-
+ 
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${ url }/prospect/${pathRoute}`, {
-            headers: {
-                'Authorization': `Bearer ${ token }`
-            }
-        })
-            .then((res) => {
-                console.warn(res.data.filter((list) => list.status === "prospect"))
-                setPros(res.data.filter((list) => list.status === "prospect"))
-            })
-            .catch((error) => {
-                console.error(error)
-            })
+    
         axios.get(`${ url }/subservice/all`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
@@ -292,34 +274,10 @@ const AllEnquires = () => {
             })
 
 
-            fetch(`${ url }/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${ token }`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data2)
-            }).then((resp) => {
-                resp.json().then(() => {
-                    setCallReport(false)
-                })
-            })
 
         } else if (enquiryStage === 'Trial Session') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', Counseller: staff.find((el)=>el._id===Counseller)?.FullName }
-            let data2 = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName:
-                 ServiceName1, AppointmentDate: appointmentDate, AppointmentTime:
-                  appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, 
-                  FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, 
-                  Counseller: staff.find((el)=>el._id===Counseller)?.FullName, Discussion: Discussion,
-                status: 'CallReport',
-                EmployeeId:Counseller,...unikqValidateObj 
-            }
-
+          
             fetch(`${ url }/enquiryForm/update/${followForm}`, {
                 method: "POST",
                 headers: {
@@ -335,20 +293,7 @@ const AllEnquires = () => {
                 })
             })
 
-            fetch(`${ url }/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${ token }`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({...data1,...data2})
-            }).then((resp) => {
-                resp.json().then(() => {
-                    getEnquiry()
-                    setCallReport(false)
-                })
-            })
+    
         } else if (enquiryStage === 'Not interested') {
                
 
@@ -378,20 +323,6 @@ const AllEnquires = () => {
                 })
             })
 
-            fetch(`${ url }/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${ token }`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data2)
-            }).then((resp) => {
-                resp.json().then(() => {
-                    setCallReport(false)
-                    getEnquiry()
-                })
-            })
         } 
         
         
@@ -399,70 +330,46 @@ const AllEnquires = () => {
             handleAdmission({...followUpData,type:'top'})
             setVisible(false)
             
-            let data2 = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email,
-                 ServiceName: ServiceName1, 
-                 AppointmentDate: appointmentDate,
-                  AppointmentTime: appointmentTime, enquiryStage: enquiryStage,
-                   CallStatus: CallStatus1, FollowupDate: FollowupDate, 
-                   TimeFollowp: TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName, Discussion: Discussion,
-                status: 'CallReport',... unikqValidateObj 
-            }
-            fetch(`${ url }/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${ token }`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({...data2})
-            }).then((resp) => {
-                resp.json().then(() => {
-                    getEnquiry()
-                    setCallReport(false)
-                })
-            })
+           
+       
         } else if (enquiryStage === 'Prospect') {
-            let data = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email,
-                ServiceName: ServiceName1, AppointmentDate: appointmentDate,
-                AppointmentTime: appointmentTime, enquiryStage: enquiryStage,
-                CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp:
-                TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName , Discussion: Discussion,
-                status: 'prospect',... unikqValidateObj 
-            }
-            let data2 = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate,
-                 AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, 
-                 FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName , Discussion: Discussion,
-                status: 'CallReport',... unikqValidateObj 
-            }
+    
+       
             if (pros.filter((list) => list.EnquiryID === followForm).length > 0) {
-                const found = pros.filter((list) => list.EnquiryID === followForm).map((element, index) => {
-                    return index === 0 && element._id;
-                });
-                fetch(`${ url }/prospect/update/${ found[0] }`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${ token }`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({...data,...data2})
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        getEnquiry()
-                        setVisible(false)
-                    })
-                })
+               
 
-                const data1 = { Counseller, CallStatus: CallStatus1 }
+                // let data = {
+                //     username: username,
+                //     CallDate: date, Time: time,
+                //     Name: Name, Contact: Contact, Email: email,
+
+                //      ServiceName: ServiceName1, 
+                //      AppointmentDate: appointmentDate,
+                //       AppointmentTime: appointmentTime,
+                //       enquiryStage: enquiryStage,
+                //        CallStatus: CallStatus1,  
+                //        TimeFollowp:
+                //         TimeFollowp, Counseller: Counseller, 
+ 
+                //         Discussion: Discussion,
+                //     FollowupDate: FollowupDate, 
+                // }
+
+                const data1 = { 
+                    Counseller, CallStatus:CallStatus1,
+                    appointmentfor:enquiryStage,
+                    PFollowupDate:FollowupDate,
+                    PDiscussion: Discussion,
+                    PTimeFollowp:TimeFollowp,       
+                    PAppointmentTime: appointmentTime,
+                    PAppointmentDate: appointmentDate,
+                    PServiceName: ServiceName1, 
+                    PCallDate: date, 
+                    PTime: time,
+                    PName: Name, 
+                    PContact: Contact,
+                    PEmail: email,
+                }
 
                 fetch(`${ url }/enquiryForm/update/${ followForm }`, {
                     method: "POST",
@@ -480,20 +387,7 @@ const AllEnquires = () => {
                     })
                 })
             } else {
-                fetch(`${ url }/prospect/create`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${ token }`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        getEnquiry()
-                        setVisible(false)
-                    })
-                })
+ 
 
                 const data1 = { EmployeeId:Counseller,Counseller:staff.find((el)=>el._id===Counseller)?.FullName , CallStatus: CallStatus1 }
 
@@ -525,30 +419,8 @@ const AllEnquires = () => {
         var time =
             + currentdate.getHours() + ":"
             + currentdate.getMinutes();
-        let data = {
-            username: username,
-            EnquiryID: followForm, CallDate: date, Time: time,
-            Name: Name, Contact: Contact, Email: email, ServiceName:
-             ServiceName1, CallStatus: CallStatus1, FollowupDate: 
-             FollowupDate, TimeFollowp: TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName,
-              Discussion: Discussion,EmployeeId:Counseller,... unikqValidateObj,
-             
-            status: 'CallReport'
-        }
-
-        fetch(`${ url }/prospect/create`, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${ token }`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        }).then((resp) => {
-            resp.json().then(() => {
-                setCallReport(false)
-            })
-        })
+   
+        
         const data1 = { Counseller }
 
         fetch(`${ url}/enquiryForm/update/${ followForm }`, {
@@ -569,7 +441,7 @@ const AllEnquires = () => {
     }
     const [ogList, setOgList] = useState([])
     function getEnquiry() {
-        axios.get(`${ url }/enquiryForm/${pathRoute}`, {
+        axios.get(`${url}/enquiryForm/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -752,7 +624,7 @@ const AllEnquires = () => {
         ["Mobile"]: el.ContactNumber ,
         ["Service"]: el.ServiceName ,
         ["Source"]: el.enquirytype,
-        ["Enquiry stage"]:el.appointmentfor,
+        ["Enquiry stage"]:el.identifyStage,
         ["Call Status"]:el.CallStatus,
         ["Last Call"]:el.Message,
         ['Date/Time']:(moment(el.appointmentDate).format("DD-MM-YYYY")
@@ -844,10 +716,6 @@ const AllEnquires = () => {
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>
-                                    <CFormInput type='file'
-                                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                        ref={hiddenXLExportFileInput}
-                                        onChange={HandaleExportChange} hidden />
                                 </CButtonGroup>
                             </CCol>
                         </CRow>
@@ -861,8 +729,7 @@ const AllEnquires = () => {
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                             Open qry: {result1.filter((list) =>
-                                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select) 
-                                                    && list.status === 'all_enquiry' && list.enquirestatus!=='notshow'
+                                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.enquirestatus!=='notshow'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
@@ -878,6 +745,7 @@ const AllEnquires = () => {
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Cold: {result1.filter((list) =>
                                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold'
+                                                    && list.enquirestatus!=='notshow'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
@@ -892,22 +760,22 @@ const AllEnquires = () => {
                                     <CCardBody className='d-flex justify-content-around'>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
-                                                FollowUps: {pros.filter((list) =>
-                                                     list.status === 'prospect'
+                                                FollowUps: {result1.filter((list) =>
+                                                     list.appointmentfor === 'Prospect' && list.enquirestatus!=='notshow'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Trial: {result1.filter((list) =>
-                                                     list.appointmentfor === 'Trial Session'
+                                                     list.appointmentfor === 'Trial Session' && list.enquirestatus!=='notshow'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Appointment: {result1.filter((list) =>
-                                                     list.appointmentfor === 'Appointment'
+                                                     list.appointmentfor === 'Appointment' && list.enquirestatus!=='notshow'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
@@ -923,21 +791,21 @@ const AllEnquires = () => {
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Trial Scheduled: {result1.filter((list) =>
-                                                     list.appointmentfor === 'Trial Session'
+                                                     list.appointmentfor === 'Trial Session' && list.enquirestatus!=='notshow'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Completed: {result1.filter((list) =>
-                                                     list.status === 'trailComplete'
+                                                     list.status === 'trailComplete' && list.enquirestatus!=='notshow'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Converted: {result1.filter((list) =>
-                                                     list.status === 'trailConverted'
+                                                     list.appointmentfor === 'Trial Session' && list.enquirestatus==='notshow'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
@@ -1958,7 +1826,7 @@ const AllEnquires = () => {
                                         <CTableDataCell>{item.ContactNumber}</CTableDataCell>
                                         <CTableDataCell>{item.ServiceName}</CTableDataCell>
                                         <CTableDataCell>{item.enquirytype}</CTableDataCell>
-                                        <CTableDataCell>{item.appointmentfor}</CTableDataCell>
+                                        <CTableDataCell>{item.identifyStage}</CTableDataCell>
                                         <CTableDataCell>{item.CallStatus}</CTableDataCell>
                                         <CTableDataCell>{item.Message}</CTableDataCell>
                                         <CTableDataCell style={{display:(isAdmin|| enquiryAdd)?'':'none'}}>

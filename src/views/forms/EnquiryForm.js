@@ -238,11 +238,9 @@ return
              address, Area, city, Profession,
             StaffName, CenterName, CallStatus, Message,
             person_Name, Relation, CountryCode2: CountryCode2, ContactNumber2: ContactNumber2,
-            EnquiryDate, ServiceName, ServiceVariation, Customertype,
-             enquirytype, appointmentDate,
-            appointmentTime, appointmentfor: appointmentfor, 
-            Counseller: counseller,trialDate, trialDate, status: "all_enquiry",
-            ClientReferenceName:clientReferance,
+            EnquiryDate, ServiceName, ServiceVariation, Customertype,enquirytype, appointmentDate,
+            appointmentTime, appointmentfor:'',identifyStage:  appointmentfor,
+            Counseller: counseller,trialDate, trialDate, status: "all_enquiry",ClientReferenceName:clientReferance,
         }
 
         const headers = {

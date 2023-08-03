@@ -641,7 +641,7 @@ const EnquireAppointment = () => {
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
-                        <strong className="mt-2">Enquire Appointment <span className='float-end'>Total Member : {result1.filter((list) => list.appointmentfor === 'Appointment').length}</span></strong>
+                        <strong className="mt-2">Enquire Appointment <span className='float-end'>Total Member : {result1.filter((list) =>list.enquirestatus!=='notshow'&& list.appointmentfor === 'Appointment').length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>
@@ -1645,7 +1645,7 @@ const EnquireAppointment = () => {
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
-                                {result1.filter((list) =>
+                                {result1.filter((list) =>list.enquirestatus!=='notshow'&&
                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                                     list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                                 ).slice(paging * 10, paging * 10 + 10).map((item, index) => (

@@ -109,14 +109,13 @@ const FollowupScheduling = () => {
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/prospect/${pathRoute}`, {
+        axios.get(`${url}/enquiryForm/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                console.log(res.data)
-                setPros(res.data.filter((list) => list.enquiryStag==="Prospect"))
+                setPros(res.data.filter((list) => list.appointmentfor==="Prospect"))
             })
             .catch((error) => {
                 console.error(error)
@@ -418,21 +417,18 @@ const FollowupScheduling = () => {
 
 
     function getEnquiry() {
-        axios.get(`${url}/prospect/${pathRoute}`, {
+        axios.get(`${url}/enquiryForm/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                console.log(res.data)
                 setResult1(res.data.reverse())
             })
             .catch((error) => {
                 console.error(error)
             })
     }
-
-    console.log(result1);
 
     function getProspect(id) {
         axios.get(`${url1}/enquiryForm/${id}`, {
@@ -505,7 +501,9 @@ const FollowupScheduling = () => {
         let data = {
             username: username,
             EnquiryID: followForm, CallDate: date, Time: time,
-            Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+            Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, 
+            CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, 
+            Counseller: Counseller, Discussion: Discussion,
             status: 'CallReport'
         }
 
@@ -1318,11 +1316,12 @@ const FollowupScheduling = () => {
                                 {result1
                                 .filter((list) =>
                                    
-                                      list?.CallDate?.toString()?.includes(Search1) 
-                                     && list?.Name?.toLowerCase()?.includes(Search3.toLowerCase())
-                                      && list?.Email?.toLowerCase()?.includes(Search4.toLowerCase())
-                                    && list?.Contact?.toString()?.includes(Search5.toString()) &&
-                                    list?.ServiceName?.toLowerCase()?.includes(Search6.toLowerCase())
+                                    //   list?.CallDate?.toString()?.includes(Search1) 
+                                    //  && list?.Name?.toLowerCase()?.includes(Search3.toLowerCase())
+                                    //   && list?.Email?.toLowerCase()?.includes(Search4.toLowerCase())
+                                    // && list?.Contact?.toString()?.includes(Search5.toString()) &&
+                                    // list?.ServiceName?.toLowerCase()?.includes(Search6.toLowerCase())
+                                    list
                                 )
                                 .map((item, index) =>{ 
                                     console.log(item)

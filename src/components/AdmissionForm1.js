@@ -154,8 +154,6 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     const username = user.user.username;
     const centerCode = user.user.centerCode;
 
-    const [result, setResult] = useState([]);
-
     const [visi, setVisi] = useState(false);
     const [mem, setMem] = useState([]);
 
