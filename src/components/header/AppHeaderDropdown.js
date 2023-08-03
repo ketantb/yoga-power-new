@@ -144,6 +144,14 @@ const AppHeaderDropdown = () => {
   )
 }
 
+const ReminderMessageDropdown = () =>{
+  return  <CDropdown variant="nav-item">
+  <CDropdownToggle placement="bottom-end" className="py-0" caret={false} >
+ <CIcon icon={cilEnvelopeClosed} className="me-2" />
+  </CDropdownToggle>
+  </CDropdown>
+}
+
 
 const AppHeaderDropdownForm = () => {
 
@@ -155,7 +163,11 @@ const AppHeaderDropdownForm = () => {
   const enquiryAdd =  rightsData?.addOn?.includes(leadsSuperRight.allEnquires)
 
   return (
+    
     <CDropdown variant="nav-item">
+ 
+
+
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
         <CIcon icon={cilUserPlus} size="lg" />
       </CDropdownToggle>
@@ -204,21 +216,10 @@ const AppHeaderDropdownForm = () => {
         </Link>
         </CDropdownItem>
 
-
-        <CDropdownItem >
-
-
-       <Link style={{ textDecoration: 'none' }} to="/message/reminder" >
-
-          <CIcon icon={cilEnvelopeClosed} className="me-2" />
-            Reminder Message
-        </Link>
- 
-        </CDropdownItem>
-
         <CDropdownDivider />
       </CDropdownMenu>
     </CDropdown>
+  
   )
 }
 
@@ -365,4 +366,6 @@ const AppHeaderDropdownLink = () => {
   )
 }
 
-export { AppHeaderDropdown, AppHeaderDropdownForm, AppHeaderDropdownBook, AppHeaderDropdownCheckIn, AppHeaderDropdownLink,AppHeaderDropdownBasket }
+export { AppHeaderDropdown, AppHeaderDropdownForm, AppHeaderDropdownBook, 
+  AppHeaderDropdownCheckIn, AppHeaderDropdownLink,AppHeaderDropdownBasket
+,ReminderMessageDropdown }

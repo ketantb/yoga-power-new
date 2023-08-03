@@ -140,9 +140,9 @@ const ColdEnquires = () => {
 
 
     const isAdmin = useSelector((el)=>el.isAdmin) 
-    const coldAdd =  rightsData?.addOn?.includes(leadsSuperRight.coldEnquires)
-    const coldDelete =  rightsData?.delete?.includes(leadsSuperRight.coldEnquires)
-    const coldEdit  =  rightsData?.edit?.includes(leadsSuperRight.coldEnquires)
+    const coldAdd =  (rightsData?.addOn?.includes(leadsSuperRight.coldEnquires) || isAdmin)
+    const coldDelete =  (rightsData?.delete?.includes(leadsSuperRight.coldEnquires) || isAdmin)
+    const coldEdit  =  (rightsData?.edit?.includes(leadsSuperRight.coldEnquires) || isAdmin)
 
 
 
@@ -674,7 +674,7 @@ const ColdEnquires = () => {
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
-                        <strong className="mt-2">Cold Enquires <span className='float-end'>Total Cold Enquires : {result1.filter((list) => list.username === username && list.CallStatus === 'Cold').length}</span></strong>
+                        <strong className="mt-2">Cold Enquires <span className='float-end'>Total Cold Enquires : {result1.filter((list) =>  list.CallStatus === 'Cold').length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>
@@ -689,8 +689,7 @@ const ColdEnquires = () => {
                                         <option value={day}>Today</option>
                                         <option value={month}>Last Month</option>
                                         <option value={year}>This Year</option>
-                                        {/* <option>Last Week</option>
-                                        <option>Custom Date</option> */}
+                                     
                                     </CFormSelect>
                                     {select === 'Custom Date' && (
                                         <CInputGroup className='mt-2 mb-2' >
@@ -1696,12 +1695,10 @@ const ColdEnquires = () => {
                                             <CTableDataCell style={{display:(isAdmin|| coldAdd)?'':'none'}} className='text-center'><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
                                             <CTableDataCell style={{display:(isAdmin|| coldEdit||coldDelete)?'':'none'}}
                                              className='text-center'>
-
                                                 {coldEdit&&<MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }}
                                                  onClick={() => handleEnquiry(item._id)} size='20px' />} 
                                                 {coldDelete && <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
-                                                onClick={() => deleteEnquiry(item._id)} size='20px' />}
-                                                
+                                                onClick={() => deleteEnquiry(item._id)} size='20px' />}                                               
                                             </CTableDataCell>
                                         </CTableRow>
  

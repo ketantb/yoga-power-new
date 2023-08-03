@@ -25,6 +25,7 @@ import { FaEye,FaEyeSlash } from 'react-icons/fa'
 import axios from 'axios'
 import moment from 'moment/moment'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
+const BalancePayment = React.lazy(()=>import('../finance/BalancePayment'))
 
 
 const EmployeeDashboard = () => {
@@ -94,6 +95,20 @@ useEffect(()=>{
 },[])
 
 
+ function  toHandleClassNameProgress(val){
+
+  if(val<=40){
+     return 'danger'
+  }else if(val<=50){
+     return 'warning'
+  }else if(val<=70){
+     return 'info'
+  }else if(val>=85){
+    return 'success'
+  }
+ }
+
+
     return (
         <>
             
@@ -102,112 +117,88 @@ useEffect(()=>{
                 <div className='p-4'>
                     
                 <CRow>  
+
+           
+
                 {(access?.includes(empLoyeeeRights.income)||isAdmin)&&<CCol md={6}>
-                    <CCard className='p-2' >
+                    <CCard  className='p-2 bg-success-100' >
                   <CCardBody>
                     <CRow >
-                      <CCol sm={4}>
-                        <h4 id="traffic" className="card-title mb-0">
-                         Sales Target
+                      <CCol sm={12}>
+                        <h4 id="traffic" className="card-title mb-0 text-center">
+                        Traget Of This Month
                         </h4>
                       </CCol>
-                      <CCol sm={4}>
-                        <div className="border-start border-start-4 border-start-info py-1 px-3">
-                          <div className="text-medium-emphasis small">
-                            Traget Of This Month {dashBoardData2.month[monthName[new Date().getMonth()]].target}
-                          </div>
-                        </div>
-                      </CCol>
-                      <CCol sm={4}>
-                        <div className="border-start border-start-4  py-1 px-3">
-                          <div className="text-medium-emphasis small">
-                          </div>
-                        </div>
-                      </CCol>
+                    
+                      
                       <hr/>
                     </CRow>
                     <CRow>
-                      <CCol sm={6} md={6}>
-                         <div className='text-center'>
-                              <h6 className='text-midium-emphasis'>{new Date().getFullYear()} Target</h6>
-                              <div className='d-flex justify-content-between'>
-                              <p className='text-midium-emphasis m-0 text-success'>{dashBoardData2.year.achived}</p>
-                              <p className='text-midium-emphasis m-0 text-info'> {dashBoardData2.year.target}</p>
-
-                              </div>
-                            </div>      
-                      </CCol>
-                      <CCol sm={6} md={6} className='border-start border-start-4 border-start-info' >
+                     
+                      <CCol sm={12}   >
                            <div className='text-center'>
-                              <h6 className='text-midium-emphasis'>{monthName[new Date().getMonth()]} Target</h6>
+                              <h6 className='text-midium-emphasis'>{monthName[new Date().getMonth()]} Target </h6>
                               <div className='d-flex justify-content-between'>
-                              <p className='text-midium-emphasis m-0 text-success'>{dashBoardData2.month[monthName[new Date().getMonth()]].achived}</p>
-                              <p className='text-midium-emphasis m-0 text-info'> {dashBoardData2.month[monthName[new Date().getMonth()]].target}</p>
+                              <p className='text-midium-emphasis m-0 text-info'> <span className='text-dark'> Target {dashBoardData2.month[monthName[new Date().getMonth()]].target} </span> </p>
+                              <p className='text-midium-emphasis m-0 text-success'> <span className='text-dark'> Achive {dashBoardData2.month[monthName[new Date().getMonth()]].achived}</span></p>
                               </div>
                             </div>                            
                       </CCol>  
-                      <CCol sm={12} className='mt-2'>
-                           <div className='text-center'>
-                              <h6 className='text-midium-emphasis'>Today Target</h6>
-
-                            </div>       
-
-                      </CCol> 
+                     
                       <div className="progress-group mb-3" key={0}>
                     
                         <div className="progress-group-bars">
                            <CProgress >
-                            <CProgressBar color="success" value={(dashBoardData2.today.achived / 
-                            (dashBoardData2.today.target>0?dashBoardData2.today.target:1)) * 100} />
-                            <CProgressBar color="info" value={(  
-                            (dashBoardData2.today.target>0?dashBoardData2.today.target:0)/dashBoardData2.today.achived) * 100} />
+                            <CProgressBar color={toHandleClassNameProgress((dashBoardData2.today.achived / 
+                            (dashBoardData2.today.target>0?dashBoardData2.today.target:1)) * 100)} value={(dashBoardData2.today.achived / 
+                            (dashBoardData2.today.target>0?dashBoardData2.today.target:1)) * 100} />                       
                           </CProgress>
                         </div>
                       </div>
-
-                          <div className='text-center'>
-                              <div className='d-flex justify-content-between'>
-                              <p className='text-midium-emphasis m-0 text-success'><span className='text-dark'>Achived:</span>  {dashBoardData2.today.achived}</p>
-                              <p className='text-midium-emphasis m-0 text-info'><span className='text-dark'>Target:</span>    {(dashBoardData2.today.target).toFixed(1)}</p>
-                              </div>
-                            </div>   
+ 
                         
                     </CRow>
                   </CCardBody>
                     
                     </CCard>
                 </CCol>}
+
                 {(access?.includes(empLoyeeeRights.attendance)||isAdmin)&&<CCol  md={6} sm={12}>
                 <CCard>   
       <CCardBody>
 
         <CRow >
-          <CCol sm={4}>
-            <h4 id="traffic" className="card-title mb-0">
+          <CCol sm={8}>
+            <h4 id="traffic" className="card-title text-center p-0 mt-2" >
              Staff  Attendance
             </h4>
             
           </CCol>
-          <CCol sm={4}>
-            <div className="border-start border-start-4 border-start-info py-1 px-3">
-              <div className="text-medium-emphasis small">
-                Total Staff {dashBoardData.noOfEmployee}
-              </div>
-              <div className="fs-5 fw-semibold">
-
-
-
-              </div>
-            </div>
+          <CCol sm={4} className='text-end'>
+          <CButton size='sm' onClick={()=>setAttenddedEye(prev=>!prev)}>
+               {attendedEye?<FaEyeSlash/>:<FaEye/>}
+          </CButton>
           </CCol>
-          
+
+          {/* Total Staff {dashBoardData.noOfEmployee} */}
+
+          <hr className="mt-0" />
+
+        </CRow>
+
+        <CRow className='mb-4'>
+          <CCol sm={6} >
+             <h6 style={{fontWeight:'normal'}}>Total Staff {dashBoardData.noOfEmployee} </h6>
+          </CCol>
+          <CCol sm={6}  className='text-end'>
+             <h6 style={{fontWeight:'normal'}}>Attended Staff {dashBoardData.todayAttendedEmp.length}</h6>
+          </CCol>
         </CRow>
 
         <CRow>
           <CCol xs={12} md={12} xl={12}>
 
 
-            <hr className="mt-0" />
               <div className="progress-group mb-3" key={0}>
                 <div className="progress-group-prepend">
                   <span className="text-medium-emphasis small">
@@ -216,8 +207,7 @@ useEffect(()=>{
                 </div>
                 <div className="progress-group-bars">
                   <CProgress >
-                    <CProgressBar color="success" value={(dashBoardData.todayAttendedEmp.length/dashBoardData.noOfEmployee)*100} />
-                    <CProgressBar color="info" value={100} />
+                    <CProgressBar color={toHandleClassNameProgress((dashBoardData.todayAttendedEmp.length/dashBoardData.noOfEmployee)*100)} value={(dashBoardData.todayAttendedEmp.length/dashBoardData.noOfEmployee)*100} />
                   </CProgress>
                 </div>
                 <div className="progress-group-prepend">
@@ -230,21 +220,7 @@ useEffect(()=>{
           </CCol>
         </CRow>
 
-        <CRow className='text-center'>
-            <h6 style={{fontWeight:'normal'}}>Attended Staff {dashBoardData.todayAttendedEmp.length}</h6>
-        </CRow>
-        <CRow className='p-2 '>
-          <CCol className='text-end'>
-          <CButton onClick={()=>setAttenddedEye(prev=>!prev)}>
-               {attendedEye?<FaEyeSlash/>:<FaEye/>}
-          </CButton>
-          </CCol>
-        </CRow>
-        <CRow>
-          <CCol>
-          <CButton>P</CButton>
-          </CCol>
-        </CRow>
+      
 
         <CTable  className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345",display:attendedEye?'':'none' }} hover responsive>
             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
@@ -276,6 +252,10 @@ useEffect(()=>{
       </CCardBody>
     </CCard>
                 </CCol>}
+
+                <CCol sm={12} className='mt-4'>
+                    <BalancePayment/>
+                </CCol>
                 </CRow> 
 
                </div>

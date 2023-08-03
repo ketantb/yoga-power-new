@@ -39,6 +39,7 @@ import { useSelector } from 'react-redux'
 import AdmissionForm1 from 'src/components/AdmissionForm1'
 import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
+import * as XLSX from 'xlsx';
 
 const AllEnquires = () => {
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
@@ -49,8 +50,6 @@ const AllEnquires = () => {
     const enquiryDelete =  rightsData?.delete?.includes(leadsSuperRight.allEnquires)
     const enquiryEdit  =  rightsData?.edit?.includes(leadsSuperRight.allEnquires)
 
-
-
     var currentdate = new Date();
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
     var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
@@ -59,10 +58,6 @@ const AllEnquires = () => {
     const url = useSelector((el) => el.domainOfApi)
     const pathRoute = useAdminValidation()
     const unikqValidateObj = useUniqAdminObjeact()
-
-
-
-
 
     const [select, setSelect] = useState('')
     const [followForm, setFollowForm] = useState('')
@@ -130,14 +125,11 @@ const AllEnquires = () => {
 
     const [ServiceVariation, setServiceVariation] = useState("");
 
-
-
+    
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
     const dashboardAccess = user.user.dashboardAccess;
     const [result1, setResult1] = useState([]);
-    console.log(token);
     const [result, setResult] = useState([]);
     const [paging, setPaging] = useState(0);
     const [subservice, setSubservice] = useState([]);
@@ -225,8 +217,6 @@ const AllEnquires = () => {
                 console.error(error)
             })
     }
-
-
 
 
 
@@ -527,7 +517,7 @@ const AllEnquires = () => {
         }
 
     }
-    console.log(select)
+
     const saveCallReport = () => {
         var currentdate = new Date();
         var date = currentdate.getDay() + "-" + currentdate.getMonth()
@@ -747,7 +737,38 @@ const AllEnquires = () => {
         setEdit({})
     }
 
-    console.log(result1)
+
+    
+
+    function downloadAsExcel(){
+    
+     const data =  result1.filter((list)=>list.enquirestatus!=='notshow').map((el,i)=>{
+        return {
+        ['Sr No']:i+1,
+        ["Enquiry ID"]:el.EnquiryId,
+        ["Date"]:moment(el.createdAt).format("DD-MM-YYYY"),
+        ["Time"]: moment(el.createdAt, "HH:mm").format("hh:mm A") ,
+        ['Name']:el.Fullname,
+        ["Mobile"]: el.ContactNumber ,
+        ["Service"]: el.ServiceName ,
+        ["Source"]: el.enquirytype,
+        ["Enquiry stage"]:el.appointmentfor,
+        ["Call Status"]:el.CallStatus,
+        ["Last Call"]:el.Message,
+        ['Date/Time']:(moment(el.appointmentDate).format("DD-MM-YYYY")
+                      != 'Invalid date' && moment(el.appointmentDate).format("DD-MM-YYYY")+" "+
+                      (moment(el.appointmentTime, "HH:mm").format("hh:mm A") !=
+                      'Invalid date' ? moment(el.appointmentTime, "HH:mm").format("hh:mm A") : '-')),
+        ['Assigned by']:el.StaffName,
+        ['Counseller']:el.Counseller
+    } })   
+    
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    
+        XLSX.writeFile(workbook, "YogPowerEnquires.xlsx");
+    }
 
     
     return (
@@ -775,8 +796,7 @@ const AllEnquires = () => {
                                         <option value={day}>Today</option>
                                         <option value={month}>Last Month</option>
                                         <option value={year}>This Year</option>
-                                        {/* <option>Last Week</option>
-                                        <option>Custom Date</option> */}
+                  
                                     </CFormSelect>
                                     {select === 'Custom Date' && (
                                         <CInputGroup className='mt-2 mb-2' >
@@ -820,7 +840,7 @@ const AllEnquires = () => {
                                         ref={hiddenXLimportFileInput}
                                         onChange={HandaleImportChange} hidden />
 
-                                    <CButton onClick={HandaleExportClick} color="primary">
+                                    <CButton onClick={downloadAsExcel} color="primary">
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>
@@ -2000,13 +2020,13 @@ const AllEnquires = () => {
                         </CPaginationItem>
                         <CPaginationItem style={{ cursor: 'pointer' }} active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
                         {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                            moment(list.createdAt).format("MM-DD-YYYY").includes(select) && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                         ).length > (paging + 1) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
                             onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                         {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select)
+                            moment(list.createdAt).format("MM-DD-YYYY").includes(select)
                             && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) &&
                             list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
                             list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
@@ -2016,7 +2036,7 @@ const AllEnquires = () => {
                         ).length > (paging + 2) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
                             onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                         {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
-                            list.username === username && moment(list.createdAt).format("MM-DD-YYYY").includes(select)
+                            moment(list.createdAt).format("MM-DD-YYYY").includes(select)
                             && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) &&
                             list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
                             list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&

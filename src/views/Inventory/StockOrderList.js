@@ -286,7 +286,7 @@ console.log(orderList)
            <CCardBody>
 
     <CNav variant="tabs" role="tablist" style={{cursor:'pointer'}}>
-      {access.includes(inventoryRight.stockListView) &&<CNavItem>
+      {(access.includes(inventoryRight.stockListView)||isAdmin) &&<CNavItem>
         <CNavLink
           active={activeKey === 1}
           onClick={() => setActiveKey(1)}
@@ -294,7 +294,7 @@ console.log(orderList)
             Stock List
         </CNavLink>
       </CNavItem>}
-      {access.includes(inventoryRight.orderList) &&<CNavItem>
+      {(access.includes(inventoryRight.orderList)||isAdmin) &&<CNavItem>
         <CNavLink
           active={activeKey === 2}
           onClick={() => setActiveKey(2)}
@@ -302,7 +302,7 @@ console.log(orderList)
           Order List 
         </CNavLink>
       </CNavItem>}
-      {access.includes(inventoryRight.orderListreceived) &&<CNavItem>
+      {(access.includes(inventoryRight.orderListreceived)||isAdmin) &&<CNavItem>
         <CNavLink
           active={activeKey === 3}
           onClick={() => setActiveKey(3)}

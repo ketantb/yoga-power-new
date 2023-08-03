@@ -159,15 +159,15 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Calls Report',
-        id:'crmCallsReports1',
-        to: '/leads/followups-call-report',
-      },
-      {
-        component: CNavItem,
         name: 'Cold Enquires',
         id:'crmColdEnquires1',
         to: '/leads/cold-enquires',
+      },
+      {
+        component: CNavItem,
+        name: 'Calls Report',
+        id:'crmCallsReports1',
+        to: '/leads/followups-call-report',
       },
     ],
   },

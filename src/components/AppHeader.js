@@ -27,7 +27,7 @@ import {
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown, AppHeaderDropdownForm } from './header/index'
 import logo from 'src/assets/images/avatars/YPI-Logo-2022.png'
-import { AppHeaderDropdownBook, AppHeaderDropdownCheckIn, AppHeaderDropdownLink,AppHeaderDropdownBasket } from './header/AppHeaderDropdown'
+import { AppHeaderDropdownBook, AppHeaderDropdownCheckIn, AppHeaderDropdownLink,AppHeaderDropdownBasket,ReminderMessageDropdown } from './header/AppHeaderDropdown'
 import { Link } from 'react-router-dom'
 
 const AppHeader = () => {
@@ -59,11 +59,19 @@ const AppHeader = () => {
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav>
+
+        <CNavItem>
+            <CNavLink href='#'>
+              <ReminderMessageDropdown/>
+            </CNavLink>
+          </CNavItem>
+
           <CNavItem>
             <CNavLink href='#'>
               <AppHeaderDropdownForm />
             </CNavLink>
           </CNavItem>
+
           <CNavItem>
             <CNavLink href="#">
               <AppHeaderDropdownBook />
