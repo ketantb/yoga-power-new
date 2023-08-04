@@ -42,15 +42,14 @@ import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
 const ColdEnquires = () => {
 
     const pathRoute = useAdminValidation()
-    const unikqValidateObj = useUniqAdminObjeact()
+    const pathRouteVal = useAdminValidation('Master')
+    const uniqObj = useUniqAdminObjeact()
 
     var currentdate = new Date();
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
     var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
     var year = currentdate.getFullYear();
 
-    console.log(month + 1);
-    console.log(day);
     const [select, setSelect] = useState('')
     const [followForm, setFollowForm] = useState()
     const [edit, setEdit] = useState()
@@ -68,11 +67,6 @@ const ColdEnquires = () => {
     const [Search8, setSearch8] = useState('')
     const [Search9, setSearch9] = useState('')
     const [Search10, setSearch10] = useState('')
-
-    const [filter1, setfilter1] = useState("Select");
-    const [filter2, setfilter2] = useState("Select");
-    const [filter3, setfilter3] = useState("Select");
-    const [filter4, setfilter4] = useState("Select");
 
     const [Name, setName] = useState("");
     const [Contact, setContact] = useState("");
@@ -122,14 +116,10 @@ const ColdEnquires = () => {
     const url2 = useSelector((el) => el.domainOfApi)
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
     const username = user.user.username;
-    const centerCode = user.user.centerCode;
 
-    const dashboardAccess = user.user.dashboardAccess;
     const [result1, setResult1] = useState([]);
-    console.log(token);
     const [result, setResult] = useState([]);
     const [paging, setPaging] = useState(0);
     const [updateItem, setUpdateItem] = useState([]);
@@ -146,29 +136,16 @@ const ColdEnquires = () => {
 
 
 
-    const [pros, setPros] = useState([])
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/prospect/${pathRoute}`, {
+    
+        axios.get(`${url}/subservice/${pathRouteVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                console.warn(res.data.filter((list) => list.status === "prospect"))
-                setPros(res.data.filter((list) => list.status === "prospect"))
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-        axios.get(`${url}/subservice/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                console.log(res.data)
                 setResult(res.data)
             })
             .catch((error) => {
@@ -177,14 +154,13 @@ const ColdEnquires = () => {
     }, []);
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url2}/employeeForm/${pathRoute}`, {
+        axios.get(`${url2}/employeeform/${pathRouteVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                 setStaff(res.data)
-                console.log(res.data);
             })
             .catch((error) => {
                 console.error(error)
@@ -203,11 +179,10 @@ const ColdEnquires = () => {
                     'Authorization': `Bearer ${token}`
                 }
             }).then((res) => {
-                console.log(res.data)
                 setEdit(res.data)
 
                 if (edit != null && res.data != null) {
-                    setAdmissionForm(true)
+                setAdmissionForm(true)
                 }
             })
                 .catch((error) => {
@@ -255,8 +230,8 @@ const ColdEnquires = () => {
 
         if (enquiryStage === 'Appointment') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment',  
-            Counseller: staff.find((el)=>el._id===Counseller)?.FullName,
-            EmployeeId:Counseller }
+            Counseller: staff.find((el)=>el._id===Counseller)?.FullName,identifyStage:'Appointment',
+            EmployeeId:Counseller,CallStatus: CallStatus1 }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
@@ -280,9 +255,9 @@ const ColdEnquires = () => {
                 resp.json().then(() => {
                     alert("successfully submitted")
                     setVisible(false)
+                    getEnquiry()
                 })
             })
-
 
             fetch(`${url}/prospect/create`, {
                 method: "POST",
@@ -291,7 +266,7 @@ const ColdEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...data2,... uniqObj})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -299,7 +274,8 @@ const ColdEnquires = () => {
             })
 
         } else if (enquiryStage === 'Trial Session') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', Counseller: Counseller }
+            const data1 = { appointmentDate, appointmentTime,CallStatus: CallStatus1,
+                 appointmentfor: 'Trial Session', Counseller: Counseller,identifyStage:'Trial Session'}
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
@@ -325,6 +301,7 @@ const ColdEnquires = () => {
                 resp.json().then(() => {
                     alert("successfully submitted")
                     setVisible(false)
+                    getEnquiry()
                 })
             })
 
@@ -335,7 +312,7 @@ const ColdEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...data2,... uniqObj})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -344,120 +321,51 @@ const ColdEnquires = () => {
         } else if (enquiryStage === 'Join') {
             handleAdmission(followForm)
             setVisible(false)
-
-            let data2 = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, 
-                ServiceName: ServiceName1, AppointmentDate: appointmentDate,
-                 AppointmentTime: appointmentTime, enquiryStage: enquiryStage,
-                  CallStatus: CallStatus1, FollowupDate: FollowupDate,
-                   TimeFollowp: TimeFollowp, 
-                    Counseller: staff.find((el)=>el._id===Counseller)?.FullName,
-                   EmployeeId:Counseller, Discussion: Discussion,
-                status: 'CallReport'
-            }
-            fetch(`${url}/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data2)
-            }).then((resp) => {
-                resp.json().then(() => {
-                    setCallReport(false)
-                })
-            })
+           
         } else if (enquiryStage === 'Prospect') {
-            let data = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
-                 AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, 
-                 enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, 
-                 TimeFollowp: TimeFollowp,  Counseller: staff.find((el)=>el._id===Counseller)?.FullName, 
-                 EmployeeId:Counseller,
-                 Discussion: Discussion,
-                status: 'prospect'
-            }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, 
                 AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage,
-                 CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp,
-                 Counseller: staff.find((el)=>el._id===Counseller)?.FullName, 
-                                EmployeeId:Counseller, Discussion: Discussion,
+                CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp,
+                Counseller: staff.find((el)=>el._id===Counseller)?.FullName, EmployeeId:Counseller, Discussion: Discussion,
                 status: 'CallReport'
             }
-            if (pros.filter((list) => list.EnquiryID === followForm).length > 0) {
-                const found = pros.filter((list) => list.EnquiryID === followForm).map((element, index) => {
-                    return index === 0 && element._id;
-                });
-                fetch(`${url}/prospect/update/${found[0]}`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        setVisible(false)
-                    })
-                })
-
-                const data1 = { Counseller, CallStatus: CallStatus1 }
-
-                fetch(`${url1}/enquiryForm/update/${followForm}`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data1)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        alert("successfully submitted")
-                        setVisible(false)
-                    })
-                })
-            } else {
-                fetch(`${url}/prospect/create`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        setVisible(false)
-                    })
-                })
-
-                const data1 = { Counseller, CallStatus: CallStatus1 }
-
-                fetch(`${url1}/enquiryForm/update/${followForm}`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data1)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        alert("successfully submitted")
-                        setVisible(false)
-                    })
-                })
+           
+            const data1 = { 
+                Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                appointmentfor:enquiryStage,
+                identifyStage:enquiryStage,
+                PFollowupDate:FollowupDate,
+                PDiscussion: Discussion,
+                PTimeFollowp:TimeFollowp,       
+                PAppointmentTime: appointmentTime,
+                PAppointmentDate: appointmentDate,
+                PServiceName: ServiceName1, 
+                PCallDate: date, 
+                PTime: time,
+                PName: Name, 
+                PContact: Contact,
+                PEmail: email,
             }
+
+                fetch(`${url1}/enquiryForm/update/${followForm}`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data1)
+                }).then((resp) => {
+                    resp.json().then(() => {
+                        alert("successfully submitted")
+                        setVisible(false)
+                        getEnquiry()
+                    })
+                })
+            
             fetch(`${url}/prospect/create`, {
                 method: "POST",
                 headers: {
@@ -465,7 +373,7 @@ const ColdEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...data2,... uniqObj})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -500,7 +408,7 @@ const ColdEnquires = () => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({...data,...uniqObj})
         }).then((resp) => {
             resp.json().then(() => {
                 setVisible(false)
@@ -531,8 +439,8 @@ const ColdEnquires = () => {
             }
         })
             .then((res) => {
-                setResult1(res.data.filter((list) =>  list.CallStatus === 'Cold').reverse())
-                setOgList(res.data.filter((list) => list).reverse())
+                setResult1(res.data.filter((list) =>  list.CallStatus === 'Cold' &&  list.enquirestatus!=='notshow').reverse())
+                setOgList(res.data.filter((list) =>   list.CallStatus === 'Cold' &&  list.enquirestatus!=='notshow').reverse())
                 console.log(res.data);
             })
             .catch((error) => {

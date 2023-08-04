@@ -136,10 +136,11 @@ const EnquireAppointment = () => {
     const [result, setResult] = useState([]);
     const [updateItem, setUpdateItem] = useState([]);
 
-    const [pros, setPros] = useState([])
 
 
     const pathNameMaster = useAdminValidation('Master')
+    const pathName = useAdminValidation()
+
 
 
     const uniqObjeact  = useUniqAdminObjeact()
@@ -148,25 +149,13 @@ const EnquireAppointment = () => {
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/prospect/${pathNameMaster}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                console.warn(res.data.filter((list) => list.status === "prospect"))
-                setPros(res.data.filter((list) => list.status === "prospect"))
-            })
-            .catch((error) => {
-                console.error(error)
-            })
+    
         axios.get(`${url}/subservice/${pathNameMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                console.log(res.data)
                 setResult(res.data)
             })
             .catch((error) => {
@@ -182,7 +171,6 @@ const EnquireAppointment = () => {
         })
             .then((res) => {
                 setStaff(res.data)
-                console.log(res.data);
             })
             .catch((error) => {
                 console.error(error)
@@ -201,7 +189,6 @@ const EnquireAppointment = () => {
                     'Authorization': `Bearer ${token}`
                 }
             }).then((res) => {
-                console.log(res.data)
                 setEdit(res.data)
 
                 if (edit != null && res.data != null) {
@@ -248,11 +235,16 @@ const EnquireAppointment = () => {
             + currentdate.getMinutes();
 
         if (enquiryStage === 'Appointment') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment', Counseller: Counseller }
+            const data1 = { appointmentDate, appointmentTime,
+                 appointmentfor: 'Appointment', Counseller: Counseller,identifyStage:'Appointment',CallStatus: CallStatus1}
+                 
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
+                 AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, 
+                 enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate,
+                  TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
                 status: 'CallReport',...uniqObjeact
             }
 
@@ -268,6 +260,7 @@ const EnquireAppointment = () => {
                 resp.json().then(() => {
                     alert("successfully submitted")
                     setVisible(false)
+                    getEnquiry()
                 })
             })
 
@@ -287,12 +280,17 @@ const EnquireAppointment = () => {
             })
 
         } else if (enquiryStage === 'Trial Session') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', Counseller: Counseller }
+            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session',
+            identifyStage:'Trial Session', Counseller: Counseller,CallStatus: CallStatus1 }
+
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport',...uniqObjeact
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
+                AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, 
+                enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate,
+                TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                status: 'CallReport'
             }
 
             fetch(`${url1}/enquiryForm/update/${followForm}`, {
@@ -307,6 +305,7 @@ const EnquireAppointment = () => {
                 resp.json().then(() => {
                     alert("successfully submitted")
                     setVisible(false)
+                    getEnquiry()
                 })
             })
 
@@ -327,73 +326,18 @@ const EnquireAppointment = () => {
             handleAdmission(followForm)
             setVisible(false)
 
-            let data2 = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
-            }
-            fetch(`${url}/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data2)
-            }).then((resp) => {
-                resp.json().then(() => {
-                    setCallReport(false)
-                })
-            })
         } else if (enquiryStage === 'Prospect') {
-            let data = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'prospect',...uniqObjeact
-            }
+            
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
+                 AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, 
+                 enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, 
+                 TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
                 status: 'CallReport',...uniqObjeact
             }
-            if (pros.filter((list) => list.EnquiryID === followForm).length > 0) {
-                const found = pros.filter((list) => list.EnquiryID === followForm).map((element, index) => {
-                    return index === 0 && element._id;
-                });
-                fetch(`${url}/prospect/update/${found[0]}`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        setVisible(false)
-                    })
-                })
-
-                const data1 = { Counseller, CallStatus: CallStatus1 }
-
-                fetch(`${url1}/enquiryForm/update/${followForm}`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data1)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        alert("successfully submitted")
-                        setVisible(false)
-                    })
-                })
-            } else {
+           
                 fetch(`${url}/prospect/create`, {
                     method: "POST",
                     headers: {
@@ -401,14 +345,29 @@ const EnquireAppointment = () => {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(data2)
                 }).then((resp) => {
                     resp.json().then(() => {
                         setVisible(false)
                     })
                 })
 
-                const data1 = { Counseller, CallStatus: CallStatus1 }
+                const data1 = { 
+                    Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                    appointmentfor:enquiryStage,
+                    identifyStage:enquiryStage,
+                    PFollowupDate:FollowupDate,
+                    PDiscussion: Discussion,
+                    PTimeFollowp:TimeFollowp,       
+                    PAppointmentTime: appointmentTime,
+                    PAppointmentDate: appointmentDate,
+                    PServiceName: ServiceName1, 
+                    PCallDate: date, 
+                    PTime: time,
+                    PName: Name, 
+                    PContact: Contact,
+                    PEmail: email,
+                }
 
                 fetch(`${url1}/enquiryForm/update/${followForm}`, {
                     method: "POST",
@@ -422,22 +381,9 @@ const EnquireAppointment = () => {
                     resp.json().then(() => {
                         alert("successfully submitted")
                         setVisible(false)
+                        getEnquiry()
                     })
                 })
-            }
-            fetch(`${url}/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data2)
-            }).then((resp) => {
-                resp.json().then(() => {
-                    setCallReport(false)
-                })
-            })
 
         }
 
@@ -488,14 +434,15 @@ const EnquireAppointment = () => {
         })
     }
     function getEnquiry() {
-        axios.get(`${url1}/enquiryForm/${pathNameMaster}`, {
+        axios.get(`${url1}/enquiryForm/${pathName}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                setResult1(res.data.filter((list) => list).reverse())
-                setOgList(res.data.filter((list) => list).reverse())
+                console.log(res.data)
+                setResult1(res.data.filter((list) => list.CallStatus !== 'Cold').reverse())
+                setOgList(res.data.filter((list) => list.CallStatus !== 'Cold').reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -1646,7 +1593,8 @@ const EnquireAppointment = () => {
                                     </CTableDataCell>
                                 </CTableRow>
                                 {result1.filter((list) =>list.enquirestatus!=='notshow'&&
-                                   moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                                   moment(list.createdAt).format("MM-DD-YYYY").includes(select) && 
+                                   list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                                     list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                                 ).slice(paging * 10, paging * 10 + 10).map((item, index) => (
                                     (

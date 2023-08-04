@@ -57,6 +57,7 @@ const AllEnquires = () => {
 
     const url = useSelector((el) => el.domainOfApi)
     const pathRoute = useAdminValidation()
+    const pathRouteMasterVal = useAdminValidation('Master')
     const unikqValidateObj = useUniqAdminObjeact()
 
     const [select, setSelect] = useState('')
@@ -129,31 +130,26 @@ const AllEnquires = () => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const username = user.user.username;
-
-    const dashboardAccess = user.user.dashboardAccess;
     const [result1, setResult1] = useState([]);
     const [result, setResult] = useState([]);
     const [paging, setPaging] = useState(0);
     const [subservice, setSubservice] = useState([]);
 
-    const [pros, setPros] = useState([])
 
 
     const hiddenXLimportFileInput = useRef('')
 
 
     useEffect(() => {
-        axios.get(`${url}/subservice/all`, {
+        axios.get(`${url}/subservice/${pathRouteMasterVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
-        })
-            .then((res) => {
+        }).then((res) => {
                 setSubservice(res.data)
-            })
-            .catch((error) => {
+        }).catch((error) => {
                 console.error(error)
-            })
+        })
     }, []);
 
 
@@ -172,7 +168,7 @@ const AllEnquires = () => {
         getEnquiry()
         getStaff()
     
-        axios.get(`${ url }/subservice/all`, {
+        axios.get(`${ url }/subservice/${pathRouteMasterVal}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -187,7 +183,7 @@ const AllEnquires = () => {
 
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${ url }/employeeForm/${pathRoute}`, {
+        axios.get(`${ url }/employeeform/${pathRouteMasterVal}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -211,7 +207,7 @@ const AllEnquires = () => {
             EnquiryDate, ServiceName, Customertype, enquirytype, appointmentDate,
             appointmentTime, appointmentfor: appointmentfor, Counseller: staff.find((el)=>el._id===Counseller)?.FullName ,
             trialDate: trialDate, status: "all_enquiry",
-            EmployeeId:Counseller
+            EmployeeId:Counseller,identifyStage: appointmentfor
         }
 
         fetch(`${ url }/enquiryForm/update/${ edit?._id }`, {
@@ -232,10 +228,8 @@ const AllEnquires = () => {
     }
 
 
+    const saveCallReportP = ()=>{
 
-
-
-    const saveProspect = () => {
         var currentdate = new Date();
         var date = currentdate.getDay() + "-" + currentdate.getMonth()
             + "-" + currentdate.getFullYear();
@@ -243,19 +237,44 @@ const AllEnquires = () => {
             + currentdate.getHours() + ":"
             + currentdate.getMinutes();
 
+        let data2 = {
+            username: username,
+            EnquiryID: followForm, CallDate: date, Time: time,
+            Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate,
+             AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, 
+             FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName , Discussion: Discussion,
+            status: 'CallReport',... unikqValidateObj 
+        }
+
+         fetch(`${url}/prospect/create`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${ token }`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({...data2,...unikqValidateObj})
+                }).then((resp) => {
+                    resp.json().then(() => {
+                        getEnquiry()
+                        setVisible(false)
+                    })
+                })
+
+    }
+
+
+    const saveProspect = () => {
+
+          var date = currentdate.getDay() + "-" + currentdate.getMonth()
+            + "-" + currentdate.getFullYear();
+
+          var time = + currentdate.getHours() + ":" + currentdate.getMinutes();               
+
         if (enquiryStage === 'Appointment') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment',
-             Counseller: staff.find((el)=>el._id===Counseller)?.FullName }
-            let data2 = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, 
-                ServiceName: ServiceName1, AppointmentDate: appointmentDate,
-                AppointmentTime: appointmentTime, enquiryStage: enquiryStage, 
-                CallStatus: CallStatus1, FollowupDate: FollowupDate,
-                TimeFollowp: TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName, Discussion: Discussion,
-                status: 'CallReport'
-            }
+            const data1 = { appointmentDate, appointmentTime, appointmentfor: enquiryStage,identifyStage:enquiryStage,
+            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName }
+             saveCallReportP()
 
             fetch(`${ url }/enquiryForm/update/${ followForm }`, {
                 method: "POST",
@@ -264,20 +283,20 @@ const AllEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...data1,...data2})
+                body: JSON.stringify(data1)
             }).then((resp) => {
                 resp.json().then(() => {
                     alert("successfully submitted")
                     getEnquiry()
                     setVisible(false)
+                    getEnquiry()
                 })
             })
-
-
-
         } else if (enquiryStage === 'Trial Session') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', Counseller: staff.find((el)=>el._id===Counseller)?.FullName }
-          
+            const data1 = { appointmentDate, appointmentTime, appointmentfor: enquiryStage,identifyStage:enquiryStage,
+            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName }
+            saveCallReportP()
+
             fetch(`${ url }/enquiryForm/update/${followForm}`, {
                 method: "POST",
                 headers: {
@@ -290,156 +309,89 @@ const AllEnquires = () => {
                 resp.json().then(() => {
                     alert("successfully submitted")
                     setVisible(false)
+                    getEnquiry()
                 })
             })
 
     
-        } else if (enquiryStage === 'Not interested') {
-               
-
-            const data1 = {appointmentfor: 'Not interested', Counseller:staff.find((el)=>el._id===Counseller)?.FullName }
-            let data2 = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName:
-                 ServiceName1, enquiryStage: enquiryStage, CallStatus: "Cold", 
-                  Counseller: staff.find((el)=>el._id===Counseller)?.FullName, Discussion: Discussion,
-                status: 'CallReport',... unikqValidateObj 
-            }
-
-            fetch(`${ url }/enquiryForm/update/${ followForm }`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${ token }`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({...data1,...data2})
-            }).then((resp) => {
-                resp.json().then((res) => {
-                    alert("successfully submitted")
-                    getEnquiry()
-                    setVisible(false)
-                })
-            })
-
-        } 
-        
+        }
         
         else if (enquiryStage === 'Join') {
             handleAdmission({...followUpData,type:'top'})
             setVisible(false)
-            
-           
-       
         } else if (enquiryStage === 'Prospect') {
-    
-       
-            if (pros.filter((list) => list.EnquiryID === followForm).length > 0) {
-               
 
-                // let data = {
-                //     username: username,
-                //     CallDate: date, Time: time,
-                //     Name: Name, Contact: Contact, Email: email,
-
-                //      ServiceName: ServiceName1, 
-                //      AppointmentDate: appointmentDate,
-                //       AppointmentTime: appointmentTime,
-                //       enquiryStage: enquiryStage,
-                //        CallStatus: CallStatus1,  
-                //        TimeFollowp:
-                //         TimeFollowp, Counseller: Counseller, 
- 
-                //         Discussion: Discussion,
-                //     FollowupDate: FollowupDate, 
-                // }
-
-                const data1 = { 
-                    Counseller, CallStatus:CallStatus1,
-                    appointmentfor:enquiryStage,
-                    PFollowupDate:FollowupDate,
-                    PDiscussion: Discussion,
-                    PTimeFollowp:TimeFollowp,       
-                    PAppointmentTime: appointmentTime,
-                    PAppointmentDate: appointmentDate,
-                    PServiceName: ServiceName1, 
-                    PCallDate: date, 
-                    PTime: time,
-                    PName: Name, 
-                    PContact: Contact,
-                    PEmail: email,
-                }
-
-                fetch(`${ url }/enquiryForm/update/${ followForm }`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${ token }`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data1)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        alert("successfully submitted")
-                        getEnquiry()
-                        setVisible(false)
-                    })
-                })
-            } else {
- 
-
-                const data1 = { EmployeeId:Counseller,Counseller:staff.find((el)=>el._id===Counseller)?.FullName , CallStatus: CallStatus1 }
-
-                fetch(`${ url }/enquiryForm/update/${ followForm }`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${ token }`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data1)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        alert("successfully submitted")
-                        setVisible(false)
-                        getEnquiry()
-                    })
-                })
+            saveCallReportP()
+           
+            const data1 = { 
+                Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                appointmentfor:enquiryStage,
+                identifyStage:enquiryStage,
+                PFollowupDate:FollowupDate,
+                PDiscussion: Discussion,
+                PTimeFollowp:TimeFollowp,       
+                PAppointmentTime: appointmentTime,
+                PAppointmentDate: appointmentDate,
+                PServiceName: ServiceName1, 
+                PCallDate: date, 
+                PTime: time,
+                PName: Name, 
+                PContact: Contact,
+                PEmail: email,
             }
 
+
+
+                fetch(`${ url }/enquiryForm/update/${ followForm }`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${ token }`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data1)
+                }).then((resp) => {
+                    resp.json().then(() => {
+                        alert("successfully submitted")
+                        setVisible(false)
+                        getEnquiry()
+                    })
+                })
+            
+
+        } else {
+            saveCallReportP()
+           
+            const data1 = { 
+                appointmentfor:enquiryStage,
+                identifyStage:enquiryStage,
+                CallStatus: CallStatus1
+            }
+
+
+
+                fetch(`${ url }/enquiryForm/update/${ followForm }`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${ token }`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data1)
+                }).then((resp) => {
+                    resp.json().then(() => {
+                        alert("successfully submitted")
+                        setVisible(false)
+                        getEnquiry()
+                    })
+                })
         }
 
     }
 
-    const saveCallReport = () => {
-        var currentdate = new Date();
-        var date = currentdate.getDay() + "-" + currentdate.getMonth()
-            + "-" + currentdate.getFullYear();
-        var time =
-            + currentdate.getHours() + ":"
-            + currentdate.getMinutes();
    
-        
-        const data1 = { Counseller }
-
-        fetch(`${ url}/enquiryForm/update/${ followForm }`, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${ token }`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data1)
-        }).then((resp) => {
-            resp.json().then(() => {
-                alert("successfully submitted")
-                setVisible(false)
-                getEnquiry()
-            })
-        })
-    }
     const [ogList, setOgList] = useState([])
+
     function getEnquiry() {
         axios.get(`${url}/enquiryForm/${pathRoute}`, {
             headers: {
@@ -455,6 +407,7 @@ const AllEnquires = () => {
             })
 
     }
+
     function handleAdmission(data) {
         setEdit(data)
     }
@@ -488,6 +441,7 @@ const AllEnquires = () => {
                 setappointmentfor(data.appointmentfor)
                 setVisible1(true)
     }
+
     function getProspect(id) {
         axios.get(`${ url }/enquiryForm/${ id }`, {
             headers: {
@@ -556,12 +510,14 @@ const AllEnquires = () => {
             .filter(e => arr[e]).map(e => arr[e]);
         return unique;
     }
+
     function filterArr(og, v) {
         if (v === '')
             setResult1(og)
         else
             setResult1(og.filter((list) => list[filterBy] === v))
     }
+
     const handleFollowup = (id,item) => {
         setFollowForm(id)
         getProspect(id)
@@ -575,7 +531,7 @@ const AllEnquires = () => {
     }
 
     function handleEnquiry(item) {
-        setEdit(item)
+        // setEdit(item)
         getUpdate(item)
     }
     const [dateFormat, setDateFormat] = useState('DD-MM-YYYY')
@@ -645,7 +601,7 @@ const AllEnquires = () => {
     
     return (
         <CRow>
-             {admissionForm&& <AdmissionForm1 add={admissionForm}  setAdmissionForm={closeAddmisionForm} ids={edit} />}
+             {(admissionForm&& !visible1) && <AdmissionForm1 add={admissionForm}  setAdmissionForm={closeAddmisionForm} ids={edit} />}
 
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
@@ -729,7 +685,8 @@ const AllEnquires = () => {
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                             Open qry: {result1.filter((list) =>
-                                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.enquirestatus!=='notshow'
+                                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select) && 
+                                                    list.enquirestatus!=='notshow' 
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
@@ -761,21 +718,27 @@ const AllEnquires = () => {
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 FollowUps: {result1.filter((list) =>
-                                                     list.appointmentfor === 'Prospect' && list.enquirestatus!=='notshow'
+                                                     list.appointmentfor === 'Prospect' && 
+                                                     list.enquirestatus!=='notshow'&&
+                                                     list.CallStatus !== 'Cold'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Trial: {result1.filter((list) =>
-                                                     list.appointmentfor === 'Trial Session' && list.enquirestatus!=='notshow'
+                                                     list.appointmentfor === 'Trial Session' && 
+                                                     list.enquirestatus!=='notshow'&&
+                                                     list.CallStatus !== 'Cold'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Appointment: {result1.filter((list) =>
-                                                     list.appointmentfor === 'Appointment' && list.enquirestatus!=='notshow'
+                                                      list.appointmentfor === 'Appointment' &&
+                                                      list.enquirestatus!=='notshow' &&
+                                                      list.CallStatus !== 'Cold'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
@@ -805,7 +768,7 @@ const AllEnquires = () => {
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Converted: {result1.filter((list) =>
-                                                     list.appointmentfor === 'Trial Session' && list.enquirestatus==='notshow'
+                                                     list.appointmentfor === 'Trial Session' && list.enquirestatus!=='notshow'
                                                 ).length}
                                             </CCardBody>
                                         </CCard>
@@ -849,143 +812,7 @@ const AllEnquires = () => {
                             </CCol>
                             <CCol></CCol>
                         </CRow>
-                      
-
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={callReport} color='' onClose={() => setCallReport(false)} >
-                            <CModalHeader  >
-                                <CModalTitle>Call Report</CModalTitle>
-                            </CModalHeader>
-                            <CModalBody>
-                                <CForm >
-                                    <CRow>
-                                        <CCol lg={4} md={6} sm={12}>
-                                            <CFormInput
-                                                className="mb-1"
-                                                type="text"
-                                                id="exampleFormControlInput1"
-                                                label="Name"
-                                                value={Name}
-                                                onChange={(e) => setName(e.target.value)}
-                                                placeholder="Enter Name"
-                                            />
-                                        </CCol>
-                                        <CCol lg={4} md={6} sm={12}>
-                                            <CFormInput
-                                                className="mb-1"
-                                                type="email"
-                                                id="exampleFormControlInput1"
-                                                label="Email Address"
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                placeholder="name@example.com"
-                                                aria-describedby="exampleFormControlInputHelpInline"
-                                            />
-                                        </CCol>
-
-                                        <CCol lg={4} md={6} sm={12}>
-                                            <CFormInput
-                                                className="mb-1"
-                                                type="number"
-                                                value={Contact}
-                                                onChange={(e) => setContact(e.target.value)}
-                                                id="exampleFormControlInput1"
-                                                label="Contact No"
-                                                placeholder="Enter Number"
-                                            />
-                                        </CCol>
-                                        <CCol lg={6} md={6} sm={12}>
-                                            <CFormSelect
-                                                className="mb-1"
-                                                aria-label="Select Service Name"
-                                                value={ServiceName1}
-                                                onChange={(e) => setServiceName1(e.target.value)}
-                                                label="Service Name"
-
-                                            >
-                                                <option>Select Service</option>
-                                                {result.map((item, index) => (
-                                                    (
-                                                        item.status === true && (
-                                                            <option key={index} value={item.id}>{item.selected_service}</option>
-                                                        )
-                                                    )
-                                                ))}
-                                            </CFormSelect>
-                                        </CCol>
-                                        <CCol lg={6} md={6} sm={12}>
-                                            <CFormSelect
-                                                className="mb-1"
-                                                aria-label="Select Assign Staff"
-                                                value={Counseller}
-                                                onChange={(e) => setCounseller(e.target.value)}
-                                                label='Counseller'
-                                            >
-                                                <option>Select Counseller</option>
-                                                {staff.filter((list) =>  list.Department.toLowerCase() === 'sales' && 
-                                                list.selected === 'Select').map((item, index) => (
-                                                     (
-                                                        <option key={index} value={item._id}>{item.FullName}</option>
-                                                    )
-                                                ))}
-                                            </CFormSelect>
-                                        </CCol>
-
-                                        <CCol lg={4} md={6} sm={12}>
-                                            <CFormSelect
-                                                className="mb-1"
-                                                aria-label="Select Call Status"
-                                                value={CallStatus1}
-                                                onChange={(e) => setCallStatus1(e.target.value)}
-                                                label="Call Status"
-                                                options={[
-                                                    "Select",
-                                                    { label: "Cold", value: "Cold" },
-                                                    { label: "Warm", value: "Warm" },
-                                                    { label: "Hot", value: "Hot" },
-                                                ]}
-                                            />
-                                        </CCol>
-                                        <CCol lg={4} md={6} sm={12}>
-                                            <CFormInput
-                                                className="mb-1"
-                                                label="FollowUp Date"
-                                                type="date"
-                                                value={FollowupDate}
-                                                onChange={(e) => setFollowupDate(e.target.value)}
-                                                id="exampleFormControlInput1"
-                                            />
-                                        </CCol>
-                                        <CCol lg={4} md={6} sm={12}>
-                                            <CFormInput
-                                                className="mb-1"
-                                                label="FollowUp Time"
-                                                type="time"
-                                                id="exampleFormControlInput1"
-                                                value={TimeFollowp}
-                                                onChange={(e) => setTimeFollowp(e.target.value)}
-
-                                            />
-                                        </CCol>
-                                        <CCol>
-                                            <CFormTextarea
-                                                id="exampleFormControlTextarea1"
-                                                label="Discussion"
-                                                value={Discussion}
-                                                onChange={(e) => setDiscussion(e.target.value)}
-                                                rows="2"
-                                                text="Must be 8-20 words long."
-                                            ></CFormTextarea>
-                                        </CCol>
-                                    </CRow>
-                                </CForm>
-                            </CModalBody>
-                            <CModalFooter>
-                                <CButton color="secondary" onClick={() => setCallReport(false)}>
-                                    Close
-                                </CButton>
-                                <CButton type='submit' color="primary" onClick={() => saveCallReport()}>Save Call Report</CButton>
-                            </CModalFooter>
-                        </CModal>
+            
 
                         <CModal size='lg'  style={{ border: '2px solid #0B5345' }} visible={visible} color='' onClose={() => setVisible(false)} >
                             <CModalHeader style={{ backgroundColor: '#0B5345', color: 'white' }} >
@@ -1927,3 +1754,59 @@ const AllEnquires = () => {
 }
 
 export default AllEnquires
+
+
+//FollowupScheduling
+
+    
+{/* <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+<CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+    <span aria-hidden="true">&laquo;</span>
+</CPaginationItem>
+<CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+{result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+
+{result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+{result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 1) * 10 ?
+    <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+        <span aria-hidden="true">&raquo;</span>
+    </CPaginationItem>
+    : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+        <span aria-hidden="true">&raquo;</span>
+    </CPaginationItem>
+}
+</CPagination> */}
+
+
+// {result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect').
+// slice(paging * 10, paging * 10 + 10).map((item, index) =>{                               
+//   return <CTableRow key={index}>
+//         <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
+//         <CTableDataCell>{item.EnquiryId}Q{index + 10 + (paging * 10)}</CTableDataCell>
+//         <CTableDataCell className='text-center'>{moment(item.PCallDate).format("DD-MM-YYYY")}</CTableDataCell>
+//         <CTableDataCell>{moment(item.PTime, "HH:mm").format("hh:mm A")}</CTableDataCell>
+//         <CTableDataCell>{item.PName}</CTableDataCell>
+//         <CTableDataCell>{item.PEmail}</CTableDataCell>
+//         <CTableDataCell>{item.PContact}</CTableDataCell>
+//         <CTableDataCell>{item.PServiceName}</CTableDataCell>
+//         <CTableDataCell>{item.CallStatus}</CTableDataCell>                                        
+//         <CTableDataCell>{item.PFollowupDate && moment(item.PFollowupDate).format("DD-MM-YYYY")}<br />{item.TimeFollowp && moment(item.TimeFollowp, "HH:mm").format("hh:mm A")}</CTableDataCell>
+//         <CTableDataCell>{item.appointmentfor}</CTableDataCell>
+//         <CTableDataCell>{item.PDiscussion}</CTableDataCell>
+//         <CTableDataCell>{item.Counseller}</CTableDataCell>
+//         <CTableDataCell  style={{display:(isAdmin|| (prospectAdd))?'':'none'}} className='text-center'><a href={`tel:+91${item.Contact}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`https://wa.me/${item.Contact}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`mailto: ${item.Email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item.EnquiryID)} /></CTableDataCell>
+        
+//         <CTableDataCell  style={{display:(isAdmin|| (prospectEdit||prospectDelete))?'':'none'}} className='text-center'>
+           
+//             {prospectEdit&&
+//                 <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }}
+//              onClick={() => handleEnquiry(item._id)} size='20px' />
+//              }
+
+//             {prospectDelete&&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
+//              onClick={() => deleteProspect(item._id)} size='20px' />}
+
+//         </CTableDataCell>
+
+//     </CTableRow>
+// })}

@@ -69,24 +69,15 @@ const FollowupCallReport = () => {
             }
         })
             .then((res) => {
-                console.log(res.data)
-                setResult1(res.data.filter((list) =>list).reverse())
+                setResult1(res.data.reverse().filter((list) =>
+                list.status === 'CallReport'
+             ))
             })
             .catch((error) => {
                 console.error(error)
             })
     }
-
-    console.log(result1);
-
-
- 
-
-
-   
-
   
-
 
     return (
         <CRow>
@@ -94,9 +85,7 @@ const FollowupCallReport = () => {
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">Call Report <span className='float-end'>Total Call Report 
-                        : {result1.filter((list) =>
-                           list.status === 'CallReport'
-                        ).length}</span></strong>
+                        : {result1.length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
                       
@@ -230,9 +219,7 @@ const FollowupCallReport = () => {
                                     </CTableDataCell>
                                    
                                 </CTableRow>
-                                {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                                    list.status === 'CallReport'
-                                ).map((item, index) => (
+                                {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
                                     <CTableRow key={index}>
                                         <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                         <CTableDataCell>{item.centerCodeC}Q{index + 10 + (paging * 10)}</CTableDataCell>
@@ -251,29 +238,27 @@ const FollowupCallReport = () => {
                             </CTableBody>
                         </CTable>
                     </CCardBody>
+                 
                     <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
-                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                        <CPaginationItem style={{ cursor: 'pointer' }} aria-label="Previous" disabled={paging != 0 ? false : true}
+                            onClick={() => paging > 0 && setPaging(paging - 1)}>
                             <span aria-hidden="true">&laquo;</span>
                         </CPaginationItem>
-                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {result1.filter((list) =>
-                            list.username === username && list.status === 'CallReport'
-                        ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
-
-                        {result1.filter((list) =>
-                            list.username === username && list.status === 'CallReport'
-                        ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {result1.filter((list) =>
-                            list.username === username && list.status === 'CallReport'
-                        ).length > (paging + 1) * 10 ?
-                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                        <CPaginationItem style={{ cursor: 'pointer' }} active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {result1.length > (paging + 1) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
+                            onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {result1.length > (paging + 2) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
+                            onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {result1.length > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" style={{ cursor: 'pointer' }} onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>
-                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                            : <CPaginationItem disabled aria-label="Next" style={{ cursor: 'pointer' }} onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
-                            </CPaginationItem>
+                     </CPaginationItem>
                         }
                     </CPagination>
+
                 </CCard>
             </CCol>
         </CRow>
@@ -281,3 +266,19 @@ const FollowupCallReport = () => {
 }
 
 export default FollowupCallReport
+
+// const data1 = { 
+//     Counseller, CallStatus:CallStatus1,
+//     appointmentfor:enquiryStage,
+//     PFollowupDate:FollowupDate,
+//     PDiscussion: Discussion,
+//     PTimeFollowp:TimeFollowp,       
+//     PAppointmentTime: appointmentTime,
+//     PAppointmentDate: appointmentDate,
+//     PServiceName: ServiceName1, 
+//     PCallDate: date, 
+//     PTime: time,
+//     PName: Name, 
+//     PContact: Contact,
+//     PEmail: email,
+// }

@@ -51,6 +51,8 @@ const TrialEnquires = () => {
     var year = currentdate.getFullYear();
 
     const pathRoute = useAdminValidation()
+    const pathRouteMaster = useAdminValidation('Master')
+
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
     ?.crmLeads?.items?.superRight) 
@@ -139,23 +141,11 @@ const TrialEnquires = () => {
     const [updateItem, setUpdateItem] = useState([]);
     const [paging, setPaging] = useState(0);
 
-    const [pros, setPros] = useState([])
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/prospect/${pathRoute}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                console.warn(res.data.filter((list) => list.status === "prospect"))
-                setPros(res.data.filter((list) => list.status === "prospect"))
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-        axios.get(`${url}/subservice/all`, {
+      
+        axios.get(`${url}/subservice/${pathRouteMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -170,7 +160,7 @@ const TrialEnquires = () => {
     }, []);
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url2}/employeeForm/${pathRoute}`, {
+        axios.get(`${url2}/employeeForm/${pathRouteMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -242,7 +232,7 @@ const TrialEnquires = () => {
             + currentdate.getMinutes();
 
         if (enquiryStage === 'Appointment') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment', Counseller: Counseller }
+            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment', Counseller: Counseller,CallStatus: CallStatus1 }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
@@ -262,6 +252,7 @@ const TrialEnquires = () => {
                 resp.json().then(() => {
                     alert("successfully submitted")
                     setVisible(false)
+                    getEnquiry()
                 })
             })
 
@@ -281,7 +272,10 @@ const TrialEnquires = () => {
             })
 
         } else if (enquiryStage === 'Trial Session') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', Counseller: Counseller }
+
+            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', 
+            Counseller: Counseller, identifyStage:'Trial Session',CallStatus: CallStatus1 }
+
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
@@ -302,6 +296,7 @@ const TrialEnquires = () => {
                 resp.json().then(() => {
                     alert("successfully submitted")
                     setVisible(false)
+                    getEnquiry()
                 })
             })
 
@@ -322,25 +317,7 @@ const TrialEnquires = () => {
             handleAdmission(followForm)
             setVisible(false)
 
-            let data2 = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
-            }
-            fetch(`${url}/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({...uniqObjeact,...data2})
-            }).then((resp) => {
-                resp.json().then(() => {
-                    setCallReport(false)
-                })
-            })
+           
         } else if (enquiryStage === 'Prospect') {
             let data = {
                 username: username,
@@ -348,47 +325,7 @@ const TrialEnquires = () => {
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
                 status: 'prospect'
             }
-            let data2 = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
-            }
-            if (pros.filter((list) => list.EnquiryID === followForm).length > 0) {
-                const found = pros.filter((list) => list.EnquiryID === followForm).map((element, index) => {
-                    return index === 0 && element._id;
-                });
-                fetch(`${url}/prospect/update/${found[0]}`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({...uniqObjeact,...data})
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        setVisible(false)
-                    })
-                })
-
-                const data1 = { Counseller, CallStatus: CallStatus1 }
-
-                fetch(`${url1}/enquiryForm/update/${followForm}`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data1)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        alert("successfully submitted")
-                        setVisible(false)
-                    })
-                })
-            } else {
+          
                 fetch(`${url}/prospect/create`, {
                     method: "POST",
                     headers: {
@@ -403,7 +340,23 @@ const TrialEnquires = () => {
                     })
                 })
 
-                const data1 = { Counseller, CallStatus: CallStatus1 }
+                   
+            const data1 = { 
+                Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                appointmentfor:enquiryStage,
+                identifyStage:enquiryStage,
+                PFollowupDate:FollowupDate,
+                PDiscussion: Discussion,
+                PTimeFollowp:TimeFollowp,       
+                PAppointmentTime: appointmentTime,
+                PAppointmentDate: appointmentDate,
+                PServiceName: ServiceName1, 
+                PCallDate: date, 
+                PTime: time,
+                PName: Name, 
+                PContact: Contact,
+                PEmail: email,
+            }
 
                 fetch(`${url1}/enquiryForm/update/${followForm}`, {
                     method: "POST",
@@ -417,22 +370,11 @@ const TrialEnquires = () => {
                     resp.json().then(() => {
                         alert("successfully submitted")
                         setVisible(false)
+                        getEnquiry()
                     })
                 })
-            }
-            fetch(`${url}/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({...uniqObjeact,...data2})
-            }).then((resp) => {
-                resp.json().then(() => {
-                    setCallReport(false)
-                })
-            })
+            
+
 
         }
 
@@ -492,7 +434,9 @@ const TrialEnquires = () => {
             .then((res) => {
                 setResult1(res.data.filter((list) => 
                             list.appointmentfor === 'Trial Session' &&
-                            list.enquirestatus!=='notshow').reverse())
+                            list.enquirestatus!=='notshow'&&
+                            list.CallStatus !== 'Cold'
+                            ).reverse())
                 setOgList(res.data.filter((list) => list).reverse())
                 console.log(res.data);
             })
@@ -670,8 +614,7 @@ const TrialEnquires = () => {
                                         <option value={day}>Today</option>
                                         <option value={month}>Last Month</option>
                                         <option value={year}>This Year</option>
-                                        {/* <option>Last Week</option>
-                                        <option>Custom Date</option> */}
+                                       
                                     </CFormSelect>
                                     {select === 'Custom Date' && (
                                         <CInputGroup className='mt-2 mb-2' >
@@ -943,7 +886,7 @@ const TrialEnquires = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                    (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -961,8 +904,8 @@ const TrialEnquires = () => {
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) =>list.selected === 'Select').map((item, index) => (
+                                                  (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}</CFormSelect>

@@ -987,7 +987,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                      
                                                  <option>Type of Class</option>     
                                                      {batchesData.filter((el)=>
-                                                     el.service_variation.trim().toLocaleLowerCase()===serviceName.trim().toLocaleLowerCase()
+                                                     el.service_variation?.trim()?.toLocaleLowerCase()===serviceName?.trim()?.toLocaleLowerCase()
                                                      )
                                                      .map((el)=>el.category).filter((el,i,arr)=>
                                                      i===arr.indexOf(el) 

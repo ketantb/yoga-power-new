@@ -40,14 +40,16 @@ import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue';
 const FollowupScheduling = () => {
 
     const pathRoute = useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
     const unikqValidateObj = useUniqAdminObjeact()
-    
+
     var currentdate = new Date();
-    var date = currentdate.getDay() + "-" + currentdate.getMonth()
-        + "-" + currentdate.getFullYear();
-    var time =
-        + currentdate.getHours() + ":"
-        + currentdate.getMinutes();
+    var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
+    var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
+    var year = currentdate.getFullYear();
+    
+
+    const [select, setSelect] = useState('') 
     const [visible, setVisible] = useState(false)
     const [edit, setEdit] = useState()
     const [visible1, setVisible1] = useState(false)
@@ -83,15 +85,17 @@ const FollowupScheduling = () => {
     const [updateItem, setUpdateItem] = useState();
     const [admissionForm, setAdmissionForm] = useState(false)
     const [admissionFormData,setAdmissionFormData] = useState('')
+    const [ogList, setOgList] = useState([])
+
 
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
     ?.crmLeads?.items?.superRight) 
 
     const isAdmin = useSelector((el)=>el.isAdmin) 
-    const prospectAdd =  rightsData?.addOn?.includes(leadsSuperRight.prospect)
-    const prospectDelete =  rightsData?.delete?.includes(leadsSuperRight.prospect)
-    const prospectEdit  =  rightsData?.edit?.includes(leadsSuperRight.prospect)
+    const prospectAdd =  (rightsData?.addOn?.includes(leadsSuperRight.prospect)||isAdmin)
+    const prospectDelete =  (rightsData?.delete?.includes(leadsSuperRight.prospect)||isAdmin)
+    const prospectEdit  =  (rightsData?.edit?.includes(leadsSuperRight.prospect)||isAdmin)
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -105,28 +109,16 @@ const FollowupScheduling = () => {
     const url = url1
 
 
-    const [pros, setPros] = useState([])
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/enquiryForm/${pathRoute}`, {
+     
+        axios.get(`${url}/subservice/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                setPros(res.data.filter((list) => list.appointmentfor==="Prospect"))
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-        axios.get(`${url}/subservice/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                console.log(res.data)
                 setResult(res.data)
             })
             .catch((error) => {
@@ -136,7 +128,6 @@ const FollowupScheduling = () => {
 
     
     function handleAdmission(id) {
-        console.log(id,'followForm')
         setEdit(null)
         if (id != null) {
             axios.get(`${url1}/enquiryForm/${ id }`, {
@@ -157,8 +148,8 @@ const FollowupScheduling = () => {
 
 
     const [staff, setStaff] = useState([])
-    function getStaff() {
-        axios.get(`${url1}/employeeForm/${pathRoute}`, {
+    function getStaff() { 
+        axios.get(`${url1}/employeeForm/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -181,7 +172,8 @@ const FollowupScheduling = () => {
             + currentdate.getMinutes();
 
         if (enquiryStage === 'Appointment') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment', Counseller: Counseller }
+            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment',CallStatus: CallStatus1,
+             Counseller: Counseller }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
@@ -201,6 +193,7 @@ const FollowupScheduling = () => {
                 resp.json().then(() => {
                     alert("successfully submitted")
                     setVisible(false)
+                    
                 })
             })
 
@@ -212,7 +205,7 @@ const FollowupScheduling = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data2)
+                body: JSON.stringify({...data2,...unikqValidateObj})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -220,7 +213,7 @@ const FollowupScheduling = () => {
             })
 
         } else if (enquiryStage === 'Trial Session') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', Counseller: Counseller }
+            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', Counseller: Counseller,CallStatus: CallStatus1 }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
@@ -257,66 +250,32 @@ const FollowupScheduling = () => {
                 })
             })
         } else if (enquiryStage === 'Join') {
-            console.log("Joni Hello")
             handleAdmission(followForm)
             setVisible(false)
-
-            let data2 = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
-            }
-            fetch(`${url}/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({...data2,...unikqValidateObj})
-            }).then((resp) => {
-                resp.json().then(() => {
-                    setCallReport(false)
-                })
-            })
         } else if (enquiryStage === 'Prospect') {
-            let data = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'prospect'
+           
+            const data1 = { 
+                Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                appointmentfor:enquiryStage,
+                PFollowupDate:FollowupDate,
+                PDiscussion: Discussion,
+                PTimeFollowp:TimeFollowp,       
+                PAppointmentTime: appointmentTime,
+                PAppointmentDate: appointmentDate,
+                PServiceName: ServiceName1, 
+                PCallDate: date, 
+                PTime: time,
+                PName: Name, 
+                PContact: Contact,
+                PEmail: email,
             }
-            let data2 = {
-                username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
-            }
-            if (pros.filter((list) => list.EnquiryID === followForm).length > 0) {
-                const found = pros.filter((list) => list.EnquiryID === followForm).map((element, index) => {
-                    return index === 0 && element._id;
-                });
-                fetch(`${url}/prospect/update/${found[0]}`, {
+
+
+
+                fetch(`${ url }/enquiryForm/update/${ followForm }`, {
                     method: "POST",
                     headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        setVisible(false)
-                    })
-                })
-
-                const data1 = { Counseller, CallStatus: CallStatus1 }
-
-                fetch(`${url}/enquiryForm/update/${followForm}`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
+                        "Authorization": `Bearer ${ token }`,
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
@@ -325,9 +284,16 @@ const FollowupScheduling = () => {
                     resp.json().then(() => {
                         alert("successfully submitted")
                         setVisible(false)
+                        getEnquiry()
                     })
                 })
-            } else {
+
+                let data2 = {
+                    username: username,
+                    EnquiryID: followForm, CallDate: date, Time: time,
+                    Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                    status: 'CallReport'
+                }
                 fetch(`${url}/prospect/create`, {
                     method: "POST",
                     headers: {
@@ -335,43 +301,13 @@ const FollowupScheduling = () => {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({...data,...unikqValidateObj})
+                    body: JSON.stringify({...data2,...unikqValidateObj})
                 }).then((resp) => {
                     resp.json().then(() => {
-                        setVisible(false)
+                        setCallReport(false)
                     })
                 })
-
-                const data1 = { Counseller, CallStatus: CallStatus1 }
-
-                fetch(`${url}/enquiryForm/update/${followForm}`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data1)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        alert("successfully submitted")
-                        setVisible(false)
-                    })
-                })
-            }
-            fetch(`${url}/prospect/create`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({...data2,...unikqValidateObj})
-            }).then((resp) => {
-                resp.json().then(() => {
-                    setCallReport(false)
-                })
-            })
+            
 
         }
 
@@ -379,29 +315,39 @@ const FollowupScheduling = () => {
 
     const updateProspect = () => {
 
-        if (FollowupDate !== '' && TimeFollowp !== '') {
-            var currentdate = new Date();
+
+        var currentdate = new Date();
             var date = currentdate.getDay() + "-" + currentdate.getMonth()
                 + "-" + currentdate.getFullYear();
             var time =
                 + currentdate.getHours() + ":"
                 + currentdate.getMinutes();
-            let data = {
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, 
-                AppointmentDate: appointmentDate, AppointmentTime: appointmentTime,
-                 enquiryStage: enquiryStage, CallStatus: CallStatus1, 
-                 FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+        
+            const data1 = { 
+                Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                appointmentfor:enquiryStage,
+                identifyStage:enquiryStage,
+                PFollowupDate:FollowupDate,
+                PDiscussion: Discussion,
+                PTimeFollowp:TimeFollowp,       
+                PAppointmentTime: appointmentTime,
+                PAppointmentDate: appointmentDate,
+                PServiceName: ServiceName1, 
+                PCallDate: date, 
+                PTime: time,
+                PName: Name, 
+                PContact: Contact,
+                PEmail: email,
             }
 
-            fetch(`${url}/prospect/update/${edit}`, {
+            fetch(`${url}/enquiryForm/update/${edit}`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data1)
             }).then((resp) => {
                 resp.json().then(() => {
 
@@ -409,9 +355,6 @@ const FollowupScheduling = () => {
                     setVisible(false)
                 })
             })
-        } else {
-            setError('Please Fill All Details')
-        }
 
     }
 
@@ -423,12 +366,34 @@ const FollowupScheduling = () => {
             }
         })
             .then((res) => {
-                setResult1(res.data.reverse())
+                setResult1(res.data.filter((el)=>el.CallStatus !== 'Cold').reverse())
+                setOgList(res.data.filter((list) => list.CallStatus !== 'Cold').reverse())
             })
             .catch((error) => {
                 console.error(error)
             })
     }
+ 
+    const [filterBy, setFilterBy] = useState('')
+    const [subFilter, setSubFilter] = useState('')
+    const [arr, setArr] = useState([])
+
+    function getUnique(arr, index) {
+        const unique = arr
+            .map(e => e[index])
+            // store the keys of the unique objects
+            .map((e, i, final) => final.indexOf(e) === i && i)
+            // eliminate the dead keys & store unique objects
+            .filter(e => arr[e]).map(e => arr[e]);
+        return unique;
+    }
+    function filterArr(og, v) {
+        if (v === '')
+            setResult1(og)
+        else
+            setResult1(og.filter((list) => list[filterBy] === v))
+    }
+
 
     function getProspect(id) {
         axios.get(`${url1}/enquiryForm/${id}`, {
@@ -450,21 +415,21 @@ const FollowupScheduling = () => {
             })
     }
     function getUpdate(id) {
-        axios.get(`${url}/prospect/${id}`, {
+        axios.get(`${url}/enquiryForm/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                 setUpdateItem(res.data)
-                setName(res.data.Name)
-                setContact(res.data.Contact)
-                setServiceName1(res.data.ServiceName)
+                setName(res.data.PName)
+                setContact(res.data.PContact)
+                setServiceName1(res.data.PServiceName)
                 setCallStatus1(res.data.CallStatus)
-                setEmail(res.data.Email)
-                setFollowupDate(moment(res.data.FollowupDate).utc().format('YYYY-MM-DD'))
+                setEmail(res.data.PEmail)
+                setFollowupDate(moment(res.data.PFollowupDate).utc().format('YYYY-MM-DD'))
                 setCounseller(res.data.Counseller)
-                setDiscussion(res.data.Discussion)
+                setDiscussion(res.data.PDiscussion)
                 setVisible1(true)
             })
             .catch((error) => {
@@ -475,7 +440,7 @@ const FollowupScheduling = () => {
     function deleteProspect(id) {
 
         if (confirm('Do you want to delete this')) {
-            fetch(`${url}/prospect/delete/${id}`, {
+            fetch(`${url}/enquiryForm/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -574,7 +539,6 @@ const FollowupScheduling = () => {
         getUpdate(id)
     }
 
-    console.log(admissionFormData)
 
     return (
         <CRow>
@@ -583,43 +547,70 @@ const FollowupScheduling = () => {
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">Prospects <span className='float-end'>Total Prospects 
-                        :{result1.length}</span></strong>
+                        :{result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect').length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
-                        <div className='d-flex justify-content-between mb-2'>
-                            <CInputGroup style={{ width: "500px" }}>
+                      <CRow>
+                         <CCol lg={4} sm={6} md={6}>
+                                <CInputGroup className='mb-2'>
+                                    <CFormSelect
+                                        id="inputGroupSelect04"
+                                        aria-label="Example select with button addon"
+                                        value={select}
+                                        onChange={(e) => setSelect(e.target.value)}
+                                    >
+                                        <option value={day}>Today</option>
+                                        <option value={month}>Last Month</option>
+                                        <option value={year}>This Year</option>
+                                       
+                                    </CFormSelect>
+                                </CInputGroup>
+                            </CCol>
+                       </CRow>  
+                      <CRow>
 
-                                <CInputGroupText
-                                    component="label"
-                                    htmlFor="inputGroupSelect01"
+                            <CCol xs={3}>
+                                <CFormSelect
+                                    className="mb-1"
+                                    aria-label="Select Service Name"
+                                    value={filterBy}
+                                    onChange={(e) => { setFilterBy(e.target.value); setArr(getUnique(ogList, e.target.value)) }}
+                                    label="Filter By"
+
                                 >
-                                    Form
-                                </CInputGroupText>
-                                <CFormInput
-                                    type="date"
-                                    value={dateFilter.startDate}
-                                    onChange={() => setDateFilter(startDate = e.target.value)}
-                                    required
-                                /><CInputGroupText
-                                    component="label"
-                                    htmlFor="inputGroupSelect01"
+                                    <option value=''>Select</option>
+                                    <option value='Counseller'>Counseller </option>
+                                    <option value='enquirytype'>Lead Sources </option>
+                                    <option value='appointmentfor'>Enquiry Stage </option>
+                                    <option value='Message'>Last Call Status </option>
+                                    <option value='ServiceName'>Services Name </option>
+                                    <option value='Customertype'>Customer Type </option>
+                                    <option value='Enquiry type'>Enquiry type </option>
+                                    <option value='CallStatus'>Call Tag </option>
+                                    <option value='Gander'>Gender</option>
+                                </CFormSelect>
+                            </CCol>
+                            <CCol xs={3}>
+                                <CFormSelect
+                                    className="mb-1"
+                                    aria-label="Select Service Name"
+                                    value={subFilter}
+                                    onChange={(e) => { setSubFilter(e.target.value); filterArr(ogList, e.target.value) }}
+                                    label="Sub-filter"
                                 >
-                                    To
-                                </CInputGroupText>
-                                <CFormInput
-                                    type="date"
-                                    value={dateFilter.endDate}
-                                    onChange={() => setDateFilter(endDate = e.target.value)}
-                                    required
-                                />
-                                <CButton type="button" color="primary">
-                                    Go
-                                </CButton>
-                            </CInputGroup>
-                        </div>
-                        <div className='d-flex justify-content-between mb-2'>
-                           
-                        </div>
+                                    <option value=''>Select</option>
+                                    {arr.filter((list) => list[filterBy] != '').map((item, index) => (
+                                        (
+                                            <option key={index} value={item.id}>{item[filterBy]}</option>
+                                        )
+                                    ))}
+                                </CFormSelect>
+                            </CCol>
+                            <CCol xs={6}>
+
+                            </CCol>
+                     </CRow>  
+
                         <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={callReport} color='' onClose={() => setCallReport(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Call Report</CModalTitle>
@@ -1313,34 +1304,26 @@ const FollowupScheduling = () => {
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
-                                {result1
-                                .filter((list) =>
-                                   
-                                    //   list?.CallDate?.toString()?.includes(Search1) 
-                                    //  && list?.Name?.toLowerCase()?.includes(Search3.toLowerCase())
-                                    //   && list?.Email?.toLowerCase()?.includes(Search4.toLowerCase())
-                                    // && list?.Contact?.toString()?.includes(Search5.toString()) &&
-                                    // list?.ServiceName?.toLowerCase()?.includes(Search6.toLowerCase())
-                                    list
-                                )
-                                .map((item, index) =>{ 
-                                    console.log(item)
-                              
+                                {result1.filter((list)=>
+                                list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect'&&
+                                moment(list.createdAt).format("MM-DD-YYYY").includes(select)                                
+                                ).
+                                slice(paging * 10, paging * 10 + 10).map((item, index) =>{                               
                                   return <CTableRow key={index}>
                                         <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-                                        <CTableDataCell>{item.centerCodeC}Q{index + 10 + (paging * 10)}</CTableDataCell>
-                                        <CTableDataCell className='text-center'>{moment(item.CallDate).format("DD-MM-YYYY")}</CTableDataCell>
-                                        <CTableDataCell>{moment(item.Time, "HH:mm").format("hh:mm A")}</CTableDataCell>
-                                        <CTableDataCell>{item.Name}</CTableDataCell>
-                                        <CTableDataCell>{item.Email}</CTableDataCell>
-                                        <CTableDataCell>{item.Contact}</CTableDataCell>
-                                        <CTableDataCell>{item.ServiceName}</CTableDataCell>
+                                        <CTableDataCell>{item.EnquiryId}Q{index + 10 + (paging * 10)}</CTableDataCell>
+                                        <CTableDataCell className='text-center'>{moment(item.PCallDate).format("DD-MM-YYYY")}</CTableDataCell>
+                                        <CTableDataCell>{moment(item.PTime, "HH:mm").format("hh:mm A")}</CTableDataCell>
+                                        <CTableDataCell>{item.PName}</CTableDataCell>
+                                        <CTableDataCell>{item.PEmail}</CTableDataCell>
+                                        <CTableDataCell>{item.PContact}</CTableDataCell>
+                                        <CTableDataCell>{item.PServiceName}</CTableDataCell>
                                         <CTableDataCell>{item.CallStatus}</CTableDataCell>                                        
-                                        <CTableDataCell>{item.FollowupDate && moment(item.FollowupDate).format("DD-MM-YYYY")}<br />{item.TimeFollowp && moment(item.TimeFollowp, "HH:mm").format("hh:mm A")}</CTableDataCell>
-                                        <CTableDataCell>{item.enquiryStage}</CTableDataCell>
-                                        <CTableDataCell>{item.Discussion}</CTableDataCell>
+                                        <CTableDataCell>{item.PFollowupDate && moment(item.PFollowupDate).format("DD-MM-YYYY")}<br />{item.TimeFollowp && moment(item.TimeFollowp, "HH:mm").format("hh:mm A")}</CTableDataCell>
+                                        <CTableDataCell>{item.appointmentfor}</CTableDataCell>
+                                        <CTableDataCell>{item.PDiscussion}</CTableDataCell>
                                         <CTableDataCell>{item.Counseller}</CTableDataCell>
-                                        <CTableDataCell  style={{display:(isAdmin|| (prospectAdd))?'':'none'}} className='text-center'><a href={`tel:+91${item.Contact}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`https://wa.me/${item.Contact}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`mailto: ${item.Email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item.EnquiryID)} /></CTableDataCell>
+                                        <CTableDataCell  style={{display:(isAdmin|| (prospectAdd))?'':'none'}} className='text-center'><a href={`tel:+91${item.Contact}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`https://wa.me/${item.Contact}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`mailto: ${item.Email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
                                         
                                         <CTableDataCell  style={{display:(isAdmin|| (prospectEdit||prospectDelete))?'':'none'}} className='text-center'>
                                            
@@ -1360,6 +1343,23 @@ const FollowupScheduling = () => {
                         </CTable>
                     </CCardBody>
                     
+                    <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+
+                        {result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                    </CPagination>
                 </CCard>
             </CCol>
         </CRow>
