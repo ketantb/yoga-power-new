@@ -272,10 +272,6 @@ useEffect(()=>{
 if(startDate&& serviceDays){
 setEndDate(getCurrentDateInput())
 }
-console.log(getCurrentDateInput())
-console.log(serviceDays)
-
-
 },[startDate,ser2,serviceDays])
 
 useEffect(()=>{
@@ -365,8 +361,7 @@ setServiceDays(el.Days)
                                     <option>Select Service</option>
                                     {subService.map((item) => (
                                 (item.Status=== true && (item.Service.toLocaleLowerCase().trim()))))
-                            .filter((el,i,arr)=>i===arr.indexOf(el)).map((el,i)=><option key={i}>{el}</option>)
-            }
+                            .filter((el,i,arr)=>i===arr.indexOf(el)).map((el,i)=><option key={i}>{el}</option>)}
                                 </CFormSelect>
                             </CCol>
                             <CCol>

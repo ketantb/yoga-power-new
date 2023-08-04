@@ -717,7 +717,7 @@ const AllEnquires = () => {
                                     <CCardBody className='d-flex justify-content-around'>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
-                                                FollowUps: {result1.filter((list) =>
+                                            Prospects: {result1.filter((list) =>
                                                      list.appointmentfor === 'Prospect' && 
                                                      list.enquirestatus!=='notshow'&&
                                                      list.CallStatus !== 'Cold'

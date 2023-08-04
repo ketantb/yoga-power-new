@@ -211,8 +211,8 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
         const response6 =  axios.get(`${url1}/Batch/${pathValMaster}`,headers)
 
 
-
         const allData = await Promise.all([response1,response2,response3,response4,response5,response6])
+
         const packageData = allData[0]?.data
         const leadSourseData = allData[1]?.data
         const staffData = allData[2]?.data
@@ -384,23 +384,18 @@ const getCurrentDateInput = () => {
     return shortDate;
   }
 
-useEffect(()=>{
-if(startDate&& serviceDays){
-console.log(startDate)
-// console.log(getCurrentDateInput())
-setEndDate(getCurrentDateInput())
-}
-},[startDate])
+ useEffect(()=>{
+    if(startDate&& serviceDays){setEndDate(getCurrentDateInput())}
+},[startDate,ser2,serviceDays])
+
+
 
 useEffect(()=>{
-if(ser1){
-subService.forEach((el)=>{
-if(el.Service=== ser1){
-setServiceDays(el.Days)
-}
-})
-}
-},[ser1])
+    if(ser1){subService.forEach((el)=>{
+    if(el.Duration=== ser2){setServiceDays(el.Days)}})}
+},[ser2])
+
+
 const selectedStaff = staff.find((el)=>el._id===ser5)
 
     const saveInvoice = () => {
@@ -543,6 +538,8 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
         }})}
     setSer1(ids?.ServiceName)
    },[ids?.ServiceName,serviceName,subService?.length])
+
+
 
 
 
@@ -1369,11 +1366,9 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                             label='Service Name'
                                                         >
                                                             <option>Select Service</option>
-                                                            {[...subService.filter((el)=>{
-                                        return                                 
-                                    })].map((el,i)=><option key={i}>{el.Service
-                                    }</option>)
-                                    }
+                                                            {subService.map((item) => (
+                                                            (item.Status=== true && (item.Service.toLocaleLowerCase().trim()))))
+                                                             .filter((el,i,arr)=>i===arr.indexOf(el)).map((el,i)=><option key={i}>{el}</option>)}
                                                         </CFormSelect>
                                                     </CCol>
                                                     <CCol>
@@ -1386,12 +1381,8 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                         >
                                                             <option>Select Package</option>
                                                             {[...subService.filter((el)=>{
-                                        return el.Service=== ser1                                
-                                    })].map((el,i)=><option key={i}>{el.Package_Name
-                                        }</option>)
-                                    }   
-
-
+                                                             return  el.Service.toLocaleLowerCase().trim()=== ser1})]
+                                                             .map((el,i)=><option key={i}>{el.Package_Name}</option>)}      
                                                         </CFormSelect>
                                                     </CCol>
                                                 </CRow>
@@ -1442,11 +1433,9 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                     onChange={(e) => setSer2(e.target.value)}
                                                 >
                                          <option>Select Duration</option>
-                                           {[...subService.filter((el)=>{
-                                         return  el.Service=== ser1                                  
-                                    })].map((el,i)=><option key={i}>{el.Duration
-                                        }</option>)
-                                    }   
+                                         {[...subService.filter((el)=>{
+                                          return  el.Service.toLocaleLowerCase().trim()=== ser1  })]
+                                          .map((el,i)=><option key={i}>{el.Duration}</option>)}      
                                                 </CFormSelect>
 
 
@@ -1462,11 +1451,8 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                 >
                                                     <option>Select Fees</option>
                                                     {[...subService.filter((el)=>{
-                                    return  el.Service=== ser1                                    
-                                    })].map((el,i)=><option key={i}>{el.Fees
-
-                                        }</option>)
-                                    }  
+                                                     return el.Service.toLocaleLowerCase().trim()=== ser1})]
+                                                     .map((el,i)=><option key={i}>{el.Fees}</option>)}   
                                                 </CFormSelect>
                                             </CTableDataCell>
                                         </CTableRow>
