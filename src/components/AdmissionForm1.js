@@ -152,6 +152,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const username = user.user.username;
+    const isAdmin = user.user.isAdmin;
     const centerCode = user.user.centerCode;
 
     const [visi, setVisi] = useState(false);
@@ -269,10 +270,11 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
             BackPain, BoneFracture, CarpalTunnel, AsthmaCOPD, DigestiveDisorder,
             Diabetes, Epilepsy, FootPain, Glaucoma, HeartDiseaseCondition, HerniaDiastasisRecti,
             HighBloodPressure, Other: OtherText, Weight, Height, fitnessLevel,
-            fitnessGoal, idealWeight, suggestion, comments, status: 'active',
-            ClientId:`${centerCode}MEM${10+mem.length}`,ClientReferenceName:clientReferance,
+            fitnessGoal, idealWeight, suggestion, comments, status: 'active'
+            ,ClientReferenceName:clientReferance,
             EnquiryId:ids._id,
-            typeOFBatchClasses,...unikqValidateObj
+            typeOFBatchClasses,...unikqValidateObj,
+            isAdmin:isAdmin
         }
 
 
@@ -427,6 +429,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
             followUpDate:new Date(),
             CountryCode,
             EmployeeId:selectedStaff?._id, 
+            isAdmin:isAdmin,
             ...unikqValidateObj
         }
 

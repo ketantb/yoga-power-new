@@ -38,12 +38,14 @@ import AdmissionForm1 from 'src/components/AdmissionForm1'
 import { useSelector } from 'react-redux'
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
+import useExportHook from './leaadCutomHook/useExportHook'
 
 const ColdEnquires = () => {
 
     const pathRoute = useAdminValidation()
     const pathRouteVal = useAdminValidation('Master')
     const uniqObj = useUniqAdminObjeact()
+    const exportColdEnquires=    useExportHook()
 
     var currentdate = new Date();
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
@@ -214,6 +216,7 @@ const ColdEnquires = () => {
         }).then((resp) => {
             resp.json().then(() => {
                 alert("successfully submitted")
+                getEnquiry()
                 setVisible1(false)
             })
         })
@@ -348,6 +351,13 @@ const ColdEnquires = () => {
                 PName: Name, 
                 PContact: Contact,
                 PEmail: email,
+
+                Fullname:Name,
+                appointmentTime,
+                appointmentDate,
+                ServiceName:ServiceName1,
+                Emailaddress:email,
+                ContactNumber:Contact,
             }
 
                 fetch(`${url1}/enquiryForm/update/${followForm}`, {
@@ -632,11 +642,7 @@ const ColdEnquires = () => {
                             </CCol>
                             <CCol lg={6} sm={6} md={6}>
                                 <CButtonGroup className=' mb-2 float-end'>
-                                    <CButton color="primary">
-                                        <CIcon icon={cilArrowCircleBottom} />
-                                        {' '}Import
-                                    </CButton>
-                                    <CButton color="primary">
+                                    <CButton color="primary" onClick={()=>exportColdEnquires(result)}>
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>

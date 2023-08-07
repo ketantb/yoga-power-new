@@ -5,8 +5,6 @@ const useAdminValidation = (type) => {
 
     function getRouteFun(userInfo){
 
-      
-
         if(userInfo.isAdmin){
          return 'all' 
         }else if(type ==='Master' && !userInfo.isAdmin){

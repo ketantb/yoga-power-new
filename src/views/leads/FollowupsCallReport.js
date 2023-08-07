@@ -50,8 +50,6 @@ const FollowupCallReport = () => {
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
-    const centerCode = user.user.centerCode;
     const [result1, setResult1] = useState([]);
     const [paging,setPaging] = useState(0)
 
@@ -258,7 +256,6 @@ const FollowupCallReport = () => {
                      </CPaginationItem>
                         }
                     </CPagination>
-
                 </CCard>
             </CCol>
         </CRow>
@@ -267,18 +264,3 @@ const FollowupCallReport = () => {
 
 export default FollowupCallReport
 
-// const data1 = { 
-//     Counseller, CallStatus:CallStatus1,
-//     appointmentfor:enquiryStage,
-//     PFollowupDate:FollowupDate,
-//     PDiscussion: Discussion,
-//     PTimeFollowp:TimeFollowp,       
-//     PAppointmentTime: appointmentTime,
-//     PAppointmentDate: appointmentDate,
-//     PServiceName: ServiceName1, 
-//     PCallDate: date, 
-//     PTime: time,
-//     PName: Name, 
-//     PContact: Contact,
-//     PEmail: email,
-// }

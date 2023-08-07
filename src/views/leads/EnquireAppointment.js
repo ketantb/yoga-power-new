@@ -38,6 +38,7 @@ import AdmissionForm1 from 'src/components/AdmissionForm1'
 import { useSelector } from 'react-redux'
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
+import useExportHook from './leaadCutomHook/useExportHook'
 
 const EnquireAppointment = () => {
 
@@ -54,6 +55,7 @@ const EnquireAppointment = () => {
     const appointmentDelete =  rightsData?.delete?.includes(leadsSuperRight.appointment)
     const appointmentEdit  =  rightsData?.edit?.includes(leadsSuperRight.appointment)
     
+    const exportDataFun =  useExportHook("YogPowerAppointment.xlsx") 
 
 
     const [select, setSelect] = useState('')
@@ -180,8 +182,7 @@ const EnquireAppointment = () => {
         localStorage.setItem('adId', JSON.stringify(id))
     }
     function handleAdmission(id) {
-        console.log(id)
-        console.log(edit)
+
         setEdit(null)
         if (id != null) {
             axios.get(`${url1}/enquiryForm/${id}`, {
@@ -222,6 +223,7 @@ const EnquireAppointment = () => {
             resp.json().then(() => {
                 alert("successfully submitted")
                 setVisible1(false)
+                getEnquiry()
             })
         })
     }
@@ -367,6 +369,13 @@ const EnquireAppointment = () => {
                     PName: Name, 
                     PContact: Contact,
                     PEmail: email,
+
+                    Fullname:Name,
+                    appointmentTime,
+                    appointmentDate,
+                    ServiceName:ServiceName1,
+                    Emailaddress:email,
+                    ContactNumber:Contact,
                 }
 
                 fetch(`${url1}/enquiryForm/update/${followForm}`, {
@@ -440,7 +449,6 @@ const EnquireAppointment = () => {
             }
         })
             .then((res) => {
-                console.log(res.data)
                 setResult1(res.data.filter((list) => list.CallStatus !== 'Cold').reverse())
                 setOgList(res.data.filter((list) => list.CallStatus !== 'Cold').reverse())
             })
@@ -638,11 +646,7 @@ const EnquireAppointment = () => {
                             </CCol>
                             <CCol lg={6} sm={6} md={6}>
                                 <CButtonGroup className=' mb-2 float-end'>
-                                    <CButton color="primary">
-                                        <CIcon icon={cilArrowCircleBottom} />
-                                        {' '}Import
-                                    </CButton>
-                                    <CButton color="primary">
+                                    <CButton color="primary" onClick={()=>exportDataFun(result1.filter((list) =>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Appointment' ))}>
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>
@@ -1377,7 +1381,7 @@ const EnquireAppointment = () => {
                                                         label='Counseller'
                                                     >
                                                         <option>Select Counseller</option>
-                                                        {staff.filter((list) =>  list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
+                                                        {staff.filter((list) =>   list.selected === 'Select').map((item, index) => (
                                                              (
                                                                 <option key={index}>{item.FullName}</option>
                                                             )
@@ -1411,7 +1415,7 @@ const EnquireAppointment = () => {
                                     <CTableHeaderCell>Source</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry stage</CTableHeaderCell>
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
-                                    <CTableHeaderCell>Last Call</CTableHeaderCell>
+                                    <CTableHeaderCell>Discussion</CTableHeaderCell>
                                     {(isAdmin|| appointmentAdd)&&<CTableHeaderCell>Add</CTableHeaderCell>}
                                     <CTableHeaderCell>Appointment Date & Time</CTableHeaderCell>
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>

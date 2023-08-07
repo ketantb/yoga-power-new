@@ -15,8 +15,6 @@ const ServiceProfile = ({ id }) => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
     const token = user.token;
-    const username = user.user.username;
-    const centerCode = user.user.centerCode;
 
     useEffect(() => {
         getDetails(id)
@@ -32,7 +30,10 @@ function getDetails(id) {
    headers
 })
   
-    data2.then(({data}) => {
+    data2.then(({data,status}) => {
+        if(status!==200){
+            return
+        }       
         setResult(data)  
         getInvoiceData(data)
             })
@@ -42,6 +43,9 @@ function getDetails(id) {
 }
 
 function getInvoiceData(data){
+    if(!data.invoiceId){
+     return 
+    }
     const headers = {
         'Authorization': `Bearer ${token}`,
         'My-Custom-Header': 'foobar'

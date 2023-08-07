@@ -78,7 +78,7 @@ const [dashBoardData2,setDashBoardData2]  = useState(
 
     const getEmpDashBoardData = async ()=>{
       try{
-        const response1 =  axios.get(`${url}/emp-attendance/all`,{headers})
+        const response1 =  axios.get(`${url}/emp-attendance/${pathValMaster}`,{headers})
         const response2 = await  axios.get(`${url}/dailyTarget/${pathValMaster}`,{headers})
 
         const allData = await Promise.all([response1,response2])
@@ -128,9 +128,7 @@ useEffect(()=>{
                         <h4 id="traffic" className="card-title mb-0 text-center">
                         Traget Of This Month
                         </h4>
-                      </CCol>
-                    
-                      
+                      </CCol>      
                       <hr/>
                     </CRow>
                     <CRow>

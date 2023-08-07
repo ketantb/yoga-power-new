@@ -40,10 +40,18 @@ import AdmissionForm1 from 'src/components/AdmissionForm1'
 import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 import * as XLSX from 'xlsx';
+import useExportHook from './leaadCutomHook/useExportHook'
+import useImportHook from './leaadCutomHook/useImportHook'
+useImportHook
 
 const AllEnquires = () => {
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
     ?.crmLeads?.items?.superRight) 
+
+    const exportDataFun = useExportHook("YogPowerAllEnquires.xlsx")
+    const importDataFun = useImportHook('enquiryForm/xlsx/add')
+
+     
 
     const isAdmin = useSelector((el)=>el.isAdmin) 
     const enquiryAdd =  rightsData?.addOn?.includes(leadsSuperRight.allEnquires)
@@ -134,6 +142,7 @@ const AllEnquires = () => {
     const [result, setResult] = useState([]);
     const [paging, setPaging] = useState(0);
     const [subservice, setSubservice] = useState([]);
+    const [toEdit,setToEdit] = useState(false)
 
 
 
@@ -159,6 +168,19 @@ const AllEnquires = () => {
     }
     const HandaleImportChange = (event) => {
         const importXlFile = event.target.files[0];
+        console.log(importXlFile)
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const data = e.target.result;
+            const workbook = XLSX.read(data, { type: "array" });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const json = XLSX.utils.sheet_to_json(worksheet);
+            importDataFun(json)
+        };
+        reader.readAsArrayBuffer(event.target.files[0]);
+
     }
 
 
@@ -210,7 +232,7 @@ const AllEnquires = () => {
             EmployeeId:Counseller,identifyStage: appointmentfor
         }
 
-        fetch(`${ url }/enquiryForm/update/${ edit?._id }`, {
+        fetch(`${ url }/enquiryForm/update/${ toEdit?._id }`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${ token }`,
@@ -338,6 +360,13 @@ const AllEnquires = () => {
                 PName: Name, 
                 PContact: Contact,
                 PEmail: email,
+
+                Fullname:Name,
+                appointmentTime,
+                appointmentDate,
+                ServiceName:ServiceName1,
+                Emailaddress:email,
+                ContactNumber:Contact,
             }
 
 
@@ -399,8 +428,8 @@ const AllEnquires = () => {
             }
         })
             .then((res) => {
-                setResult1(res.data.reverse())
-                setOgList(res.data.reverse())
+                setResult1(res.data)
+                setOgList(res.data)
             })
             .catch((error) => {
                 console.error(error)
@@ -479,9 +508,6 @@ const AllEnquires = () => {
                 console.error(error)
             })
     }
-
-
-
     function deleteEnquiry(id) {
         if (confirm('Do you want to delete this')) {
             fetch(`${ url }/enquiryForm/delete/${ id }`, {
@@ -530,9 +556,14 @@ const AllEnquires = () => {
         getCallReport(id)
     }
 
-    function handleEnquiry(item) {
-        // setEdit(item)
+    function handleEnquiry(item,val) {
+        if(val==='edit'){
+            setToEdit(item)
+        }else{
+            setEdit(item)
+        }
         getUpdate(item)
+
     }
     const [dateFormat, setDateFormat] = useState('DD-MM-YYYY')
 
@@ -550,11 +581,8 @@ const AllEnquires = () => {
         }
     }
 
-
-
-
     useEffect(()=>{
-        if(edit?._id){
+        if(edit?._id ){
             setAdmissionForm(true)           
         }
     },[edit?._id,edit.type])
@@ -566,37 +594,6 @@ const AllEnquires = () => {
     }
 
 
-    
-
-    function downloadAsExcel(){
-    
-     const data =  result1.filter((list)=>list.enquirestatus!=='notshow').map((el,i)=>{
-        return {
-        ['Sr No']:i+1,
-        ["Enquiry ID"]:el.EnquiryId,
-        ["Date"]:moment(el.createdAt).format("DD-MM-YYYY"),
-        ["Time"]: moment(el.createdAt, "HH:mm").format("hh:mm A") ,
-        ['Name']:el.Fullname,
-        ["Mobile"]: el.ContactNumber ,
-        ["Service"]: el.ServiceName ,
-        ["Source"]: el.enquirytype,
-        ["Enquiry stage"]:el.identifyStage,
-        ["Call Status"]:el.CallStatus,
-        ["Last Call"]:el.Message,
-        ['Date/Time']:(moment(el.appointmentDate).format("DD-MM-YYYY")
-                      != 'Invalid date' && moment(el.appointmentDate).format("DD-MM-YYYY")+" "+
-                      (moment(el.appointmentTime, "HH:mm").format("hh:mm A") !=
-                      'Invalid date' ? moment(el.appointmentTime, "HH:mm").format("hh:mm A") : '-')),
-        ['Assigned by']:el.StaffName,
-        ['Counseller']:el.Counseller
-    } })   
-    
-        const worksheet = XLSX.utils.json_to_sheet(data);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    
-        XLSX.writeFile(workbook, "YogPowerEnquires.xlsx");
-    }
 
     
     return (
@@ -626,35 +623,7 @@ const AllEnquires = () => {
                                         <option value={year}>This Year</option>
                   
                                     </CFormSelect>
-                                    {select === 'Custom Date' && (
-                                        <CInputGroup className='mt-2 mb-2' >
-
-                                            <CInputGroupText
-                                                component="label"
-                                                htmlFor="inputGroupSelect01"
-                                            >
-                                                Form
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                type="date"
-                                                required
-                                            /><CInputGroupText
-                                                component="label"
-                                                htmlFor="inputGroupSelect01"
-                                            >
-                                                To
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                type="date"
-                                                required
-                                            />
-                                            <CButton type="button" color="primary">
-                                                Go
-                                            </CButton>
-                                        </CInputGroup>
-
-                                    )}
-
+                        
                                 </CInputGroup>
                             </CCol>
                             <CCol lg={6} sm={6} md={6}>
@@ -668,7 +637,7 @@ const AllEnquires = () => {
                                         ref={hiddenXLimportFileInput}
                                         onChange={HandaleImportChange} hidden />
 
-                                    <CButton onClick={downloadAsExcel} color="primary">
+                                    <CButton onClick={()=>exportDataFun(result.filter((list)=>list.enquirestatus!=='notshow'))} color="primary">
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>
@@ -676,7 +645,7 @@ const AllEnquires = () => {
                             </CCol>
                         </CRow>
                         <CRow className='d-flex justify-content-between mb-2'>
-                            <CCol lg={4} sm={12} md={12} className='mb-2'>
+                            <CCol lg={3} sm={12} md={12} className='mb-2'>
                                 <CCard>
                                     <CCardHeader className='d-flex justify-content-center'>
                                         Enquiries
@@ -698,23 +667,24 @@ const AllEnquires = () => {
                                                      ).length}
                                             </CCardBody>
                                         </CCard>
-                                        <CCard style={{ margin: "2px" }}>
-                                            <CCardBody style={{ padding: "5px" }}>
-                                                Cold: {result1.filter((list) =>
-                                                   moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold'
-                                                    && list.enquirestatus!=='notshow'
-                                                ).length}
-                                            </CCardBody>
-                                        </CCard>
+                                        
                                     </CCardBody>
                                 </CCard>
                             </CCol>
-                            <CCol lg={4} sm={12} md={12} className='mb-2'>
+                            <CCol lg={5} sm={12} md={12} className='mb-2'>
                                 <CCard>
                                     <CCardHeader className='d-flex justify-content-center'>
                                         Follow Up
                                     </CCardHeader>
                                     <CCardBody className='d-flex justify-content-around'>
+                                    <CCard style={{ margin: "2px" }}>
+                                            <CCardBody style={{ padding: "5px" }}>
+                                                Cold: {result1.filter((list) =>
+                                                    list.CallStatus === 'Cold'
+                                                    && list.enquirestatus!=='notshow'
+                                                ).length}
+                                            </CCardBody>
+                                        </CCard>
                                         <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                             Prospects: {result1.filter((list) =>
@@ -1459,7 +1429,7 @@ const AllEnquires = () => {
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Source</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Enquiry stage</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Call Status</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Last Call</CTableHeaderCell>
+                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Discussion</CTableHeaderCell>
                                     {(isAdmin|| enquiryAdd)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Add</CTableHeaderCell>}
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px', minWidth: '100px' }} > Date/Time</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Assigned by</CTableHeaderCell>
@@ -1695,7 +1665,7 @@ const AllEnquires = () => {
                                          {(isAdmin|| enquiryEdit ||enquiryDelete) &&<CTableDataCell className='text-center'>{
                                             (isAdmin|| enquiryEdit) && 
                                             <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }}
-                                                onClick={() => handleEnquiry(item)} size='20px' />}
+                                                onClick={() => handleEnquiry(item,'edit')} size='20px' />}
                                                 
                                             {(isAdmin|| enquiryDelete) && <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }}
                                                 onClick={() => deleteEnquiry(item._id)} size='20px' />}

@@ -36,12 +36,14 @@ import { useSelector } from 'react-redux'
 import AdmissionForm1 from 'src/components/AdmissionForm1';
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
 import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue';
+import useExportHook from './leaadCutomHook/useExportHook';
 
 const FollowupScheduling = () => {
 
     const pathRoute = useAdminValidation()
     const pathValMaster = useAdminValidation('Master')
     const unikqValidateObj = useUniqAdminObjeact()
+    const exportFolloupSchedulind =  useExportHook("YogPowerProspect.xlsx")
 
     var currentdate = new Date();
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
@@ -101,7 +103,6 @@ const FollowupScheduling = () => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const username = user.user.username;
-    const centerCode = user.user.centerCode;
     const [result, setResult] = useState([]);
     const [result1, setResult1] = useState([]);
     const [paging, setPaging] = useState(0);
@@ -155,8 +156,7 @@ const FollowupScheduling = () => {
             }
         })
             .then((res) => {
-                setStaff(res.data)
-                console.log( "new Data",res.data);
+                setStaff(res.data.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect'))
             })
             .catch((error) => {
                 console.error(error)
@@ -327,6 +327,7 @@ const FollowupScheduling = () => {
                 Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
                 appointmentfor:enquiryStage,
                 identifyStage:enquiryStage,
+
                 PFollowupDate:FollowupDate,
                 PDiscussion: Discussion,
                 PTimeFollowp:TimeFollowp,       
@@ -338,7 +339,15 @@ const FollowupScheduling = () => {
                 PName: Name, 
                 PContact: Contact,
                 PEmail: email,
+
+                Fullname:Name,
+                appointmentTime,
+                appointmentDate,
+                ServiceName:ServiceName1,
+                Emailaddress:email,
+                ContactNumber:Contact,
             }
+
 
             fetch(`${url}/enquiryForm/update/${edit}`, {
                 method: "POST",
@@ -350,8 +359,31 @@ const FollowupScheduling = () => {
                 body: JSON.stringify(data1)
             }).then((resp) => {
                 resp.json().then(() => {
-
                     alert("successfully submitted")
+                    getEnquiry()
+                    setVisible(false)
+                })
+            })
+
+            let data = {
+                username: username,
+                EnquiryID: followForm, CallDate: date, Time: time,
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, 
+                AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate,
+                TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                status: 'prospect'
+            }
+
+            fetch(`${url}/prospect/create`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            }).then((resp) => {
+                resp.json().then(() => {
                     setVisible(false)
                 })
             })
@@ -547,7 +579,7 @@ const FollowupScheduling = () => {
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">Prospects <span className='float-end'>Total Prospects 
-                        :{result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect').length}</span></strong>
+                        :{result1.length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
                       <CRow>
@@ -566,7 +598,17 @@ const FollowupScheduling = () => {
                                     </CFormSelect>
                                 </CInputGroup>
                             </CCol>
+
+                            <CCol lg={6} sm={6} md={6}>
+                                <CButtonGroup className=' mb-2 float-end'>
+                                    <CButton color="primary" onClick={()=>exportTrailFun(result1) }>
+                                        <CIcon icon={cilArrowCircleTop} />
+                                        {' '}Export
+                                    </CButton>
+                                </CButtonGroup>
+                            </CCol>
                        </CRow>  
+
                       <CRow>
 
                             <CCol xs={3}>
@@ -1043,7 +1085,7 @@ const FollowupScheduling = () => {
                                                     { label: "Appointment", value: "Appointment" },
                                                     { label: "Trial Session", value: "Trial Session" },
                                                     { label: "Join", value: "Join" },
-                                                    { label: 'Enquiry', value: 'Enquiry' }
+                                                    { label: 'Prospect', value: 'Prospect' }
                                                 ]}
                                             />
                                         </CCol>
@@ -1305,13 +1347,12 @@ const FollowupScheduling = () => {
                                     </CTableDataCell>
                                 </CTableRow>
                                 {result1.filter((list)=>
-                                list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect'&&
                                 moment(list.createdAt).format("MM-DD-YYYY").includes(select)                                
                                 ).
                                 slice(paging * 10, paging * 10 + 10).map((item, index) =>{                               
                                   return <CTableRow key={index}>
                                         <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-                                        <CTableDataCell>{item.EnquiryId}Q{index + 10 + (paging * 10)}</CTableDataCell>
+                                        <CTableDataCell>{item.EnquiryId}</CTableDataCell>
                                         <CTableDataCell className='text-center'>{moment(item.PCallDate).format("DD-MM-YYYY")}</CTableDataCell>
                                         <CTableDataCell>{moment(item.PTime, "HH:mm").format("hh:mm A")}</CTableDataCell>
                                         <CTableDataCell>{item.PName}</CTableDataCell>

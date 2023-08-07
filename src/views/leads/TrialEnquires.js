@@ -35,10 +35,12 @@ import { MdCall, MdDelete, MdEdit, MdMail } from 'react-icons/md'
 import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs'
 import moment from 'moment/moment'
 import AdmissionForm1 from 'src/components/AdmissionForm1'
-useAdminValidation
 import { useSelector } from 'react-redux'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
 import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
+import useExportHook from './leaadCutomHook/useExportHook'
+
+
 
 const TrialEnquires = () => {
     const url1 = useSelector((el) => el.domainOfApi)
@@ -52,6 +54,7 @@ const TrialEnquires = () => {
 
     const pathRoute = useAdminValidation()
     const pathRouteMaster = useAdminValidation('Master')
+    const exportTrailFun =  useExportHook('YogPowerTrailEnquires.xlsx')
 
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
@@ -219,6 +222,7 @@ const TrialEnquires = () => {
             resp.json().then(() => {
                 alert("successfully submitted")
                 setVisible1(false)
+                getEnquiry()
             })
         })
     }
@@ -356,6 +360,13 @@ const TrialEnquires = () => {
                 PName: Name, 
                 PContact: Contact,
                 PEmail: email,
+
+                Fullname:Name,
+                appointmentTime,
+                appointmentDate,
+                ServiceName:ServiceName1,
+                Emailaddress:email,
+                ContactNumber:Contact,
             }
 
                 fetch(`${url1}/enquiryForm/update/${followForm}`, {
@@ -432,13 +443,14 @@ const TrialEnquires = () => {
             }
         })
             .then((res) => {
-                setResult1(res.data.filter((list) => 
-                            list.appointmentfor === 'Trial Session' &&
-                            list.enquirestatus!=='notshow'&&
-                            list.CallStatus !== 'Cold'
-                            ).reverse())
-                setOgList(res.data.filter((list) => list).reverse())
-                console.log(res.data);
+
+                const data = res.data.filter((list) => 
+                list.appointmentfor === 'Trial Session' &&
+                list.enquirestatus!=='notshow'&&
+                list.CallStatus !== 'Cold'
+                ).reverse()
+                setResult1(data)
+                setOgList(data)
             })
             .catch((error) => {
                 console.error(error)
@@ -649,11 +661,7 @@ const TrialEnquires = () => {
                             </CCol>
                             <CCol lg={6} sm={6} md={6}>
                                 <CButtonGroup className=' mb-2 float-end'>
-                                    <CButton color="primary">
-                                        <CIcon icon={cilArrowCircleBottom} />
-                                        {' '}Import
-                                    </CButton>
-                                    <CButton color="primary">
+                                    <CButton color="primary" onClick={()=>exportTrailFun(result1) }>
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>
@@ -1287,7 +1295,7 @@ const TrialEnquires = () => {
                                                     >
                                                         <option>Select Service</option>
                                                         {result.map((item, index) => (
-                                                            item.username === username && (
+                                                           (
                                                                 item.status === true && (
                                                                     <option key={index} value={item.id}>{item.selected_service}</option>
                                                                 )
@@ -1388,8 +1396,8 @@ const TrialEnquires = () => {
                                                         label='Counseller'
                                                     >
                                                         <option>Select Counseller</option>
-                                                        {staff.filter((list) => list.username === username && list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
-                                                            item.username === username && (
+                                                        {staff.filter((list) =>  list.Department.toLowerCase() === 'sales' && list.selected === 'Select').map((item, index) => (
+                                                            (
                                                                 <option key={index}>{item.FullName}</option>
                                                             )
                                                         ))}</CFormSelect>
@@ -1425,7 +1433,7 @@ const TrialEnquires = () => {
                                     <CTableHeaderCell style={{minWidth:'100px'}}>Trial Date/Time</CTableHeaderCell>
 
                                     {(isAdmin|| trailEdit)&&<CTableHeaderCell>Trial Status</CTableHeaderCell>}
-                                    <CTableHeaderCell>Dicussion</CTableHeaderCell>
+                                    <CTableHeaderCell>Discussion</CTableHeaderCell>
 
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>
                                     <CTableHeaderCell>Counseller</CTableHeaderCell>
@@ -1611,7 +1619,7 @@ const TrialEnquires = () => {
                                      list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && 
                                      list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                                 ).map((item, index) => (
-                                    item.username === username && (
+                                  (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{item.EnquiryId}</CTableDataCell>
@@ -1628,10 +1636,8 @@ const TrialEnquires = () => {
                                             {item?.trailStatus?<CButton size='sm' color='success'>Done</CButton>:  
                                             <CButton size='sm' color='warning' onClick={()=>conFirmTrailStatus(item._id)} >Pending...</CButton>}   
                                             </CTableDataCell>
-                                            <CTableDataCell>{item.Message}</CTableDataCell>
-                                           
-                                          
- <CTableDataCell>{item.StaffName}</CTableDataCell>
+                                            <CTableDataCell>{item.Message}</CTableDataCell>                                                                                     
+                                             <CTableDataCell>{item.StaffName}</CTableDataCell>
                                             <CTableDataCell>{item.Counseller}</CTableDataCell>
                                             <CTableDataCell className='text-center' style={{display:(isAdmin|| trailAdd)?'':'none'}}><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
                                             <CTableDataCell className='text-center'>
