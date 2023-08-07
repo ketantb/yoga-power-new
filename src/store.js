@@ -15,7 +15,7 @@ const initialState = {
   activeToCall:'',
   empLoyeeRights:obj,
   sidebarShow: true,
-  domainOfApi:'http://localhost:8000',
+  domainOfApi:'https://yog-power-api.vercel.app',
   stockDataClothData:[],
   clothStockDataClearFun:()=>{},
   stockDataAuravedaData:[],
