@@ -1306,7 +1306,10 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                             </CTabPane>
                         </CTabContent>
 
-                        <CModal size="xl" alignment="center" id='invoice-cancel' scrollable visible={visi} onClick={(e)=>{clickFun2(e.target.id)}}>
+                        <CModal size="xl" alignment="center" scrollable visible={visi}  onClick={(e) => {
+                            e.stopPropagation()
+                            clickFun2('invoice-cancel') 
+                            }} >
                             <CModalHeader>
                                 <CModalTitle>Invoice</CModalTitle>
                             </CModalHeader>
@@ -1827,7 +1830,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                 </CCard>
             </CModalBody>
             <CModalFooter>
-                <CButton color="secondary" id="btn btn-close" onClick={(e)=>clickfun(e.target.id)}>
+                <CButton color="secondary" id="btn btn-close" onClick={(e)=>{e.stopPropagation(),clickfun(e.target.id)}}>
                     Close
                 </CButton>
             </CModalFooter>
