@@ -1584,10 +1584,8 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                                 />
                                                             </CTableDataCell>
                                                         </CTableRow>
-
                                                         <CTableRow>
                                                             <CTableDataCell>Mode of Payment</CTableDataCell>
-
                                                             <CTableDataCell>
                                                                 <CFormSelect
                                                                     className="mb-1"
