@@ -65,7 +65,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     }
 
     const clickFun2=(type)=>{
-        if(type.includes('btn btn-close')){
+        if(type.includes('invoice-cancel')){
             setVisi1(false)
         }
     }
@@ -1306,7 +1306,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                             </CTabPane>
                         </CTabContent>
 
-                        <CModal size="xl" alignment="center" scrollable visible={visi} onClick={(e)=>{clickFun2(e.target.className)}}>
+                        <CModal size="xl" alignment="center" id='invoice-cancel' scrollable visible={visi} onClick={(e)=>{clickFun2(e.target.id)}}>
                             <CModalHeader>
                                 <CModalTitle>Invoice</CModalTitle>
                             </CModalHeader>
@@ -1652,7 +1652,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                             {errorMessage&& <CCol className="text-end px-5"><p style={{color:'red',fontSize:'15px'}}>{errorMessage}</p></CCol>}
 
                             <CModalFooter>
-                                <CButton color="secondary" onClick={() => { setVisi(false) }}>
+                                <CButton color="secondary" id='invoice-cancel' onClick={(e)=>{clickFun2(e.target.id)}}>
                                     Close
                                 </CButton>
                                 <CButton color="primary" onClick={() => saveInvoice()}>Submit</CButton>

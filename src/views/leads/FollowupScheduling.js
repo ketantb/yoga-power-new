@@ -402,7 +402,7 @@ const FollowupScheduling = () => {
             }
         })
             .then((res) => {
-                setResult1(res.data.filter((el)=>el.CallStatus !== 'Cold' &&list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect').reverse())
+                setResult1(res.data.filter((list)=>list.CallStatus !== 'Cold' &&list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect').reverse())
                 setOgList(res.data.filter((list) => list.CallStatus !== 'Cold' &&list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect').reverse())
             })
             .catch((error) => {
@@ -444,6 +444,7 @@ const FollowupScheduling = () => {
                 setServiceName1(res.data.ServiceName)
                 setCallStatus1(res.data.CallStatus)
                 setEmail(res.data.Emailaddress)
+                setEnquiryStage(res.data.appointmentfor)
                 setVisible(true)
             })
             .catch((error) => {
@@ -466,6 +467,7 @@ const FollowupScheduling = () => {
                 setFollowupDate(moment(res.data.PFollowupDate).utc().format('YYYY-MM-DD'))
                 setCounseller(res.data.Counseller)
                 setDiscussion(res.data.PDiscussion)
+                setEnquiryStage(res.data.appointmentfor)
                 setVisible1(true)
             })
             .catch((error) => {
@@ -552,6 +554,7 @@ const FollowupScheduling = () => {
                 setServiceName1(res.data.ServiceName)
                 setCallStatus1(res.data.CallStatus)
                 setEmail(res.data.Emailaddress)
+                setEnquiryStage(res.data.appointmentfor)
                 setCallReport(true)
             })
             .catch((error) => {

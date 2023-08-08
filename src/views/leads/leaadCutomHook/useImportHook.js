@@ -1,22 +1,28 @@
 import axios from 'axios'
+import { useState,useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import moment from 'moment/moment'
+import { useUniqAdminObjeact } from '../../Custom-hook/adminValidation'
+
 
 
 
 function useImportHook(route){
 
 const url1 = useSelector((el) => el.domainOfApi)
+const unikqValidateObj = useUniqAdminObjeact()
+const [result1,setResult1] = useState()
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
+const centerCode = user.centerCode
 
-return function insertManyCollection(collection,getData=()=>{}){
 
+
+return function insertManyCollection(collection,getData=()=>{},number){
 
     const data = collection.map((el,i)=>{
         return {
-        ['EnquiryId']:el["Enquiry ID"],
+        ['EnquiryId']:(centerCode+""+(number+1+i)),
         ['createdAt']:new Date(el["Date"]),
         ['Fullname']:el['Name'],
         ['ContactNumber']:el["Mobile"],
@@ -34,8 +40,8 @@ return function insertManyCollection(collection,getData=()=>{}){
         ['city']:el['City'],
         ['Profession']:el['Profession'],
         ['DateofBirth']:el['DateofBirth'],
+        ...unikqValidateObj
     } })  
-    console.log(data,'hello world')
 
     axios.post(`${url1}/${route}`,data, {
         headers: {

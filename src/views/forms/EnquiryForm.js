@@ -19,11 +19,12 @@ import { CountryList } from "src/components/CountryList";
 import { useSelector } from 'react-redux'
 import CustomSelectInput from "../Fitness/CustomSelectInput/CustomSelectInput";
 import { useAdminValidation,useUniqAdminObjeact} from "../Custom-hook/adminValidation";
+import moment from "moment";
 
 
 
 
-const EnquiryForm = () => {
+const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
 
    const  uniqObj  = useUniqAdminObjeact()
    const  pathVal = useAdminValidation()
@@ -128,6 +129,42 @@ const EnquiryForm = () => {
 
     }, []);
 
+    useEffect(()=>{
+     if(edit){
+        setFullName((editData.Fullname||''))
+        setEmailAddress((editData.Emailaddress||''))
+        setCountryCode((editData.CountryCode+""||''))
+        setContactNumber((+editData.ContactNumber||''))
+        setGander((editData.Gander||''))
+        setDateofBirth((editData.DateofBirth||''))
+        setAddress((editData.address||''))
+        setArea((editData.Area||''))
+        setCity((editData.city||''))
+        setProfession((editData.Profession||''))
+        setStaffName((editData.StaffName||''))
+        setCallStatus((editData.CallStatus||''))
+        setMessage((editData.Message||''))
+        setperson_Name((editData.person_Name||''))
+        setRelation((editData.Relation||''))
+        setCountryCode2((editData.CountryCode2||''))
+        setContactNumber2((editData.ContactNumber2||''))
+        setEnquiryDate(moment(new Date(editData.EnquiryDate)).format('YYYY-MM-DD'))
+        setServiceName((editData.ServiceName||''))
+        setServiceVariation((editData.ServiceVariation||''))
+        setCustomertype((editData.Customertype||''))
+        setEnquirytype((editData.enquirytype||''))
+        setappointmentDate((moment(new Date(editData.appointmentDate)).format('YYYY-MM-DD')||''))
+        setappointmentTime((editData.appointmentTime||''))
+        setappointmentfor((editData.identifyStage||''))
+        setCounseller((editData.Counseller||''))
+        setTrialDate((moment(new Date(editData.trialDate)).format('YYYY-MM-DD')||''))
+        setClientReferance((editData.ClientReferenceName||'')) 
+        setCenterName((editData.CenterName||''))
+        setDateofBirth((moment(new Date(editData.DateofBirth)).format('YYYY-MM-DD')||''))
+
+     }
+    },[edit])
+
     function getLeadSource() {
         axios.get(`${url}/leadSourceMaster/${pathValMaster}`, {
             headers: {
@@ -174,8 +211,8 @@ const EnquiryForm = () => {
 
 
     const Email = Emailaddress.includes('@')            
-    const contact = ContactNumber.length===10  
-    const address1 = address.trim().split(' ').length>=2 
+    const contact = ContactNumber+"".length>=10  
+    const address1 = address.trim().split(' ').length
 
 
     
@@ -194,7 +231,8 @@ const EnquiryForm = () => {
 
 
 useEffect(()=>{
-    if(PersionalDetailsValidation){
+
+    if(PersionalDetailsValidation  ){
         setError('')
         setPersionalDetailDengar((val)=>!val)
         return 
@@ -207,11 +245,11 @@ useEffect(()=>{
         setLeadDetailDengar((val)=>!val)
         return 
     }
-},[PersionalDetailsValidation,LeadInformationValidation,ScheduleenquiryfollowUp])
+},[PersionalDetailsValidation,LeadInformationValidation,ScheduleenquiryfollowUp,editData?._id])
 
-console.log(clientReferance)
                                        
 const saveEnquiry = () => {
+console.log(Fullname ,Email,Emailaddress,CountryCode, ContactNumber+"".length===10 , ContactNumber,  ContactNumber)
 
 if(!PersionalDetailsValidation){
 setError('Please Fill all Require Personal Details')
@@ -227,19 +265,20 @@ setLeadDetailDengar((val)=>true)
 return 
 }
 
+        const editPath = edit &&editData ?`${url}/enquiryForm/update/${editData._id}`:`${url}/enquiryForm/create`
 
         let enqId = centerCode + 'Q' + (result1.length + 1);
 
         let data = {
             username: username,
-            EnquiryId: enqId,
+            EnquiryId: editData?.EnquiryId?editData?.EnquiryId:enqId,
             Fullname, Emailaddress, CountryCode,
-             ContactNumber, Gander, DateofBirth, 
-             address, Area, city, Profession,
+            ContactNumber, Gander, DateofBirth, 
+            address, Area, city, Profession,
             StaffName, CenterName, CallStatus, Message,
             person_Name, Relation, CountryCode2: CountryCode2, ContactNumber2: ContactNumber2,
             EnquiryDate, ServiceName, ServiceVariation, Customertype,enquirytype, appointmentDate,
-            appointmentTime, appointmentfor:'',identifyStage:  appointmentfor,
+            appointmentTime, appointmentfor:editData?.appointmentfor?appointmentfor:'',identifyStage:  appointmentfor,
             Counseller: counseller,trialDate, trialDate, status: "all_enquiry",ClientReferenceName:clientReferance,
         }
 
@@ -249,11 +288,10 @@ return
         }
 
 
-        axios.post(`${url1}/enquiryForm/create`, {...data,...uniqObj}, { headers })
+        axios.post(editPath, {...data,...uniqObj}, { headers })
             .then((resp) => {
-                console.log(resp)
+                if(resp.status===200){
                 alert("successfully submitted")
-                console.log("refresh prevented");
                 setEmailAddress('')
                 setFullName('')
                 setCountryCode('')
@@ -279,7 +317,11 @@ return
                 setLeadDetailDengar(false)
                 setPersionalDetailDengar(false)
                 setScheduleenquiryDanger(false)
-      
+                if(getEnquiry){
+                    getEnquiry()
+                    setVisible(false)
+                }
+            }
             })
             .catch((error) =>
                 console.error(error)
@@ -349,19 +391,18 @@ return
                                 </CCol>
                                 <CCol lg={6} md={6} sm={12}>
                                     <CFormInput
-                                        className={!contact && personalDetailDenger?"mb-1 bg-light-warning":"mb-1"}
+                                        className={! ContactNumber+"".length===10   && personalDetailDenger?"mb-1 bg-light-warning":"mb-1"}
                                         type="number"
                                         value={ContactNumber}
                                         onChange={(e) =>{
-                                         e.target.value.length <=10? 
+                                         e.target.value.length ||ContactNumber <=10? 
                                          setContactNumber(e.target.value):
                                          setContactNumber((val)=>val)
-
                                         }}
                                         id="exampleFormControlInput1"
                                         label="Contact Number"
                                         placeholder="Enter Number"
-                                        text={!contact&& personalDetailDenger &&<span className="text-danger">Must be 10 characters long</span>}
+                                        text={!ContactNumber+"".length===10 && personalDetailDenger &&<span className="text-danger">Must be 10 characters long</span>}
                                     />
                                 </CCol>
                             </CRow>
@@ -395,7 +436,7 @@ return
                             </CRow>
 
                             <CFormTextarea
-                                className={!address1 && personalDetailDenger?"mb-1 bg-light-warning":"mb-1"}
+                                className={!address && personalDetailDenger?"mb-1 bg-light-warning":"mb-1"}
                                 id="exampleFormControlTextarea1"
                                 label="Address"
                                 value={address}
@@ -450,7 +491,7 @@ return
                                         onChange={(e) => setStaffName(e.target.value)}
                                     >
                                         <option value={''}>Select Staff Name</option>
-                                        {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                                        {staff?.filter((list) =>  list.selected === 'Select')?.map((item, index) => (
                                             (
                                                 <option key={index}>{item.FullName}</option>
                                             )

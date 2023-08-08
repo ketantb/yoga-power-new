@@ -9,7 +9,6 @@ return      function downloadAsExcel(data){
   const data1 =   data.map((el,i)=>{
        return {
        ['Sr No']:i+1,
-       ["Enquiry ID"]:el.EnquiryId,
        ["Date"]:moment(el.createdAt).format("DD-MM-YYYY"),
        ["Time"]: moment(el.createdAt, "HH:mm").format("hh:mm A") ,
        ['Name']:el.Fullname,
