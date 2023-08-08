@@ -32,6 +32,8 @@ import { MdCall, MdDelete, MdEdit, MdMail } from 'react-icons/md';
 import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs';
 import moment from 'moment';
 import CIcon from '@coreui/icons-react'
+import { cilArrowCircleBottom, cilArrowCircleTop } from '@coreui/icons'
+
 
 import { useSelector } from 'react-redux'
 import AdmissionForm1 from 'src/components/AdmissionForm1';
@@ -45,6 +47,7 @@ const FollowupScheduling = () => {
     const pathValMaster = useAdminValidation('Master')
     const unikqValidateObj = useUniqAdminObjeact()
     const exportFolloupSchedulind =  useExportHook("YogPowerProspect.xlsx")
+    
 
     var currentdate = new Date();
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
@@ -157,7 +160,7 @@ const FollowupScheduling = () => {
             }
         })
             .then((res) => {
-                setStaff(res.data.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect'))
+                setStaff(res.data)
             })
             .catch((error) => {
                 console.error(error)
@@ -399,8 +402,8 @@ const FollowupScheduling = () => {
             }
         })
             .then((res) => {
-                setResult1(res.data.filter((el)=>el.CallStatus !== 'Cold').reverse())
-                setOgList(res.data.filter((list) => list.CallStatus !== 'Cold').reverse())
+                setResult1(res.data.filter((el)=>el.CallStatus !== 'Cold' &&list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect').reverse())
+                setOgList(res.data.filter((list) => list.CallStatus !== 'Cold' &&list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect').reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -602,7 +605,7 @@ const FollowupScheduling = () => {
 
                             <CCol lg={6} sm={6} md={6}>
                                 <CButtonGroup className=' mb-2 float-end'>
-                                    <CButton color="primary" onClick={()=>exportTrailFun(result1) }>
+                                    <CButton color="primary" onClick={()=>exportFolloupSchedulind(result1) }>
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>

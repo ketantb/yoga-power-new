@@ -6,7 +6,7 @@ function useExportHook(name){
 return      function downloadAsExcel(data){
 
     
-    data.map((el,i)=>{
+  const data1 =   data.map((el,i)=>{
        return {
        ['Sr No']:i+1,
        ["Enquiry ID"]:el.EnquiryId,
@@ -30,7 +30,7 @@ return      function downloadAsExcel(data){
        ['DateofBirth']:el.DateofBirth,
    } })   
    
-       const worksheet = XLSX.utils.json_to_sheet(data);
+       const worksheet = XLSX.utils.json_to_sheet(data1);
        const workbook = XLSX.utils.book_new();
        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
    

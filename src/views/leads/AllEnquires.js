@@ -177,7 +177,7 @@ const AllEnquires = () => {
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
             const json = XLSX.utils.sheet_to_json(worksheet);
-            importDataFun(json)
+            importDataFun(json,getEnquiry)
         };
         reader.readAsArrayBuffer(event.target.files[0]);
 
@@ -637,7 +637,7 @@ const AllEnquires = () => {
                                         ref={hiddenXLimportFileInput}
                                         onChange={HandaleImportChange} hidden />
 
-                                    <CButton onClick={()=>exportDataFun(result.filter((list)=>list.enquirestatus!=='notshow'))} color="primary">
+                                    <CButton onClick={()=>exportDataFun(result1.filter((list)=>list.enquirestatus!=='notshow'))} color="primary">
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>
@@ -1608,11 +1608,11 @@ const AllEnquires = () => {
                                 </CTableRow>
 
                                 {result1.filter((list)=>list.enquirestatus!=='notshow').slice(paging * 10, paging * 10 + 10).filter((list) => {
-                                    return  list.Fullname.toLowerCase().includes(Search3.toLowerCase())
-                                        && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-                                           list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) &&
-                                           list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) &&
-                                           list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
+                                    return  list.Fullname?.toLowerCase()?.includes(Search3.toLowerCase())
+                                        && list.StaffName?.toLowerCase()?.includes(Search9.toLowerCase()) &&
+                                           list.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) &&
+                                           list.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) &&
+                                           list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
                                 }).map((item, index) => (
                                     <CTableRow key={index}>
                                         <CTableDataCell>{((result1.filter((list)=>list.enquirestatus!=='notshow').length - index)) - (paging * 10)}</CTableDataCell>
@@ -1685,29 +1685,29 @@ const AllEnquires = () => {
                         </CPaginationItem>
                         <CPaginationItem style={{ cursor: 'pointer' }} active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
                         {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
-                            moment(list.createdAt).format("MM-DD-YYYY").includes(select) && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
+                            moment(list.createdAt).format("MM-DD-YYYY").includes(select) && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) && list?.Fullname?.toLowerCase()?.includes(Search3.toLowerCase()) && list?.StaffName?.toLowerCase()?.includes(Search9.toLowerCase()) &&
+                            list?.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) && list?.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) && list?.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
                         ).length > (paging + 1) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
                             onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                         {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
                             moment(list.createdAt).format("MM-DD-YYYY").includes(select)
                             && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) &&
-                            list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
-                            list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) &&
-                            list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) &&
-                            list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
+                            list.Fullname?.toLowerCase()?.includes(Search3.toLowerCase()) &&
+                            list.StaffName?.toLowerCase()?.includes(Search9.toLowerCase()) &&
+                            list.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) &&
+                            list.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) &&
+                            list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
                         ).length > (paging + 2) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
                             onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                         {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
                             moment(list.createdAt).format("MM-DD-YYYY").includes(select)
                             && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) &&
-                            list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
-                            list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) &&
-                            list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) &&
-                            list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
+                            list.Fullname?.toLowerCase()?.includes(Search3.toLowerCase()) &&
+                            list.StaffName?.toLowerCase()?.includes(Search9.toLowerCase()) &&
+                            list.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) &&
+                            list.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) &&
+                            list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
                         ).length > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" style={{ cursor: 'pointer' }} onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
@@ -1726,57 +1726,3 @@ const AllEnquires = () => {
 export default AllEnquires
 
 
-//FollowupScheduling
-
-    
-{/* <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
-<CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
-    <span aria-hidden="true">&laquo;</span>
-</CPaginationItem>
-<CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-{result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
-
-{result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-{result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 1) * 10 ?
-    <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
-        <span aria-hidden="true">&raquo;</span>
-    </CPaginationItem>
-    : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
-        <span aria-hidden="true">&raquo;</span>
-    </CPaginationItem>
-}
-</CPagination> */}
-
-
-// {result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect').
-// slice(paging * 10, paging * 10 + 10).map((item, index) =>{                               
-//   return <CTableRow key={index}>
-//         <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-//         <CTableDataCell>{item.EnquiryId}Q{index + 10 + (paging * 10)}</CTableDataCell>
-//         <CTableDataCell className='text-center'>{moment(item.PCallDate).format("DD-MM-YYYY")}</CTableDataCell>
-//         <CTableDataCell>{moment(item.PTime, "HH:mm").format("hh:mm A")}</CTableDataCell>
-//         <CTableDataCell>{item.PName}</CTableDataCell>
-//         <CTableDataCell>{item.PEmail}</CTableDataCell>
-//         <CTableDataCell>{item.PContact}</CTableDataCell>
-//         <CTableDataCell>{item.PServiceName}</CTableDataCell>
-//         <CTableDataCell>{item.CallStatus}</CTableDataCell>                                        
-//         <CTableDataCell>{item.PFollowupDate && moment(item.PFollowupDate).format("DD-MM-YYYY")}<br />{item.TimeFollowp && moment(item.TimeFollowp, "HH:mm").format("hh:mm A")}</CTableDataCell>
-//         <CTableDataCell>{item.appointmentfor}</CTableDataCell>
-//         <CTableDataCell>{item.PDiscussion}</CTableDataCell>
-//         <CTableDataCell>{item.Counseller}</CTableDataCell>
-//         <CTableDataCell  style={{display:(isAdmin|| (prospectAdd))?'':'none'}} className='text-center'><a href={`tel:+91${item.Contact}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`https://wa.me/${item.Contact}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`mailto: ${item.Email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item.EnquiryID)} /></CTableDataCell>
-        
-//         <CTableDataCell  style={{display:(isAdmin|| (prospectEdit||prospectDelete))?'':'none'}} className='text-center'>
-           
-//             {prospectEdit&&
-//                 <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }}
-//              onClick={() => handleEnquiry(item._id)} size='20px' />
-//              }
-
-//             {prospectDelete&&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
-//              onClick={() => deleteProspect(item._id)} size='20px' />}
-
-//         </CTableDataCell>
-
-//     </CTableRow>
-// })}

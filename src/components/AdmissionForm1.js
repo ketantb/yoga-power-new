@@ -64,6 +64,12 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
         }
     }
 
+    const clickFun2=(type)=>{
+        if(type.includes('btn btn-close')){
+            setVisi1(false)
+        }
+    }
+
     const componentRef = useRef()
 
     const handlePrint = useReactToPrint({
@@ -274,7 +280,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
             ,ClientReferenceName:clientReferance,
             EnquiryId:ids._id,
             typeOFBatchClasses,...unikqValidateObj,
-            isAdmin:isAdmin
+            isAdmin:isAdmin,ClientId:`${centerCode}MEM${10+mem.length}`
         }
 
 
@@ -549,8 +555,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
 
     return (
         <CModal size='xl'   id='parent-model'  style={{ border: '2px solid #0B5345' }} scrollable visible={add} onClick={(e)=>{
-            console.log(e.target.className)
-            console.log(e.target)
+            
             clickfun(e.target.className)
         }} >
             <CModalHeader  >
@@ -1301,7 +1306,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                             </CTabPane>
                         </CTabContent>
 
-                        <CModal size="xl" alignment="center" scrollable visible={visi} onClose={() => { setVisi(false) }}>
+                        <CModal size="xl" alignment="center" scrollable visible={visi} onClick={(e)=>{clickFun2(e.target.className)}}>
                             <CModalHeader>
                                 <CModalTitle>Invoice</CModalTitle>
                             </CModalHeader>

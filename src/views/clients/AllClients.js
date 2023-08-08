@@ -111,7 +111,7 @@ const AllClients = () => {
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/subservice/all`, {
+        axios.get(`${url}/subservice/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
