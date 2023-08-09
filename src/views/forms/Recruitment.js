@@ -9,15 +9,15 @@ import { v4 } from 'uuid'
 import { useSelector } from 'react-redux';
 import { cilArrowCircleBottom} from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { useUniqAdminObjeact } from '../Custom-hook/adminValidation'
+import { useUniqAdminObjeact,useAdminValidation } from '../Custom-hook/adminValidation'
 
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
 
 const Recruitment = () => {
 
     const url1 = useSelector((el) => el.domainOfApi)
+    const url2 =url1
     const valdationObj = useUniqAdminObjeact() 
+    const pathValMaster = useAdminValidation('Master')
     
     const [error, setError] = useState('')
     const [image, setImage] = useState('')
@@ -52,7 +52,6 @@ const Recruitment = () => {
 
     const navigate = useNavigate()
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
     const username = user.user.username;
 
@@ -62,7 +61,7 @@ const Recruitment = () => {
     const [leadArr, setLeadArr] = useState([]);
     
     function getLeadSource() {
-        axios.get(`${url2}/leadSourceMaster/all`, {
+        axios.get(`${url2}/leadSourceMaster/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -80,13 +79,12 @@ const Recruitment = () => {
 
 
     function getDesignation() {
-        axios.get(`${url1}/designation/all`, {
+        axios.get(`${url1}/designation/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-            console.log(res.data)
                 setResult(res.data.reverse())
 
             })

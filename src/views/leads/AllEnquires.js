@@ -397,8 +397,8 @@ const AllEnquires = () => {
             }
         })
             .then((res) => {
-                setResult1(res.data)
-                setOgList(res.data)
+                setResult1(res.data.reverse())
+                setOgList(res.data.reverse())
             })
             .catch((error) => {
                 console.error(error)

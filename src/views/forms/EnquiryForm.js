@@ -10,16 +10,22 @@ import {
     CFormSelect,
     CFormTextarea,
     CRow,
+    CImage
 } from "@coreui/react";
 import axios from "axios";
 import React, { useState } from "react";
-import { useEffect } from "react";
+import { getDownloadURL, ref,  uploadBytesResumable } from 'firebase/storage'
+import { useEffect,useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { CountryList } from "src/components/CountryList";
 import { useSelector } from 'react-redux'
 import CustomSelectInput from "../Fitness/CustomSelectInput/CustomSelectInput";
 import { useAdminValidation,useUniqAdminObjeact} from "../Custom-hook/adminValidation";
+import { cilArrowCircleBottom} from '@coreui/icons'
 import moment from "moment";
+import ProfileIcon from 'src/assets/images/avatars/profile_icon.png'
+import CIcon from '@coreui/icons-react'
+import { storage } from 'src/firebase'
 
 
 
@@ -29,6 +35,11 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
    const  uniqObj  = useUniqAdminObjeact()
    const  pathVal = useAdminValidation()
    const  pathValMaster = useAdminValidation('Master')
+
+   const imgRef = useRef(null)
+   const imageInput = useRef('')
+  
+
 
 
     const url1 = useSelector((el)=>el.domainOfApi) 
@@ -60,7 +71,6 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
     const [Customertype, setCustomertype] = useState("");
     const [enquirytype, setEnquirytype] = useState("");
     const [trialDate, setTrialDate] = useState("");
-    const [trialTime, setTrialTime] = useState("");
     const [appointmentDate, setappointmentDate] = useState("");
     const [appointmentTime, setappointmentTime] = useState("");
     const [appointmentfor, setappointmentfor] = useState("");
@@ -71,14 +81,10 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
     const [scheduleenquiryDanger,setScheduleenquiryDanger] = useState(false)
     const [clientReferance,setClientReferance] = useState('')
     const [clientData,setClientData] = useState([])
-    
+    const [imgPrograss,setImgPrograss] = useState(0)
+    const [imageUrl, setImageUrl] = useState(null)
 
-    const navigate = useNavigate()
 
-
-     const changeRoute =()=>{
-        navigate('/leads/all-enquires')
-     }
 
 
 
@@ -280,6 +286,7 @@ return
             EnquiryDate, ServiceName, ServiceVariation, Customertype,enquirytype, appointmentDate,
             appointmentTime, appointmentfor:editData?.appointmentfor?appointmentfor:'',identifyStage:  appointmentfor,
             Counseller: counseller,trialDate, trialDate, status: "all_enquiry",ClientReferenceName:clientReferance,
+            image: imageUrl
         }
 
         const headers = {
@@ -333,6 +340,43 @@ return
         setClientReferance(obj.Fullname)    
      }
 
+   
+     const HandaleImageClick = () =>{
+        imageInput.current.click()
+     }
+
+     const handleImage = event => {
+        const fileUploaded = event.target.files[0];
+        const file = event.target.files[0] 
+        const reader = new FileReader();
+        if (!file.type.startsWith('image/')) return;
+
+        reader.onload = (e) => {
+            imgRef.current.src = e.target.result
+        }
+        reader.readAsDataURL(file)
+
+            const uploadImage = (file)=>{
+              if(!fileUploaded)return
+             const storageRef =   ref(storage,`profile-photo/${fileUploaded.name}`)
+             const uploadTask = uploadBytesResumable(storageRef,fileUploaded)
+      
+             uploadTask.on("state_changed",(snapshot)=>{
+              const prog = Math.round((snapshot.bytesTransferred/snapshot.totalBytes) *100)
+              setImgPrograss(prog)
+      
+             },(error)=>{
+              console.log(error)
+             },
+             ()=>{
+              getDownloadURL(uploadTask.snapshot.ref).then((url)=>{
+                setImageUrl(url)
+              })
+             }
+             )
+            }
+            uploadImage(file)
+      };
 
 
     return (
@@ -347,7 +391,22 @@ return
                     <CRow>
                         <CCol lg={6} sm={12}>
                             <CCardTitle>Personal Details</CCardTitle>
+
                             <CRow>
+                                <CCol sm={12} className='p-3'>
+                                    <CImage ref={imgRef}  style={{ borderRadius: "100px" }} width={'200px'} src={ProfileIcon} className="me-4" />
+                                
+                                    <CFormInput
+                                        type="file"
+                                        onChange={handleImage}
+                                        accept="image/*"
+                                        ref={imageInput}
+                                        hidden
+                                    />
+                                    <CButton onClick={HandaleImageClick} > <CIcon icon={cilArrowCircleBottom} /> {imgPrograss}% Upload Image</CButton>
+                                </CCol>
+
+
                                 <CCol lg={6} md={6} sm={12}>
                                     <CFormInput
                                         className={Fullname.trim()===''&&personalDetailDenger ?"mb-1 bg-light-warning":"mb-1"}

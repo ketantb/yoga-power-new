@@ -596,17 +596,16 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                             <CCardTitle>Personal Details</CCardTitle>
                                             <CRow>
                                                 <CCol xs={4} className='mt-2 mb-1' >
-                                                    <CImage ref={imgRef} className="mb-1" style={{ borderRadius: "50px" }} width={'160px'} src={ProfileIcon} />
+                                                    <CImage ref={imgRef} className="mb-1" style={{ borderRadius: "50px" }} width={'160px'} src={ids?.image?ids?.image:ProfileIcon} />
                                                 </CCol>
                                                 <CCol xs={7} className='mt-3'>
-
                                                     <CFormInput
                                                         className="mb-1 mr-3"
                                                         type="file"
                                                         onChange={handleImage}
                                                         accept="image/*"
                                                     />
-                                                    <CButton onClick={UploadImage}>Upload Image</CButton>
+                                                <CButton onClick={UploadImage}>Upload Image</CButton>
 
                                                 </CCol>
                                                 <CCol xs={6}>

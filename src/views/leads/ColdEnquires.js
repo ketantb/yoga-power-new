@@ -140,9 +140,7 @@ const ColdEnquires = () => {
                 console.error(error)
             })
     }
-    function addForm(id) {
-        localStorage.setItem('adId', JSON.stringify(id))
-    }
+
     function handleAdmission(id) {
         console.log(id)
         console.log(edit)
@@ -815,8 +813,7 @@ const ColdEnquires = () => {
                                                     "Select",
                                                     { label: "Appointment", value: "Appointment" },
                                                     { label: "Trial Session", value: "Trial Session" },
-                                                    { label: "Join", value: "Join" },
-                                                    { label: 'Prospect', value: 'Prospect' }
+                                                    { label: 'Prospect', value: 'Prospect' },
                                                 ]}
                                             />
                                         </CCol>
@@ -974,7 +971,6 @@ const ColdEnquires = () => {
                                     <CTableHeaderCell>Enquiry stage</CTableHeaderCell>
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
                                     <CTableHeaderCell>Discussion</CTableHeaderCell>
-                                    {(isAdmin|| coldAdd)&&<CTableHeaderCell>Add</CTableHeaderCell>}
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>
                                     <CTableHeaderCell>Counseller</CTableHeaderCell>
                                     {(isAdmin|| coldAdd)&&<CTableHeaderCell>Action</CTableHeaderCell>}
@@ -1092,16 +1088,7 @@ const ColdEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell style={{display:(isAdmin|| coldAdd)?'':'none'}}>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "100px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-
-                                        />
-                                    </CTableDataCell>
+                                   
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
@@ -1163,7 +1150,6 @@ const ColdEnquires = () => {
                                             <CTableDataCell>{item.appointmentfor}</CTableDataCell>
                                             <CTableDataCell>{item.CallStatus}</CTableDataCell>
                                             <CTableDataCell>{item.Message}</CTableDataCell>
-                                            <CTableDataCell style={{display:(isAdmin|| coldAdd)?'':'none'}} ><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { addForm(item._id), setEdit(item._id), handleAdmission(item._id) }} /></CTableDataCell>
                                             <CTableDataCell>{item.StaffName}</CTableDataCell>
                                             <CTableDataCell>{item.Counseller}</CTableDataCell>
                                             <CTableDataCell style={{display:(isAdmin|| coldAdd)?'':'none'}} className='text-center'><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
