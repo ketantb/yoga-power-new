@@ -413,7 +413,7 @@ return
                                         aria-label="Select Currency"
                                         value={Gander}
                                         onChange={(e) => setGander(e.target.value)}
-                                        label="Gander"
+                                        label="Gender"
                                         options={[
                                             "Select Gender",
                                             { label: "Male", value: "Male" },
@@ -452,7 +452,7 @@ return
                                         value={Area}
                                         onChange={(e) => setArea(e.target.value)}
                                         id="exampleFormControlInput1"
-                                        label="Area"
+                                        label="Country"
                                         placeholder="Enter Locality"
                                     />
                                 </CCol>

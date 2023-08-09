@@ -14,7 +14,7 @@ const [result1,setResult1] = useState()
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const centerCode = user.centerCode
+const centerCode = user.user.centerCode
 
 
 

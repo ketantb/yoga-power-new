@@ -45,8 +45,13 @@ const FollowupCallReport = () => {
     const [Search6, setSearch6] = useState('')
     const [Search7, setSearch7] = useState('')
     const [Search8, setSearch8] = useState('')
-    const url = useSelector((el) => el.domainOfApi)
 
+    const [dateFilterObj,setDteFilterObj] = useState({
+        startDate:moment(new Date(new Date().getFullYear(),0,1)).format('YYYY-MM-DD'),
+        endDate:moment(new Date()).format('YYYY-MM-DD')
+      })
+
+    const url = useSelector((el) => el.domainOfApi)
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -61,7 +66,7 @@ const FollowupCallReport = () => {
 
    
     function getEnquiry() {
-        axios.get(`${url}/prospect/${pathRoute}`, {
+        axios.get(`${url}/prospect/${dateFilterObj.startDate}/${dateFilterObj.endDate}/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -86,6 +91,39 @@ const FollowupCallReport = () => {
                         : {result1.length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
+
+                    <div className='d-flex justify-content-between mb-2'>
+                            <CInputGroup style={{ width: "500px" }}>
+
+                                <CInputGroupText
+                                    component="label"
+                                    htmlFor="inputGroupSelect01"
+                                >
+                                    Form
+                                </CInputGroupText>
+                                <CFormInput
+                                    type="date"
+                                    value={dateFilterObj.startDate}
+                                    onChange={(e)=>setDteFilterObj((prev)=>({...prev,startDate:e.target.value}))}
+
+                                  
+                                /><CInputGroupText
+                                    component="label"
+                                    htmlFor="inputGroupSelect01"
+
+                                >
+                                    To
+                                </CInputGroupText>
+                                <CFormInput
+                                    type="date"
+                                    value={dateFilterObj.endDate}
+                                    onChange={(e)=>setDteFilterObj((prev)=>({...prev,endDate:e.target.value}))}
+                                                                   />
+                                <CButton type="button" color="primary" onClick={()=>getEnquiry()} >
+                                    Go
+                                </CButton>
+                            </CInputGroup>
+                        </div>
                       
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >

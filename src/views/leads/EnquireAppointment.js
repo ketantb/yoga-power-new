@@ -103,12 +103,10 @@ const EnquireAppointment = () => {
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
     const username = user.user.username;
 
     const [result1, setResult1] = useState([]);
-    console.log(token);
     const [result, setResult] = useState([]);
 
 
@@ -139,7 +137,7 @@ const EnquireAppointment = () => {
     }, []);
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url2}/employeeform/${pathNameMaster}`, {
+        axios.get(`${url}/employeeform/${pathNameMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -436,6 +434,7 @@ const EnquireAppointment = () => {
                 setServiceName1(res.data.ServiceName)
                 setCallStatus1(res.data.CallStatus)
                 setEmail(res.data.Emailaddress)
+                setEnquiryStage(res.data.appointmentfor)
                 setVisible(true)
             })
             .catch((error) => {
@@ -984,7 +983,7 @@ const EnquireAppointment = () => {
                                     {(isAdmin|| appointmentAdd)&&<CTableHeaderCell>Add</CTableHeaderCell>}
                                     <CTableHeaderCell>Appointment Date & Time</CTableHeaderCell>
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>
-                                    <CTableHeaderCell>Counseller</CTableHeaderCell>
+                                    <CTableHeaderCell>Counsellor</CTableHeaderCell>
                                     {(isAdmin|| appointmentAdd)&&<CTableHeaderCell >Action</CTableHeaderCell>}
                                     {(isAdmin|| appointmentEdit || appointmentDelete)&&<CTableHeaderCell>
                                         Edit/Delete

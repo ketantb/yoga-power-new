@@ -410,7 +410,6 @@ const AllEnquires = () => {
         setEdit(data)
     }
     
-    
 
     function getProspect(id) {
         axios.get(`${ url }/enquiryForm/${ id }`, {
@@ -424,6 +423,7 @@ const AllEnquires = () => {
                 setServiceName1(res.data.ServiceName)
                 setCallStatus1(res.data.CallStatus)
                 setEmail(res.data.Emailaddress)
+                setEnquiryStage(res.data.appointmentfor)
                 setVisible(true)
             })
             .catch((error) => {
@@ -988,7 +988,7 @@ const AllEnquires = () => {
                                     {(isAdmin|| enquiryAdd)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Add</CTableHeaderCell>}
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px', minWidth: '100px' }} > Date/Time</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Assigned by</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Counseller</CTableHeaderCell>
+                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Counsellor</CTableHeaderCell>
                                     {(isAdmin|| enquiryAdd)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Action</CTableHeaderCell>}
                                     {(isAdmin|| enquiryEdit)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Edit</CTableHeaderCell>}
                                 </CTableRow>
