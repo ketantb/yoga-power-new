@@ -321,18 +321,18 @@ const AllEnquires = () => {
                 PFollowupDate:FollowupDate,
                 PDiscussion: Discussion,
                 PTimeFollowp:TimeFollowp,       
-                PAppointmentTime: appointmentTime,
-                PAppointmentDate: appointmentDate,
+                PAppointmentTime: TimeFollowp,
+                PAppointmentDate: FollowupDate,
+                
                 PServiceName: ServiceName1, 
                 PCallDate: date, 
                 PTime: time,
                 PName: Name, 
                 PContact: Contact,
                 PEmail: email,
-
                 Fullname:Name,
-                appointmentTime,
-                appointmentDate,
+                appointmentTime:TimeFollowp,
+                appointmentDate:FollowupDate,
                 ServiceName:ServiceName1,
                 Emailaddress:email,
                 ContactNumber:Contact,
@@ -527,7 +527,7 @@ const AllEnquires = () => {
         if(edit?._id ){
             setAdmissionForm(true)           
         }
-    },[edit?._id,edit.type])
+    },[edit?._id,edit?.type])
 
 
     function closeAddmisionForm (valBol) {
@@ -1009,8 +1009,9 @@ const AllEnquires = () => {
                                             className="mb-1"
                                             style={{ minWidth: "120px" }}
                                             type="text"
-                                            disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            value={Search2}
+                                            onChange={(e) => setSearch2(e.target.value)}
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
@@ -1029,8 +1030,7 @@ const AllEnquires = () => {
                                             type="text"
                                             style={{ minWidth: "90px" }}
                                             disabled
-                                            value={Search2}
-                                            onChange={(e) => setSearch2(e.target.value)}
+                                         
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
@@ -1050,7 +1050,6 @@ const AllEnquires = () => {
                                             type="text"
                                             style={{ minWidth: "120px" }}
                                             value={Search4}
-                                            disabled
                                             onChange={(e) => setSearch4(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
@@ -1162,12 +1161,18 @@ const AllEnquires = () => {
                                     </CTableDataCell>
                                 </CTableRow>
 
-                                {result1.filter((list)=>list.enquirestatus!=='notshow').slice(paging * 10, paging * 10 + 10).filter((list) => {
-                                    return  list.Fullname?.toLowerCase()?.includes(Search3.toLowerCase())
+                                {result1.filter((list)=>list.enquirestatus!=='notshow').slice(paging * 10, paging * 10 + 10)
+                                .filter((list) => {
+                                    return moment(list.createdAt, "HH:mm").format("hh:mm A")?.toLowerCase()?.includes(Search1.toLowerCase())
+                                    &&list.Fullname?.toLowerCase()?.includes(Search3.toLowerCase())
+                                    &&list.EnquiryId?.toLowerCase()?.includes(Search2.toLowerCase())&&
+                                    list.ContactNumber+""?.includes(Search4)
+
                                         && list.StaffName?.toLowerCase()?.includes(Search9.toLowerCase()) &&
                                            list.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) &&
                                            list.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) &&
                                            list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
+
                                 }).map((item, index) => (
                                     <CTableRow key={index}>
                                         <CTableDataCell>{((result1.filter((list)=>list.enquirestatus!=='notshow').length - index)) - (paging * 10)}</CTableDataCell>
@@ -1242,10 +1247,12 @@ const AllEnquires = () => {
                         {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
                             moment(list.createdAt).format("MM-DD-YYYY").includes(select) && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) && list?.Fullname?.toLowerCase()?.includes(Search3.toLowerCase()) && list?.StaffName?.toLowerCase()?.includes(Search9.toLowerCase()) &&
                             list?.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) && list?.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) && list?.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
+                        &&list.ContactNumber+""?.includes(Search4)
                         ).length > (paging + 1) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
                             onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                         {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
+                        
                             moment(list.createdAt).format("MM-DD-YYYY").includes(select)
                             && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) &&
                             list.Fullname?.toLowerCase()?.includes(Search3.toLowerCase()) &&
@@ -1253,6 +1260,8 @@ const AllEnquires = () => {
                             list.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) &&
                             list.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) &&
                             list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
+                            &&list.EnquiryId?.toLowerCase()?.includes(Search2.toLowerCase())&&
+                            list.ContactNumber+""?.includes(Search4)
                         ).length > (paging + 2) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
                             onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                         {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
@@ -1263,6 +1272,8 @@ const AllEnquires = () => {
                             list.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) &&
                             list.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) &&
                             list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
+                            &&list.EnquiryId?.toLowerCase()?.includes(Search2.toLowerCase())&&
+                                    list.ContactNumber+""?.includes(Search4)
                         ).length > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" style={{ cursor: 'pointer' }} onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>

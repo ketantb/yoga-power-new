@@ -40,8 +40,11 @@ import AdmissionForm1 from 'src/components/AdmissionForm1';
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
 import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue';
 import useExportHook from './leaadCutomHook/useExportHook';
+import { list } from 'firebase/storage';
 
 const FollowupScheduling = () => {
+
+     let num =0 
 
     const pathRoute = useAdminValidation()
     const pathValMaster = useAdminValidation('Master')
@@ -92,6 +95,9 @@ const FollowupScheduling = () => {
     const [admissionForm, setAdmissionForm] = useState(false)
     const [admissionFormData,setAdmissionFormData] = useState('')
     const [ogList, setOgList] = useState([])
+    const [addmissionData,setAdmissionData] = useState({})
+    const [followUpData,setFollowUPdata] = useState({})
+
 
 
 
@@ -132,23 +138,8 @@ const FollowupScheduling = () => {
     }, []);
 
     
-    function handleAdmission(id) {
-        setEdit(null)
-        if (id != null) {
-            axios.get(`${url1}/enquiryForm/${ id }`, {
-                headers: {
-                    'Authorization': `Bearer ${ token }`
-                }
-            }).then((res) => {
-                setAdmissionFormData(res.data)
-                if (admissionFormData != null && res.data != null) {
-                    setAdmissionForm(true)
-                }
-            })
-                .catch((error) => {
-                    console.error(error)
-                })
-        }
+    function handleAdmission(data) {
+       setAdmissionData(data)
     }
 
 
@@ -254,24 +245,32 @@ const FollowupScheduling = () => {
                 })
             })
         } else if (enquiryStage === 'Join') {
-            handleAdmission(followForm)
+            handleAdmission({...followUpData,type:'top'})
             setVisible(false)
         } else if (enquiryStage === 'Prospect') {
            
             const data1 = { 
                 Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
                 appointmentfor:enquiryStage,
+                identifyStage:enquiryStage,
                 PFollowupDate:FollowupDate,
                 PDiscussion: Discussion,
                 PTimeFollowp:TimeFollowp,       
-                PAppointmentTime: appointmentTime,
-                PAppointmentDate: appointmentDate,
+                PAppointmentTime: TimeFollowp,
+                PAppointmentDate: FollowupDate,
+                
                 PServiceName: ServiceName1, 
                 PCallDate: date, 
                 PTime: time,
                 PName: Name, 
                 PContact: Contact,
                 PEmail: email,
+                Fullname:Name,
+                appointmentTime:TimeFollowp,
+                appointmentDate:FollowupDate,
+                ServiceName:ServiceName1,
+                Emailaddress:email,
+                ContactNumber:Contact,
             }
 
 
@@ -567,9 +566,11 @@ const FollowupScheduling = () => {
         getCallReport(id)
     }
 
-    const handleFollowup = (id) => {
+    const handleFollowup = (id,item) => {
         setFollowForm(id)
         getProspect(id)
+        setFollowUPdata(item)
+
     }
 
 
@@ -578,10 +579,21 @@ const FollowupScheduling = () => {
         getUpdate(id)
     }
 
+    useEffect(()=>{
+        if(addmissionData?._id ){
+            setAdmissionForm(true)           
+        }
+    },[addmissionData?._id,addmissionData?.type])
+
+    function closeAddmisionForm (valBol) {
+        setAdmissionForm(valBol)
+        setAdmissionData({})
+    }
+
 
     return (
         <CRow>
-            { admissionFormData &&<AdmissionForm1 add={admissionForm} setAdmissionForm={setAdmissionForm} ids={admissionFormData} />}  
+              {(admissionForm&& !visible1) && <AdmissionForm1 add={admissionForm}  setAdmissionForm={closeAddmisionForm} ids={addmissionData} />}
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
@@ -1193,9 +1205,9 @@ const FollowupScheduling = () => {
                                     <CTableHeaderCell>Name</CTableHeaderCell>
                                     <CTableHeaderCell>Email</CTableHeaderCell>
                                     <CTableHeaderCell>Mobile</CTableHeaderCell>
+                                    {(isAdmin|| prospectAdd)&&<CTableHeaderCell>Add</CTableHeaderCell>}
                                     <CTableHeaderCell>Service</CTableHeaderCell>
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
-                                    <CTableHeaderCell>FollowUp Details</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry Stage</CTableHeaderCell>
                                     <CTableHeaderCell>Discussion</CTableHeaderCell>
                                     <CTableHeaderCell>Counseller</CTableHeaderCell>
@@ -1220,7 +1232,6 @@ const FollowupScheduling = () => {
                                             className="mb-1"
                                             type="text"
                                             style={{ minWidth: "120px" }}
-
                                             value={Search1}
                                             onChange={(e) => setSearch1(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -1231,7 +1242,6 @@ const FollowupScheduling = () => {
                                             className="mb-1"
                                             type="text"
                                             style={{ minWidth: "90px" }}
-                                            disabled
                                             value={Search2}
                                             onChange={(e) => setSearch2(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -1241,9 +1251,8 @@ const FollowupScheduling = () => {
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
+                                            disabled
                                             style={{ minWidth: "120px" }}
-                                            value={Search3}
-                                            onChange={(e) => setSearch3(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
@@ -1260,8 +1269,9 @@ const FollowupScheduling = () => {
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
-                                            type="number"
+                                            type="text"
                                             value={Search5}
+                                            style={{ minWidth: "100px" }}
                                             onChange={(e) => setSearch5(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
@@ -1269,10 +1279,19 @@ const FollowupScheduling = () => {
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "80px" }}
+                                            type="number"
+                                            style={{ minWidth: "100px" }}
                                             value={Search6}
                                             onChange={(e) => setSearch6(e.target.value)}
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            type="number"
+                                            style={{ minWidth: "100px" }}
+                                            disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
@@ -1296,15 +1315,7 @@ const FollowupScheduling = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "100px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
+                                 
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
@@ -1339,6 +1350,7 @@ const FollowupScheduling = () => {
                                             type="text"
                                             value={Search10}
                                             style={{ minWidth: "100px" }}
+                                            disabled
                                             onChange={(e) => setSearch10(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
@@ -1354,9 +1366,16 @@ const FollowupScheduling = () => {
                                     </CTableDataCell>
                                 </CTableRow>
                                 {result1.filter((list)=>
-                                moment(list.createdAt).format("MM-DD-YYYY").includes(select)                                
-                                ).
-                                slice(paging * 10, paging * 10 + 10).map((item, index) =>{                               
+                                moment(list.createdAt).format("MM-DD-YYYY").includes(select)  &&              
+                                list.EnquiryId.toLocaleLowerCase().includes(Search1.toLocaleLowerCase()) &&
+                                moment(list.PCallDate).format("DD-MM-YYYY").includes(Search2)&&
+                                list.PName.toLocaleLowerCase().includes(Search4.toLocaleLowerCase())&&list.PEmail.includes(Search5) &&
+                                (list.PContact+"").includes(Search6)
+                                &&list.PServiceName.toLocaleLowerCase()+"".toLocaleLowerCase().includes(Search7.toLocaleLowerCase())&&
+                                list.CallStatus.includes(Search8)&&list.Counseller.toLocaleLowerCase().includes(Search9.toLocaleLowerCase())
+                                ). 
+                                slice(paging * 10, paging * 10 + 10).map((item, index) =>{  
+                                    num++                             
                                   return <CTableRow key={index}>
                                         <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                         <CTableDataCell>{item.EnquiryId}</CTableDataCell>
@@ -1365,13 +1384,14 @@ const FollowupScheduling = () => {
                                         <CTableDataCell>{item.PName}</CTableDataCell>
                                         <CTableDataCell>{item.PEmail}</CTableDataCell>
                                         <CTableDataCell>{item.PContact}</CTableDataCell>
+                                        <CTableDataCell style={{display:(isAdmin|| prospectAdd)?'':'none'}} ><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }}  
+                                        onClick={() => { setEdit(item._id), handleAdmission({...item,type:'bottom'}) }} /></CTableDataCell>
                                         <CTableDataCell>{item.PServiceName}</CTableDataCell>
                                         <CTableDataCell>{item.CallStatus}</CTableDataCell>                                        
-                                        <CTableDataCell>{item.PFollowupDate && moment(item.PFollowupDate).format("DD-MM-YYYY")}<br />{item.TimeFollowp && moment(item.TimeFollowp, "HH:mm").format("hh:mm A")}</CTableDataCell>
                                         <CTableDataCell>{item.appointmentfor}</CTableDataCell>
                                         <CTableDataCell>{item.PDiscussion}</CTableDataCell>
                                         <CTableDataCell>{item.Counseller}</CTableDataCell>
-                                        <CTableDataCell  style={{display:(isAdmin|| (prospectAdd))?'':'none'}} className='text-center'><a href={`tel:+91${item.Contact}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`https://wa.me/${item.Contact}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`mailto: ${item.Email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
+                                        <CTableDataCell  style={{display:(isAdmin|| (prospectAdd))?'':'none'}} className='text-center'><a href={`tel:+91${item.Contact}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`https://wa.me/${item.Contact}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item.EnquiryID) }} size='20px' /></a><a href={`mailto: ${item.Email}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id,item)} /></CTableDataCell>
                                         
                                         <CTableDataCell  style={{display:(isAdmin|| (prospectEdit||prospectDelete))?'':'none'}} className='text-center'>
                                            
@@ -1396,10 +1416,10 @@ const FollowupScheduling = () => {
                             <span aria-hidden="true">&laquo;</span>
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {num> (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                        {result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {result1.filter((list)=>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Prospect') > (paging + 1) * 10 ?
+                        {num> (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {num> (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>

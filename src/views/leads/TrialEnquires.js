@@ -47,7 +47,7 @@ const TrialEnquires = () => {
     const url1 = useSelector((el) => el.domainOfApi)
     const url = url1
     const url2 = url1
-    
+
     var currentdate = new Date();
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
     var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
@@ -55,25 +55,27 @@ const TrialEnquires = () => {
 
     const pathRoute = useAdminValidation()
     const pathRouteMaster = useAdminValidation('Master')
-    const exportTrailFun =  useExportHook('YogPowerTrailEnquires.xlsx')
+    const exportTrailFun = useExportHook('YogPowerTrailEnquires.xlsx')
 
 
-    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
-    ?.crmLeads?.items?.superRight) 
+    const rightsData = useSelector((el) => el.empLoyeeRights?.crmRights
+        ?.crmLeads?.items?.superRight)
 
 
 
-    const isAdmin = useSelector((el)=>el.isAdmin) 
-    const trailAdd =  rightsData?.addOn?.includes(leadsSuperRight.trailUpdate)
-    const trailDelete =  rightsData?.delete?.includes(leadsSuperRight.trailUpdate)
-    const trailEdit  =  rightsData?.edit?.includes(leadsSuperRight.trailUpdate)
+    const isAdmin = useSelector((el) => el.isAdmin)
+    const trailAdd = rightsData?.addOn?.includes(leadsSuperRight.trailUpdate)
+    const trailDelete = rightsData?.delete?.includes(leadsSuperRight.trailUpdate)
+    const trailEdit = rightsData?.edit?.includes(leadsSuperRight.trailUpdate)
 
 
     const [select, setSelect] = useState('')
     const [followForm, setFollowForm] = useState()
     const [admissionForm, setAdmissionForm] = useState(false)
+    const [addmissionData,setAdmissionData] = useState({})
+
     const [edit, setEdit] = useState()
-    const [toEdit,setToEdit] = useState()
+    const [toEdit, setToEdit] = useState()
     const [callReport, setCallReport] = useState(false)
     const [visible, setVisible] = useState(false)
     const [visible1, setVisible1] = useState(false)
@@ -99,11 +101,12 @@ const TrialEnquires = () => {
     const [TimeFollowp, setTimeFollowp] = useState("");
     const [Discussion, setDiscussion] = useState("");
     const [Counseller, setCounseller] = useState("");
-    const [deleteEnqId, setDelete] = useState("");
 
     const [appointmentDate, setappointmentDate] = useState("");
     const [appointmentTime, setappointmentTime] = useState("");
-   
+    const [followUpData,setFollowUPdata] = useState({})
+
+
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -120,10 +123,10 @@ const TrialEnquires = () => {
     useEffect(() => {
         getEnquiry()
         getStaff()
-      
-        axios.get(`${url}/subservice/${pathRouteMaster}`, {
+
+        axios.get(`${ url }/subservice/${ pathRouteMaster }`, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${ token }`
             }
         })
             .then((res) => {
@@ -136,9 +139,9 @@ const TrialEnquires = () => {
     }, []);
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url2}/employeeForm/${pathRouteMaster}`, {
+        axios.get(`${ url2 }/employeeForm/${ pathRouteMaster }`, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${ token }`
             }
         })
             .then((res) => {
@@ -150,30 +153,9 @@ const TrialEnquires = () => {
                 console.error(error)
             })
     }
-   
-    function handleAdmission(id) {
-        console.log(id)
-        console.log(edit)
-        setEdit(null)
-        if (id != null) {
-            axios.get(`${url1}/enquiryForm/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            }).then((res) => {
-                console.log(res.data)
-                setEdit(res.data)
 
-                if (edit != null && res.data != null) {
-                    setAdmissionForm(true)
-                }
-            })
-                .catch((error) => {
-                    console.error(error)
-                })
-        }
-    }
-   
+    
+
 
     const saveProspect = () => {
         var currentdate = new Date();
@@ -184,7 +166,7 @@ const TrialEnquires = () => {
             + currentdate.getMinutes();
 
         if (enquiryStage === 'Appointment') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment', Counseller: Counseller,CallStatus: CallStatus1 }
+            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment', Counseller: Counseller, CallStatus: CallStatus1 }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
@@ -192,10 +174,10 @@ const TrialEnquires = () => {
                 status: 'CallReport'
             }
 
-            fetch(`${url1}/enquiryForm/update/${followForm}`, {
+            fetch(`${ url1 }/enquiryForm/update/${ followForm }`, {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${token}`,
+                    "Authorization": `Bearer ${ token }`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
@@ -209,14 +191,14 @@ const TrialEnquires = () => {
             })
 
 
-            fetch(`${url}/prospect/create`, {
+            fetch(`${ url }/prospect/create`, {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${token}`,
+                    "Authorization": `Bearer ${ token }`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...uniqObjeact,...data2})
+                body: JSON.stringify({ ...uniqObjeact, ...data2 })
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -225,21 +207,23 @@ const TrialEnquires = () => {
 
         } else if (enquiryStage === 'Trial Session') {
 
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', 
-            Counseller: Counseller, identifyStage:'Trial Session',CallStatus: CallStatus1 }
+            const data1 = {
+                appointmentDate, appointmentTime, appointmentfor: 'Trial Session',
+                Counseller: Counseller, identifyStage: 'Trial Session', CallStatus: CallStatus1
+            }
 
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, 
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
                 AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
                 status: 'CallReport'
             }
 
-            fetch(`${url1}/enquiryForm/update/${followForm}`, {
+            fetch(`${ url1 }/enquiryForm/update/${ followForm }`, {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${token}`,
+                    "Authorization": `Bearer ${ token }`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
@@ -252,24 +236,22 @@ const TrialEnquires = () => {
                 })
             })
 
-            fetch(`${url}/prospect/create`, {
+            fetch(`${ url }/prospect/create`, {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${token}`,
+                    "Authorization": `Bearer ${ token }`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...uniqObjeact,...data2})
+                body: JSON.stringify({ ...uniqObjeact, ...data2 })
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
                 })
             })
         } else if (enquiryStage === 'Join') {
-            handleAdmission(followForm)
+            handleAdmission({...followUpData,type:'top'})
             setVisible(false)
-
-           
         } else if (enquiryStage === 'Prospect') {
             let data = {
                 username: username,
@@ -277,22 +259,22 @@ const TrialEnquires = () => {
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
                 status: 'prospect'
             }
-          
-                fetch(`${url}/prospect/create`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        setVisible(false)
-                    })
-                })
 
-                   
+            fetch(`${ url }/prospect/create`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${ token }`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            }).then((resp) => {
+                resp.json().then(() => {
+                    setVisible(false)
+                })
+            })
+
+
             const data1 = { 
                 Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
                 appointmentfor:enquiryStage,
@@ -300,39 +282,39 @@ const TrialEnquires = () => {
                 PFollowupDate:FollowupDate,
                 PDiscussion: Discussion,
                 PTimeFollowp:TimeFollowp,       
-                PAppointmentTime: appointmentTime,
-                PAppointmentDate: appointmentDate,
+                PAppointmentTime: TimeFollowp,
+                PAppointmentDate: FollowupDate,
+                
                 PServiceName: ServiceName1, 
                 PCallDate: date, 
                 PTime: time,
                 PName: Name, 
                 PContact: Contact,
                 PEmail: email,
-
                 Fullname:Name,
-                appointmentTime,
-                appointmentDate,
+                appointmentTime:TimeFollowp,
+                appointmentDate:FollowupDate,
                 ServiceName:ServiceName1,
                 Emailaddress:email,
                 ContactNumber:Contact,
             }
 
-                fetch(`${url1}/enquiryForm/update/${followForm}`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data1)
-                }).then((resp) => {
-                    resp.json().then(() => {
-                        alert("successfully submitted")
-                        setVisible(false)
-                        getEnquiry()
-                    })
+            fetch(`${ url1 }/enquiryForm/update/${ followForm }`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${ token }`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data1)
+            }).then((resp) => {
+                resp.json().then(() => {
+                    alert("successfully submitted")
+                    setVisible(false)
+                    getEnquiry()
                 })
-            
+            })
+
 
 
         }
@@ -353,14 +335,14 @@ const TrialEnquires = () => {
             status: 'CallReport'
         }
 
-        fetch(`${url}/prospect/create`, {
+        fetch(`${ url }/prospect/create`, {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${token}`,
+                "Authorization": `Bearer ${ token }`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({...uniqObjeact,...data})
+            body: JSON.stringify({ ...uniqObjeact, ...data })
         }).then((resp) => {
             resp.json().then(() => {
                 setVisible(false)
@@ -368,10 +350,10 @@ const TrialEnquires = () => {
         })
         const data1 = { Counseller }
 
-        fetch(`${url1}/enquiryForm/update/${followForm}`, {
+        fetch(`${ url1 }/enquiryForm/update/${ followForm }`, {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${token}`,
+                "Authorization": `Bearer ${ token }`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
@@ -385,17 +367,17 @@ const TrialEnquires = () => {
     }
     const [ogList, setOgList] = useState([])
     function getEnquiry() {
-        axios.get(`${url1}/enquiryForm/${pathRoute}`, {
+        axios.get(`${ url1 }/enquiryForm/${ pathRoute }`, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${ token }`
             }
         })
             .then((res) => {
 
-                const data = res.data.filter((list) => 
-                list.appointmentfor === 'Trial Session' &&
-                list.enquirestatus!=='notshow'&&
-                list.CallStatus !== 'Cold'
+                const data = res.data.filter((list) =>
+                    list.appointmentfor === 'Trial Session' &&
+                    list.enquirestatus !== 'notshow' &&
+                    list.CallStatus !== 'Cold'
                 ).reverse()
                 setResult1(data)
                 setOgList(data)
@@ -422,11 +404,11 @@ const TrialEnquires = () => {
         else
             setResult1(og.filter((list) => list[filterBy] === v))
     }
-   
+
     function getProspect(id) {
-        axios.get(`${url1}/enquiryForm/${id}`, {
+        axios.get(`${ url1 }/enquiryForm/${ id }`, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${ token }`
             }
         })
             .then((res) => {
@@ -444,9 +426,9 @@ const TrialEnquires = () => {
     }
 
     function getCallReport(id) {
-        axios.get(`${url1}/enquiryForm/${id}`, {
+        axios.get(`${ url1 }/enquiryForm/${ id }`, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${ token }`
             }
         })
             .then((res) => {
@@ -467,10 +449,10 @@ const TrialEnquires = () => {
     function deleteEnquiry(id) {
 
         if (confirm('Do you want to delete this')) {
-            fetch(`${url1}/enquiryForm/delete/${id}`, {
+            fetch(`${ url1 }/enquiryForm/delete/${ id }`, {
                 method: 'DELETE',
                 headers: {
-                    "Authorization": `Bearer ${token}`,
+                    "Authorization": `Bearer ${ token }`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
@@ -483,9 +465,10 @@ const TrialEnquires = () => {
         }
     }
 
-    const handleFollowup = (id) => {
+    const handleFollowup = (id,item) => {
         setFollowForm(id)
         getProspect(id)
+        setFollowUPdata(item)
     }
 
     const handleCallReport = (id) => {
@@ -500,26 +483,43 @@ const TrialEnquires = () => {
         setVisible1(true)
     }
 
-    
+
+    function handleAdmission(data) {
+        setAdmissionData(data)
+    }
 
     function conFirmTrailStatus(id) {
-        axios.post(`${url1}/enquiryForm/update/${id}`,{trailStatus:true}, {
+        axios.post(`${ url1 }/enquiryForm/update/${ id }`, { trailStatus: true }, {
             headers: {
-                "Authorization": `Bearer ${token}`,
+                "Authorization": `Bearer ${ token }`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
         })
             .then((res) => {
-               getEnquiry()
+                getEnquiry()
             })
             .catch((error) => {
                 console.error(error)
             })
     }
 
+    useEffect(()=>{
+        if(addmissionData?._id ){
+            setAdmissionForm(true)           
+        }
+    },[addmissionData?._id,addmissionData?.type])
+
+
+    function closeAddmisionForm (valBol) {
+        setAdmissionForm(valBol)
+        setAdmissionData({})
+    }
+
     return (
         <CRow>
+             {(admissionForm&& !visible1) && <AdmissionForm1 add={admissionForm}  setAdmissionForm={closeAddmisionForm} ids={addmissionData} />}
+
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
@@ -538,7 +538,7 @@ const TrialEnquires = () => {
                                         <option value={day}>Today</option>
                                         <option value={month}>Last Month</option>
                                         <option value={year}>This Year</option>
-                                       
+
                                     </CFormSelect>
                                     {select === 'Custom Date' && (
                                         <CInputGroup className='mt-2 mb-2' >
@@ -573,7 +573,7 @@ const TrialEnquires = () => {
                             </CCol>
                             <CCol lg={6} sm={6} md={6}>
                                 <CButtonGroup className=' mb-2 float-end'>
-                                    <CButton color="primary" onClick={()=>exportTrailFun(result1) }>
+                                    <CButton color="primary" onClick={() => exportTrailFun(result1)}>
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>
@@ -620,7 +620,7 @@ const TrialEnquires = () => {
                             <CCol></CCol>
                         </CRow>
 
-                        
+
                         <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={callReport} color='' onClose={() => setCallReport(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Call Report</CModalTitle>
@@ -750,9 +750,7 @@ const TrialEnquires = () => {
                                 <CButton type='submit' color="primary" onClick={() => saveCallReport()}>Save Call Report</CButton>
                             </CModalFooter>
                         </CModal>
-                        {edit &&
-                            <AdmissionForm1 add={admissionForm} setAdmissionForm={setAdmissionForm} deleteId={deleteEnqId} ids={edit} />
-                        }
+                      
                         <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible} color='' onClose={() => setVisible(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Prospect Form</CModalTitle>
@@ -824,8 +822,8 @@ const TrialEnquires = () => {
                                                 label='Counseller'
                                             >
                                                 <option>Select Counseller</option>
-                                                {staff.filter((list) =>list.selected === 'Select').map((item, index) => (
-                                                  (
+                                                {staff.filter((list) => list.selected === 'Select').map((item, index) => (
+                                                    (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}</CFormSelect>
@@ -969,18 +967,18 @@ const TrialEnquires = () => {
                                 <CModalTitle>Edit Form</CModalTitle>
                             </CModalHeader>
                             <CModalBody>
-                            {visible1 &&  <EnquiryForm 
-                              edit={visible1} 
-                              editData={toEdit} 
-                              getEnquiry={()=>getEnquiry()}
-                              setVisible={setVisible1}                             
-                              />}
+                                {visible1 && <EnquiryForm
+                                    edit={visible1}
+                                    editData={toEdit}
+                                    getEnquiry={() => getEnquiry()}
+                                    setVisible={setVisible1}
+                                />}
 
-                             <div className='text-end'>        
-                                 <CButton color="secondary" onClick={() => setVisible1(false)}>
-                                    Close
-                                 </CButton>
-                              </div>   
+                                <div className='text-end'>
+                                    <CButton color="secondary" onClick={() => setVisible1(false)}>
+                                        Close
+                                    </CButton>
+                                </div>
                             </CModalBody>
                         </CModal>
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
@@ -996,15 +994,16 @@ const TrialEnquires = () => {
                                     <CTableHeaderCell>Source</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry stage</CTableHeaderCell>
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
-                                    <CTableHeaderCell style={{minWidth:'100px'}}>Trial Date/Time</CTableHeaderCell>
-
-                                    {(isAdmin|| trailEdit)&&<CTableHeaderCell>Trial Status</CTableHeaderCell>}
+                                    <CTableHeaderCell style={{ minWidth: '100px' }}>Trial Date/Time</CTableHeaderCell>
+                                    {(isAdmin||trailAdd)&&<CTableHeaderCell>Add</CTableHeaderCell>}
+ 
+                                    {(isAdmin || trailEdit) && <CTableHeaderCell>Trial Status</CTableHeaderCell>}
                                     <CTableHeaderCell>Discussion</CTableHeaderCell>
 
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>
-                                    <CTableHeaderCell>Counseller</CTableHeaderCell>
-                                    {(isAdmin|| trailAdd)&&<CTableHeaderCell>Action</CTableHeaderCell>}
-                                    {(isAdmin|| (trailEdit||trailDelete))&&<CTableHeaderCell>Edit/Delete</CTableHeaderCell>}
+                                    <CTableHeaderCell>Counsellor</CTableHeaderCell>
+                                    {(isAdmin || trailAdd) && <CTableHeaderCell>Action</CTableHeaderCell>}
+                                    {(isAdmin || (trailEdit || trailDelete)) && <CTableHeaderCell>Edit/Delete</CTableHeaderCell>}
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -1023,16 +1022,6 @@ const TrialEnquires = () => {
                                             className="mb-1"
                                             style={{ minWidth: "120px" }}
                                             type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
-                                            disabled
                                             value={Search1}
                                             onChange={(e) => setSearch1(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -1042,10 +1031,18 @@ const TrialEnquires = () => {
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            style={{ minWidth: "90px" }}
-                                            disabled
+                                            style={{ minWidth: "120px" }}
                                             value={Search2}
                                             onChange={(e) => setSearch2(e.target.value)}
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            type="text"
+                                            disabled
+                                            style={{ minWidth: "90px" }}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
@@ -1065,7 +1062,6 @@ const TrialEnquires = () => {
                                             type="text"
                                             style={{ minWidth: "120px" }}
                                             value={Search4}
-                                            disabled
                                             onChange={(e) => setSearch4(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
@@ -1118,13 +1114,22 @@ const TrialEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell style={{display:(isAdmin|| trailEdit)?'':'none'}}>
+                                    <CTableDataCell style={{ display: (isAdmin || trailAdd) ? '' : 'none' }}>
+                                        <CFormInput
+                                            className="mb-1"
+                                            style={{ minWidth: "100px" }}
+                                            type="text"
+                                            disabled
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell style={{ display: (isAdmin || trailEdit) ? '' : 'none' }}>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
-                                            style={{minWidth: "100px"}}
+                                            style={{ minWidth: "100px" }}
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
@@ -1156,36 +1161,41 @@ const TrialEnquires = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell style={{display:(isAdmin|| trailAdd)?'':'none'}}>
+                                    <CTableDataCell style={{ display: (isAdmin || trailAdd) ? '' : 'none' }}>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
-                                            style={{minWidth: "100px"}}
+                                            style={{ minWidth: "100px" }}
 
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell style={{display:(isAdmin|| (trailEdit||trailDelete))?'':'none'}}>
+                                    <CTableDataCell style={{ display: (isAdmin || (trailEdit || trailDelete)) ? '' : 'none' }}>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
-                                            style={{minWidth: "100px"}}
+                                            style={{ minWidth: "100px" }}
 
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
                                 {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                                     moment(list.createdAt).format("MM-DD-YYYY").includes(select) &&
+                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select) &&
+                                    list.EnquiryId?.toLowerCase().includes(Search1.toLowerCase()) &&
+                                    list.createdAt?.toLowerCase().includes(Search2.toLowerCase()) &&
+                                    (list.ContactNumber+"").includes(Search4) &&
+                                    list.Counseller.includes(Search10.toLowerCase()) &&
+
                                     list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
-                                     list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                                    list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                                     list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) &&
-                                     list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && 
-                                     list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
+                                    list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) &&
+                                    list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                                 ).map((item, index) => (
-                                  (
+                                    (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{item.EnquiryId}</CTableDataCell>
@@ -1198,18 +1208,23 @@ const TrialEnquires = () => {
                                             <CTableDataCell>{item.appointmentfor}</CTableDataCell>
                                             <CTableDataCell>{item.CallStatus}</CTableDataCell>
                                             <CTableDataCell>{moment(item.appointmentDate).format("DD-MM-YYYY") != 'Invalid date' && moment(item.appointmentDate).format("DD-MM-YYYY")}<br />{moment(item.appointmentTime, "HH:mm").format("hh:mm A") != 'Invalid date' && moment(item.appointmentTime, "HH:mm").format("hh:mm A")}</CTableDataCell>
-                                            <CTableDataCell style={{display:(isAdmin|| trailEdit)?'':'none'}}>
-                                            {item?.trailStatus?<CButton size='sm' color='success'>Done</CButton>:  
-                                            <CButton size='sm' color='warning' onClick={()=>conFirmTrailStatus(item._id)} >Pending...</CButton>}   
+                                            <CTableDataCell style={{display:(isAdmin|| trailAdd)?'':'none'}} ><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }}  
+                                        onClick={() => { setEdit(item._id), handleAdmission({...item,type:'bottom'}) }} /></CTableDataCell>
+                                           
+                                            <CTableDataCell style={{ display: (isAdmin || trailEdit) ? '' : 'none' }}>
+                                                {item?.trailStatus ? <CButton size='sm' color='success'>Done</CButton> :
+                                                    <CButton size='sm' color='warning' onClick={() => 
+                                                    conFirmTrailStatus(item._id)} >Pending...</CButton>}
                                             </CTableDataCell>
-                                            <CTableDataCell>{item.Message}</CTableDataCell>                                                                                     
-                                             <CTableDataCell>{item.StaffName}</CTableDataCell>
+
+                                            <CTableDataCell>{item.Message}</CTableDataCell>
+                                            <CTableDataCell>{item.StaffName}</CTableDataCell>
                                             <CTableDataCell>{item.Counseller}</CTableDataCell>
-                                            <CTableDataCell className='text-center' style={{display:(isAdmin|| trailAdd)?'':'none'}}><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
+                                            <CTableDataCell className='text-center' style={{ display: (isAdmin || trailAdd) ? '' : 'none' }}><a href={`tel:+${ item.CountryCode }${ item.ContactNumber }`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${ item.ContactNumber }`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${ item.Emailaddress }`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id,item)} /></CTableDataCell>
                                             <CTableDataCell className='text-center'>
-                                                {(isAdmin|| trailEdit) &&<MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} 
-                                                onClick={() => handleEnquiry(item)} size='20px' />}
-                                         {(isAdmin||trailDelete) &&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteEnquiry(item._id)} size='20px' />}</CTableDataCell>
+                                                {(isAdmin || trailEdit) && <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }}
+                                                    onClick={() => handleEnquiry(item)} size='20px' />}
+                                                {(isAdmin || trailDelete) && <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteEnquiry(item._id)} size='20px' />}</CTableDataCell>
                                         </CTableRow>
                                     )
                                 ))}
@@ -1221,16 +1236,20 @@ const TrialEnquires = () => {
                             <span aria-hidden="true">&laquo;</span>
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {result1.filter((list) =>
-                            list && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Trial Session' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                        {result1.filter((list) => 
+                            list.EnquiryId?.toLowerCase().includes(Search1.toLowerCase()) &&list.createdAt?.toLowerCase().includes(Search2.toLowerCase()) &&(list.ContactNumber + "").includes(Search4) &&
+                            list.Counseller.includes(Search10.toLowerCase()) &&list && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Trial Session' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                         ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                        {result1.filter((list) =>
-                            list && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Trial Session' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                        {result1.filter((list) => 
+                            list.EnquiryId?.toLowerCase().includes(Search1.toLowerCase()) &&list.createdAt?.toLowerCase().includes(Search2.toLowerCase()) &&(list.ContactNumber + "").includes(Search4) &&
+                            list.Counseller.includes(Search10.toLowerCase()) &&list && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Trial Session' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                         ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {result1.filter((list) =>
+                        {result1.filter((list) => 
+                            list.EnquiryId?.toLowerCase().includes(Search1.toLowerCase()) &&list.createdAt?.toLowerCase().includes(Search2.toLowerCase()) &&
+                            (list.ContactNumber + "").includes(Search4) &&list.Counseller.includes(Search10.toLowerCase()) &&
                             list && moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Trial Session' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                             list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
                         ).length > (paging + 1) * 10 ?

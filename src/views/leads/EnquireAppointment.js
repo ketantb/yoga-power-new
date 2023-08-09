@@ -63,11 +63,14 @@ const EnquireAppointment = () => {
     const [followForm, setFollowForm] = useState()
     const [edit, setEdit] = useState()
     const [toEdit,setToEdit] = useState({})
+    const [addmissionData,setAdmissionData] = useState({})
     const [visible1, setVisible1] = useState(false)
     const [admissionForm, setAdmissionForm] = useState(false)
     const [callReport, setCallReport] = useState(false)
     const [paging, setPaging] = useState(0);
     const [visible, setVisible] = useState(false)
+    const [followUpData,setFollowUPdata] = useState({})
+
     const [Search1, setSearch1] = useState('')
     const [Search2, setSearch2] = useState('')
     const [Search3, setSearch3] = useState('')
@@ -99,7 +102,6 @@ const EnquireAppointment = () => {
 
     const url1 = useSelector((el) => el.domainOfApi)
     const url = useSelector((el) => el.domainOfApi)
-    const url2 = useSelector((el) => el.domainOfApi)
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -149,28 +151,9 @@ const EnquireAppointment = () => {
                 console.error(error)
             })
     }
-    function addForm(id) {
-        localStorage.setItem('adId', JSON.stringify(id))
-    }
-    function handleAdmission(id) {
-
-        setEdit(null)
-        if (id != null) {
-            axios.get(`${url1}/enquiryForm/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            }).then((res) => {
-                setEdit(res.data)
-
-                if (edit != null && res.data != null) {
-                    setAdmissionForm(true)
-                }
-            })
-                .catch((error) => {
-                    console.error(error)
-                })
-        }
+   
+    function handleAdmission(data) {
+        setAdmissionData(data)
     }
 
 
@@ -270,10 +253,9 @@ const EnquireAppointment = () => {
                     setCallReport(false)
                 })
             })
-        } else if (enquiryStage === 'Join') {
-            handleAdmission(followForm)
+        }  else if (enquiryStage === 'Join') {
+            handleAdmission({...followUpData,type:'top'})
             setVisible(false)
-
         } else if (enquiryStage === 'Prospect') {
             
             let data2 = {
@@ -307,18 +289,18 @@ const EnquireAppointment = () => {
                     PFollowupDate:FollowupDate,
                     PDiscussion: Discussion,
                     PTimeFollowp:TimeFollowp,       
-                    PAppointmentTime: appointmentTime,
-                    PAppointmentDate: appointmentDate,
+                    PAppointmentTime: TimeFollowp,
+                    PAppointmentDate: FollowupDate,
+                    
                     PServiceName: ServiceName1, 
                     PCallDate: date, 
                     PTime: time,
                     PName: Name, 
                     PContact: Contact,
                     PEmail: email,
-
                     Fullname:Name,
-                    appointmentTime,
-                    appointmentDate,
+                    appointmentTime:TimeFollowp,
+                    appointmentDate:FollowupDate,
                     ServiceName:ServiceName1,
                     Emailaddress:email,
                     ContactNumber:Contact,
@@ -482,9 +464,11 @@ const EnquireAppointment = () => {
         }
     }
 
-    const handleFollowup = (id) => {
+    const handleFollowup = (id,item) => {
         setFollowForm(id)
         getProspect(id)
+        setFollowUPdata(item)
+
     }
 
     const handleCallReport = (id) => {
@@ -499,10 +483,22 @@ const EnquireAppointment = () => {
     }
  
 
+    useEffect(()=>{
+        if(addmissionData?._id ){
+            setAdmissionForm(true)           
+        }
+    },[addmissionData?._id,addmissionData?.type])
+
+    function closeAddmisionForm (valBol) {
+        setAdmissionForm(valBol)
+        setAdmissionData({})
+    }
 
 
     return (
         <CRow>
+ {(admissionForm&& !visible1) && <AdmissionForm1 add={admissionForm}  setAdmissionForm={closeAddmisionForm} ids={addmissionData} />}
+
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
@@ -523,35 +519,7 @@ const EnquireAppointment = () => {
                                         <option value={year}>This Year</option>
                                        
                                     </CFormSelect>
-                                    {select === 'Custom Date' && (
-                                        <CInputGroup className='mt-2 mb-2' >
-
-                                            <CInputGroupText
-                                                component="label"
-                                                htmlFor="inputGroupSelect01"
-                                            >
-                                                Form
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                type="date"
-                                                required
-                                            /><CInputGroupText
-                                                component="label"
-                                                htmlFor="inputGroupSelect01"
-                                            >
-                                                To
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                type="date"
-                                                required
-                                            />
-                                            <CButton type="button" color="primary">
-                                                Go
-                                            </CButton>
-                                        </CInputGroup>
-
-                                    )}
-
+                                   
                                 </CInputGroup>
                             </CCol>
                             <CCol lg={6} sm={6} md={6}>
@@ -603,9 +571,7 @@ const EnquireAppointment = () => {
                             <CCol></CCol>
                         </CRow>
                         
-                        {edit &&
-                            <AdmissionForm1 add={admissionForm} setAdmissionForm={setAdmissionForm} ids={edit} />
-                        }
+                        
                         <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={callReport} color='' onClose={() => setCallReport(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Call Report</CModalTitle>
@@ -998,8 +964,8 @@ const EnquireAppointment = () => {
                                             className="mb-1"
                                             style={{ minWidth: "60px" }}
                                             type="text"
-                                            disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            disabled
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
@@ -1007,16 +973,6 @@ const EnquireAppointment = () => {
                                             className="mb-1"
                                             style={{ minWidth: "120px" }}
                                             type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
-                                            disabled
                                             value={Search1}
                                             onChange={(e) => setSearch1(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -1026,10 +982,18 @@ const EnquireAppointment = () => {
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            style={{ minWidth: "90px" }}
-                                            disabled
+                                            style={{ minWidth: "120px" }}
                                             value={Search2}
                                             onChange={(e) => setSearch2(e.target.value)}
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            type="text"
+                                            style={{ minWidth: "90px" }}
+                                            disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
@@ -1049,7 +1013,6 @@ const EnquireAppointment = () => {
                                             type="text"
                                             style={{ minWidth: "120px" }}
                                             value={Search4}
-                                            disabled
                                             onChange={(e) => setSearch4(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
@@ -1136,7 +1099,6 @@ const EnquireAppointment = () => {
                                             type="text"
                                             value={Search10}
                                             style={{ minWidth: "100px" }}
-                                            disabled
                                             onChange={(e) => setSearch10(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
@@ -1162,8 +1124,17 @@ const EnquireAppointment = () => {
                                 </CTableRow>
                                 {result1.filter((list) =>list.enquirestatus!=='notshow'&&
                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select) && 
-                                   list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-                                    list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
+                                   moment(list.createdAt).format("MM-DD-YYYY").includes(Search2) && 
+                                   list.appointmentfor === 'Appointment' && 
+                                   list.EnquiryId.toLowerCase().includes(Search1.toLowerCase()) && 
+                                   list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && 
+                                   list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
+                                    list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) &&
+                                     list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) &&
+                                      list.CallStatus.toLowerCase().includes(Search8.toLowerCase()) &&
+                                      list.Counseller.toLowerCase().includes(Search10.toLowerCase()) &&
+                                      list.ContactNumber+"".includes(Search4) 
+
                                 ).slice(paging * 10, paging * 10 + 10).map((item, index) => (
                                     (
                                         <CTableRow key={index}>
@@ -1178,11 +1149,13 @@ const EnquireAppointment = () => {
                                             <CTableDataCell>{item.appointmentfor}</CTableDataCell>
                                             <CTableDataCell>{item.CallStatus}</CTableDataCell>
                                             <CTableDataCell>{item.Message}</CTableDataCell>
-                                            <CTableDataCell style={{display:(isAdmin|| appointmentAdd)?'':'none'}} ><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { addForm(item._id), setEdit(item._id), handleAdmission(item._id) }} /></CTableDataCell>
+                                            <CTableDataCell style={{display:(isAdmin|| appointmentAdd)?'':'none'}} ><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }}  
+                                        onClick={() => { setEdit(item._id), handleAdmission({...item,type:'bottom'}) }} /></CTableDataCell>
                                             <CTableDataCell>{moment(item.appointmentDate).format("MM-DD-YYYY")}<br />{moment(item.appointmentTime, "HH:mm").format("hh:mm A")}</CTableDataCell>
                                             <CTableDataCell>{item.StaffName}</CTableDataCell>
                                             <CTableDataCell>{item.Counseller}</CTableDataCell>
-                                            <CTableDataCell style={{display:(isAdmin|| appointmentAdd)?'':'none'}} className='text-center'><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
+                                            <CTableDataCell style={{display:(isAdmin|| appointmentAdd)?'':'none'}} className='text-center'><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a>
+                     <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id,item)} /></CTableDataCell>
                                             <CTableDataCell  style={{display:(isAdmin|| (appointmentEdit || appointmentDelete ))?'':'none'}} className='text-center'>
                                                 <MdEdit  style={{display:(isAdmin|| appointmentEdit)?'':'none',fontSize: '35px', cursor: 'pointer', markerStart: '10px'}} id={item._id}  
                                                 onClick={() => handleEnquiry(item)} size='20px' /> 
@@ -1199,18 +1172,19 @@ const EnquireAppointment = () => {
                             <span aria-hidden="true">&laquo;</span>
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {result1.filter((list) => list.enquirestatus!=='notshow'&&  
+                        {result1.filter((list) => list.enquirestatus!=='notshow'&&       moment(list.createdAt).format("MM-DD-YYYY").includes(Search2) && list.EnquiryId.toLowerCase().includes(Search1.toLowerCase()) && 
                              moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
+                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase()) && list.ContactNumber+"".includes(Search4) 
                         ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                        {result1.filter((list) => list.enquirestatus!=='notshow'&&  
+                        {result1.filter((list) => list.enquirestatus!=='notshow'&&  moment(list.createdAt).format("MM-DD-YYYY").includes(Search2) &&  list.EnquiryId.toLowerCase().includes(Search1.toLowerCase()) &&
                              moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
+                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase()) &&  list.ContactNumber+"".includes(Search4) 
+
                         ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {result1.filter((list) => list.enquirestatus!=='notshow'&&  
+                        {result1.filter((list) => list.enquirestatus!=='notshow'&& moment(list.createdAt).format("MM-DD-YYYY").includes(Search2) &&  list.EnquiryId.toLowerCase().includes(Search1.toLowerCase()) && 
                              moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.appointmentfor === 'Appointment' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
+                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase()) && list.ContactNumber+"".includes(Search4) 
                         ).length > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
