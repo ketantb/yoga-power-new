@@ -84,6 +84,7 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
     const [imgPrograss,setImgPrograss] = useState(0)
     const [imageUrl, setImageUrl] = useState(null)
     const [centerPartnerData,setCenterPartnerData] = useState([])
+    const [clientId,setClientId] = useState()
 
     const [staff, setStaff] = useState([])
     const isAdmin = useSelector((el)=>el.isAdmin) 
@@ -119,6 +120,7 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
 
       const allData = await Promise.all([response1,response2,response3,response4,response5,response6])
       const centerData = allData[5].data.filter((el)=>el.status && el._id===uniqObj.partnerAdminMongoId)
+
       setStaff(allData[0].data)
       setClientData(allData[1].data)
       setLeadArr(allData[2].data.filter((el)=>el.Status))
@@ -263,6 +265,7 @@ return
             EnquiryDate, ServiceName, ServiceVariation, Customertype,enquirytype, appointmentDate,
             appointmentTime, appointmentfor:editData?.appointmentfor?appointmentfor:'',identifyStage:  appointmentfor,
             Counseller:Counseller.FullName,trialDate, trialDate, status: "all_enquiry",ClientReferenceName:clientReferance,
+            ClientReferrenceId:clientId,
             image: imageUrl
         }
 
@@ -315,7 +318,8 @@ return
 
 
     function clientObj(obj){
-        setClientReferance(obj.Fullname)    
+        setClientReferance(obj.Fullname)
+        setClientId(obj._id)    
      }
 
    
