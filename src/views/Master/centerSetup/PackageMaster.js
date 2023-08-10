@@ -30,7 +30,9 @@ import { masterRightValue } from "src/views/hr/Rights/rightsValue/masterRightsVa
 
 const PackageMaster = () => {
 
-c
+    const addPackageMaste = true
+    const packageStatus =true
+    const deletePackageMaster = true
 
     const url1 = useSelector((el)=>el.domainOfApi) 
     const url = url1

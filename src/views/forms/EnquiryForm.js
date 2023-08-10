@@ -83,8 +83,10 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
     const [clientData,setClientData] = useState([])
     const [imgPrograss,setImgPrograss] = useState(0)
     const [imageUrl, setImageUrl] = useState(null)
+    const [centerPartnerData,setCenterPartnerData] = useState([])
 
-
+    const [staff, setStaff] = useState([])
+    const isAdmin = useSelector((el)=>el.isAdmin) 
 
 
 
@@ -93,46 +95,47 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
     const username = user.user.username;
     const centerCode = user.user.centerCode;
     
-    const userInfo = user.user
-
 
     const [result, setResult] = useState([]);
-    const [serviceArr, setServiceArr] = useState([]);
     const [result1, setResult1] = useState([]);
     const [leadArr, setLeadArr] = useState([]);
-    const [mem, setMem] = useState([]);
-    
+
+    const headers = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+          }
+    }
+
+    const getEnquiryFormData = async ()=>{
+    try{
+      const response1 = axios.get(`${url1}/employeeform/${pathValMaster}`,headers)
+      const response2 = axios.get(`${url1}/memberForm/${pathValMaster}`,headers)
+      const response3 = axios.get(`${url}/leadSourceMaster/${pathValMaster}`,headers)
+      const response4 = axios.get(`${url1}/packageMaster/${pathValMaster}`,headers)
+      const response5 = axios.get(`${url1}/enquiryForm/${pathVal}`,headers)
+      const response6 = axios.get(`${url}/signup/center-patner`,headers)
+
+      const allData = await Promise.all([response1,response2,response3,response4,response5,response6])
+      const centerData = allData[5].data.filter((el)=>el.status)
+        
+      setStaff(allData[0].data)
+      setClientData(allData[1].data)
+      setLeadArr(allData[2].data.filter((el)=>el.Status))
+      setResult(allData[3].data)
+      setResult1(allData[4].data)
+      setCenterPartnerData(isAdmin?centerData:centerData.filter((el)=>el._id===uniqObj.partnerAdminMongoId))
+      setCenterName(centerData.find((el)=>el._id===uniqObj.partnerAdminMongoId)._id)
+      setCounseller(allData[0].data.find((el)=>el._id===uniqObj.employeeMongoId)._id)
+      setStaffName(allData[0].data.find((el)=>el._id===uniqObj.employeeMongoId)._id)
+    }catch(error){
+   
+    }
+
+    }     
 
 
     useEffect(() => {
-        getStaff()
-        getLeadSource()
-        getClientData()
-        axios.get(`${url1}/packageMaster/${pathValMaster}`, {
-        
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setResult(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-
-        axios.get(`${url1}/enquiryForm/${pathVal}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setResult1(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-
+        getEnquiryFormData()
     }, []);
 
     useEffect(()=>{
@@ -169,49 +172,9 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
      }
     },[edit])
 
-    function getLeadSource() {
-        axios.get(`${url}/leadSourceMaster/${pathValMaster}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setLeadArr(res.data.filter((el)=>el.Status))
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-    const [staff, setStaff] = useState([])
-    function getStaff() {
-        axios.get(`${url1}/employeeform/${pathValMaster}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                
-                setStaff(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
-    function getClientData() {
-        axios.get(`${url1}/memberForm/${pathValMaster}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                
-                setClientData(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
+    
+  
+   
 
 
     const Email = Emailaddress.includes('@')            
@@ -273,6 +236,20 @@ return
         const editPath = edit &&editData ?`${url}/enquiryForm/update/${editData._id}`:`${url}/enquiryForm/create`
 
         let enqId = centerCode + 'Q' + (result1.length + 1);
+        
+       const staffName =  staff.find((el)=>el._id===StaffName)
+       const Counseller = staff.find(()=>el._id===counseller)
+       const center = centerPartnerData.find(()=>el._id===CenterName)
+
+       const uniqObj2  = {
+        empNameC:Counseller.FullName,
+        employeeIDC:Counseller._id,
+        employeeMongoId:Counseller._id,
+        centerNameC:center.center,
+        centerCodeC:center.centerCode,
+        adminNameC:center.username,
+        partnerAdminMongoId:center._id,
+        }
 
         let data = {
             username: username,
@@ -280,21 +257,22 @@ return
             Fullname, Emailaddress, CountryCode,
             ContactNumber, Gander, DateofBirth, 
             address, Area, city, Profession,
-            StaffName, CenterName, CallStatus, Message,
+            StaffName:staffName.FullName, CenterName:enterName, CallStatus, Message,
             person_Name, Relation, CountryCode2: CountryCode2, ContactNumber2: ContactNumber2,
             EnquiryDate, ServiceName, ServiceVariation, Customertype,enquirytype, appointmentDate,
             appointmentTime, appointmentfor:editData?.appointmentfor?appointmentfor:'',identifyStage:  appointmentfor,
-            Counseller: counseller,trialDate, trialDate, status: "all_enquiry",ClientReferenceName:clientReferance,
+            Counseller:Counseller.FullName,trialDate, trialDate, status: "all_enquiry",ClientReferenceName:clientReferance,
             image: imageUrl
         }
+
+
 
         const headers = {
             'Authorization': `Bearer ${token}`,
             'My-Custom-Header': 'foobar'
         }
 
-
-        axios.post(editPath, {...data,...uniqObj}, { headers })
+        axios.post(editPath, {...data,...{...uniqObj2,employeeMongoId:counseller}}, { headers })
             .then((resp) => {
                 if(resp.status===200){
                 alert("successfully submitted")
@@ -376,9 +354,6 @@ return
             }
             uploadImage(file)
       };
-
-
-      console.log(imageUrl)
 
     return (
         <CCard className="mb-3 border-success">
@@ -553,7 +528,7 @@ return
                                         <option value={''}>Select Staff Name</option>
                                         {staff?.filter((list) =>  list.selected === 'Select')?.map((item, index) => (
                                             (
-                                                <option key={index}>{item.FullName}</option>
+                                                <option key={index} value={item._id} >{[item.FullName,item.EmployeeID].join('\n')}</option>
                                             )
                                         ))}
                                     </CFormSelect>
@@ -572,7 +547,7 @@ return
                                         <option value={''}>Select Counseller</option>
                                         {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                              (
-                                                <option key={index}>{item.FullName}</option>
+                                                <option key={index} value={item._id}>{[item.FullName,item.EmployeeID].join('\n')}</option>
                                             )
                                         ))}</CFormSelect>
                                 </CCol>
@@ -586,8 +561,9 @@ return
                                         label="Center Name"
                                         options={[
                                             "Select Center",
-                                            { label: "V-mall Thakur Complex", value: "V-mall Thakur Complex" },
-                                            { label: "Station Kandivali East", value: "Station Kandivali East" },
+                                            ...centerPartnerData.map((el)=>{
+                                              return { label: el.center, value: el._id}
+                                            })
                                         ]}
                                     />
                                 </CCol>
@@ -755,7 +731,7 @@ return
                                         label="Enquiry Source"
                                     >
                                         <option value={''}>Select Enquiry source</option>
-                                        {leadArr.map((item, index) => (
+                                        {[...leadArr,{LeadSource:'Referred'}].map((item, index) => (
                                              (
                                                 <option key={index}>{item.LeadSource}</option>
                                             )
@@ -784,7 +760,6 @@ return
                                             { label: "Appointment", value: "Appointment" },
                                             { label: "Trial Session", value: 'Trial Session' },
                                             { label: "Join", value: "Admission" },
-
                                         ]}
                                     />
                                 </CCol>

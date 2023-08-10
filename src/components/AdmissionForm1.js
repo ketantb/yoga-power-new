@@ -46,6 +46,8 @@ import { useReactToPrint } from 'react-to-print'
 import { useSelector } from 'react-redux'
 import moment from "moment/moment";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { cilArrowCircleBottom} from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 
 
 const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
@@ -55,7 +57,11 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     const url = url1
     const unikqValidateObj = useUniqAdminObjeact()
     const pathValMaster = useAdminValidation('Master')
+    const [imgPrograss,setImgPrograss] = useState(0)
+    const [imageUrl, setImageUrl] = useState(null)
 
+    const imgRef = useRef(null)
+    const imageInput = useRef('')
 
 
     const clickfun =(type)=>{
@@ -79,10 +85,6 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     })
 
     const [activeKey, setActiveKey] = useState(1)
-
-    const [image, setImage] = useState(null)
-    const [imageUrl, setImageUrl] = useState(null)
-
     const [Fullname, setFullname] = useState('')
     const [CountryCode, setCountryCode] = useState('')
     const [ContactNumber, setContactNumber] = useState('')
@@ -167,7 +169,6 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     const [packageArr, setPackageArr] = useState([]);
     useEffect(() => {
         getAdmisionRequireData()
-        getImage()
         if(ids){
             getDetails(ids)
         }
@@ -196,8 +197,9 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
         setEnquiryType(data.enquirytype)
         setMemberManager(data.Counseller)
         setClientReferance(data?.ClientReferenceName)
-        setDateofBirth(data?.DateofBirth?moment(data?.DateofBirth).utc().format('YYYY-MM-DD'):'')         
-  
+        setDateofBirth(data?.DateofBirth?moment(data?.DateofBirth).utc().format('YYYY-MM-DD'):'')     
+        setImageUrl(data?.image)    
+
     }
 
 
@@ -239,12 +241,44 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
 
     
 
-    function getImage() {
-        listAll(imagesListRef).then((response) => {
-            console.log(response); // relate to fire base 
-        })
-    }
 
+
+    const HandaleImageClick = () =>{
+        imageInput.current.click()
+     }
+
+     const handleImage = event => {
+        const fileUploaded = event.target.files[0];
+        const file = event.target.files[0] 
+        const reader = new FileReader();
+        if (!file.type.startsWith('image/')) return;
+
+        reader.onload = (e) => {
+            imgRef.current.src = e.target.result
+        }
+        reader.readAsDataURL(file)
+
+            const uploadImage = (file)=>{
+              if(!fileUploaded)return
+             const storageRef =   ref(storage,`profile-photo/${fileUploaded.name}`)
+             const uploadTask = uploadBytesResumable(storageRef,fileUploaded)
+      
+             uploadTask.on("state_changed",(snapshot)=>{
+              const prog = Math.round((snapshot.bytesTransferred/snapshot.totalBytes) *100)
+              setImgPrograss(prog)
+      
+             },(error)=>{
+              console.log(error)
+             },
+             ()=>{
+              getDownloadURL(uploadTask.snapshot.ref).then((url)=>{
+                setImageUrl(url)
+              })
+             }
+             )
+            }
+            uploadImage(file)
+      };
 
 
 
@@ -507,38 +541,6 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
         }
         setDiscount(e.target.value)
     }
-
-    
-    const imgRef = useRef(null)
-    const handleImage = (e) => {
-        setImage(e.target.files[0])
-        const file = e.target.files[0]
-        if (!file.type.startsWith('image/')) return;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            imgRef.current.src = e.target.result
-        }
-        reader.readAsDataURL(file)
-        console.log(file, image);
-    }
-
-
-    const imagesListRef = ref(storage, "images/");
-    const UploadImage = () => {
-        if (image == null) return;
-        const imageRef = ref(storage, `images/${image.name + v4()}`)
-        console.log(imageRef.fullPath);
-        setImageUrl(imageRef.fullPath)
-
-        uploadBytes(imageRef, image).then(() => {
-            alert('image uploaded')
-        })
-    }
-    console.log(imageUrl);
-
-
-  
  
    useEffect(()=>{
     if(ids?.ServiceName ||serviceName){
@@ -596,19 +598,19 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                         <CCol lg={6} sm={12}>
                                             <CCardTitle>Personal Details</CCardTitle>
                                             <CRow>
-                                                <CCol xs={4} className='mt-2 mb-1' >
-                                                    <CImage ref={imgRef} className="mb-1" style={{ borderRadius: "50px" }} width={'160px'} src={ids?.image?ids?.image:ProfileIcon} />
-                                                </CCol>
-                                                <CCol xs={7} className='mt-3'>
+                                                <CCol sm={12} className='p-3'>
+                                                    <CImage ref={imgRef} style={{ borderRadius: "100px" }} width={'200px'} src={imageUrl?imageUrl:ProfileIcon} className="me-4" />
+
                                                     <CFormInput
-                                                        className="mb-1 mr-3"
                                                         type="file"
                                                         onChange={handleImage}
                                                         accept="image/*"
+                                                        ref={imageInput}
+                                                        hidden
                                                     />
-                                                <CButton onClick={UploadImage}>Upload Image</CButton>
-
+                                                    <CButton onClick={HandaleImageClick} > <CIcon icon={cilArrowCircleBottom} /> {imgPrograss}% Upload Image</CButton>
                                                 </CCol>
+
                                                 <CCol xs={6}>
                                                     <CFormInput
                                                         className="mb-1"
