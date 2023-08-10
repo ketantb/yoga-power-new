@@ -239,8 +239,8 @@ return
         let enqId = centerCode + 'Q' + (result1.length + 1);
         
        const staffName =  staff.find((el)=>el._id===StaffName)
-       const Counseller = staff.find(()=>el._id===counseller)
-       const center = centerPartnerData.find(()=>el._id===CenterName)
+       const Counseller = staff.find((el)=>el._id===counseller)
+       const center = centerPartnerData.find((el)=>el._id===CenterName)
 
        const uniqObj2  = {
         empNameC:Counseller.FullName,
