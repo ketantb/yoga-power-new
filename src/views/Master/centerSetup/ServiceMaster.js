@@ -55,7 +55,6 @@ const ServiceMaster = () => {
     const deleteServiceMaster =  (access.includes(masterRightValue.deleteServicesMaster) || isAdmin )
 
 
-
     const headers ={
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -78,7 +77,6 @@ const ServiceMaster = () => {
         if (confirm('Do you want to delete this')) {
             axios.delete(`${url}/subservice/delete/${id}`,headers).then((result) => {
                 result.json().then((resp) => {
-                    console.warn(resp)
                     getSubService()
                 })
             })
@@ -89,9 +87,9 @@ const ServiceMaster = () => {
     const updateStatus2 = (id, status) => {
         let item = { status: status }
         axios.post(`${url}/subservice/update/${id}`,item, headers).then((result) => {
-            result.json().then((resp) => {
+            if(result.status===200){
                 getSubService()
-            })
+            }
         })
     }
 

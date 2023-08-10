@@ -47,7 +47,7 @@ const useUniqAdminObjeact = ()=>{
         centerNameC:userInfo.center,
         centerCodeC:userInfo.centerCode,
         adminNameC:userInfo.createdBy,
-        partnerAdminMongoId:(userInfo.isAdminPatner?userInfo.emailUniqId:userInfo.createrId),
+        partnerAdminMongoId:((userInfo.isAdminPatner||userInfo.isAdmin)?userInfo.emailUniqId:userInfo.createrId),
         }
 
         const [obj,setObj] = useState(uniqObj)
