@@ -117,7 +117,6 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
 
       const allData = await Promise.all([response1,response2,response3,response4,response5,response6])
       const centerData = allData[5].data.filter((el)=>el.status)
-        
       setStaff(allData[0].data)
       setClientData(allData[1].data)
       setLeadArr(allData[2].data.filter((el)=>el.Status))

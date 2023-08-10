@@ -136,6 +136,7 @@ const ServiceMaster = () => {
                 setJobDesignation('')
                 setDepartment('')
                 setVacancy('')
+                getDesignation()
                 alert("successfully submitted")
             })
         })
