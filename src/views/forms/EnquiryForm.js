@@ -258,7 +258,7 @@ return
             Fullname, Emailaddress, CountryCode,
             ContactNumber, Gander, DateofBirth, 
             address, Area, city, Profession,
-            StaffName:staffName.FullName, CenterName:enterName, CallStatus, Message,
+            StaffName:staffName.FullName, CenterName:center.center, CallStatus, Message,
             person_Name, Relation, CountryCode2: CountryCode2, ContactNumber2: ContactNumber2,
             EnquiryDate, ServiceName, ServiceVariation, Customertype,enquirytype, appointmentDate,
             appointmentTime, appointmentfor:editData?.appointmentfor?appointmentfor:'',identifyStage:  appointmentfor,
