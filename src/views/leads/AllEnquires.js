@@ -142,6 +142,7 @@ const AllEnquires = () => {
     const [toEdit,setToEdit] = useState(false)
 
 
+    console.log(token)
 
     const hiddenXLimportFileInput = useRef('')
 
@@ -208,7 +209,7 @@ const AllEnquires = () => {
             }
         })
             .then((res) => {
-                setStaff(res.data.reverse())
+                setStaff(res.data)
             })
             .catch((error) => {
                 console.error(error)
@@ -397,8 +398,9 @@ const AllEnquires = () => {
             }
         })
             .then((res) => {
-                setResult1(res.data.reverse())
-                setOgList(res.data.reverse())
+               res.data.reverse()
+                setResult1(res.data)
+                setOgList(res.data)
             })
             .catch((error) => {
                 console.error(error)

@@ -187,8 +187,8 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
         setCity(data.city)
         setName(data.person_Name)
         setRelationship(data.Relation)
-        setCountryCode1(data.CountryCode2)
-        setContactNumber1(data.ContactNumber2)
+        setCountryCode1("+"+data.CountryCode2)
+        setContactNumber1("+"+data.ContactNumber2)
         setserviceName(data.ServiceName)
         setserviceVariation(data.ServiceVariation)
         setAssignStaff(data.StaffName)
@@ -196,7 +196,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
         setEnquiryType(data.enquirytype)
         setMemberManager(data.Counseller)
         setClientReferance(data?.ClientReferenceName)
-        setDateofBirth(data?.DateofBirth?moment(data?.DateofBirth).utc().format('YYYY-MM-DD'):data?.DateofBirth)         
+        setDateofBirth(data?.DateofBirth?moment(data?.DateofBirth).utc().format('YYYY-MM-DD'):'')         
   
     }
 
@@ -233,6 +233,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
         setService(packageMaster)
         setMem(memberFormData)
         setBatches(batchesData)
+        setAttendanceID(`CLA${memberFormData.length+1}`)
     }
     
 

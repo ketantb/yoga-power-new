@@ -139,7 +139,7 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
      if(edit){
         setFullName((editData.Fullname||''))
         setEmailAddress((editData.Emailaddress||''))
-        setCountryCode((editData.CountryCode+""||''))
+        setCountryCode(((editData?.CountryCode&&"+"+editData?.CountryCode)||' '))
         setContactNumber((+editData.ContactNumber||''))
         setGander((editData.Gander||''))
         setDateofBirth((editData.DateofBirth||''))
@@ -152,22 +152,20 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
         setMessage((editData.Message||''))
         setperson_Name((editData.person_Name||''))
         setRelation((editData.Relation||''))
-        setCountryCode2((editData.CountryCode2||''))
+        setCountryCode2(((editData?.CountryCode2&&"+"+editData?.CountryCode2)||' '))
         setContactNumber2((editData.ContactNumber2||''))
-        setEnquiryDate(moment(new Date(editData.EnquiryDate)).format('YYYY-MM-DD'))
+        setEnquiryDate(editData.EnquiryDate?moment(new Date(editData.EnquiryDate)).format('YYYY-MM-DD'):'')
         setServiceName((editData.ServiceName||''))
         setServiceVariation((editData.ServiceVariation||''))
         setCustomertype((editData.Customertype||''))
         setEnquirytype((editData.enquirytype||''))
-        setappointmentDate((moment(new Date(editData.appointmentDate)).format('YYYY-MM-DD')||''))
+        setappointmentDate(editData.appointmentDate?moment(new Date(editData.appointmentDate)).format('YYYY-MM-DD'):'')
         setappointmentTime((editData.appointmentTime||''))
         setappointmentfor((editData.identifyStage||''))
         setCounseller((editData.Counseller||''))
-        setTrialDate((moment(new Date(editData.trialDate)).format('YYYY-MM-DD')||''))
         setClientReferance((editData.ClientReferenceName||'')) 
         setCenterName((editData.CenterName||''))
-        setDateofBirth((moment(new Date(editData.DateofBirth)).format('YYYY-MM-DD')||''))
-
+        setDateofBirth(editData.DateofBirth?moment(new Date(editData.DateofBirth)).format('YYYY-MM-DD'):'')
      }
     },[edit])
 
@@ -253,6 +251,7 @@ useEffect(()=>{
     }
 },[PersionalDetailsValidation,LeadInformationValidation,ScheduleenquiryfollowUp,editData?._id])
 
+console.log(imageUrl)
                                        
 const saveEnquiry = () => {
 console.log(Fullname ,Email,Emailaddress,CountryCode, ContactNumber+"".length===10 , ContactNumber,  ContactNumber)
@@ -379,6 +378,8 @@ return
       };
 
 
+      console.log(imageUrl)
+
     return (
         <CCard className="mb-3 border-success">
 
@@ -437,7 +438,7 @@ return
                             <CRow>
                                 <CCol lg={6} md={6} sm={12}>
                                     <CFormSelect
-                                       className={CountryCode.trim()===''&&personalDetailDenger?"mb-1 bg-light-warning":"mb-1"}
+                                       className={CountryCode?.trim()===''&&personalDetailDenger?"mb-1 bg-light-warning":"mb-1"}
                                         aria-label="Select Currency"
                                         label="Country Code"
                                         value={CountryCode}

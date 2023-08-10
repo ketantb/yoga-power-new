@@ -5,14 +5,23 @@ const useAdminValidation = (type) => {
 
     function getRouteFun(userInfo){
 
-        if(userInfo.isAdmin){
-         return 'all' 
-        }else if(type ==='Master' && !userInfo.isAdmin){
-         return userInfo.isAdminPatner?`filter-by-admin/${userInfo.emailUniqId}`
-            :`filter-by-admin/${userInfo.createrId}`
-        }else if(!userInfo.isAdmin){
-        return userInfo.isAdminPatner?`filter-by-admin/${userInfo.emailUniqId}`
-        :`filter-by-employee/${(userInfo?.memBerId?userInfo.memBerId:userInfo.emailUniqId)}`
+        // if(userInfo.isAdmin){
+        //  return 'all' 
+        // }else if(type ==='Master' && !userInfo.isAdmin){
+        //  return userInfo.isAdminPatner?`filter-by-admin/${userInfo.emailUniqId}`
+        //     :`filter-by-admin/${userInfo.createrId}`
+        // }else if(!userInfo.isAdmin){
+        // return userInfo.isAdminPatner?`filter-by-admin/${userInfo.emailUniqId}`
+        // :`filter-by-employee/${(userInfo?.memBerId?userInfo.memBerId:userInfo.emailUniqId)}`
+        // }
+
+
+         if(type ==='Master'){
+            return (userInfo.isAdminPatner||userInfo.isAdmin)?`filter-by-admin/${userInfo.emailUniqId}`
+               :`filter-by-admin/${userInfo.createrId}`
+        }else{
+           return (userInfo.isAdminPatner||userInfo.isAdmin)?`filter-by-admin/${userInfo.emailUniqId}`
+           :`filter-by-employee/${(userInfo?.memBerId?userInfo.memBerId:userInfo.emailUniqId)}`
         }
 
     } 
