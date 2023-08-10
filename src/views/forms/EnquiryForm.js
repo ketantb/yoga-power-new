@@ -93,6 +93,8 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const username = user.user.username;
+    const eamailUniqId = user.user.emailUniqId;
+
     const centerCode = user.user.centerCode;
     
 
@@ -113,17 +115,17 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
       const response3 = axios.get(`${url}/leadSourceMaster/${pathValMaster}`,headers)
       const response4 = axios.get(`${url1}/packageMaster/${pathValMaster}`,headers)
       const response5 = axios.get(`${url1}/enquiryForm/${pathVal}`,headers)
-      const response6 = axios.get(`${url}/signup/center-patner`,headers)
+      const response6 = axios.get(`${url}/signup/center`,headers)
 
       const allData = await Promise.all([response1,response2,response3,response4,response5,response6])
-      const centerData = allData[5].data.filter((el)=>el.status)
+      const centerData = allData[5].data.filter((el)=>el.status && el._id===uniqObj.partnerAdminMongoId)
       setStaff(allData[0].data)
       setClientData(allData[1].data)
       setLeadArr(allData[2].data.filter((el)=>el.Status))
       setResult(allData[3].data)
       setResult1(allData[4].data)
-      setCenterPartnerData(isAdmin?centerData:centerData.filter((el)=>el._id===uniqObj.partnerAdminMongoId))
-      setCenterName(centerData.find((el)=>el._id===uniqObj.partnerAdminMongoId)._id)
+      setCenterPartnerData(isAdmin?allData[5].data:centerData)
+      setCenterName((isAdmin?allData[5].data:centerData).find((el)=>el._id===uniqObj.partnerAdminMongoId)._id)
       setCounseller(allData[0].data.find((el)=>el._id===uniqObj.employeeMongoId)._id)
       setStaffName(allData[0].data.find((el)=>el._id===uniqObj.employeeMongoId)._id)
     }catch(error){

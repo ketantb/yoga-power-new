@@ -47,13 +47,13 @@ const EmpRecruitment = () => {
     const isAdmin = useSelector((el)=>el.isAdmin) 
 
 
-    const recruitmentImportExport =  access.includes(hrManagement.recruitmentImportExport)
-    const recruitmentEdit =  access.includes(hrManagement.recruitmentEdit)
-    const recruitmentDelete  =  access.includes(hrManagement.recruitmentDelete)
+    const recruitmentImportExport =  (access.includes(hrManagement.recruitmentImportExport)||isAdmin)
+    const recruitmentEdit =  (access.includes(hrManagement.recruitmentEdit)||isAdmin)
+    const recruitmentDelete  =  (access.includes(hrManagement.recruitmentDelete)||isAdmin)
 
-    const recruitmentResume  =  access.includes(hrManagement.recruitmentResume)
-    const recruitmentStatus  =  access.includes(hrManagement.recruitmentStatus)
-    const recruitmentAction  =  access.includes(hrManagement.recruitmentAction)
+    const recruitmentResume  =  (access.includes(hrManagement.recruitmentResume)||isAdmin)
+    const recruitmentStatus  =  (access.includes(hrManagement.recruitmentStatus)||isAdmin)
+    const recruitmentAction  =  (access.includes(hrManagement.recruitmentAction)||isAdmin)
 
 
 
