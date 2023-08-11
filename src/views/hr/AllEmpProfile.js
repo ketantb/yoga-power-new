@@ -52,12 +52,12 @@ const AllEmpProfile = () => {
                                          
     
 
-   const  allImpProfileImportExport = access.includes(hrManagement.allImpProfileImportExport)
-   const  allImpProfileView = access.includes(hrManagement.allImpProfileView)
-   const  allImpProfileStatus = access.includes(hrManagement.allImpProfileStatus)
-   const  allImpProfileAction =  access.includes(hrManagement.allImpProfileAction)
-   const  allImpProfileEdit =  access.includes(hrManagement.allImpProfileEdit)
-   const  allImpProfileDelete = access.includes(hrManagement.allImpProfileDelete)
+   const  allImpProfileImportExport = (access.includes(hrManagement.allImpProfileImportExport)||isAdmin)
+   const  allImpProfileView = (access.includes(hrManagement.allImpProfileView)||isAdmin)
+   const  allImpProfileStatus = (access.includes(hrManagement.allImpProfileStatus)||isAdmin)
+   const  allImpProfileAction =  (access.includes(hrManagement.allImpProfileAction)||isAdmin)
+   const  allImpProfileEdit =  (access.includes(hrManagement.allImpProfileEdit)||isAdmin)
+   const  allImpProfileDelete = (access.includes(hrManagement.allImpProfileDelete)||isAdmin)
 
 
 
