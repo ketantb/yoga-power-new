@@ -12,26 +12,13 @@ import {
     CFormSwitch,
     CFormTextarea,
     CImage,
-    CInputGroup,
-    CInputGroupText,
     CListGroup,
     CListGroupItem,
-    CModal,
-    CModalBody,
-    CModalFooter,
-    CModalHeader,
-    CModalTitle,
     CNav,
     CNavItem,
     CNavLink,
     CRow,
     CTabContent,
-    CTable,
-    CTableBody,
-    CTableDataCell,
-    CTableHead,
-    CTableHeaderCell,
-    CTableRow,
     CTabPane,
 } from "@coreui/react";
 import React, { useEffect, useRef, useState } from "react";
@@ -103,7 +90,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
     const [BoneFracture, setBoneFracture] = useState(false)
     const [CarpalTunnel, setCarpalTunnel] = useState(false)
     const [Diabetes, setDiabetes] = useState(false)
-    const [DigestiveDisorder, setDigestiveDisorder] = useState(false)
     const [Epilepsy, setEpilepsy] = useState(false)
     const [FootPain, setFootPain] = useState(false)
     const [Glaucoma, setGlaucoma] = useState(false)
@@ -121,32 +107,13 @@ const ProfileDetails = ({ ids, deleteId }) => {
     const [comments, setcomments] = useState('')
     const url1 = useSelector((el)=>el.domainOfApi) 
 
-    console.log(ids)
-
-
-
-    var currentdate = new Date();
-    var datetime = currentdate.getDay() + "/" + currentdate.getMonth()
-        + "/" + currentdate.getFullYear();
-    const navigate = useNavigate()
+  
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
-    const centerCode = user.user.centerCode;
-    const [result, setResult] = useState([]);
-    const [result1, setResult1] = useState([]);
-    const [visi, setVisi] = useState(false);
-    const [mem, setMem] = useState([]);
-    const [packageArr, setPackageArr] = useState([]);
+   
+
     useEffect(() => {
         getDetails(ids)
-        getStaff()
-        getBatch()
-        getMem()
-        getSubService()
-        getLeadSource()
-        getPackage()
-        getImage()
     }, [])
   
     function getDetails(id) {
@@ -157,13 +124,14 @@ const ProfileDetails = ({ ids, deleteId }) => {
         axios.get(`${url1}/memberForm/${id}`, { headers },
         )
             .then(({data}) => {
+                console.log(data)
                 setFullname(data?.Fullname)
                 setEmail(data?.Email)
                 setCountryCode(data?.CountryCode)
                 setContactNumber(data?.ContactNumber)
                 setWhatsappNumber(data?.WhatsappNumber)
-                setDateofBirth(moment(data?.DateofBirth).format('YYYY-MM-DD'))
-                setAnniversarydate(data?.Anniversarydate)
+                setDateofBirth((data?.DateofBirth?moment(data?.DateofBirth).format('YYYY-MM-DD'):''))
+                setAnniversarydate((data?.Anniversarydate?moment(data?.Anniversarydate).format('YYYY-MM-DD'):'') )
                 setGender(data?.Gender)
                 setAddress(data?.Address)
                 setArea(data?.Area)
@@ -177,13 +145,13 @@ const ProfileDetails = ({ ids, deleteId }) => {
                 setpushnotification(data?.pushnotification)
                 setName(data?.Name)
                 setRelationship(data?.Relationship)
-                setCountryCode1(data?.CountryCode1)
+                setCountryCode1(""+data?.CountryCode1)
                 setContactNumber1(data?.ContactNumber1)
                 setserviceName(data?.serviceName)
-                setserviceVariation(data?.package)
+                setserviceVariation(data?.serviceVaration)
                 setCustomertype(data?.Customertype)
                 setEnquiryType(data?.EnquiryType)
-                setMemberManager(data?.AssignStaff)
+                setMemberManager(data?.MemberManager)
                 setBatch(data?.Batch)
                 setGeneralTrainer(data?.GeneralTrainer)
                 setAttendanceID(data?.AttendanceID)
@@ -209,40 +177,8 @@ const ProfileDetails = ({ ids, deleteId }) => {
                 setidealWeight(data?.idealWeight)
                 setsuggestion(data?.suggestion)
                 setcomments(data?.comments)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
-    function getPackage() {
-        axios.get(`${url1}/Package/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setPackageArr(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
-    function getImage() {
-        listAll(imagesListRef).then((response) => {
-        })
-    }
-
-    const [leadArr, setLeadArr] = useState([]);
-    function getLeadSource() {
-        axios.get(`${url1}/leadSourceMaster/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setLeadArr(res.data)
+                setImageUrl(data?.image)         
+                setAssignStaff(data?.AssignStaff)      
             })
             .catch((error) => {
                 console.error(error)
@@ -250,141 +186,15 @@ const ProfileDetails = ({ ids, deleteId }) => {
     }
 
 
-    const [staff, setStaff] = useState([])
-    function getStaff() {
-        axios.get(`${url1}/employeeform`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setStaff(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
-    function getSubService() {
-        axios.get(`${url1}/subservice/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setResult1(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-    function getMem() {
-        axios.get(`${url1}/memberForm/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setMem(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-    function getBatch() {
-        axios.get(`${url1}/Batch/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setResult(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
-    console.log(ids)
-
-    function updateClientInfo(){
-        let editdata = {
-            username: username,
-            image: imageUrl,
-            Fullname, CountryCode, ContactNumber,
-            WhatsappNumber, Email, Gender, DateofBirth, 
-            Anniversarydate, Address, Area, city, pincode, state, BloodGroup,
-            FacebookID, sms, mail, pushnotification,
-            Name, CountryCode1, ContactNumber1, Relationship,
-            serviceName, serviceVaration, Customertype, EnquiryType,
-            AssignStaff, MemberManager, Batch, GeneralTrainer, AttendanceID,
-            CenterID, LockerKeyNo, PAN,
-            BackPain, BoneFracture, CarpalTunnel, AsthmaCOPD, DigestiveDisorder,
-            Diabetes, Epilepsy, FootPain, Glaucoma, HeartDiseaseCondition, HerniaDiastasisRecti,
-            HighBloodPressure, Other: OtherText, Weight, Height, fitnessLevel,
-            fitnessGoal, idealWeight, suggestion, comments, status: 'active',
-            ClientId:`${centerCode}MEM${10+mem.length}`,
-            package:serviceVaration
-        }
-    
-     const headers = {
-            'Authorization': `Bearer ${token}`,
-            'My-Custom-Header': 'foobar'
-    };
-        axios.post(`${url1}/memberForm/update/${ids}`, editdata, { headers },
-        ).then((resp) => {
-                console.log(resp.data)
-                alert("successfully submitted Updated")
-    }).catch((error) => {
-                console.error(error)
-    })
-     } 
-
-   
 
 
-  
 
-    const imgRef = useRef(null)
-    const handleImage = (e) => {
-        setImage(e.target.files[0])
-        const file = e.target.files[0]
-        if (!file.type.startsWith('image/')) return;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            imgRef.current.src = e.target.result
-        }
-        reader.readAsDataURL(file)
-    }
-
-
-    const imagesListRef = ref(storage, "images/");
-    const UploadImage = () => {
-        if (image == null) return;
-        const imageRef = ref(storage, `images/${image.name + v4()}`)
-        console.log(imageRef.fullPath);
-        setImageUrl(imageRef.fullPath)
-
-        uploadBytes(imageRef, image).then(() => {
-            alert('image uploaded')
-        })
-    }
-    console.log(imageUrl);
     return (
         <>
             <div className='d-flex justify-content-between mb-2'>
                 <div className='mt-2 ms-2'>
                     <CCardTitle>Profile </CCardTitle>
-                </div>
-                <div className='justify-content-around'>
-                    <CButton style={{ margin: '5px' }}>Inter branch transfer</CButton>
-                    <CButton style={{ margin: '5px' }}>Print Profile</CButton>
-                    <CButton style={{ margin: '5px' }}>New Invoice</CButton>
-                    <CButton style={{ margin: '5px' }}>New Call</CButton>
-                    <CButton style={{ margin: '5px' }}>New Appointment</CButton>
-                </div>
-
+                </div>       
             </div>
             <CCard className="mb-3 border-success">
                 <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
@@ -420,18 +230,14 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                         <CCardTitle>Personal Details </CCardTitle>
                                         <CRow>
                                             <CCol xs={4} className='mt-2 mb-1' >
-                                                <CImage ref={imgRef} className="mb-1" style={{ borderRadius: "50px" }} width={'160px'} src={ProfileIcon} />
+                                                <CImage className="mb-1" 
+                                                style={{ borderRadius: "50px" }} width={'160px'} src={imageUrl?.trim()?imageUrl?.trim():
+                                                    ProfileIcon
+                                                } />
                                             </CCol>
                                             <CCol xs={7} className='mt-3'>
 
-                                                <CFormInput
-                                                    className="mb-1 mr-3"
-                                                    type="file"
-                                                    onChange={handleImage}
-                                                    accept="image/*"
-                                                />
-                                                <CButton onClick={UploadImage}>Upload Image</CButton>
-
+                                              
                                             </CCol>
                                             <CCol xs={6}>
                                                 <CFormInput
@@ -460,16 +266,13 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                         </CRow>
                                         <CRow>
                                             <CCol>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Currency"
                                                     label="Country Code"
                                                     value={CountryCode}
                                                     onChange={(e) => setCountryCode(e.target.value)}
-                                                >{CountryList.map((item, index) => (
-                                                    <option key={index} value={item.dial_code}>{item.name} {item.dial_code}</option>
-                                                ))}
-                                                </CFormSelect>
+                                                />
                                             </CCol>
                                             <CCol>
                                                 <CFormInput
@@ -520,18 +323,13 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                 />
                                             </CCol>
                                             <CCol>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Currency"
                                                     value={Gender}
                                                     onChange={(e) => setGender(e.target.value)}
                                                     label="Gender"
-                                                    options={[
-                                                        "Select Gender",
-                                                        { label: "Male", value: "Male" },
-                                                        { label: "Female", value: "Female" },
-                                                        { label: "Other", value: "Other" },
-                                                    ]}
+                                                    
                                                 />
                                             </CCol>
                                         </CRow>
@@ -543,7 +341,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                 value={Address}
                                                 onChange={(e) => setAddress(e.target.value)}
                                                 rows="2"
-                                                text="Must be 8-20 words long."
                                             ></CFormTextarea>
                                         </CCol>
                                         <CRow>
@@ -604,23 +401,12 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                 />
                                             </CCol>
                                             <CCol>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Blood Group"
                                                     value={BloodGroup}
                                                     onChange={(e) => setBloodGroup(e.target.value)}
                                                     label="Blood Group"
-                                                    options={[
-                                                        "Select Blood Group",
-                                                        { label: "A+", value: "A+" },
-                                                        { label: "A-", value: "A-" },
-                                                        { label: "B+", value: "B+" },
-                                                        { label: "B-", value: "B-" },
-                                                        { label: "O+", value: "O+" },
-                                                        { label: "O-", value: "O-" },
-                                                        { label: "AB+", value: "AB+" },
-                                                        { label: "AB-", value: "AB-" },
-                                                    ]}
                                                 />
                                             </CCol>
                                         </CRow>
@@ -671,15 +457,13 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             </CCol>
 
                                             <CCol xs={6}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Working Days"
                                                     value={CountryCode1}
                                                     onChange={(e) => setCountryCode1(e.target.value)}
                                                     label="Country Code"
-                                                >{CountryList.map((item, index) => (
-                                                    <option key={index} value={item.dial_code}>{item.name} {item.dial_code}</option>
-                                                ))}</CFormSelect>
+                                                />
                                             </CCol>
                                             <CCol xs={6}>
                                                 <CFormInput
@@ -696,163 +480,108 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                         <CRow>
                                             <CCardTitle>Lead Information</CCardTitle>
                                             <CCol xs={6}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Service Name"
                                                     value={serviceName}
                                                     onChange={(e) => setserviceName(e.target.value)}
                                                     label="Service Name"
-                                                >
-                                                    <option>Select Service</option>
-                                                    {result1.map((item, index) => (
-                                                        item.username === username && (
-                                                            item.status === true && (
-                                                                <option key={index}>{item.selected_service}</option>
-                                                            )
-                                                        )
-                                                    ))}</CFormSelect>
+                                                />
                                             </CCol>
                                             <CCol xs={6}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Service Name"
                                                     value={serviceVaration}
                                                     onChange={(e) => setserviceVariation(e.target.value)}
                                                     label="Service Variation"
-                                                >
-                                                    <option>Select Service</option>
-                                                    {result1.filter((list) => list.selected_service === serviceName).map((item, index) => (
-                                                        item.username === username && (
-                                                            item.status === true && (
-                                                                <option key={index}>{item.sub_Service_Name}</option>
-                                                            )
-                                                        )
-                                                    ))}</CFormSelect>
+                                                />
                                             </CCol>
 
                                             <CCol xs={6}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Customer type"
                                                     value={Customertype}
                                                     onChange={(e) => setCustomertype(e.target.value)}
                                                     label="Customer type"
-                                                    options={[
-                                                        "Select Customer type",
-                                                        { label: "Self", value: "Self" },
-                                                        { label: "Group", value: "Group" },
-                                                        { label: "Couple", value: "Couple" },
-                                                        { label: "Youth", value: "Touth" },
-                                                        { label: "Kids", value: "Kids" },
-                                                    ]}
                                                 />
                                             </CCol>
                                             <CCol xs={6}>
 
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Assign Staff"
                                                     value={EnquiryType}
                                                     onChange={(e) => setEnquiryType(e.target.value)}
                                                     label="Enquiry Type"
 
-                                                >
-                                                    <option>Select Enquiry Type</option>
-                                                    {leadArr.filter((list) => list.username === username).map((item, index) => (
-                                                        item.username === username && (
-                                                            <option key={index}>{item.LeadSource}</option>
-                                                        )
-                                                    ))}</CFormSelect>
+                                                />
                                             </CCol>
                                         </CRow>
 
                                         <CRow>
                                             <CCardTitle>Member Manager</CCardTitle>
                                             <CCol xs={6}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Assign Staff"
                                                     value={AssignStaff}
                                                     onChange={(e) => setAssignStaff(e.target.value)}
                                                     label="Assign Staff"
-                                                >
-                                                    <option>Select Assign Staff</option>
-                                                    {staff.filter((list) => list.username === username && list.Department === 'Sales').map((item, index) => (
-                                                        <option key={index}>{item.FullName}</option>
-                                                    ))}
-                                                </CFormSelect>
+                                                />
+                                                   
                                             </CCol>
                                             <CCol xs={6}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
-                                                    aria-label="Select Member Manager"
+                                                    aria-label="Counselor"
                                                     value={MemberManager}
                                                     onChange={(e) => setMemberManager(e.target.value)}
-                                                    label="Member Manager"
-                                                    options={[
-                                                        "Select Member Manager",
-                                                        { label: "prabha", value: "prabha" },
-                                                        { label: "sejal", value: "sejal" },
-                                                        { label: "sonali", value: "sonali" },
-                                                        { label: "None", value: "None" },
-                                                    ]}
+                                                    label="Member Manager"   
                                                 />
                                             </CCol>
                                             <CCol xs={6}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Batch"
                                                     value={Batch}
                                                     onChange={(e) => setBatch(e.target.value)}
                                                     label="Batch"
-                                                ><option>Select Batch</option>
-                                                    {result.map((item, index) => (
-                                                        item.username === username && (
-                                                            <option key={index} value={item.batch_timing}>{item.batch_timing} {item.Batch_Duration}</option>
-                                                        )
-                                                    ))}</CFormSelect>
+                                                />
                                             </CCol>
                                             <CCol xs={6}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select General Trainer"
                                                     value={GeneralTrainer}
                                                     onChange={(e) => setGeneralTrainer(e.target.value)}
                                                     label="General Trainer"
-                                                    options={[
-                                                        "Select General Trainer",
-                                                        { label: "None", value: "None" },
-                                                    ]}
                                                 />
                                             </CCol>
                                         </CRow>
                                         <CRow>
                                             <CCardTitle>IDs</CCardTitle>
                                             <CCol xs={6}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     type="text"
                                                     id="exampleFormControlInput1"
                                                     value={AttendanceID}
                                                     onChange={(e) => setAttendanceID(e.target.value)}
                                                     label="Attendance ID"
-                                                >
-                                                    <option>Select Attendance ID</option>
-                                                    <option>CLIENT{mem.length + 1}</option>
-                                                </CFormSelect>
+                                                />
+                                                 
                                             </CCol>
                                             <CCol xs={6}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     type="text"
                                                     id="exampleFormControlInput1"
                                                     value={CenterID}
                                                     onChange={(e) => setCenterID(e.target.value)}
-                                                    label="Center ID">
-                                                    <option>Select Center ID</option>
-                                                    <option>{username}</option>
-                                                </CFormSelect>
-                                            </CCol>
+                                                    label="Center ID"/>
+                                                                                              </CCol>
                                             <CCol xs={6}>
                                                 <CFormInput
                                                     className="mb-1"
@@ -969,7 +698,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                         </CCol>
                                     )}
                                 </CRow>
-                                <CButton className='mt-2' onClick={() => saveMember()}>Next</CButton>
                             </CForm>
                         </CTabPane>
 
@@ -1001,35 +729,22 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                     <CCardTitle>Fitness Goals</CCardTitle>
 
                                     <CCol xs={6}>
-                                        <CFormSelect
+                                        <CFormInput
                                             className="mb-1"
                                             aria-label="Select Currency"
                                             value={fitnessLevel}
                                             onChange={(e) => setfitnessLevel(e.target.value)}
                                             label="Fitness Level"
-                                            options={[
-                                                "Select Fitness Level",
-                                                { label: "New", value: "1" },
-                                                { label: "Beginner", value: "2" },
-                                                { label: "Intermediate", value: "3" },
-                                                { label: "Advance", value: "4" },
-                                            ]}
+                                            
                                         />
                                     </CCol>
                                     <CCol xs={3}>
-                                        <CFormSelect
+                                        <CFormInput
                                             className="mb-1"
                                             value={fitnessGoal}
                                             onChange={(e) => setfitnessGoal(e.target.value)}
                                             aria-label="Select Currency"
                                             label="Fitness Goal"
-                                            options={[
-                                                "Select Fitness Goal",
-                                                { label: "Weight loss", value: "Weight loss" },
-                                                { label: "Inch loss", value: "Inch loss" },
-                                                { label: "Fitness", value: "Fitness" },
-                                                { label: "Staminess", value: "Staminess" },
-                                            ]}
                                         />
                                     </CCol>
                                     <CCol xs={3}>
@@ -1065,8 +780,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                         ></CFormTextarea>
                                     </CCol>
                                 </CRow>
-
-                                <CButton className='mt-2' onClick={() =>  updateClientInfo()}>Save</CButton>
                             </CForm>
                         </CTabPane>
 

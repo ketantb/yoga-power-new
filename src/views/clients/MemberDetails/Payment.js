@@ -34,11 +34,8 @@ const Payment = ({ id }) => {
 
   async  function getDetails() {
   
-  const {data} = await axios.get(`${url1}/Invoice/all`,{headers})    
-    console.log(data)
-    setInvoiceData(data?.filter((el)=>el.MemberId===id))
-  
-
+const {data} = await axios.get(`${url1}/invoice/invoiceGet/${id}`,{headers})    
+  setInvoiceData(data)
  }
 
 

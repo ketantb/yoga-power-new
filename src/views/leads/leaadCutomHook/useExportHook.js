@@ -10,7 +10,6 @@ return      function downloadAsExcel(data){
        return {
        ['Sr No']:i+1,
        ["Date"]:moment(el.createdAt).format("DD-MM-YYYY"),
-       ["Time"]: moment(el.createdAt, "HH:mm").format("hh:mm A") ,
        ['Name']:el.Fullname,
        ["Mobile"]: el.ContactNumber ,
        ["Service"]: el.ServiceName ,
@@ -26,7 +25,7 @@ return      function downloadAsExcel(data){
        ['Center Name']:el.centerNameC,
        ['City']:el.city,
        ['Profession']:el.Profession,
-       ['DateofBirth']:el.DateofBirth,
+       ['DateofBirth']:moment(el.DateofBirth).format("DD-MM-YYYY"),
    } })   
    
        const worksheet = XLSX.utils.json_to_sheet(data1);

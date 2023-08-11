@@ -10,7 +10,8 @@ const ServiceProfile = ({ id }) => {
 
     const [result, setResult] = useState([])
     const [allInvoiceData,setAllInvoiceData] = useState([])
-    const [active,setActive] = useState(false)
+    const [invoiceData,setInvoiceData] = useState({})
+    const [slectedInvoiceData,setSelectedInvoiceData] = useState()
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
@@ -20,40 +21,27 @@ const ServiceProfile = ({ id }) => {
         getDetails(id)
     }, [])
 
-function getDetails(id) {
+async function getDetails(id) {
+
+   try{
         const headers = {
             'Authorization': `Bearer ${token}`,
-            'My-Custom-Header': 'foobar'
         };
 
- const data2 = axios.get(`${url1}/memberForm/${id}`, {
-   headers
-})
-  
-    data2.then(({data,status}) => {
-        if(status!==200){
+        const response = axios.get(`${url1}/memberForm/${id}`, {headers})
+        const response1 = axios.get(`${url1}/invoice/invoiceGet/${id}`, {headers})
+
+        const allData = await Promise.all([response,response1])
+
+        if(allData[0].status!==200 || allData[1].status!==200){
             return
         }       
-        setResult(data)  
-        getInvoiceData(data)
-            })
-    .catch((error) => {
-    console.error(error)
-    })
+        setResult(allData[0].data)  
+        setAllInvoiceData(allData[1].data)
+        setSelectedInvoiceData(allData[1].data[0]?._id)
+}catch(error){
+
 }
-
-function getInvoiceData(data){
-    if(!data.invoiceId){
-     return 
-    }
-    const headers = {
-        'Authorization': `Bearer ${token}`,
-        'My-Custom-Header': 'foobar'
-    };
-    axios.get(`${url1}/invoice/${data.invoiceId}`, { headers }).then(({data})=>{
-        setAllInvoiceData(data)
-     })
-
 
 }
 
@@ -67,8 +55,9 @@ const getDate = (date,val) => {
 
 }
 
-
-console.log(allInvoiceData,result,"game on")
+useEffect(()=>{
+    setInvoiceData(allInvoiceData.find((el)=>el._id===slectedInvoiceData))
+},[slectedInvoiceData])
 
 
 
@@ -84,13 +73,13 @@ console.log(allInvoiceData,result,"game on")
             </CCol>
              
             <CCol xs={3} lg={3} sm={3}>
-                <CImage className="mb-1" style={{ borderRadius: "20px" }} width={'200px'} src={ProfileIcon} />
+                <CImage className="mb-1" style={{ borderRadius: "20px" }} width={'200px'} src={result?.image?.trim()?result?.image?.trim():ProfileIcon} />
             </CCol>
              
             <CCol xs={3} lg={3} sm={3}>
                       <p >Member Id:- {result?.ClientId}</p>
                       <p>Attendance ID : {result?.AttendanceID}</p>
-                      <p>Service: {allInvoiceData?.ServiceName} </p>
+                      <p>Service: {invoiceData?.ServiceName} </p>
                       <p>Total Loyalty Points</p>
                       <CButton size='sm'>Add/View Loyalty Points</CButton>
 
@@ -106,33 +95,30 @@ console.log(allInvoiceData,result,"game on")
                      
             <CCol xs={3} lg={3} sm={3}>
         
-                     <p>{result?.status}</p>
-                     <p>{ getDate(allInvoiceData?.startDate,true)}</p>
-                     <p> Rs {allInvoiceData?.amount}</p>
+                     <p>{invoiceData?.status}</p>
+                     <p>{ getDate(invoiceData?.startDate,true)}</p>
+                     <p> Rs {invoiceData?.amount}</p>
                      <p>Referrals Value(0)</p>
                      <p>Shop Value: 0</p>
 
             </CCol>
         
             <CCol xs={12} className='mt-4'>
-                <CRow >
-                    <CCol xs={2}>
-                        <CButton className='ml-1' size='sm' color='dark'  >Resync To Device</CButton></CCol>
-                    <CCol xs={2}>
-                        <CButton className='ml-1'  size='sm' color='dark' >Delete Member</CButton></CCol>
+                <CRow >                    
                     <CCol xs={2}>
                         <CFormSelect 
                             aria-label="Select Currency"
                             size='sm'
+                            value={setAllInvoiceData}
+                            onChange={(e)=>setSelectedInvoiceData(e.target.value)}
                         >
-                            <option>Select</option>
+                            <option value=''>Select Service </option>
+                            {allInvoiceData.map((el)=>{
+                                return <option value={el._id}>{el.ServiceName}</option>
+                            })}
                         </CFormSelect>
                         
                         </CCol>
-                    <CCol xs={2}>
-                        <CButton className='ml-1' color='dark'  size='sm'>Add Fingerprint</CButton>
-                    </CCol>
-
                 </CRow>
             </CCol>
             <CCol  className='mt-4'>
@@ -162,19 +148,15 @@ console.log(allInvoiceData,result,"game on")
                 <CCard style={{ padding: '15px' }} className='mt-2'>
                     <CRow>
                          <CCol className='d-flex '>
-
-                        <CCol>
-                            <b>Service Id</b> : <br/> 2068115
-                        </CCol>
                         <CCol>
                             <b>Service Name</b> :<br/>
-                            {allInvoiceData?.ServiceName}
+                            {invoiceData?.ServiceName}
                         </CCol>
                         <CCol>
-                            <b>Duration:</b><br/> {allInvoiceData?.duration}
+                            <b>Duration:</b><br/> {invoiceData?.duration}
                         </CCol>
                         <CCol>
-                             <b>Packages:</b> <br/>{allInvoiceData?.PackageName}
+                             <b>Packages:</b> <br/>{invoiceData?.PackageName}
                         </CCol>
                         </CCol>
 
@@ -184,17 +166,17 @@ console.log(allInvoiceData,result,"game on")
                              <b>TOTAL DAYS</b> <br/>
 
                              {
-                            Math.ceil(new Date(allInvoiceData?.endDate) -new Date(allInvoiceData?.startDate))/(1000*60*60*24) 
+                            Math.ceil(new Date(invoiceData?.endDate) -new Date(invoiceData?.startDate))/(1000*60*60*24) 
                              } days
                         </CCol>
                         <CCol>
-                              <b>START DATE</b> <br/>{getDate(allInvoiceData?.startDate,true)}
+                              <b>START DATE</b> <br/>{getDate(invoiceData?.startDate,true)}
                         </CCol>
                         <CCol>
-                              <b>EXPIRY DATE</b> <br/>{getDate(allInvoiceData?.endDate,true)}
+                              <b>EXPIRY DATE</b> <br/>{getDate(invoiceData?.endDate,true)}
                         </CCol>
                         <CCol>
-                              <b>Status </b><br/>{result?.status}
+                              <b>Status </b><br/>{invoiceData?.status}
                         </CCol>  
                         </CCol>    
   

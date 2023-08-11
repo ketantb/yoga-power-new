@@ -177,7 +177,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
         if(ids){
             getDetails(ids)
         }
-    }, [])
+    }, [ids._id])
 
    
     function getDetails(data) {
@@ -235,6 +235,8 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
         const packageMaster = allData[3]?.data
         const memberFormData = allData[4]?.data
         const batchesData = allData[5]?.data
+
+        console.log(batchesData)
 
         setLeadArr(leadSourseData)
         setPackageArr(packageData)
@@ -1003,8 +1005,13 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                     >
                                                      
                                                  <option>Type of Class</option>     
-                                                     {batchesData.filter((el)=>
-                                                     el.service_variation?.trim()?.toLocaleLowerCase()===serviceName?.trim()?.toLocaleLowerCase()
+                                                     {batchesData.filter((el)=>{
+                                                        if(serviceName?.trim()){
+                                                            return    el.service_variation?.trim()?.toLowerCase()===
+                                                            serviceName?.trim()?.toLowerCase()
+                                                        }
+                                                        return true
+                                                     }
                                                      )
                                                      .map((el)=>el.category).filter((el,i,arr)=>
                                                      i===arr.indexOf(el) 
@@ -1056,7 +1063,6 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                                     >
                                                    <option>Select Trainer</option>     
                                                      {batchesData.filter((el)=>el.batch_timing === Batch).map((el)=>{
-                                                          console.log(el)   
                                                  return  <option> {el.trainer_name} </option>                           
                                                      })}      
 

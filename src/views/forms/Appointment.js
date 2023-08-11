@@ -64,13 +64,9 @@ const Appointment = () => {
     const [pagination, setPagination] = useState(10)
 
 
-
-
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const username = user.user.username;
-
-
 
 
 
@@ -107,7 +103,6 @@ const Appointment = () => {
         })
             .then((res) => {
                 setStaff(res.data)
-                console.log(res.data);
             })
             .catch((error) => {
                 console.error(error)

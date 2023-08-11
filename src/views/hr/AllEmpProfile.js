@@ -99,7 +99,6 @@ const AllEmpProfile = () => {
      }
      const HandaleExportChange = (event)=>{
       const importXlFile = event.target.files[0];
-      // console.log("Export",importXlFile)
      }
   
 

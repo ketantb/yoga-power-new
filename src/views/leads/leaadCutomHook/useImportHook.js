@@ -34,7 +34,7 @@ return function insertManyCollection(collection,getData=()=>{},number){
         ['Counseller']:el['Counseller'],
         ['Address']:el['Address'],
         ['Emailaddress']:el['Email'],
-        ['Gander']:el['Gander'],
+        ['Gender']:el['Gander'],
         ['centerCodeC']:el['Center Code'],
         ['centerNameC']:el['Center Name'],
         ['city']:el['City'],
