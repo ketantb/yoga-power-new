@@ -482,9 +482,12 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
         )
             .then((resp) => {
                 setInvId(resp.data._id);
-              
-                let data1 = { invoiceId: resp.data._id, invoiceNum: resp.data.InvoiceNo, startDate,duration:ser2,
-                   endDate,plan: true,EmployeeId:selectedStaff?._id,
+                let data1 = { 
+                   invoiceId: resp.data._id, 
+                   invoiceNum: resp.data.InvoiceNo, 
+                   startDate,duration:ser2,
+                   endDate,plan: true,
+                   EmployeeId:selectedStaff?._id,
                 }
 
 

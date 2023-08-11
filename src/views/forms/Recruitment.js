@@ -128,10 +128,24 @@ useEffect(()=>{
                 body: JSON.stringify({...valdationObj,...data})
             }).then((resp) => {
                 resp.json().then(() => {
+                    setImageUrl(null)
+                    setFullname('')
+                    setAge('')
+                    setContactNumber('')
+                    setDesignation('')
+                    setEmail('')
+                    setGender('')
+                    setResumeUrl('')
+                    setDepartment('')
+                    setAddress('')
+                    setArea('')
+                    setCity('')
+                    setPincode('')
+                    setSalary('')
+                    setSource('')
+                    setgrade('')
+                    setComment('')
                     alert("successfully submitted")
-                    e?.preventDefault();
-                    console.log("refresh prevented");
-                    navigate('/forms/staff-form')
                 })
             })
         } else {
@@ -211,9 +225,6 @@ useEffect(()=>{
       const HandaleResumeInputClick  = () =>{
          resumeInput.current.click()
     }
-
-   console.log(resumeUrl)
-   console.log(imageUrl)
 
 
 

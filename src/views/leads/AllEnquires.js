@@ -414,7 +414,8 @@ const AllEnquires = () => {
     
 
     function getProspect(id) {
-        axios.get(`${ url }/enquiryForm/${ id }`, {
+        axios.get(`${ url }/enquiryForm/${ id }`,
+         {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }

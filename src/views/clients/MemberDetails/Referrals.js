@@ -31,15 +31,12 @@ const url2 = 'https://yog-seven.vercel.app'
 import { useSelector } from "react-redux";
 
 const Referrals = ({ id }) => {
-    const [action, setAction] = useState(false)
-    const [Title, setTitle] = useState('')
-    const [Policy, setPolicy] = useState('')
+
     const url = useSelector((el)=>el.domainOfApi) 
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
     const [result1, setResult1] = useState([]);
     const [paging, setPaging] = useState(0);
     const headers = {
@@ -57,8 +54,7 @@ const Referrals = ({ id }) => {
             }
         })
             .then((res) => {
-                setResult1([res.data].filter((el)=>el?.ClientReferenceName))
-            
+                setResult1(res.data)          
             })
             .catch((error) => {
                 console.error(error)
@@ -91,15 +87,14 @@ const Referrals = ({ id }) => {
                     </CTableHead>
                     <CTableBody>
 
-                        {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
+                        {result1.map((item, index) => (
                                 <CTableRow key={index}>
-                                    <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
+                                    <CTableDataCell>{index + 1 }</CTableDataCell>
                                     <CTableDataCell>{item.ClientReferenceName}</CTableDataCell>
                                     <CTableDataCell>{item.Fullname}</CTableDataCell>
                                     <CTableDataCell> {item.ContactNumber} </CTableDataCell>
                                     <CTableDataCell> {item.serviceName} </CTableDataCell>
                                 </CTableRow>
-
                             ))}
                     </CTableBody>
                 </CTable>

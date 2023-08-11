@@ -2,6 +2,7 @@ import { CButton, CCard, CCardBody, CCardHeader, CCardTitle, CCol, CForm, CFormI
 import { async } from '@firebase/util'
 import axios from 'axios'
 import { ref, uploadBytes } from 'firebase/storage'
+import {nanoid} from 'nanoid'
 import React, { useEffect, useRef, useState } from 'react'
 // import { useNavigate } from 'react-router-dom'
 // import ProfileIcon from 'src/assets/images/avatars/profile_icon.png'
@@ -14,8 +15,7 @@ const token = user.token;
 const username = user.user.username;
 const centerCode = user.user.centerCode;
 
-const EmployeeForm = ({showEmpRecrumentFormFun,token,userdata,data,AttendenceLength}) => {
-    console.log(AttendenceLength)
+const EmployeeForm = ({showEmpRecrumentFormFun,token,userdata,data,AttendenceLength,getStaff}) => {
     const url = useSelector((el)=>el.domainOfApi) 
 
 
@@ -32,10 +32,17 @@ const EmployeeForm = ({showEmpRecrumentFormFun,token,userdata,data,AttendenceLen
     const [validation ,setFormValidation] = useState(true)
 
 
-
     
 
-var bodyElement = document.body
+useEffect(()=>{
+
+const id = nanoid().split("_").join("");
+let attendanceId = "AID" + id.slice(id.length-6, id.length).toUpperCase();
+let employeeId = "EID" + id.slice(id.length-6, id.length).toUpperCase();
+
+setAttendanceID(attendanceId)
+setEmployeeID(employeeId)
+},[])
 
 const  formRenderParentObjeact = {  
         background:'rgb(0,0,0,0.1)',
@@ -97,12 +104,13 @@ fetch(`${url}/employeeForm/update/${userdata._id}`, {
         body: JSON.stringify(obj)
     }).then((res)=>{
      console.log(res)
+     getStaff()
+     showEmpRecrumentFormFun()
     })
 }
 
 sendDatawithSlectedData()
 setFormValidation(true)
-showEmpRecrumentFormFun()
  }else{
      setFormValidation(false)
  }    
@@ -189,7 +197,7 @@ return<CCard style={formRenderParentObjeact} className='Parent' onClick={toggale
 
                                           
                                          <CCol xs={6}>
-                                             <CFormSelect
+                                             <CFormInput
                                                  className="mb-1"
                                                  type="text"
                                                  id="exampleFormControlInput1"
@@ -197,14 +205,11 @@ return<CCard style={formRenderParentObjeact} className='Parent' onClick={toggale
                                                  onChange={(e) => setEmployeeID(e.target.value)}
                                                  label="Employee ID"
                                                  placeholder="Enter Employee ID"
-                                             >
-                                                 <option>Select Id</option>
-                                                 <option>{`${centerCode}E${+AttendenceLength +1}`}</option>
-                                             </CFormSelect>
+                                             />
 
                                          </CCol>
                                          <CCol xs={6}>
-                                             <CFormSelect
+                                             <CFormInput
                                                  className="mb-1"
                                                  type="text"
                                                  id="exampleFormControlInput1"
@@ -212,10 +217,8 @@ return<CCard style={formRenderParentObjeact} className='Parent' onClick={toggale
                                                  onChange={(e) => setAttendanceID(e.target.value)}
                                                  label="Attendance ID"
                                                  placeholder="Enter Attendance ID"
-                                             >
-                                                 <option>Select Id</option>
-                                                 <option>{`${centerCode}AIDE${+AttendenceLength +1}`}</option>
-                                             </CFormSelect>
+                                             />
+                                                
                                          </CCol>
                                          <CCol xs={6}>
                                             <CFormInput

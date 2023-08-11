@@ -177,7 +177,8 @@ const EmpRecruitment = () => {
                 { showEmpRecrument[0]&& 
 
                 <EmployeeForm
-                 AttendenceLength={staff.filter((list) => list.username === username && list.selected === 'Select').length} 
+                 AttendenceLength={staff.filter((list) => list.selected === 'Select').length} 
+                 getStaff={getStaff}
                  token={token} userdata={userdata} data={staff}
                  showEmpRecrumentFormFun={showEmpRecrumentFormFun}/>}
 
