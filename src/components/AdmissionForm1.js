@@ -144,7 +144,12 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
     const [subService,setService] = useState([])
     const [wantToGiveMony,setWantToGiveMony] = useState(false)
     const [batchesData,setBatches] = useState([])
-    const [clientReferance,setClientReferance] = useState('')
+    const [clientReferance,setClientReferance] = useState(
+        {
+            id:'',
+            name:''
+        }
+    )
     const [leadArr, setLeadArr] = useState([]);
     const [staff, setStaff] = useState([])
 
@@ -196,10 +201,12 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
         setCustomertype(data.Customertype)
         setEnquiryType(data.enquirytype)
         setMemberManager(data.Counseller)
-        setClientReferance(data?.ClientReferenceName)
         setDateofBirth(data?.DateofBirth?moment(data?.DateofBirth).utc().format('YYYY-MM-DD'):'')     
-        setImageUrl(data?.image)    
-
+        setImageUrl(data?.image)   
+        setClientReferance({
+            id:data?.ClientReferrenceId,
+            name:data?.ClientReferenceName,
+        })
     }
 
 
@@ -312,10 +319,10 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
             Diabetes, Epilepsy, FootPain, Glaucoma, HeartDiseaseCondition, HerniaDiastasisRecti,
             HighBloodPressure, Other: OtherText, Weight, Height, fitnessLevel,
             fitnessGoal, idealWeight, suggestion, comments, status: 'active'
-            ,ClientReferenceName:clientReferance,
+            ,ClientReferenceName:clientReferance.name,ClientReferrenceId:clientReferance.id,
             EnquiryId:ids._id,
             typeOFBatchClasses,...unikqValidateObj,
-            isAdmin:isAdmin,ClientId:`${centerCode}MEM${10+mem.length}`
+            isAdmin:isAdmin,ClientId:`${centerCode}MEM${10+mem.length}`            
         }
 
 

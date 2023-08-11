@@ -38,8 +38,6 @@ import { hrManagement } from './Rights/rightsValue/erpRightsValue';
 
 const EmployeeProfile = React.lazy(()=>import('./Hr-Employee-Details/Tables/EmployeeProfile'))
 
-const url2 = 'https://yog-seven.vercel.app'
-
 
 const AllEmpProfile = () => {
     const url = useSelector((el)=>el.domainOfApi) 

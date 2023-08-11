@@ -121,7 +121,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
     const [comments, setcomments] = useState('')
     const url1 = useSelector((el)=>el.domainOfApi) 
 
-
+    console.log(ids)
 
 
 
