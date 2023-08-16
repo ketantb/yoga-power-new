@@ -1013,7 +1013,7 @@ const TrialEnquires = () => {
                                     {(isAdmin||trailAdd)&&<CTableHeaderCell>Add</CTableHeaderCell>}
  
                                     {(isAdmin || trailEdit) && <CTableHeaderCell>Trial Status</CTableHeaderCell>}
-                                    <CTableHeaderCell>Discussion</CTableHeaderCell>
+                                    <CTableHeaderCell>Message</CTableHeaderCell>
 
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>
                                     <CTableHeaderCell>Counsellor</CTableHeaderCell>

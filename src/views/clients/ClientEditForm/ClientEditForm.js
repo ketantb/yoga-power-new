@@ -298,7 +298,6 @@ setImageUrl(data?.image)
         Diabetes, Epilepsy, FootPain, Glaucoma, HeartDiseaseCondition, HerniaDiastasisRecti,
         HighBloodPressure, Other: OtherText, Weight, Height, fitnessLevel,
         fitnessGoal, idealWeight, suggestion, comments, status: 'active',
-        ClientId:`${centerCode}MEM${10+mem.length}`,
         typeOFBatchClasses,
         package:serviceVaration
     }
@@ -844,17 +843,15 @@ setImageUrl(data?.image)
 
                                        
                                         <CCol xs={6}>
-                                                    <CFormSelect
+                                                    <CFormInput
                                                         className="mb-1"
                                                         type="text"
                                                         id="exampleFormControlInput1"
                                                         value={AttendanceID}
                                                         onChange={(e) => setAttendanceID(e.target.value)}
                                                         label="Attendance ID"
-                                                    >
-                                                        <option>Select Attendance ID</option>
-                                                        <option value={`CLA${mem.length+1}`}>CLA{mem.length + 1}</option>
-                                                    </CFormSelect>
+                                                    />
+
                                         </CCol>
                                         <CCol xs={6}>
                                             <CFormSelect

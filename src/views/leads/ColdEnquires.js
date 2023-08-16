@@ -979,7 +979,7 @@ const ColdEnquires = () => {
                                     <CTableHeaderCell>Source</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry stage</CTableHeaderCell>
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
-                                    <CTableHeaderCell>Discussion</CTableHeaderCell>
+                                    <CTableHeaderCell>Message</CTableHeaderCell>
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>
                                     <CTableHeaderCell>Counseller</CTableHeaderCell>
                                     {(isAdmin|| coldAdd)&&<CTableHeaderCell>Action</CTableHeaderCell>}

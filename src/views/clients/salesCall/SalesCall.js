@@ -65,7 +65,6 @@ const SalesCall = ({}) => {
     const [selectedYear,setSelectedYear] = useState('')
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    const username = user.user.username;
     const token = user.token;
 
 
@@ -87,6 +86,7 @@ const SalesCall = ({}) => {
         setRenevalsCallData(response2.data)
         setCrossCellCallsData(response3.data)
      }else{
+        console.log(response2.data)
         setUppgradeCallsData(response1.data.filter((el)=>el.Member_Id ===id))
         setRenevalsCallData(response2.data.filter((el)=>el.Member_Id  ===id))
         setCrossCellCallsData(response3.data.filter((el)=>el.Member_Id ===id))

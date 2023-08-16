@@ -43,6 +43,8 @@ import CallUpdate from 'src/components/CallUpdate'
 import ClientEditForm from './ClientEditForm/ClientEditForm'
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 import { clientManagementRights } from '../hr/Rights/rightsValue/crmRightsValue'
+import useClientExport from './Custom-Hook/useClientExport'
+
 
 const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
@@ -52,16 +54,23 @@ const AllClients = () => {
     const navigateFitnees = useNavigate()
     const pathVal  = useAdminValidation()
     const uniQObjVal = useUniqAdminObjeact()
+    const exportClientData = useClientExport('All-Clients')
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
     ?.crmLeads?.items?.superRight) 
 
     const isAdmin = useSelector((el)=>el.isAdmin) 
+
     // const enquiryAdd =  (rightsData?.addOn?.includes(clientManagementRights)||isAdmin)
     // const enquiryDelete = (rightsData?.delete?.includes(clientManagementRights)||isAdmin)
     // const enquiryEdit  =  (rightsData?.edit?.includes(clientManagementRights)||isAdmin)
 
-    const [select, setSelect] = useState()
+    var currentdate = new Date();
+    var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
+    var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
+    var year = currentdate.getFullYear();
+
+    const [select, setSelect] = useState('')
     const [followForm, setFollowForm] = useState()
     const [visible, setVisible] = useState(false)
     
@@ -96,28 +105,24 @@ const AllClients = () => {
     const [editData,setEditData] = useState({})
 
 
-
-
-  
-
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
     const username = user.user.username;
     const [result1, setResult1] = useState([]);
-    console.log(token);
+    const [prevData,setPrevData] = useState([])
+ 
     const [result, setResult] = useState([]);
     const [paging, setPaging] = useState(0);
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/subservice/${pathVal}`, {
+        axios.get(`${url1}/subservice/${pathVal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                setResult(res.data)
+                setResult(res.data?.reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -131,7 +136,7 @@ const AllClients = () => {
             }
         })
             .then((res) => {
-                setStaff(res.data)
+                setStaff(res.data?.reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -148,9 +153,11 @@ const AllClients = () => {
             }
         })
             .then((res) => {
+                res.data?.reverse()
                 console.log(res.data)
-                setResult1(res.data.filter((list) => list).reverse())
-                setOgList(res.data.filter((list) => list).reverse())
+                setPrevData(res.data)
+                setResult1(res.data)
+                setOgList(res.data)
             })
             .catch((error) => {
                 console.error(error)
@@ -170,7 +177,6 @@ const AllClients = () => {
             }
         })
             .then((res) => {
-                console.log(res.data,"Hello World")
                 setName(res.data.Fullname)
                 setContact(res.data.ContactNumber)
                 setServiceName1(res.data.serviceName)
@@ -202,10 +208,7 @@ const AllClients = () => {
             })
         }
     }
-    var currentdate = new Date();
-    var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
-    var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
-    var year = currentdate.getFullYear();
+   
 
     const handleFollowup = (id,uniqId) => {
         setFollowForm(id)
@@ -259,7 +262,7 @@ const saveCalls = () => {
     Name:Name,
     Contact:Contact,
     Service: ServiceName1,
-    Type_Of_Calls:' ',
+    Type_Of_Calls:enquiryStage,
     Discussion: discussion,
     Counseller:Counseller,  
     Member_Id:followForm,
@@ -284,8 +287,46 @@ axios.post(`${url1}/${path}/create`, data, { headers:{
 .catch((error) => console.log(error))
 
 }
+}
 
-  
+
+const [dateForm,setDateFormat]  = useState()
+
+const dateFilter = (e) => {
+    const { value } = e.target
+    if (value === day) {
+        setDateFormat('DD-MM-YYYY')
+        setSelect(day)
+    } else if (value === month) {
+        setDateFormat('MM-DD-YYYY')
+        setSelect(month)
+    } else {
+        setDateFormat('YYYY')
+        setSelect(year)
+    }
+}
+
+
+function getUnique(arr, index) {
+    const unique = arr
+        .map(e => e[index])
+        // store the keys of the unique objects
+        .map((e, i, final) => final.indexOf(e) === i && i)
+        // eliminate the dead keys & store unique objects
+        .filter(e => arr[e]).map(e => arr[e]);
+    return unique;
+}
+function filterArr(og, v) {
+    if (v === '')
+        setResult1(og)
+    else
+        setResult1(og.filter((list) => list[filterBy] === v))
+}
+
+const clearFilter = ()=>{
+    setResult1(prevData)
+    const value = {target:{value:''}}
+    dateFilter(value)
 }
 
     return (
@@ -304,54 +345,20 @@ axios.post(`${url1}/${path}/create`, data, { headers:{
                                         id="inputGroupSelect04"
                                         aria-label="Example select with button addon"
                                         value={select}
-                                        onChange={(e) => setSelect(e.target.value)}
+                                        onChange={(e) => dateFilter(e)}
                                     >
+                                        <option value=''>All Year</option>
                                         <option value={day}>Today</option>
                                         <option value={month}>Last Month</option>
-                                        <option value={year}>Year</option>
+                                        <option value={year}>This Year</option>
+
                                     </CFormSelect>
-                                    {select === 'Custom Date' && (
-                                        <CInputGroup className='mt-2 mb-2' >
-
-                                            <CInputGroupText
-                                                component="label"
-                                                htmlFor="inputGroupSelect01"
-                                            >
-                                                Form
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                type="date"
-                                                required
-                                            /><CInputGroupText
-                                                component="label"
-                                                htmlFor="inputGroupSelect01"
-                                            >
-                                                To
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                type="date"
-                                                required
-                                            />
-                                            <CButton type="button" color="primary">
-                                                Go
-                                            </CButton>
-                                        </CInputGroup>
-
-                                    )}
-                                    {select !== 'Custom Date' && (
-                                        <CButton type="button" color="primary">
-                                            Go
-                                        </CButton>
-                                    )}
+                                  
                                 </CInputGroup>
                             </CCol>
                             <CCol lg={6} sm={6} md={6}>
                                 <CButtonGroup className=' mb-2 float-end'>
-                                    <CButton color="primary">
-                                        <CIcon icon={cilArrowCircleBottom} />
-                                        {' '}Import
-                                    </CButton>
-                                    <CButton color="primary">
+                                    <CButton color="primary" onClick={()=>exportClientData(result1)}>
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>
@@ -362,8 +369,9 @@ axios.post(`${url1}/${path}/create`, data, { headers:{
                                     className="mb-1"
                                     aria-label="Select Service Name"
                                     value={filterBy}
-                                    onChange={(e) => { setFilterBy(e.target.value); setArr(getUnique(ogList, e.target.value)) }}
+                                    onChange={(e) => { setFilterBy(e.target.value); setArr(getUnique(ogList, e.target.value))}}
                                     label="Filter By"
+                                    
 
                                 >
                                     <option value=''>Select</option>
@@ -391,8 +399,13 @@ axios.post(`${url1}/${path}/create`, data, { headers:{
                                         )
                                     ))}
                                 </CFormSelect>
+                            </CCol> 
+                            <CCol></CCol>                   
+                        </CRow>
+                        <CRow>
+                            <CCol>
+                             <CButton onClick={()=>clearFilter()}>Clear Filter</CButton>
                             </CCol>
-                            <CCol></CCol>
                         </CRow>
                         
                         <CallUpdate add={Calls} clickfun={() => setCalls(false)} ids={CallUpdateID} />
@@ -751,6 +764,7 @@ axios.post(`${url1}/${path}/create`, data, { headers:{
                                     </CTableDataCell>
                                 </CTableRow>
                                 {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
+                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select)&&
                                      list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                                     list.EnquiryType.toLowerCase().includes(Search5.toLowerCase()) &&
                                      list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && 
@@ -758,7 +772,7 @@ axios.post(`${url1}/${path}/create`, data, { headers:{
                                 ).map((item, index) => {
                                    return  (
                                         <CTableRow key={index}>
-                                            <CTableDataCell>{ result1.length  -(index+ (paging * 10))}</CTableDataCell>
+                                            <CTableDataCell>{ (index+1+ (paging * 10))}</CTableDataCell>
                                             <CTableDataCell>{item.ClientId}</CTableDataCell>
                                             <CTableDataCell><Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/1`} 
                                             target="_black">{item.Fullname}</Link></CTableDataCell>
@@ -819,15 +833,18 @@ axios.post(`${url1}/${path}/create`, data, { headers:{
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
                         {result1.filter((list) =>
+                              moment(list.createdAt).format("MM-DD-YYYY").includes(select)&&
                              list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                         {result1.filter((list) =>
+                         moment(list.createdAt).format("MM-DD-YYYY").includes(select)&&
                              list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                         {result1.filter((list) =>
+                         moment(list.createdAt).format("MM-DD-YYYY").includes(select)&&
                              list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                             list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
                         ).length > (paging + 1) * 10 ?

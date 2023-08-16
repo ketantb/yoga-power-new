@@ -100,32 +100,6 @@ const AllEnquires = () => {
     const [Discussion, setDiscussion] = useState("");
     const [Counseller, setCounseller] = useState("");
 
-    const [Fullname, setFullName] = useState("");
-    const [Emailaddress, setEmailAddress] = useState("");
-    const [CountryCode, setCountryCode] = useState("");
-    const [ContactNumber, setContactNumber] = useState("");
-    const [Gander, setGander] = useState("");
-    const [DateofBirth, setDateofBirth] = useState("");
-    const [address, setAddress] = useState("");
-    const [Area, setArea] = useState("");
-    const [city, setCity] = useState("");
-    const [Profession, setProfession] = useState("");
-
-    const [StaffName, setStaffName] = useState("");
-    const [CenterName, setCenterName] = useState("");
-    const [CallStatus, setCallStatus] = useState("");
-    const [Message, setMessage] = useState("");
-
-    const [person_Name, setperson_Name] = useState("");
-    const [Relation, setRelation] = useState("");
-    const [CountryCode2, setCountryCode2] = useState("");
-    const [ContactNumber2, setContactNumber2] = useState("");
-
-    const [EnquiryDate, setEnquiryDate] = useState("");
-    const [ServiceName, setServiceName] = useState("");
-    const [Customertype, setCustomertype] = useState("");
-    const [enquirytype, setEnquirytype] = useState("");
-    const [trialDate, setTrialDate] = useState("");
     const [appointmentDate, setappointmentDate] = useState("");
     const [appointmentTime, setappointmentTime] = useState("");
     const [appointmentfor, setappointmentfor] = useState("");
@@ -270,7 +244,9 @@ const AllEnquires = () => {
 
         if (enquiryStage === 'Appointment') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: enquiryStage,identifyStage:enquiryStage,
-            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName,...unikqValidateObj }
+            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName,...unikqValidateObj,
+        
+        }
              saveCallReportP()
 
             fetch(`${ url }/enquiryForm/update/${ followForm }`, {
@@ -291,7 +267,8 @@ const AllEnquires = () => {
             })
         } else if (enquiryStage === 'Trial Session') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: enquiryStage,identifyStage:enquiryStage,
-            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName,...unikqValidateObj }
+            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName,...unikqValidateObj,
+        }
             saveCallReportP()
 
             fetch(`${ url }/enquiryForm/update/${followForm}`, {
@@ -993,7 +970,7 @@ const AllEnquires = () => {
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Source</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Enquiry stage</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Call Status</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Discussion</CTableHeaderCell>
+                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Message</CTableHeaderCell>
                                     {(isAdmin|| enquiryAdd)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Add</CTableHeaderCell>}
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px', minWidth: '100px' }} > Date/Time</CTableHeaderCell>
                                     <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Assigned by</CTableHeaderCell>

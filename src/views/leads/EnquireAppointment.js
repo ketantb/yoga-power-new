@@ -959,7 +959,7 @@ const EnquireAppointment = () => {
                                     <CTableHeaderCell>Source</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry stage</CTableHeaderCell>
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
-                                    <CTableHeaderCell>Discussion</CTableHeaderCell>
+                                    <CTableHeaderCell>Message</CTableHeaderCell>
                                     {(isAdmin|| appointmentAdd)&&<CTableHeaderCell>Add</CTableHeaderCell>}
                                     <CTableHeaderCell>Appointment Date & Time</CTableHeaderCell>
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>
