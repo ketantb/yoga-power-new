@@ -18,7 +18,6 @@ const useStockReport = () => {
 
  const saveData = (productData)=>{
 
-
     const selctedProduct =   {
             Order_Date: new Date(),
             Product_Category:productData.productDetails.Product_Category,
@@ -37,8 +36,10 @@ const useStockReport = () => {
             Status:'Sold',
             ProductId:productData.productDetails.ProductId,
             StatOfStock:'InStock',
+            ClientId:productData.ClientId,
             ...uniqObjVal
         }
+
     
     
     axios.post(`${url}/stockorderlist/create`, selctedProduct,{headers})

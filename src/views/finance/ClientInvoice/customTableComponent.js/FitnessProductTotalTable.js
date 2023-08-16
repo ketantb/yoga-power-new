@@ -34,7 +34,7 @@ const FitnessProductTotalTable = ({fitnessProduct,status,validate,toRenderErrorO
       toRenderErrorOnFrontend()
       return 
    }
-    saveUpdate(item)    
+    saveUpdate({...item,ClientId:clientReferance.MemberId})    
     createStockReport({...clientReferance,...item})    
   }
 

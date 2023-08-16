@@ -23,7 +23,7 @@ import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { MdDelete } from "react-icons/md";
 import YogaSpinnar from '../theme/YogaSpinnar'
-import { useAdminValidation } from '../Custom-hook/adminValidation';
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
 
 
 const optionAppointmentTyep = [
@@ -40,6 +40,7 @@ const Appointment = () => {
     const url1 = useSelector((el) => el.domainOfApi)
     const url=url1
     const pathValMaster = useAdminValidation('Master')
+    const uniqObjectVal = useUniqAdminObjeact()
 
     const [appointment, setAppointment] = useState(false)
     const [Enquiry, setEnquiry] = useState([])
@@ -124,10 +125,11 @@ const Appointment = () => {
 
 
     const getAppointmentData = async () => {
-
-        const response = await axios.get(`${ url1 }/appointment`)
+        const response = await axios.get(`${ url1 }/appointment/${pathValMaster}`,{  headers: {
+            'Authorization': `Bearer ${ token }`
+        }})
+        console.log(response.data)
         setAppointmentData([...response.data].reverse())
-        console.log(appointmentData)
     }
 
     useEffect(() => {
@@ -148,7 +150,8 @@ const Appointment = () => {
         "Amount": fess,
         "Status": false,
         "Staff": staffValue,
-        "Cancel": 'Not'
+        "Cancel": 'Not',
+        ...uniqObjectVal
     }
 
 
@@ -156,30 +159,34 @@ const Appointment = () => {
     const sendAppointmentData = async () => {
         const data = AppointmentObj
 
-        fetch(`${ url1 }/appointment`, {
+        fetch(`${ url1 }/appointment/create`, {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${ token }`
             },
             body: JSON.stringify(data)
         }).then((result) => {
-            alert('Successfully Save')
-            getAppointmentData()
-            setAppointmentType('')
-            setAppointmentDate('')
-            setAppointmentTime('')
-            setBookingDate('')
-            setAppointmentWith('')
-            setFessStatus('')
-            setFees('')
-            setStaffValue('')
+            console.log(result)
+            if(result.status===200){
+                alert('Successfully Save')
+                getAppointmentData()
+                setAppointmentType('')
+                setAppointmentDate('')
+                setAppointmentTime('')
+                setBookingDate('')
+                setAppointmentWith('')
+                setFessStatus('')
+                setFees('')
+                setStaffValue('')
+            }
         })
 
     }
 
     function deleteAppointmentData(id) {
-        fetch(`${ url1 }/appointment/${ id }`, {
+        fetch(`${ url1 }/appointment/delete/${ id }`, {
             method: 'DELETE',
         }).then((result) => {
             getAppointmentData()
@@ -192,11 +199,12 @@ const Appointment = () => {
         console.log(Cancel)
 
         const data1 = { ...data, Status, Cancel }
-        fetch(`${ url1 }/appointment/${ id }`, {
-            method: 'PUT',
+        fetch(`${ url1 }/appointment/update/${ id }`, {
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${ token }`
             },
             body: JSON.stringify(data1)
         }).then((result) => {
@@ -383,8 +391,8 @@ const Appointment = () => {
                                             >
                                                 <option>Select Appointment With</option>
 
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                                                     (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}
@@ -399,13 +407,11 @@ const Appointment = () => {
                                                 label="Staff"
                                                 value={staffValue}
                                                 onChange={(e) => setStaffValue(e.target.value)}
-
-
                                             >
                                                 <option>Select Staff</option>
 
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                                                    (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}

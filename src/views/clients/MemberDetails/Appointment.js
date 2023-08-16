@@ -25,8 +25,7 @@ import axios from 'axios'
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux'
-
-//  el.Sr_No i am using it to get id 
+import  {useAdminValidation} from '../../Custom-hook/adminValidation'
 
 const optionAppointmentTyep = [
     "Diet",
@@ -38,7 +37,8 @@ const optionAppointmentTyep = [
 
 const Appointment = ({ id }) => {
 const url1 = useSelector((el) => el.domainOfApi)
-const url = 'https://yog-seven.vercel.app'
+const pathValMaster = useAdminValidation('Master')
+
 const [appointment, setAppointment] = useState(false)
 const [Enquiry, setEnquiry] = useState([])
 const [active, setActive] = useState(false)
@@ -51,27 +51,31 @@ const [appointmentType, setAppointmentType] = useState('')
 const [staff, setStaff] = useState([])
 const [appointmentData, setAppointmentData] = useState([])
 const [appointmentWith, setAppointmentWith] = useState([])
-const [bookingDate, setBookingDate] = useState()
+const [bookingDate, setBookingDate] = useState('')
 const [fess, setFees] = useState('')
 const [memberId, setMemberId] = useState('')
 const [staffValue, setStaffValue] = useState('')
 const [appointmentTime, setAppointmentTime] = useState('')
-const [Appontment_Date, setAppointmentDate] = useState('')
-const [feesStatus, setFessStatus] = useState('')
+    const [Appontment_Date, setAppointmentDate] = useState('')
+    const [feesStatus, setFessStatus] = useState('')
+    const [pagination, setPagination] = useState(10)
 
-const [pagination, setPagination] = useState(10)
 
-
-  let user = JSON.parse(localStorage.getItem('user-info'))
+    let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const username = user.user.username;
 
 
 
 const getAppointmentData = async () => {
-        const response = await axios.get(`${ url1 }/appointment`)       
-        setAppointmentData([...response.data].filter((el)=> el.Sr_No ===id))
-
+        const response = await axios.get(`${ url1 }/appointment/${id}`,{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })       
+        if(response.status===200){           
+            setAppointmentData(response.data)
+        }
     }
 
 useEffect(() => {
@@ -97,7 +101,7 @@ async function getEnquiry() {
                    
    
 function deleteAppointmentData(id) {
-    fetch(`${ url1 }/appointment/${ id }`, {
+    fetch(`${ url1 }/appointment/delete/${ id }`, {
         method: 'DELETE',
     }).then((result) => {
         getAppointmentData()
@@ -108,8 +112,8 @@ function deleteAppointmentData(id) {
 function updateAppointmentStatus(id, data, Status,Cancel1) {
 const Cancel = Cancel1==='Not'?'Not':'cancel'
     const data1 = { ...data, Status,Cancel}
-    fetch(`${ url1 }/appointment/${ id }`, {
-        method: 'PUT',
+    fetch(`${ url1 }/appointment/update/${ id }`, {
+        method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -122,7 +126,7 @@ const Cancel = Cancel1==='Not'?'Not':'cancel'
 
 
 function getStaff() {
-    axios.get(`${ url1 }/employeeform`, {
+    axios.get(`${ url1 }/employeeform/${pathValMaster}`, {
         headers: {
             'Authorization': `Bearer ${ token }`
         }
@@ -173,28 +177,28 @@ const AppointmentObj = {
 const sendAppointmentData = async () => {
     const data = AppointmentObj
 
-    fetch(`${ url1 }/appointment`, {
+    fetch(`${ url1 }/appointment/create`, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(data)
     }).then((result) => {
+        if(result.status===200){
         alert('Successfully Save')
         getAppointmentData()
         setAppointmentType('')
         setAppointmentDate('')
         setAppointmentTime('')
         setBookingDate('')
-        setAppointmentWith('')
+        setAppointmentWith([])
         setFessStatus('')
         setFees('')
         setStaffValue('')
+        }
     })
-
-
-
 
 }
 
@@ -329,8 +333,8 @@ const sendAppointmentData = async () => {
                                             >
                                                 <option>Select Appointment With</option>
 
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                                                   (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}
@@ -350,8 +354,8 @@ const sendAppointmentData = async () => {
                                             >
                                                 <option>Select Staff</option>
 
-                                                {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                                    item.username === username && (
+                                                {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
+                                                     (
                                                         <option key={index}>{item.FullName}</option>
                                                     )
                                                 ))}

@@ -40,7 +40,6 @@ import AdmissionForm1 from 'src/components/AdmissionForm1';
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
 import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue';
 import useExportHook from './leaadCutomHook/useExportHook';
-import { list } from 'firebase/storage';
 
 const FollowupScheduling = () => {
 
@@ -48,7 +47,7 @@ const FollowupScheduling = () => {
 
     const pathRoute = useAdminValidation()
     const pathValMaster = useAdminValidation('Master')
-    const unikqValidateObj = useUniqAdminObjeact()
+    const uniqObjeact = useUniqAdminObjeact()
     const exportFolloupSchedulind =  useExportHook("YogPowerProspect.xlsx")
     
 
@@ -144,6 +143,13 @@ const FollowupScheduling = () => {
 
 
     const [staff, setStaff] = useState([])
+
+    const unikqValidateObj = {
+        ...uniqObjeact,
+        employeeMongoId:Counseller,
+        empNameC:staff.find((el)=>el._id===Counseller)?.FullName
+    }
+
     function getStaff() { 
         axios.get(`${url1}/employeeForm/${pathValMaster}`, {
             headers: {
@@ -168,12 +174,12 @@ const FollowupScheduling = () => {
 
         if (enquiryStage === 'Appointment') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment',CallStatus: CallStatus1,
-             Counseller: Counseller }
+             Counseller: Counseller,...unikqValidateObj }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
+                status: 'CallReport',...unikqValidateObj
             }
 
             fetch(`${url}/enquiryForm/update/${followForm}`, {
@@ -208,12 +214,16 @@ const FollowupScheduling = () => {
             })
 
         } else if (enquiryStage === 'Trial Session') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', Counseller: Counseller,CallStatus: CallStatus1 }
+            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', 
+            Counseller: Counseller,CallStatus: CallStatus1,...unikqValidateObj
+         }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate,
+                 AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1,
+                  FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                status: 'CallReport',...unikqValidateObj
             }
 
             fetch(`${url}/enquiryForm/update/${followForm}`, {
@@ -271,6 +281,7 @@ const FollowupScheduling = () => {
                 ServiceName:ServiceName1,
                 Emailaddress:email,
                 ContactNumber:Contact,
+                ...unikqValidateObj
             }
 
 
@@ -294,7 +305,9 @@ const FollowupScheduling = () => {
                 let data2 = {
                     username: username,
                     EnquiryID: followForm, CallDate: date, Time: time,
-                    Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                    Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, 
+                    AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1,
+                     FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
                     status: 'CallReport'
                 }
                 fetch(`${url}/prospect/create`, {
@@ -349,6 +362,7 @@ const FollowupScheduling = () => {
                 ServiceName:ServiceName1,
                 Emailaddress:email,
                 ContactNumber:Contact,
+                ...unikqValidateObj
             }
 
 
@@ -373,7 +387,7 @@ const FollowupScheduling = () => {
                 EnquiryID: followForm, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, 
                 AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate,
-                TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,...unikqValidateObj,
                 status: 'prospect'
             }
 
@@ -516,13 +530,13 @@ const FollowupScheduling = () => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({...data,unikqValidateObj})
+            body: JSON.stringify({...data,...unikqValidateObj})
         }).then((resp) => {
             resp.json().then(() => {
                 setVisible(false)
             })
         })
-        const data1 = { Counseller }
+        const data1 = { Counseller,...unikqValidateObj}
 
         fetch(`${url}/enquiryForm/update/${followForm}`, {
             method: "POST",
@@ -593,7 +607,7 @@ const FollowupScheduling = () => {
 
     return (
         <CRow>
-              {(admissionForm&& !visible1) && <AdmissionForm1 add={admissionForm}  setAdmissionForm={closeAddmisionForm} ids={addmissionData} />}
+              {(admissionForm&& !visible1) && <AdmissionForm1 getEnquiry={getEnquiry} add={admissionForm}  setAdmissionForm={closeAddmisionForm} ids={addmissionData} />}
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
@@ -875,7 +889,7 @@ const FollowupScheduling = () => {
                                                 <option>Select Counseller</option>
                                                 {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                                      (
-                                                        <option key={index}>{item.FullName}</option>
+                                                        <option key={index}>{[item.FullName,item.EmployeeID].join('\n')}</option>
                                                     )
                                                 ))}</CFormSelect>
                                         </CCol>
@@ -1088,7 +1102,7 @@ const FollowupScheduling = () => {
                                                 {staff.filter((list) =>  list.selected === 'Select')
                                                 .map((item, index) => (
                                                      (
-                                                        <option key={index}>{item.FullName}</option>
+                                                        <option key={index}>{[item.FullName,item.EmployeeID].join('\n')}</option>
                                                     )
                                                 ))}</CFormSelect>
                                         </CCol>

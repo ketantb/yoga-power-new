@@ -472,7 +472,7 @@ const  compareDate = (date1,date2,type)=>{
                             <CTableBody>
 
                                 {AllInvoiceData.filter((el)=>{
-                                 return el.counseller.includes(selectedEmployee)})
+                                 return el.counseller?.includes(selectedEmployee)})
                                 .filter((el)=>{ if(startDate&&endDate){
                                 return compareDate(startDate,el.startDate,'start') &&
                                 compareDate(endDate,el.endDate,'end')}return true})

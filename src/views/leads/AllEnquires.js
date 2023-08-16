@@ -66,7 +66,8 @@ const AllEnquires = () => {
     const url = useSelector((el) => el.domainOfApi)
     const pathRoute = useAdminValidation()
     const pathRouteMasterVal = useAdminValidation('Master')
-    const unikqValidateObj = useUniqAdminObjeact()
+    const unikqObj = useUniqAdminObjeact()
+
 
     const [select, setSelect] = useState('')
     const [followForm, setFollowForm] = useState('')
@@ -142,8 +143,6 @@ const AllEnquires = () => {
     const [toEdit,setToEdit] = useState(false)
 
 
-    console.log(token)
-
     const hiddenXLimportFileInput = useRef('')
 
 
@@ -180,8 +179,6 @@ const AllEnquires = () => {
         reader.readAsArrayBuffer(event.target.files[0]);
 
     }
-
-
     // Export 
  
     useEffect(() => {
@@ -202,6 +199,15 @@ const AllEnquires = () => {
     }, []);
 
     const [staff, setStaff] = useState([])
+
+    const unikqValidateObj = {
+        ...unikqObj,
+        employeeMongoId:Counseller,
+        empNameC:staff.find((el)=>el._id===Counseller)?.FullName
+    }
+
+
+
     function getStaff() {
         axios.get(`${ url }/employeeform/${pathRouteMasterVal}`, {
             headers: {
@@ -252,7 +258,6 @@ const AllEnquires = () => {
                         setVisible(false)
                     })
                 })
-
     }
 
 
@@ -265,7 +270,7 @@ const AllEnquires = () => {
 
         if (enquiryStage === 'Appointment') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: enquiryStage,identifyStage:enquiryStage,
-            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName }
+            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName,...unikqValidateObj }
              saveCallReportP()
 
             fetch(`${ url }/enquiryForm/update/${ followForm }`, {
@@ -286,7 +291,7 @@ const AllEnquires = () => {
             })
         } else if (enquiryStage === 'Trial Session') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: enquiryStage,identifyStage:enquiryStage,
-            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName }
+            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName,...unikqValidateObj }
             saveCallReportP()
 
             fetch(`${ url }/enquiryForm/update/${followForm}`, {
@@ -337,6 +342,7 @@ const AllEnquires = () => {
                 ServiceName:ServiceName1,
                 Emailaddress:email,
                 ContactNumber:Contact,
+                ...unikqValidateObj
             }
 
 
@@ -543,7 +549,7 @@ const AllEnquires = () => {
     
     return (
         <CRow>
-             {(admissionForm&& !visible1) && <AdmissionForm1 add={admissionForm}  setAdmissionForm={closeAddmisionForm} ids={edit} />}
+             {(admissionForm&& !visible1) && <AdmissionForm1 add={admissionForm} getEnquiry={getEnquiry}  setAdmissionForm={closeAddmisionForm} ids={edit} />}
 
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
@@ -802,7 +808,7 @@ const AllEnquires = () => {
                                                 <option>Select Counseller</option>
                                                 {staff.filter((list) => list.selected === 'Select').map((item, index) => (
                                                     (
-                                                        <option key={index} value={item._id}>{item.FullName}</option>
+                                                        <option key={index} value={item._id}>{[item.FullName,item.EmployeeID].join('\n')}</option>
                                                     )
                                                 ))}</CFormSelect>
                                         </CCol>

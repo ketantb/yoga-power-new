@@ -35,7 +35,7 @@ import { useParams } from 'react-router-dom';
 import { empLoyeeeRights } from '../../hr/Rights/rightsValue/crmRightsValue'
 import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
-const SalesCall = () => {
+const SalesCall = ({}) => {
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
 
@@ -265,8 +265,8 @@ const SalesCall = () => {
                 >
                     <option >Select Your Employee </option>
 
-                    {employeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
+                    {employeeData.filter((list) => list.selected === 'Select').map((item, index) => (
+                        (
                             <option key={index} value={item.FullName} >{item.FullName}</option>
                         )
                     ))}

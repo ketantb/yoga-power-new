@@ -38,14 +38,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { CountryList } from "src/components/CountryList";
 import ProfileIcon from 'src/assets/images/avatars/profile_icon.png'
 import axios from "axios";
-import { listAll, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref,  uploadBytesResumable } from 'firebase/storage'
 import { storage } from "src/firebase";
 import logo from 'src/assets/images/avatars/icon.png'
 import { v4 } from "uuid";
 import { useReactToPrint } from 'react-to-print'
 import { useSelector } from 'react-redux'
 import moment from "moment/moment";
-
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
+import { cilArrowCircleBottom} from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 
 
 const url = 'https://yog-seven.vercel.app'
@@ -115,11 +117,15 @@ const ClientEditForm = ({data,closeEdit,showEdit,getClientData}) => {
     const [batchesData,setBatches] = useState([])
     const [showEditForm,closeEditForm]  = useState(true)
     const [activeKey, setActiveKey] = useState(1)
+    const pathValMaster = useAdminValidation('Master')
+    const [imgPrograss,setImgPrograss] = useState(0)
+    const [leadArr, setLeadArr] = useState([]);
+    const [staff, setStaff] = useState([])
+    const [typeOFBatchClasses,setTypeOfBatchClasses] = useState('')
 
 
 
     const url1 = useSelector((el)=>el.domainOfApi)
-    const imgRef = useRef(null)
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -131,120 +137,85 @@ const ClientEditForm = ({data,closeEdit,showEdit,getClientData}) => {
     const [visi, setVisi] = useState(false);
     const [mem, setMem] = useState([]);
 
-    const handleImage = (e) => {
-        setImage(e.target.files[0])
-        const file = e.target.files[0]
+    const imgRef = useRef(null)
+    const imageInput = useRef('') 
+
+
+   
+    const getEditRequireData = async  ()=>{
+       
+        const headers = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+
+        const response2 =  axios.get(`${url1}/leadSourceMaster/${pathValMaster}`,headers)
+        const response3 =  axios.get(`${url1}/employeeForm/${pathValMaster}`,headers)
+        const response4 =  axios.get(`${url1}/packageMaster/${pathValMaster}`,headers)
+        const response5 =  axios.get(`${url1}/memberForm/${pathValMaster}`,headers)
+        const response6 =  axios.get(`${url1}/Batch/${pathValMaster}`,headers)
+
+
+        const allData = await Promise.all([response2,response3,response4,response5,response6])
+
+        const leadSourseData = allData[0]?.data
+        const staffData = allData[1]?.data
+        const packageMaster = allData[2]?.data
+        const memberFormData = allData[3]?.data
+        const batchesData = allData[4]?.data
+
+
+        setLeadArr(leadSourseData)
+        setStaff(staffData)
+        setService(packageMaster)
+        setMem(memberFormData)
+        setBatches(batchesData)
+        setAttendanceID(`CLA${memberFormData.length+1}`)
+    }
+    
+
+
+
+    const HandaleImageClick = () =>{
+        imageInput.current.click()
+     }
+
+     const handleImage = event => {
+        const fileUploaded = event.target.files[0];
+        const file = event.target.files[0] 
+        const reader = new FileReader();
         if (!file.type.startsWith('image/')) return;
 
-        const reader = new FileReader();
         reader.onload = (e) => {
             imgRef.current.src = e.target.result
         }
         reader.readAsDataURL(file)
-        console.log(file, image);
-    }
 
-    const imagesListRef = ref(storage, "images/");
-    const UploadImage = () => {
-        if (image == null) return;
-        const imageRef = ref(storage, `images/${image.name + v4()}`)
-        console.log(imageRef.fullPath);
-        setImageUrl(imageRef.fullPath)
-
-        uploadBytes(imageRef, image).then(() => {
-            alert('image uploaded')
-        })
-    }
- 
-
-
-
-    const [leadArr, setLeadArr] = useState([]);
-
-    function getLeadSource() {
-        axios.get(`${url}/leadSourceMaster/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
+            const uploadImage = (file)=>{
+              if(!fileUploaded)return
+             const storageRef =   ref(storage,`profile-photo/${fileUploaded.name}`)
+             const uploadTask = uploadBytesResumable(storageRef,fileUploaded)
+      
+             uploadTask.on("state_changed",(snapshot)=>{
+              const prog = Math.round((snapshot.bytesTransferred/snapshot.totalBytes) *100)
+              setImgPrograss(prog)
+      
+             },(error)=>{
+              console.log(error)
+             },
+             ()=>{
+              getDownloadURL(uploadTask.snapshot.ref).then((url)=>{
+                setImageUrl(url)
+              })
+             }
+             )
             }
-        })
-            .then((res) => {
-                setLeadArr(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
-
-    const [staff, setStaff] = useState([])
-    function getStaff() {
-        axios.get(`${url1}/employeeform`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setStaff(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
-
-    function getSubService() {
-        axios.get(`${url1}/packagemaster`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setService(res.data)
-                console.log(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-    
-
-    function getMem() {
-        axios.get(`${url1}/memberForm/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setMem(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
-    function getBatch() {
-        axios.get(`${url1}/Batch/all`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                console.log(res.data)
-                setBatches(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
+            uploadImage(file)
+      };
 
 useEffect(()=>{
-    getBatch()
-    getMem()
-    getSubService()
-    getStaff()
-    getLeadSource()
-
+    getEditRequireData()
 },[])
 
 
@@ -255,7 +226,7 @@ useEffect(()=>{
 useEffect(()=>{
 setFullname(data?.Fullname)
 setEmail(data?.Email)
-setCountryCode(data?.CountryCode)
+setCountryCode("+"+data?.CountryCode)
 setContactNumber(data?.ContactNumber)
 setWhatsappNumber(data?.WhatsappNumber)
 setDateofBirth(moment(data?.DateofBirth).format('YYYY-MM-DD'))
@@ -305,6 +276,8 @@ setfitnessGoal(data?.fitnessGoal)
 setidealWeight(data?.idealWeight)
 setsuggestion(data?.suggestion)
 setcomments(data?.comments)
+setTypeOfBatchClasses(data?.typeOFBatchClasses)
+setImageUrl(data?.image)
 },[data?._id])
 
 
@@ -326,14 +299,14 @@ setcomments(data?.comments)
         HighBloodPressure, Other: OtherText, Weight, Height, fitnessLevel,
         fitnessGoal, idealWeight, suggestion, comments, status: 'active',
         ClientId:`${centerCode}MEM${10+mem.length}`,
-        // trainerName:String,
-        // batchTime:String,
+        typeOFBatchClasses,
         package:serviceVaration
     }
 
  const headers = {
-        'Authorization': `Bearer ${token}`,
-        'My-Custom-Header': 'foobar'
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
 };
     axios.post(`${url1}/memberForm/update/${data?._id}`, editdata, { headers },
     ).then((resp) => {
@@ -354,7 +327,7 @@ setcomments(data?.comments)
   return  <CModal size='xl' style={{ border: '2px solid #0B5345' }} scrollable visible={showEdit} onClose={closeEdit} >
 
     <CModalHeader  >
-        <CModalTitle>Member Form</CModalTitle>
+        <CModalTitle>Edit Form</CModalTitle>
     </CModalHeader>
 
     <CModalBody>
@@ -391,20 +364,18 @@ setcomments(data?.comments)
                                 <CCol lg={6} sm={12}>
                                     <CCardTitle>Personal Details</CCardTitle>
                                     <CRow>
-                                        <CCol xs={4} className='mt-2 mb-1' >
-                                            <CImage ref={imgRef} className="mb-1" style={{ borderRadius: "50px" }} width={'160px'} src={ProfileIcon} />
-                                        </CCol>
-                                        <CCol xs={7} className='mt-3'>
+                                       <CCol sm={12} className='p-3'>
+                                                    <CImage ref={imgRef} style={{ borderRadius: "100px" }} width={'200px'} src={imageUrl?imageUrl:ProfileIcon} className="me-4" />
 
-                                            <CFormInput
-                                                className="mb-1 mr-3"
-                                                type="file"
-                                                onChange={handleImage}
-                                                accept="image/*"
-                                            />
-                                            <CButton onClick={UploadImage}>Upload Image</CButton>
-
-                                        </CCol>
+                                                    <CFormInput
+                                                        type="file"
+                                                        onChange={handleImage}
+                                                        accept="image/*"
+                                                        ref={imageInput}
+                                                        hidden
+                                                    />
+                                                    <CButton onClick={HandaleImageClick} > <CIcon icon={cilArrowCircleBottom} /> {imgPrograss}% Upload Image</CButton>
+                                                </CCol>
                                         <CCol xs={6}>
                                             <CFormInput
                                                 className="mb-1"
@@ -668,22 +639,22 @@ setcomments(data?.comments)
                                     <CRow>
                                         <CCardTitle>Lead Information</CCardTitle>
                                         <CCol xs={6}>
-                                            <CFormSelect
-                                                className="mb-1"
-                                                aria-label="Select Service Name"
-                                                value={serviceName}
-                                                onChange={(e) => setserviceName(e.target.value)}
-                                                label="Service Name"
-                                            >
-                                                <option>Select Name</option>
-                                                {[...subService].map((item, index) => (
-                                    item.username === username && (
-                                       item.Status=== true && (
-                                            <option key={index}>{item.Service }</option>                                                  
-                                        )
-                                    
-                                    )))}</CFormSelect>
-                                        </CCol>
+                                                    <CFormSelect
+                                                        className="mb-1"
+                                                        aria-label="Select Service Name"
+                                                        value={serviceName}
+                                                        onChange={(e) => setserviceName(e.target.value)}
+                                                        label="Service Name"
+                                                    >
+                                                        <option>Select Name</option>
+                                                        {[...subService].filter((el)=>el).map((item, index) => (
+                                            (
+                                               item.Status=== true && (
+                                                    <option key={index}>{item.Service }</option>                                                  
+                                                )
+                                            
+                                            )))}</CFormSelect>
+                                                </CCol>
                                         <CCol xs={6}>
                                             <CFormSelect
                                                 className="mb-1"
@@ -696,7 +667,7 @@ setcomments(data?.comments)
                                                     {[...subService].filter((list) =>
                                     list.Service=== serviceName
                                 ).map((item, index) => (
-                                    item.username === username && (
+                                     (
                                         item.Status === true && (
                                             <option key={index}>{item.Package_Name }</option>
                                         )
@@ -734,8 +705,8 @@ setcomments(data?.comments)
 
                                             >
                                                 <option>Select Enquiry Type</option>
-                                                {leadArr.filter((list) => list.username === username).map((item, index) => (
-                                                    item.username === username && (
+                                                {leadArr.filter((list) => list).map((item, index) => (
+                                                     (
                                                         <option key={index}>{item.LeadSource}</option>
                                                     )
                                                 ))}</CFormSelect>
@@ -753,7 +724,7 @@ setcomments(data?.comments)
                                                 label="Assign Staff"
                                             >
                                                 <option>Select Assign Staff</option>
-                                                {staff.filter((list) => list.username === username &&
+                                                {staff.filter((list) => 
                                                  list.selected === 'Select').map((item, index) => (
                                                     <option key={index}>{item.FullName}</option>
                                                 ))}
@@ -769,33 +740,71 @@ setcomments(data?.comments)
                                                 
                                             >
                                                  <option>Select Counselor</option>
-                                                {staff.filter((list) => list.username === username &&
+                                                {staff.filter((list) => 
                                                  list.selected === 'Select').map((item, index) => (
                                                     <option key={index}>{item.FullName}</option>
                                                 ))}
                                             </CFormSelect>
                                         </CCol>
                                         
+
+                                           <CCol xs={6}>
+                                                    <CFormSelect
+                                                        className="mb-1"
+                                                        aria-label="Select Batch"
+                                                        value={typeOFBatchClasses}
+                                                        onChange={(e) => setTypeOfBatchClasses(e.target.value)}
+                                                        label="Type Of Classes"
+                                                    >
+                                                     
+                                                 <option>Type of Class</option>     
+                                                     {batchesData.filter((el)=>{
+                                                        if(serviceName?.trim()){
+                                                            return    el.service_variation?.trim()?.toLowerCase()===
+                                                            serviceName?.trim()?.toLowerCase()
+                                                        }
+                                                        return true
+                                                     }
+                                                     )
+                                                     .map((el)=>el.category).filter((el,i,arr)=>
+                                                     i===arr.indexOf(el) 
+
+                                                     
+                                                     ).map((el)=>{
+                                                           
+                                                 return  <option > 
+                                                     {el}
+
+                                                  </option>                           
+                                                     })}  
+                                                        
+                                                        </CFormSelect>
+
+                                                </CCol>
                                      
 
-                                        <CCol xs={6}>
-                                            <CFormSelect
-                                                className="mb-1"
-                                                aria-label="Select Batch"
-                                                value={Batch}
-                                                onChange={(e) => setBatch(e.target.value)}
-                                                label="Batch"
-                                            >
-                                             
-                                         <option>Select Batch</option>     
-                                             {batchesData.map((el)=>{
-                                                   
-                                         return  <option> {el.batch_timing} </option>                           
-                                             })}  
-                                                
-                                                </CFormSelect>
+                                                <CCol xs={6}>
+                                                    <CFormSelect
+                                                        className="mb-1"
+                                                        aria-label="Select Batch"
+                                                        value={Batch}
+                                                        onChange={(e) => setBatch(e.target.value)}
+                                                        label="Class Timeing"
+                                                    >
+                                                     
+                                                 <option>Select Class Timeing</option>     
+                                                     {batchesData.
+                                                     filter((el)=>el.category === typeOFBatchClasses                                   
+                                                     
+                                                     ).map((el)=>{                                                          
+                                                 return  <option > 
+                                                    {el.batch_timing}  
+                                                  </option>                           
+                                                     })}  
+                                                        
+                                                        </CFormSelect>
 
-                                        </CCol>
+                                                </CCol>
 
 
                                         <CCol xs={6}>
@@ -809,27 +818,43 @@ setcomments(data?.comments)
                                             >
                                            <option>Select Trainer</option>     
                                              {batchesData.filter((el)=>el.batch_timing === Batch).map((el)=>{
-                                                  console.log(el)   
                                          return  <option> {el.trainer_name} </option>                           
                                              })}      
+
+                                            </CFormSelect>
+                                        </CCol> 
+                                        <CCol xs={6}>
+                                                <CFormSelect
+                                                        className="mb-1"
+                                                        value={GeneralTrainer}
+                                                        onChange={(e) => setGeneralTrainer(e.target.value)}
+                                                        label="Trainer Name"
+                                                           
+                                                >
+                                            <option>Select Trainer</option>     
+                                            {batchesData.filter((el)=>el.batch_timing === Batch).map((el)=>{
+                                                 return  <option> {el.trainer_name} </option>                           
+                                            })}      
 
                                             </CFormSelect>
                                         </CCol>
                                     </CRow>
                                     <CRow>
                                         <CCardTitle>IDs</CCardTitle>
+
+                                       
                                         <CCol xs={6}>
-                                            <CFormSelect
-                                                className="mb-1"
-                                                type="text"
-                                                id="exampleFormControlInput1"
-                                                value={AttendanceID}
-                                                onChange={(e) => setAttendanceID(e.target.value)}
-                                                label="Attendance ID"
-                                            >
-                                                <option>Select Attendance ID</option>
-                                                <option value={`CLA${mem.length+1}`}>CLA{mem.length + 1}</option>
-                                            </CFormSelect>
+                                                    <CFormSelect
+                                                        className="mb-1"
+                                                        type="text"
+                                                        id="exampleFormControlInput1"
+                                                        value={AttendanceID}
+                                                        onChange={(e) => setAttendanceID(e.target.value)}
+                                                        label="Attendance ID"
+                                                    >
+                                                        <option>Select Attendance ID</option>
+                                                        <option value={`CLA${mem.length+1}`}>CLA{mem.length + 1}</option>
+                                                    </CFormSelect>
                                         </CCol>
                                         <CCol xs={6}>
                                             <CFormSelect

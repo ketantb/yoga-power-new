@@ -38,17 +38,14 @@ const Referrals = ({ id }) => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const [result1, setResult1] = useState([]);
-    const [paging, setPaging] = useState(0);
-    const headers = {
-        'Authorization': `Bearer ${token}`,
-        'My-Custom-Header': 'foobar'
-    };
+
+   
     useEffect(() => {
         getMem()
     }, []);
 
    function getMem() {
-        axios.get(`${url}/memberForm/${id}`, {
+        axios.get(`${url}/memberForm/clientReferenceId/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

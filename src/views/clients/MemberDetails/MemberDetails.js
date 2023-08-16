@@ -37,6 +37,7 @@ import Teams from './Teams'
 import Attendence from './Attendence'
 import axios from 'axios'
 import FitnessProfile from './FitnessProfile'
+import ProductSalesReport from '../../Inventory/ProductSalesReport'
 
 const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
@@ -98,12 +99,11 @@ const MemberDetails = () => {
                                 { id: '4', heading: 'Attendence', com: <Attendence id={id} /> },   
                                 { id: '5', heading: 'Appoinments', com: <Appointment id={id} /> },
                                 { id: '6', heading: 'Referd', com: <Referrals id={id} /> },
-                                { id: '7', heading: 'Shop' },
+                                { id: '7', heading: 'Shop',com:<ProductSalesReport onlyOneClient={true} id={id}/> },
                                 { id: '8', heading: 'Calls', com: <CallUpdate id={id} /> },
                                 { id: '9', heading: 'Fitness' , com: <FitnessProfile/>} ,
                                 { id: '10', heading: 'Docs', com: <Documents id={id} /> },
                                 { id: '11', heading: 'T&C', com: <Teams id={id} /> },
-
                             ].filter((el,i)=>(+el.id===+activeKey)).map((item, index) => (
                                 <CTabPane key={index} role="tabpanel" aria-labelledby="home-tab" visible={true}>
                                     {item.com}

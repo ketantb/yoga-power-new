@@ -33,7 +33,7 @@ const AuravedaTotalTable = ({auravedaStore,status,validate,toRenderErrorOnFronte
       toRenderErrorOnFrontend()
       return 
    }
-    saveUpdate(item)    
+    saveUpdate({...item,ClientId:clientReferance.MemberId})    
     createStockReport({...clientReferance,...item})
   }
 

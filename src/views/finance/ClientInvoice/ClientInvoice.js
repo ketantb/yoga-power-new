@@ -165,7 +165,8 @@ toGetSelectInputData()
         ContactNumber:obj?.ContactNumber,
         CustomerId:obj?.ClientId?obj?.ClientId:obj?.EnquiryId,
         EmailId:obj?.Email?obj?.Email:obj?.Emailaddress,
-        MemberId:obj?._id,
+        ClientId:obj?._id,
+        MemberId:obj?._id
     })    
  }
 

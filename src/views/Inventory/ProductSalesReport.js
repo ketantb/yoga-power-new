@@ -1,13 +1,6 @@
 import {
-    CButton,
     CCard,
-    CCardBody,
     CCol,
-    CForm,
-    CFormInput,
-    CFormSelect,
-    CPagination,
-    CPaginationItem,
     CRow,
     CTable,
     CTableBody,
@@ -15,29 +8,21 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
-    CToast,
-    CToastBody,
-    CToastClose,
     CCardHeader,
     CCardTitle
 } from "@coreui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { BsWhatsapp } from "react-icons/bs";
-import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
 import { useSelector } from 'react-redux'
 import { useAdminValidation } from "../Custom-hook/adminValidation";
 
-const AllSuppilerList = () => {
+const AllSuppilerList = ({onlyOneClient,id}) => {
     const url = useSelector((el)=>el.domainOfApi) 
     const [soldProductData,setSoldProductData] = useState([])
     const pathVal = useAdminValidation()
-    
-
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
 
     const headers =   {
@@ -51,8 +36,10 @@ const AllSuppilerList = () => {
 
 
     function  getSoldProductData() {
-        axios.get(`${url}/stockorderlist/sold/${pathVal}`,{headers})
-       
+
+        const path = onlyOneClient?`${url}/stockorderlist/shop/${id}`:`${url}/stockorderlist/sold/${pathVal}`
+
+        axios.get(path,{headers})
                .then((res) => {
                 console.log(res.data)
                 setSoldProductData(res.data.reverse())
@@ -62,21 +49,12 @@ const AllSuppilerList = () => {
                })
        }
 
-    
-   
-
-
-       console.log(soldProductData)
-   
-
-
-    
     return (
-        <CCard className="overflow-hidden" >
-           <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
-                        <CCardTitle className="mt-2 mb-4">Product Sales Report</CCardTitle>
-                    </CCardHeader>
-        <CRow className=' mb-2'>
+        <CCard className={onlyOneClient?"border-0":"overflow-hidden"} >
+          {!onlyOneClient&& <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
+                        <CCardTitle className="mt-2 mb-4">{onlyOneClient?'Cliet Shop Report':'Product Sales Report'}</CCardTitle>
+                    </CCardHeader>}
+        <CRow className='mb-2'>
             
             <CCol lg={3} sm={6} className='mb-2'>
             </CCol>

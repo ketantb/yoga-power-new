@@ -38,7 +38,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { CountryList } from "src/components/CountryList";
 import ProfileIcon from 'src/assets/images/avatars/profile_icon.png'
 import axios from "axios";
-import { listAll, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref,  uploadBytesResumable } from 'firebase/storage'
 import { storage } from "src/firebase";
 import logo from 'src/assets/images/avatars/icon.png'
 import { v4 } from "uuid";
@@ -50,7 +50,7 @@ import { cilArrowCircleBottom} from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
 
-const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
+const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => {
     
 
     const url1 = useSelector((el)=>el.domainOfApi) 
@@ -328,29 +328,26 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId }) => {
         }
 
 
-const headers = {
+       const headers = {
             'Authorization': `Bearer ${token}`,
             'My-Custom-Header': 'foobar'
         };
-        axios.post(`${url1}/memberForm/create`, data, { headers },
-        ).then((resp) => {
-                console.log(resp.data._id)
+            
+        
+        axios.all([
+            axios.post(`${url1}/enquiryForm/update/${ids._id}`, {
+                enquirestatus:'notshow',
+                enquiryConvertedDate:new Date()}, { headers}),
+            axios.post(`${url1}/memberForm/create`, data, { headers },)]
+            ).then(() => {
                 setMemberId(resp.data._id);
                 alert("successfully submitted")
-                setVisi(true)
-                        
-axios.post(`${url1}/enquiryForm/update/${ids._id}`, {
-    enquirestatus:'notshow',
-    enquiryConvertedDate:new Date()}, { headers: {
-    "Authorization": `Bearer ${ token }`,
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-}})   
-                
-                
+                setVisi(true)     
+                if(getEnquiry){
+                    getEnquiry()
+                }
 
-
-}).catch((error) => {
+        }).catch((error) => {
                 console.error(error)
 })
             
@@ -407,9 +404,6 @@ const headers = {
     setInvoice(data.length)
   })
  }
-
-
-
  useEffect(()=>{
     getInvoiceNoFun()
 },[])
@@ -1324,10 +1318,8 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                             </CTabPane>
                         </CTabContent>
 
-                        <CModal size="xl" alignment="center" scrollable visible={visi}  onClick={(e) => {
-                            e.stopPropagation()
-                            clickFun2('invoice-cancel') 
-                            }} >
+                        <CModal size="xl" alignment="center" scrollable visible={visi} onClose={() => {clickFun2('invoice-cancel')}}
+                            >
                             <CModalHeader>
                                 <CModalTitle>Invoice</CModalTitle>
                             </CModalHeader>

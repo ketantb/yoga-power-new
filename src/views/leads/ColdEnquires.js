@@ -126,7 +126,16 @@ const ColdEnquires = () => {
                 console.error(error)
             })
     }, []);
+
+
+    
     const [staff, setStaff] = useState([])
+
+    const unikqValidateObj = {
+        ...uniqObj,
+        employeeMongoId:Counseller,
+        empNameC:staff.find((el)=>el._id===Counseller)?.FullName
+    }
     function getStaff() {
         axios.get(`${url2}/employeeform/${pathRouteVal}`, {
             headers: {
@@ -175,7 +184,7 @@ const ColdEnquires = () => {
 
         if (enquiryStage === 'Appointment') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment',  
-            Counseller: staff.find((el)=>el._id===Counseller)?.FullName,identifyStage:'Appointment',
+            Counseller: staff.find((el)=>el._id===Counseller)?.FullName,identifyStage:'Appointment',...unikqValidateObj,
             EmployeeId:Counseller,CallStatus: CallStatus1 }
             let data2 = {
                 username: username,
@@ -185,7 +194,7 @@ const ColdEnquires = () => {
                  FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Discussion: Discussion,
                  Counseller: staff.find((el)=>el._id===Counseller)?.FullName,
                  EmployeeId:Counseller,
-                status: 'CallReport'
+                status: 'CallReport',
             }
 
             fetch(`${url1}/enquiryForm/update/${followForm}`, {
@@ -211,7 +220,7 @@ const ColdEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...data2,... uniqObj})
+                body: JSON.stringify({...data2,...unikqValidateObj})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -220,7 +229,7 @@ const ColdEnquires = () => {
 
         } else if (enquiryStage === 'Trial Session') {
             const data1 = { appointmentDate, appointmentTime,CallStatus: CallStatus1,
-                 appointmentfor: 'Trial Session', Counseller: Counseller,identifyStage:'Trial Session'}
+                 appointmentfor: 'Trial Session', Counseller: Counseller,identifyStage:'Trial Session',...unikqValidateObj}
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
@@ -257,7 +266,7 @@ const ColdEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...data2,... uniqObj})
+                body: JSON.stringify({...data2,... unikqValidateObj})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -275,7 +284,7 @@ const ColdEnquires = () => {
                 AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage,
                 CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp,
                 Counseller: staff.find((el)=>el._id===Counseller)?.FullName, EmployeeId:Counseller, Discussion: Discussion,
-                status: 'CallReport'
+                status: 'CallReport',...unikqValidateObj
             }
            
             const data1 = { 
@@ -300,6 +309,7 @@ const ColdEnquires = () => {
                 ServiceName:ServiceName1,
                 Emailaddress:email,
                 ContactNumber:Contact,
+                ...unikqValidateObj
             }
 
                 fetch(`${url1}/enquiryForm/update/${followForm}`, {
@@ -325,7 +335,7 @@ const ColdEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...data2,... uniqObj})
+                body: JSON.stringify({...data2,... unikqValidateObj})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -350,7 +360,7 @@ const ColdEnquires = () => {
              CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, 
              Counseller: staff.find((el)=>el._id===Counseller)?.FullName, 
              EmployeeId: Counseller, Discussion: Discussion,
-            status: 'CallReport'
+            status: 'CallReport',...unikqValidateObj
         }
 
         fetch(`${url}/prospect/create`, {
@@ -360,14 +370,14 @@ const ColdEnquires = () => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({...data,...uniqObj})
+            body: JSON.stringify({...data,...unikqValidateObj})
         }).then((resp) => {
             resp.json().then(() => {
                 setVisible(false)
             })
         })
         const data1 = {  Counseller: staff.find((el)=>el._id===Counseller)?.FullName, 
-            EmployeeId: Counseller, }
+            EmployeeId: Counseller,...unikqValidateObj }
 
         fetch(`${url1}/enquiryForm/update/${followForm}`, {
             method: "POST",
@@ -393,7 +403,6 @@ const ColdEnquires = () => {
             .then((res) => {
                 setResult1(res.data.filter((list) =>  list.CallStatus === 'Cold' &&  list.enquirestatus!=='notshow').reverse())
                 setOgList(res.data.filter((list) =>   list.CallStatus === 'Cold' &&  list.enquirestatus!=='notshow').reverse())
-                console.log(res.data);
             })
             .catch((error) => {
                 console.error(error)
@@ -798,7 +807,7 @@ const ColdEnquires = () => {
                                                 {staff.filter((list) =>  list.selected === 'Select')
                                                 .map((item, index) => (
                                                   (
-                                                        <option key={index} value={item._id} >{item.FullName}</option>
+                                                        <option key={index} value={item._id} >{[item.FullName,item.EmployeeID].join('\n')}</option>
                                                     )
                                                 ))}</CFormSelect>
                                         </CCol>

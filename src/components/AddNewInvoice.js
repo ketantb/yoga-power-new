@@ -286,7 +286,9 @@ setServiceDays(el.Days)
 
 
 
-    return   <CModal size="xl" alignment="center" scrollable visible={viewInvoice} onClose={() => {setViewInvoice(false) }}>
+    return   <CModal size="xl" alignment="center" scrollable visible={viewInvoice} onClose={() => {setViewInvoice(false) }}
+    
+    >
     <CModalHeader>
         <CModalTitle>Invoice</CModalTitle>
     </CModalHeader>

@@ -22,7 +22,7 @@ return function insertManyCollection(collection,getData=()=>{},number){
 
     const data = collection.map((el,i)=>{
         return {
-        ['EnquiryId']:(centerCode+""+(number+1+i)),
+        ['EnquiryId']:(centerCode+"Q"+(number+1+i)),
         ['createdAt']:new Date(el["Date"]),
         ['Fullname']:el['Name'],
         ['ContactNumber']:el["Mobile"],

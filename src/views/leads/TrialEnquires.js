@@ -36,7 +36,7 @@ import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs'
 import moment from 'moment/moment'
 import AdmissionForm1 from 'src/components/AdmissionForm1'
 import { useSelector } from 'react-redux'
-import { useAdminValidation } from '../Custom-hook/adminValidation'
+import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 import { leadsSuperRight } from '../hr/Rights/rightsValue/crmRightsValue'
 import useExportHook from './leaadCutomHook/useExportHook'
 import EnquiryForm from '../forms/EnquiryForm'
@@ -56,6 +56,7 @@ const TrialEnquires = () => {
     const pathRoute = useAdminValidation()
     const pathRouteMaster = useAdminValidation('Master')
     const exportTrailFun = useExportHook('YogPowerTrailEnquires.xlsx')
+    const uniqObjeact = useUniqAdminObjeact()
 
 
     const rightsData = useSelector((el) => el.empLoyeeRights?.crmRights
@@ -138,6 +139,13 @@ const TrialEnquires = () => {
             })
     }, []);
     const [staff, setStaff] = useState([])
+
+    const unikqValidateObj = {
+        ...uniqObjeact,
+        employeeMongoId:Counseller,
+        empNameC:staff.find((el)=>el._id===Counseller)?.FullName
+    }
+
     function getStaff() {
         axios.get(`${ url2 }/employeeForm/${ pathRouteMaster }`, {
             headers: {
@@ -166,12 +174,13 @@ const TrialEnquires = () => {
             + currentdate.getMinutes();
 
         if (enquiryStage === 'Appointment') {
-            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment', Counseller: Counseller, CallStatus: CallStatus1 }
+            const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment',
+             Counseller: Counseller, CallStatus: CallStatus1,...unikqValidateObj }
             let data2 = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
+                status: 'CallReport',...unikqValidateObj
             }
 
             fetch(`${ url1 }/enquiryForm/update/${ followForm }`, {
@@ -198,7 +207,7 @@ const TrialEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ ...uniqObjeact, ...data2 })
+                body: JSON.stringify({ ...unikqValidateObj, ...data2 })
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -209,7 +218,8 @@ const TrialEnquires = () => {
 
             const data1 = {
                 appointmentDate, appointmentTime, appointmentfor: 'Trial Session',
-                Counseller: Counseller, identifyStage: 'Trial Session', CallStatus: CallStatus1
+                Counseller: Counseller, identifyStage: 'Trial Session', CallStatus: CallStatus1,
+                ...unikqValidateObj
             }
 
             let data2 = {
@@ -217,7 +227,7 @@ const TrialEnquires = () => {
                 EnquiryID: followForm, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
                 AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
-                status: 'CallReport'
+                status: 'CallReport',...unikqValidateObj
             }
 
             fetch(`${ url1 }/enquiryForm/update/${ followForm }`, {
@@ -243,7 +253,7 @@ const TrialEnquires = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ ...uniqObjeact, ...data2 })
+                body: JSON.stringify({...data2})
             }).then((resp) => {
                 resp.json().then(() => {
                     setCallReport(false)
@@ -256,7 +266,10 @@ const TrialEnquires = () => {
             let data = {
                 username: username,
                 EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
+                AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, 
+                CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, 
+                Discussion: Discussion,...unikqValidateObj,
                 status: 'prospect'
             }
 
@@ -297,6 +310,7 @@ const TrialEnquires = () => {
                 ServiceName:ServiceName1,
                 Emailaddress:email,
                 ContactNumber:Contact,
+                ...unikqValidateObj
             }
 
             fetch(`${ url1 }/enquiryForm/update/${ followForm }`, {
@@ -331,7 +345,8 @@ const TrialEnquires = () => {
         let data = {
             username: username,
             EnquiryID: followForm, CallDate: date, Time: time,
-            Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+            Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, CallStatus: CallStatus1, FollowupDate: FollowupDate,
+            TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,...unikqValidateObj,
             status: 'CallReport'
         }
 
@@ -342,13 +357,13 @@ const TrialEnquires = () => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ ...uniqObjeact, ...data })
+            body: JSON.stringify({ ...unikqValidateObj, ...data })
         }).then((resp) => {
             resp.json().then(() => {
                 setVisible(false)
             })
         })
-        const data1 = { Counseller }
+        const data1 = { Counseller,...unikqValidateObj }
 
         fetch(`${ url1 }/enquiryForm/update/${ followForm }`, {
             method: "POST",
@@ -489,7 +504,7 @@ const TrialEnquires = () => {
     }
 
     function conFirmTrailStatus(id) {
-        axios.post(`${ url1 }/enquiryForm/update/${ id }`, { trailStatus: true }, {
+        axios.post(`${ url1 }/enquiryForm/update/${ id }`, { trailStatus: true,...unikqValidateObj }, {
             headers: {
                 "Authorization": `Bearer ${ token }`,
                 'Accept': 'application/json',
@@ -523,7 +538,7 @@ const TrialEnquires = () => {
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
-                        <strong className="mt-2">Enquire Trial <span className='float-end'>Total Trial : {result1.filter((list) => list.username === username && list.appointmentfor.includes('Trial Session')).length}</span></strong>
+                        <strong className="mt-2">Enquire Trial <span className='float-end'>Total Trial : {result1.filter((list) =>list.appointmentfor.includes('Trial Session')).length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>
@@ -611,7 +626,7 @@ const TrialEnquires = () => {
                                 >
                                     <option value=''>Select</option>
                                     {arr.filter((list) => list[filterBy] != '').map((item, index) => (
-                                        item.username === username && (
+                                        (
                                             <option key={index} value={item.id}>{item[filterBy]}</option>
                                         )
                                     ))}
@@ -674,7 +689,7 @@ const TrialEnquires = () => {
                                             >
                                                 <option>Select Service</option>
                                                 {result.map((item, index) => (
-                                                    item.username === username && (
+                                                    (
                                                         item.status === true && (
                                                             <option key={index} value={item.id}>{item.selected_service}</option>
                                                         )
@@ -824,7 +839,7 @@ const TrialEnquires = () => {
                                                 <option>Select Counseller</option>
                                                 {staff.filter((list) => list.selected === 'Select').map((item, index) => (
                                                     (
-                                                        <option key={index}>{item.FullName}</option>
+                                                        <option key={index}>{[item.FullName,item.EmployeeID].join('\n')}</option>
                                                     )
                                                 ))}</CFormSelect>
                                         </CCol>
@@ -1188,7 +1203,6 @@ const TrialEnquires = () => {
                                     list.createdAt?.toLowerCase().includes(Search2.toLowerCase()) &&
                                     (list.ContactNumber+"").includes(Search4) &&
                                     list.Counseller.includes(Search10.toLowerCase()) &&
-
                                     list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
                                     list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
                                     list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) &&

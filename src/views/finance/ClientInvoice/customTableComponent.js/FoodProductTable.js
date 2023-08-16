@@ -36,7 +36,7 @@ import { useSelector } from 'react-redux';
       toRenderErrorOnFrontend()
       return 
    }
-    saveUpdate(item)    
+    saveUpdate({...item,ClientId:clientReferance.MemberId})    
     createStockReport({...clientReferance,...item})    
   }
 

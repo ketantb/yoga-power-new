@@ -246,8 +246,8 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     id="exampleFormControlInput1"
                                                     label="Full name"
                                                     value={Fullname}
-                                                    onChange={(e) => setFullname(e.target.value)}
                                                     placeholder="Enter Name"
+                                                    disabled
                                                 />
                                             </CCol>
                                             <CCol>
@@ -257,7 +257,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     id="exampleFormControlInput1"
                                                     label="Email address"
                                                     value={Email}
-                                                    onChange={(e) => setEmail(e.target.value)}
+                                                    disabled
                                                     placeholder="name@example.com"
                                                     text="Must be 8-20 characters long."
                                                     aria-describedby="exampleFormControlInputHelpInline"
@@ -271,7 +271,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     aria-label="Select Currency"
                                                     label="Country Code"
                                                     value={CountryCode}
-                                                    onChange={(e) => setCountryCode(e.target.value)}
+                                                    disabled
                                                 />
                                             </CCol>
                                             <CCol>
@@ -281,7 +281,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     id="exampleFormControlInput1"
                                                     label="Contact Number"
                                                     value={ContactNumber}
-                                                    onChange={(e) => setContactNumber(e.target.value)}
+                                                    disabled
                                                     placeholder="Enter Number"
                                                 />
                                             </CCol>
@@ -293,7 +293,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     type="number"
                                                     id="exampleFormControlInput1"
                                                     value={WhatsappNumber}
-                                                    onChange={(e) => setWhatsappNumber(e.target.value)}
+                                                    disabled
                                                     label="Whatsapp Number"
                                                     placeholder="Enter Number"
                                                 />
@@ -304,7 +304,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     type="date"
                                                     id="exampleFormControlInput1"
                                                     value={DateofBirth}
-                                                    onChange={(e) => setDateofBirth(e.target.value)}
+                                                    disabled
                                                     label="Date of Birth"
                                                     placeholder="Enter Date"
                                                 />
@@ -317,7 +317,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     type="date"
                                                     id="exampleFormControlInput1"
                                                     value={Anniversarydate}
-                                                    onChange={(e) => setAnniversarydate(e.target.value)}
+                                                    disabled
                                                     label='Anniversary Date'
                                                     placeholder="Enter Anniversary Date"
                                                 />
@@ -327,7 +327,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     aria-label="Select Currency"
                                                     value={Gender}
-                                                    onChange={(e) => setGender(e.target.value)}
+                                                    disabled
                                                     label="Gender"
                                                     
                                                 />
@@ -339,7 +339,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                 id="exampleFormControlTextarea1"
                                                 label="Address"
                                                 value={Address}
-                                                onChange={(e) => setAddress(e.target.value)}
+                                                disabled
                                                 rows="2"
                                             ></CFormTextarea>
                                         </CCol>
@@ -350,7 +350,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     type="text"
                                                     id="exampleFormControlInput1"
                                                     value={Area}
-                                                    onChange={(e) => setArea(e.target.value)}
+                                                    disabled
                                                     label="Area"
                                                     placeholder="Enter Locality"
                                                 />
@@ -360,7 +360,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     type="text"
                                                     value={city}
-                                                    onChange={(e) => setCity(e.target.value)}
+                                                    disabled
                                                     label="City"
                                                     placeholder="Enter City"
                                                 />
@@ -372,7 +372,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     type="number"
                                                     value={pincode}
-                                                    onChange={(e) => setPincode(e.target.value)}
+                                                    disabled
                                                     label="Pin Code"
                                                     placeholder="Enter Pin Code"
                                                 />
@@ -382,7 +382,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     type="text"
                                                     value={state}
-                                                    onChange={(e) => setState(e.target.value)}
+                                                    disabled
                                                     label="State"
                                                     placeholder="Enter State"
                                                 />
@@ -395,7 +395,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     type="url"
                                                     value={FacebookID}
-                                                    onChange={(e) => setFacebookID(e.target.value)}
+                                                    disabled
                                                     label="Facebook Id"
                                                     placeholder="Enter Facebook id"
                                                 />
@@ -405,7 +405,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     aria-label="Select Blood Group"
                                                     value={BloodGroup}
-                                                    onChange={(e) => setBloodGroup(e.target.value)}
+                                                    disabled
                                                     label="Blood Group"
                                                 />
                                             </CCol>
@@ -415,17 +415,23 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             <CCol xs={4}>
                                                 <CFormSwitch size="xl" label="SMS"
                                                     checked={sms}
-                                                    onChange={() => setsms(!sms)} />
+                                                    onChange={() => setsms(!sms)}
+
+                                                    />
                                             </CCol>
                                             <CCol xs={4}>
                                                 <CFormSwitch size="xl" label="Mail"
                                                     checked={mail}
-                                                    onChange={() => setmail(!mail)} />
+                                                    onChange={() => setmail(!mail)}
+
+                                                    />
                                             </CCol>
                                             <CCol xs={4}>
                                                 <CFormSwitch size="xl" label="Push Notification"
                                                     checked={pushnotification}
-                                                    onChange={() => setpushnotification(!pushnotification)} />
+                                                    onChange={() => setpushnotification(!pushnotification)}
+
+                                                    />
                                             </CCol>
                                         </CRow>
                                     </CCol>
@@ -442,6 +448,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     onChange={(e) => setName(e.target.value)}
                                                     label="Name"
                                                     placeholder="Enter Name"
+                                                    disabled
                                                 />
                                             </CCol>
                                             <CCol>
@@ -449,10 +456,10 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     type="text"
                                                     value={Relationship}
-                                                    onChange={(e) => setRelationship(e.target.value)}
                                                     id="exampleFormControlInput1"
                                                     label="Relationship"
                                                     placeholder="Enter Relationship"
+                                                    disabled
                                                 />
                                             </CCol>
 
@@ -461,8 +468,8 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     aria-label="Select Working Days"
                                                     value={CountryCode1}
-                                                    onChange={(e) => setCountryCode1(e.target.value)}
                                                     label="Country Code"
+                                                    disabled
                                                 />
                                             </CCol>
                                             <CCol xs={6}>
@@ -471,9 +478,10 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     type="number"
                                                     id="exampleFormControlInput1"
                                                     value={ContactNumber1}
-                                                    onChange={(e) => setContactNumber1(e.target.value)}
                                                     label="Contact Number"
                                                     placeholder="Enter Number"
+                                                    disabled
+
                                                 />
                                             </CCol>
                                         </CRow>
@@ -484,7 +492,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     aria-label="Select Service Name"
                                                     value={serviceName}
-                                                    onChange={(e) => setserviceName(e.target.value)}
+                                                    disabled
                                                     label="Service Name"
                                                 />
                                             </CCol>
@@ -493,7 +501,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     aria-label="Select Service Name"
                                                     value={serviceVaration}
-                                                    onChange={(e) => setserviceVariation(e.target.value)}
+                                                    disabled
                                                     label="Service Variation"
                                                 />
                                             </CCol>
@@ -503,7 +511,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     aria-label="Select Customer type"
                                                     value={Customertype}
-                                                    onChange={(e) => setCustomertype(e.target.value)}
+                                                    disabled
                                                     label="Customer type"
                                                 />
                                             </CCol>
@@ -513,7 +521,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     aria-label="Select Assign Staff"
                                                     value={EnquiryType}
-                                                    onChange={(e) => setEnquiryType(e.target.value)}
+                                                    disabled
                                                     label="Enquiry Type"
 
                                                 />
@@ -527,7 +535,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     aria-label="Select Assign Staff"
                                                     value={AssignStaff}
-                                                    onChange={(e) => setAssignStaff(e.target.value)}
+                                                    disabled
                                                     label="Assign Staff"
                                                 />
                                                    
@@ -537,7 +545,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     aria-label="Counselor"
                                                     value={MemberManager}
-                                                    onChange={(e) => setMemberManager(e.target.value)}
+                                                    disabled
                                                     label="Member Manager"   
                                                 />
                                             </CCol>
@@ -546,7 +554,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     aria-label="Select Batch"
                                                     value={Batch}
-                                                    onChange={(e) => setBatch(e.target.value)}
+                                                    disabled
                                                     label="Batch"
                                                 />
                                             </CCol>
@@ -555,7 +563,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     className="mb-1"
                                                     aria-label="Select General Trainer"
                                                     value={GeneralTrainer}
-                                                    onChange={(e) => setGeneralTrainer(e.target.value)}
+                                                    disabled
                                                     label="General Trainer"
                                                 />
                                             </CCol>
@@ -568,7 +576,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     type="text"
                                                     id="exampleFormControlInput1"
                                                     value={AttendanceID}
-                                                    onChange={(e) => setAttendanceID(e.target.value)}
+                                                    disabled
                                                     label="Attendance ID"
                                                 />
                                                  
@@ -579,7 +587,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     type="text"
                                                     id="exampleFormControlInput1"
                                                     value={CenterID}
-                                                    onChange={(e) => setCenterID(e.target.value)}
+                                                    disabled
                                                     label="Center ID"/>
                                                                                               </CCol>
                                             <CCol xs={6}>
@@ -588,7 +596,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     type="text"
                                                     id="exampleFormControlInput1"
                                                     value={LockerKeyNo}
-                                                    onChange={(e) => setLockerKeyNo(e.target.value)}
+                                                    disabled
                                                     label="Locker Key No"
                                                     placeholder="Enter Locker Key No"
                                                 />
@@ -599,7 +607,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                     type="text"
                                                     id="exampleFormControlInput1"
                                                     value={PAN}
-                                                    onChange={(e) => setPAN(e.target.value)}
+                                                    disabled
                                                     label="PAN"
                                                     placeholder="Enter PAN"
                                                 />
@@ -615,17 +623,20 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             <CListGroupItem>
                                                 <CFormCheck label="Back Pain"
                                                     checked={BackPain}
-                                                    onChange={() => setBackPain(!BackPain)} />
+                                                    onChange={() => setBackPain(!BackPain)} 
+                                                    />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Bone Fracture"
                                                     checked={BoneFracture}
-                                                    onChange={() => setBoneFracture(!BoneFracture)} />
+                                                    onChange={() => setBoneFracture(!BoneFracture)}
+                                                    />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Carpal Tunnel"
                                                     checked={CarpalTunnel}
-                                                    onChange={() => setCarpalTunnel(!CarpalTunnel)} />
+                                                    onChange={() => setCarpalTunnel(!CarpalTunnel)}
+                                                    />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Diabetes"
@@ -640,22 +651,27 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             <CListGroupItem>
                                                 <CFormCheck label="Pregnancy"
                                                     checked={HeartDiseaseCondition}
-                                                    onChange={() => setHeartDiseaseCondition(!HeartDiseaseCondition)} />
+                                                    onChange={() => setHeartDiseaseCondition(!HeartDiseaseCondition)} 
+                                                    />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Shoulder Pain"
                                                     checked={Epilepsy}
-                                                    onChange={() => setEpilepsy(!Epilepsy)} />
+                                                    onChange={() => setEpilepsy(!Epilepsy)}
+
+                                                    />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Foot Pain"
                                                     checked={FootPain}
-                                                    onChange={() => setFootPain(!FootPain)} />
+                                                    onChange={() => setFootPain(!FootPain)} 
+                                                    />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Knee Replacement"
                                                     checked={Glaucoma}
-                                                    onChange={() => setGlaucoma(!Glaucoma)} />
+                                                    onChange={() => setGlaucoma(!Glaucoma)} 
+                                                    />
                                             </CListGroupItem>
                                         </CListGroup>
                                     </CCol>
@@ -665,22 +681,28 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             <CListGroupItem>
                                                 <CFormCheck label="Joint Pain"
                                                     checked={AsthmaCOPD}
-                                                    onChange={() => setAsthmaCOPD(!AsthmaCOPD)} />
+                                                    onChange={() => setAsthmaCOPD(!AsthmaCOPD)} 
+                                                    />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Surgery"
                                                     checked={HerniaDiastasisRecti}
-                                                    onChange={() => setHerniaDiastasisRecti(!HerniaDiastasisRecti)} />
+                                                    onChange={() => setHerniaDiastasisRecti(!HerniaDiastasisRecti)} 
+
+                                                    />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="High Blood Pressure"
                                                     checked={HighBloodPressure}
-                                                    onChange={() => setHighBloodPressure(!HighBloodPressure)} />
+                                                    onChange={() => setHighBloodPressure(!HighBloodPressure)}
+                                                    />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Other"
                                                     checked={Other}
-                                                    onChange={() => setOther(!Other)} />
+                                                    onChange={() => setOther(!Other)}
+                                                    
+                                                    />
                                             </CListGroupItem>
                                         </CListGroup>
                                     </CCol>
@@ -694,6 +716,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                 onChange={(e) => setOtherText(e.target.value)}
                                                 label="Other Reason"
                                                 placeholder="Enter Other Reason"
+                                                disabled
                                             />
                                         </CCol>
                                     )}
@@ -713,6 +736,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             onChange={(e) => setHeight(e.target.value)}
                                             label="Height"
                                             placeholder="Enter height"
+                                            disabled
                                         />
                                     </CCol>
                                     <CCol xs={6}>
@@ -724,6 +748,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             onChange={(e) => setWeight(e.target.value)}
                                             label="Weight"
                                             placeholder="Enter Weight"
+                                            disabled
                                         />
                                     </CCol>
                                     <CCardTitle>Fitness Goals</CCardTitle>
@@ -735,7 +760,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             value={fitnessLevel}
                                             onChange={(e) => setfitnessLevel(e.target.value)}
                                             label="Fitness Level"
-                                            
+                                            disabled                                            
                                         />
                                     </CCol>
                                     <CCol xs={3}>
@@ -745,6 +770,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             onChange={(e) => setfitnessGoal(e.target.value)}
                                             aria-label="Select Currency"
                                             label="Fitness Goal"
+                                            disabled
                                         />
                                     </CCol>
                                     <CCol xs={3}>
@@ -756,6 +782,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             id="exampleFormControlInput1"
                                             label="Ideal Weight"
                                             placeholder="Enter Ideal Weight"
+                                            disabled
                                         />
                                     </CCol>
                                     <CCol>
@@ -766,6 +793,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             label="Suggestion"
                                             rows="2"
                                             text="Must be 8-20 words long."
+                                            disabled
                                         ></CFormTextarea>
                                     </CCol>
                                     <CCol>
@@ -777,6 +805,7 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             label="Comments"
                                             rows="2"
                                             text="Must be 8-20 words long."
+                                            disabled
                                         ></CFormTextarea>
                                     </CCol>
                                 </CRow>
