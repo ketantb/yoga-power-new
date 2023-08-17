@@ -961,7 +961,7 @@ const AllEnquires = () => {
 
 
                         <CTable className='mt-3' align="middle" bordered  scrollable hover responsive>
-                            <CTableHead  >
+                            <CTableHead color={'darkGreen'} >
                                     <CTableHeaderCell >Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell >Enquiry ID</CTableHeaderCell>
                                     <CTableHeaderCell >Date</CTableHeaderCell>
