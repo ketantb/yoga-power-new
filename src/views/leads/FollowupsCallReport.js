@@ -125,9 +125,8 @@ const FollowupCallReport = () => {
                             </CInputGroup>
                         </div>
                       
-                        <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                                <CTableRow >
+                        <CTable className='mt-3' align="middle" bordered  hover responsive>
+                            <CTableHead >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry ID</CTableHeaderCell>
                                     <CTableHeaderCell>Date</CTableHeaderCell>
@@ -140,7 +139,6 @@ const FollowupCallReport = () => {
                                  
                                     <CTableHeaderCell>Discussion</CTableHeaderCell>
                                     <CTableHeaderCell>Counseller</CTableHeaderCell>
-                                </CTableRow>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>

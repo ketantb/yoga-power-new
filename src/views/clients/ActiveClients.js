@@ -603,8 +603,7 @@ const clearFilter = ()=>{
                             <ViewInvoice add={viewInvoice} clickfun={() => setViewInvoice(false)} invoiceId={invId} clientId={cliId} />
                         }
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                                <CTableRow >
+                            <CTableHead  >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell>Member ID</CTableHeaderCell>
                                     <CTableHeaderCell>Name</CTableHeaderCell>
@@ -621,7 +620,6 @@ const clearFilter = ()=>{
                                     <CTableHeaderCell>Status</CTableHeaderCell>
                                     <CTableHeaderCell>Action</CTableHeaderCell>
                                     <CTableHeaderCell>Edit</CTableHeaderCell>
-                                </CTableRow>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>

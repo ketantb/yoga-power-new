@@ -996,9 +996,8 @@ const TrialEnquires = () => {
                                 </div>
                             </CModalBody>
                         </CModal>
-                        <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                                <CTableRow >
+                        <CTable className='mt-3' align="middle" bordered  hover responsive scrollable>
+                            <CTableHead color={'darkGreen'} >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry ID</CTableHeaderCell>
                                     <CTableHeaderCell>Date</CTableHeaderCell>
@@ -1019,7 +1018,6 @@ const TrialEnquires = () => {
                                     <CTableHeaderCell>Counsellor</CTableHeaderCell>
                                     {(isAdmin || trailAdd) && <CTableHeaderCell>Action</CTableHeaderCell>}
                                     {(isAdmin || (trailEdit || trailDelete)) && <CTableHeaderCell>Edit/Delete</CTableHeaderCell>}
-                                </CTableRow>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>

@@ -966,9 +966,8 @@ const ColdEnquires = () => {
                         {edit &&
                             <AdmissionForm1 add={admissionForm} setAdmissionForm={setAdmissionForm} ids={edit} />
                         }
-                        <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                                <CTableRow >
+                        <CTable className='mt-3' align="middle" bordered  hover responsive scrollable>
+                            <CTableHead   color={'darkGreen'} >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry ID</CTableHeaderCell>
                                     <CTableHeaderCell>Date</CTableHeaderCell>
@@ -984,7 +983,6 @@ const ColdEnquires = () => {
                                     <CTableHeaderCell>Counseller</CTableHeaderCell>
                                     {(isAdmin|| coldAdd)&&<CTableHeaderCell>Action</CTableHeaderCell>}
                                     {(isAdmin||coldDelete||coldEdit)&&<CTableHeaderCell>Edit</CTableHeaderCell>}
-                                </CTableRow>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>

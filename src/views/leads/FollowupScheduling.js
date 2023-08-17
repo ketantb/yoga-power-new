@@ -1209,9 +1209,8 @@ const FollowupScheduling = () => {
                                 <CButton type='submit' color="primary" onClick={() => updateProspect()}>Update Prospect</CButton>
                             </CModalFooter>
                         </CModal>
-                        <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                                <CTableRow >
+                        <CTable className='mt-3' align="middle" bordered  hover responsive scrollable>
+                            <CTableHead color={'darkGreen'} >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry ID</CTableHeaderCell>
                                     <CTableHeaderCell>Date</CTableHeaderCell>
@@ -1227,7 +1226,6 @@ const FollowupScheduling = () => {
                                     <CTableHeaderCell>Counseller</CTableHeaderCell>
                                     {(isAdmin|| prospectAdd)&&<CTableHeaderCell>Action</CTableHeaderCell>}
                                     {(isAdmin|| prospectEdit||prospectDelete)&&<CTableHeaderCell>Edit</CTableHeaderCell>}
-                                </CTableRow>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>

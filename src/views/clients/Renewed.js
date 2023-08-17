@@ -397,15 +397,14 @@ const Renewed = () => {
                                 </CTableRow>
                                 {result1.filter((list) =>{
                                         console.log(list)
-                                 return    list.username === username
-                                    //  && list.status === 'renewed'
+                                 return    
                                     && list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
                                     list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) &&
                                      list.serviceName.toLowerCase().includes(Search6.toLowerCase()) &&
                                       list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
 
 }).filter((list) =>list.renewed===true).map((item, index) => (
-                                    item.username === username && (
+                                   (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 }</CTableDataCell>
                                             <CTableDataCell>{item.ClientId}</CTableDataCell>

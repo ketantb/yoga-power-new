@@ -317,8 +317,7 @@ function Edit(data){
 
 
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                                <CTableRow >
+                            <CTableHead  >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell>Member ID</CTableHeaderCell>
                                     <CTableHeaderCell>Name</CTableHeaderCell>
@@ -336,7 +335,6 @@ function Edit(data){
                                     <CTableHeaderCell>Action</CTableHeaderCell>
                                     <CTableHeaderCell>Invoice</CTableHeaderCell>
                                     <CTableHeaderCell>Edit</CTableHeaderCell>
-                                </CTableRow>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>

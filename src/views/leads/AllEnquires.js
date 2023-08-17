@@ -960,7 +960,7 @@ const AllEnquires = () => {
 
 
 
-                        <CTable className='mt-3' align="middle" bordered  scrollable hover responsive>
+                        <CTable className='mt-3' align="middle" bordered  hover responsive scrollable>
                             <CTableHead color={'darkGreen'} >
                                     <CTableHeaderCell >Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell >Enquiry ID</CTableHeaderCell>
@@ -980,7 +980,7 @@ const AllEnquires = () => {
                                     {(isAdmin|| enquiryAdd)&&<CTableHeaderCell >Action</CTableHeaderCell>}
                                     {(isAdmin|| enquiryEdit)&&<CTableHeaderCell >Edit</CTableHeaderCell>}
                             </CTableHead>
-                            <CTableBody className='border-1'>
+                            <CTableBody >
                                 <CTableRow>
                                     <CTableDataCell>
                                         <CFormInput
@@ -1161,7 +1161,7 @@ const AllEnquires = () => {
                                            list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
 
                                 }).map((item, index) => (
-                                    <CTableRow key={index}>
+                                    <CTableRow key={index} className='border-1'>
                                         <CTableDataCell>{((result1.filter((list)=>list.enquirestatus!=='notshow').length - index)) - (paging * 10)}</CTableDataCell>
                                         <CTableDataCell>{item.EnquiryId}</CTableDataCell>
                                         <CTableDataCell className='text-center'>{moment(item.createdAt).format("DD-MM-YYYY")}</CTableDataCell>
