@@ -960,29 +960,27 @@ const AllEnquires = () => {
 
 
 
-                        <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} scrollable hover responsive>
-                            <CTableHead style={{ position: 'sticky', backgroundColor: "#0B5345", color: "white", top: '0px' }} >
-                                <CTableRow style={{ position: 'sticky', top: '0px' }}>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Sr.No</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Enquiry ID</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Date</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Time</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Name</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Mobile</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Service</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Source</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Enquiry stage</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Call Status</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Message</CTableHeaderCell>
-                                    {(isAdmin|| enquiryAdd)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Add</CTableHeaderCell>}
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px', minWidth: '100px' }} > Date/Time</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Assigned by</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Counsellor</CTableHeaderCell>
-                                    {(isAdmin|| enquiryAdd)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Action</CTableHeaderCell>}
-                                    {(isAdmin|| enquiryEdit)&&<CTableHeaderCell style={{ position: 'sticky', top: '0px' }}>Edit</CTableHeaderCell>}
-                                </CTableRow>
+                        <CTable className='mt-3' align="middle" bordered  scrollable hover responsive>
+                            <CTableHead  >
+                                    <CTableHeaderCell >Sr.No</CTableHeaderCell>
+                                    <CTableHeaderCell >Enquiry ID</CTableHeaderCell>
+                                    <CTableHeaderCell >Date</CTableHeaderCell>
+                                    <CTableHeaderCell >Time</CTableHeaderCell>
+                                    <CTableHeaderCell >Name</CTableHeaderCell>
+                                    <CTableHeaderCell >Mobile</CTableHeaderCell>
+                                    <CTableHeaderCell >Service</CTableHeaderCell>
+                                    <CTableHeaderCell >Source</CTableHeaderCell>
+                                    <CTableHeaderCell >Enquiry stage</CTableHeaderCell>
+                                    <CTableHeaderCell >Call Status</CTableHeaderCell>
+                                    <CTableHeaderCell >Message</CTableHeaderCell>
+                                    {(isAdmin|| enquiryAdd)&&<CTableHeaderCell >Add</CTableHeaderCell>}
+                                    <CTableHeaderCell > Date/Time</CTableHeaderCell>
+                                    <CTableHeaderCell >Assigned by</CTableHeaderCell>
+                                    <CTableHeaderCell >Counsellor</CTableHeaderCell>
+                                    {(isAdmin|| enquiryAdd)&&<CTableHeaderCell >Action</CTableHeaderCell>}
+                                    {(isAdmin|| enquiryEdit)&&<CTableHeaderCell >Edit</CTableHeaderCell>}
                             </CTableHead>
-                            <CTableBody>
+                            <CTableBody className='border-1'>
                                 <CTableRow>
                                     <CTableDataCell>
                                         <CFormInput

@@ -1326,12 +1326,12 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                             </CTabPane>
                         </CTabContent>
 
-                        <CModal size="xl" alignment="center" scrollable visible={visi} onClose={() => {clickFun2('invoice-cancel')}}
+                        <CModal size="xl"  aria-labelledby="invoice-model" alignment="center" scrollable visible={visi} onClose={() => {clickFun2('invoice-cancel')}}
                             >
                             <CModalHeader>
                                 <CModalTitle>Invoice</CModalTitle>
                             </CModalHeader>
-                            <CModalBody>
+                            <CModalBody >
                                 <CRow>
                                     <CCol lg={12} className='text-center'><CImage src={logo} width="100px" height='100px' /></CCol>
                                     <CCol lg={12} className='text-center mt-2'><h5>Yog Power International  </h5></CCol>
