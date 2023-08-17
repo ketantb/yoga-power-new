@@ -46,15 +46,17 @@ import { clientManagementRights } from '../hr/Rights/rightsValue/crmRightsValue'
 import useClientExport from './Custom-Hook/useClientExport'
 
 
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
 
 const AllClients = () => {
     const url1 = useSelector((el)=>el.domainOfApi) 
     const navigateFitnees = useNavigate()
-    const pathVal  = useAdminValidation()
+    const pathValMaster  = useAdminValidation('Master')
+    const pathal =  useAdminValidation()
+    let pageNumber = 0
+
+
     const uniQObjVal = useUniqAdminObjeact()
-    const exportClientData = useClientExport('All-Clients')
+    const exportClientData = useClientExport('All-Clients.xlsx')
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
     ?.crmLeads?.items?.superRight) 
@@ -104,10 +106,11 @@ const AllClients = () => {
     const [showEdit,setEdit] = useState(false)
     const [editData,setEditData] = useState({})
 
+    const [uniqClientId,setUniqClientId] = useState([])
+
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
     const [result1, setResult1] = useState([]);
     const [prevData,setPrevData] = useState([])
  
@@ -116,7 +119,7 @@ const AllClients = () => {
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url1}/subservice/${pathVal}`, {
+        axios.get(`${url1}/subservice/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -130,7 +133,7 @@ const AllClients = () => {
     }, []);
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url1}/employeeForm/${pathVal}`, {
+        axios.get(`${url1}/employeeForm/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -147,17 +150,18 @@ const AllClients = () => {
 
     const [ogList, setOgList] = useState([])
     function getEnquiry() {
-        axios.get(`${url1}/memberForm/${pathVal}`, {
+        axios.get(`${url1}/memberForm/${pathal}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
-                res.data?.reverse()
-                console.log(res.data)
-                setPrevData(res.data)
-                setResult1(res.data)
-                setOgList(res.data)
+                const data = res.data.filter((list) =>   list.status === 'active').reverse()
+                console.log(data)
+
+                setPrevData(data)
+                setResult1(data)
+                setOgList(data)
             })
             .catch((error) => {
                 console.error(error)
@@ -169,25 +173,7 @@ const AllClients = () => {
 
    
 
-  
-    function getClientinfo(id) {
-        axios.get(`${url1}/memberForm/${id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setName(res.data.Fullname)
-                setContact(res.data.ContactNumber)
-                setServiceName1(res.data.serviceName)
-                setCallStatus1(res.data.CallStatus)
-                setEmail(res.data.Email)                
-                setVisible(true)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
+
 
 
     function deleteEnquiry(id) {
@@ -210,15 +196,23 @@ const AllClients = () => {
     }
    
 
-    const handleFollowup = (id,uniqId) => {
+    const handleFollowup = (id,uniqId,item) => {
         setFollowForm(id)
         setUniqId(uniqId)
-        getClientinfo(id)
+        getCallReport(item)
     }
+
+    function getCallReport(item) {  
+        setUpdateItem(item)
+        setName(item.Fullname)
+        setContact(item.ContactNumber)
+        setServiceName1(item.serviceName?.trim()?.toLowerCase())
+        setCallStatus1(item.CallStatus)
+        setEmail(item.Email)
+}
    
 
     function NavigateFitnnesofClient(id){
-    console.log(id)
      navigateFitnees(`/clients/member-details/${id}/9`)   
     }
 
@@ -327,6 +321,14 @@ const clearFilter = ()=>{
     setResult1(prevData)
     const value = {target:{value:''}}
     dateFilter(value)
+    setFilterBy('')
+    setSubFilter('')
+}
+
+
+const getUniqCllientCallData = (id)=>{
+                setUniqClientId(id)
+                setCalls(true)        
 }
 
     return (
@@ -408,7 +410,7 @@ const clearFilter = ()=>{
                             </CCol>
                         </CRow>
                         
-                        <CallUpdate add={Calls} clickfun={() => setCalls(false)} ids={CallUpdateID} />
+                        <CallUpdate add={Calls} clickfun={() => setCalls(false)} ids={uniqClientId} />
 
                         <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible} 
                         onClose={() => setVisible(false)} >
@@ -463,13 +465,14 @@ const clearFilter = ()=>{
 
                                             >
                                                 <option>Select Service</option>
-                                                {result.map((item, index) => (
+                                                {result.map((item,) => (
                                                   (
                                                         item.status === true && (
-                                                            <option key={index} value={item.id}>{item.selected_service}</option>
+                                                            item.selected_service?.trim()?.toLowerCase()
                                                         )
                                                     )
-                                                ))}
+                                                )).filter((el,i,arr)=>i===arr.indexOf(el)
+                                                ).map((el,i)=><option key={i}>{el}</option>) }
                                             </CFormSelect>
                                         </CCol>
                                         <CCol lg={4} md={6} sm={12}>
@@ -597,40 +600,29 @@ const clearFilter = ()=>{
                                             className="mb-1"
                                             style={{ minWidth: "120px" }}
                                             type="text"
-                                            disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
                                             value={Search1}
                                             onChange={(e) => setSearch1(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            disabled
-                                            style={{ minWidth: "90px" }}
+                                            style={{ minWidth: "120px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
                                             value={Search2}
                                             onChange={(e) => setSearch2(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            disabled
-                                            style={{ minWidth: "120px" }}
+                                            style={{ minWidth: "90px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
                                             value={Search3}
                                             onChange={(e) => setSearch3(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
@@ -638,69 +630,47 @@ const clearFilter = ()=>{
                                             className="mb-1"
                                             type="text"
                                             style={{ minWidth: "120px" }}
-                                            value={Search4}
-
-                                            onChange={(e) => setSearch4(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            value={Search4}
+                                            onChange={(e) => setSearch4(e.target.value)}
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
+                                            style={{ minWidth: "120px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
                                             value={Search5}
                                             onChange={(e) => setSearch5(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            disabled
-                                            style={{ minWidth: "80px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
                                             value={Search6}
                                             onChange={(e) => setSearch6(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            disabled
-                                            style={{ minWidth: "100px" }}
+                                            style={{ minWidth: "80px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
                                             value={Search7}
                                             onChange={(e) => setSearch7(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            disabled
-                                            style={{ minWidth: "100px" }}
                                             value={Search8}
                                             onChange={(e) => setSearch8(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
                                             style={{ minWidth: "100px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "100px" }}
-                                            type="text"
-                                            disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
@@ -708,10 +678,36 @@ const clearFilter = ()=>{
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            style={{ minWidth: "100px" }}
-                                            disabled
                                             value={Search9}
-                                            onChange={(e) => setSearch9(e.target.value)}
+                                            onChange={(e) => setSearch9(e.target.value)}                                            
+                                            style={{ minWidth: "100px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            style={{ minWidth: "100px" }}
+                                            type="text"
+                                            disabled
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            style={{ minWidth: "100px" }}
+                                            type="text"
+                                            disabled
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            type="text"
+                                            style={{ minWidth: "100px" }}
+                                            disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
@@ -763,13 +759,22 @@ const clearFilter = ()=>{
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
-                                {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
+                                {result1.filter((list) =>
+                                    (list.ClientId||' ').toLowerCase().includes(Search1.toLowerCase())&&
+                                    (list.Fullname||' ').toLowerCase().includes(Search2.toLowerCase()) &&
+                                    (list.ContactNumber+"").toLowerCase().includes(Search3.toLowerCase())&&
+                                    (list.invoiceNum||' ').toLowerCase().includes(Search4.toLowerCase())&&
+                                    (list.AttendanceID||' ').toLowerCase().includes(Search5.toLowerCase())&&
                                     moment(list.createdAt).format("MM-DD-YYYY").includes(select)&&
-                                     list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
-                                    list.EnquiryType.toLowerCase().includes(Search5.toLowerCase()) &&
-                                     list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && 
-                                     list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
-                                ).map((item, index) => {
+                                    (list.EnquiryType||' ').toLowerCase().includes(Search6.toLowerCase()) &&
+                                    (list.serviceName||' ').toLowerCase().includes(Search7.toLowerCase()) && 
+                                    (list.typeOFBatchClasses||' ').toLowerCase().includes(Search8.toLowerCase())&&
+                                    (list.duration||' ').toLowerCase().includes(Search9.toLowerCase())
+
+                                ).filter((el)=>{
+                                    pageNumber++
+                                    return el
+                                }).slice(paging * 10, paging * 10 + 10).map((item, index) => {
                                    return  (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{ (index+1+ (paging * 10))}</CTableDataCell>
@@ -777,9 +782,7 @@ const clearFilter = ()=>{
                                             <CTableDataCell><Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/1`} 
                                             target="_black">{item.Fullname}</Link></CTableDataCell>
                                             <CTableDataCell>{item.ContactNumber}</CTableDataCell>
-                                            <CTableDataCell><label style={{ cursor: 'pointer' }} onClick={() =>
-                                                 { setinvId(item.invoiceId), setCliId(item._id),
-                                                  handleInvoice(item.invoiceId, item._id) }}>{item.invoiceNum}</label> </CTableDataCell>
+                                            <CTableDataCell><label style={{ cursor: 'pointer' }}>{item.invoiceNum}</label> </CTableDataCell>
                                             <CTableDataCell>{item.AttendanceID}</CTableDataCell>
                                             <CTableDataCell>{item.EnquiryType}</CTableDataCell>
                                             <CTableDataCell>{item.serviceName}</CTableDataCell>
@@ -797,7 +800,7 @@ const clearFilter = ()=>{
                                                    style={{ cursor: 'pointer', markerStart: '10px' }} />
                                                    </Link>
                                                    </CTableDataCell>
-                                            <CTableDataCell><CButton onClick={() => { setCalls(true), setCallUpdateID(item._id) }}>View</CButton></CTableDataCell>
+                                            <CTableDataCell><CButton onClick={() => {getUniqCllientCallData(item._id) }}>View</CButton></CTableDataCell>
                                             <CTableDataCell className='text-center'>{item.status === 'active' ? <><CButton className='mt-1' color='success' onClick={() => updateRec(item._id, 'inactive')} >Active</CButton></> : <CButton className='mt-1' color='danger' onClick={() => updateRec(item._id, 'active')}>Inactive</CButton>}</CTableDataCell>
                                             <CTableDataCell className='text-center'>
                                                 <a href={`tel:${item.CountryCode}${item.ContactNumber}`} target='_black'>
@@ -812,7 +815,7 @@ const clearFilter = ()=>{
                                                                  </a> 
                                                                  
                                                                  <BsPlusCircle id={item._id} style={{ cursor: 'pointer'
-                                                                 , markerStart: '10px' }} onClick={() => {handleFollowup(item._id,item.ClientId)
+                                                                 , markerStart: '10px' }} onClick={() => {setVisible(true),handleFollowup(item._id,item.ClientId)
                                                                  }} />
                                                                  </CTableDataCell>
                                             <CTableDataCell className='text-center'>
@@ -832,22 +835,9 @@ const clearFilter = ()=>{
                             <span aria-hidden="true">&laquo;</span>
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {result1.filter((list) =>
-                              moment(list.createdAt).format("MM-DD-YYYY").includes(select)&&
-                             list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
-                            list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
-                        ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
-
-                        {result1.filter((list) =>
-                         moment(list.createdAt).format("MM-DD-YYYY").includes(select)&&
-                             list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
-                            list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
-                        ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {result1.filter((list) =>
-                         moment(list.createdAt).format("MM-DD-YYYY").includes(select)&&
-                             list.Fullname.toLowerCase().includes(Search1.toLowerCase()) &&
-                            list.AttendanceID.toLowerCase().includes(Search5.toLowerCase()) && list.serviceName.toLowerCase().includes(Search6.toLowerCase()) && list.fitnessGoal.toLowerCase().includes(Search7.toLowerCase())
-                        ).length > (paging + 1) * 10 ?
+                        {pageNumber > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {pageNumber > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {pageNumber > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>

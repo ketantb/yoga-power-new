@@ -181,31 +181,31 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
 
    
     function getDetails(data) {
-        setFullname(data.Fullname)
-        setEmail(data.Emailaddress)
-        setCountryCode(data.CountryCode)
-        setContactNumber(data.ContactNumber)
-        setWhatsappNumber(data.ContactNumber)
-        setGender(data.Gander)
-        setDateofBirth(data.DateofBirth)
-        setAddress(data.address)
-        setArea(data.Area)
-        setCity(data.city)
-        setName(data.person_Name)
-        setRelationship(data.Relation)
+        setFullname((data.Fullname|| ' '))
+        setEmail(( data.Emailaddress|| ' '))
+        setCountryCode((data.CountryCode||' '))
+        setContactNumber((data.ContactNumber||' '))
+        setWhatsappNumber((data.ContactNumber||' '))
+        setGender((data.Gander||' '))
+        setDateofBirth((data.DateofBirth||' '))
+        setAddress((data.address||' '))
+        setArea((data.Area||''))
+        setCity((data.city||' '))
+        setName((data.person_Name||' '))
+        setRelationship((data.Relation||''))
         setCountryCode1("+"+data.CountryCode2)
         setContactNumber1("+"+data.ContactNumber2)
-        setserviceName(data.ServiceName)
-        setserviceVariation(data.ServiceVariation)
-        setAssignStaff(data.StaffName)
-        setCustomertype(data.Customertype)
-        setEnquiryType(data.enquirytype)
-        setMemberManager(data.Counseller)
+        setserviceName((data.ServiceName||' '))
+        setserviceVariation((data.ServiceVariation||' '))
+        setAssignStaff((data.StaffName||' '))
+        setCustomertype((data.Customertype||' '))
+        setEnquiryType((data.enquirytype||' '))
+        setMemberManager((data.Counseller||' '))
         setDateofBirth(data?.DateofBirth?moment(data?.DateofBirth).utc().format('YYYY-MM-DD'):'')     
-        setImageUrl(data?.image)   
+        setImageUrl((data?.image||' '))   
         setClientReferance({
-            id:data?.ClientReferrenceId,
-            name:data?.ClientReferenceName,
+            id:(data?.ClientReferrenceId||' '),
+            name:(data?.ClientReferenceName||' '),
         })
     }
 
@@ -295,6 +295,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
 
 
     const saveMember = () => {
+        let num = 0
         if(!AttendanceID){
            alert('AttendanceID  is Required please select AttendanceID') 
            return
@@ -305,15 +306,20 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
          
          return 
         }
+        if(!num){ 
+            num++ 
+        }else if(num){
+           return 
+        }
         
         let data = {
             username: username,
             image: imageUrl,
-            Fullname, CountryCode, ContactNumber,
+            Fullname, CountryCode, ContactNumber:(+ContactNumber),
             WhatsappNumber, Email, Gender, DateofBirth, 
             Anniversarydate, Address, Area, city, pincode, state, BloodGroup,
             FacebookID, sms, mail, pushnotification,
-            Name, CountryCode1, ContactNumber1, Relationship,
+            Name, CountryCode1, ContactNumber1:(+ContactNumber1), Relationship,
             serviceName, serviceVaration, Customertype, EnquiryType,
             AssignStaff, MemberManager, Batch, GeneralTrainer, AttendanceID,
             CenterID, LockerKeyNo, PAN,
@@ -321,7 +327,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
             Diabetes, Epilepsy, FootPain, Glaucoma, HeartDiseaseCondition, HerniaDiastasisRecti,
             HighBloodPressure, Other: OtherText, Weight, Height, fitnessLevel,
             fitnessGoal, idealWeight, suggestion, comments, status: 'active'
-            ,ClientReferenceName:clientReferance.name,ClientReferrenceId:clientReferance.id,
+            ,ClientReferenceName:(clientReferance.name||' '),ClientReferrenceId:(clientReferance.id||ids._id),
             EnquiryId:ids._id,
             typeOFBatchClasses,...unikqValidateObj,
             isAdmin:isAdmin,ClientId:`${centerCode}MEM${10+mem.length}`            
@@ -332,19 +338,19 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
             'Authorization': `Bearer ${token}`,
             'My-Custom-Header': 'foobar'
         };
-            
-        
+                    
         axios.all([
             axios.post(`${url1}/enquiryForm/update/${ids._id}`, {
                 enquirestatus:'notshow',
                 enquiryConvertedDate:new Date()}, { headers}),
             axios.post(`${url1}/memberForm/create`, data, { headers },)]
             ).then(() => {
-                setMemberId(resp.data._id);
+                setMemberId(data._id);
                 alert("successfully submitted")
                 setVisi(true)     
                 if(getEnquiry){
                     getEnquiry()
+                    num=0
                 }
 
         }).catch((error) => {

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import './CustomSelectInput.css'
 import {AiOutlineDown,AiOutlineUp,AiOutlineSearch} from 'react-icons/ai'
 
-const CustomSelectInput = ({title,data,dataneed,getData}) => {
+const CustomSelectInput = ({title,data,dataneed,getData,id}) => {
 
     const [visibale,setVisibale] = useState(false)
     const [inputvalName,setInputValName] = useState('')
@@ -17,11 +17,17 @@ const CustomSelectInput = ({title,data,dataneed,getData}) => {
           setVisibale(false)
        }
     }
+    const selectedClientObj = data.find((el)=>el?._id===id)
 
     useEffect(()=>{
-        setSelectedName(title)
-    },[title])
-
+    console.log(selectedClientObj,id,data)
+    if(selectedClientObj){
+      setSelectedName(selectedClientObj.Fullname)
+      getData(selectedClientObj)
+    }else{
+      setSelectedName(title)
+    }
+    },[title,id,data?.length,selectedClientObj?._id])
 
   return (
  <div className='input-containenr'>

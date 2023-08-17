@@ -4,14 +4,14 @@ import { useState,useEffect } from "react"
 import CustomSelectInput from "../CustomSelectInput/CustomSelectInput"
 import axios from "axios"
 import { useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation"
-function AllDietClientForm({allMemberData, closeFormFun, getClientDietData,edit,editData }) {
+function AllDietClientForm({allMemberData, closeFormFun, getClientDietData,edit,editData,id }) {
 
     const uniqObjVal = useUniqAdminObjeact()
 
 
     const [allDiietClientData,setAllDietClient] = useState({
-        Member_Id: ' ',
-        Start_Date: ' ',
+        Member_Id:' ',
+        Start_Date:' ',
         Name: ' ',
         Mobile_No:' ',
         Gender: 'Male',
@@ -20,7 +20,6 @@ function AllDietClientForm({allMemberData, closeFormFun, getClientDietData,edit,
         Package: ' ',
         DietitianName:' ',
         Action:'no action',
-        ...uniqObjVal 
     })
 
     
@@ -33,7 +32,7 @@ function AllDietClientForm({allMemberData, closeFormFun, getClientDietData,edit,
 
 const  sumbitFormInfoHandler = async (e)=>{
     
-         const  headers = {
+        const  headers = {
             "Authorization": `Bearer ${token}`,
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -48,7 +47,7 @@ const  sumbitFormInfoHandler = async (e)=>{
           })
         return 
        }
-       axios.post(`${url}/allDietClient/create`,allDiietClientData ,{headers}).then((el)=>{
+       axios.post(`${url}/allDietClient/create`,{...uniqObjVal,...allDiietClientData} ,{headers}).then((el)=>{
         alert('Successfully save')
         getClientDietData()
        })
@@ -81,7 +80,6 @@ function clientObj(obj){
     })
     },[editData?._id])
 
-    console.log(allDiietClientData)
 
     return <CCard className="m-3 overflow-hidden" >
         <CNav className="p-2 px-3" style={{ background: '#0B5345' }}>
@@ -100,7 +98,11 @@ function clientObj(obj){
                     <h5>Name</h5>
                     
                     <div className="w-50">
-                    <CustomSelectInput  data={allMemberData} title={allDiietClientData?.Name?.trim()?allDiietClientData?.Name:"Select client name"} getData={clientObj}/>
+                    <CustomSelectInput  data={allMemberData}
+                     title={allDiietClientData?.Name?.trim()?allDiietClientData?.Name:"Select client name"}
+                     getData={clientObj}
+                     id={id}
+                      />
                     </div>         
                 </CCol>
 

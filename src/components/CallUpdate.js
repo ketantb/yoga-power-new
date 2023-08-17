@@ -12,23 +12,23 @@ const CallUpdate = ({ add, clickfun, ids }) => {
     const [result1, setResult1] = useState([])
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
+
     useEffect(() => {
-        axios.get(`${url}/prospect/all`, {
+        axios.get(`${url}/typeOfCall/${ids}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                 setResult1(res.data)
-                console.log(res.data);
             })
             .catch((error) => {
                 console.error(error)
             })
-    }, []);
+    }, [ids,add]);
 
     return (
-        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={add} onClose={clickfun} >
+        <CModal size='xl' scrollable style={{ border: '2px solid #0B5345' }} visible={add} onClose={clickfun} >
             <CModalHeader  >
                 <CModalTitle>Call Update</CModalTitle>
             </CModalHeader>
@@ -39,7 +39,7 @@ const CallUpdate = ({ add, clickfun, ids }) => {
                             <CTableHeaderCell>Sr.No</CTableHeaderCell>
                             <CTableHeaderCell>Name</CTableHeaderCell>
                             <CTableHeaderCell>Phone</CTableHeaderCell>
-                            <CTableHeaderCell>Call Status</CTableHeaderCell>
+                            <CTableHeaderCell>Type Of Calls</CTableHeaderCell>
                             <CTableHeaderCell>Date</CTableHeaderCell>
                             <CTableHeaderCell>Time</CTableHeaderCell>
                             <CTableDataCell>Discussion</CTableDataCell>
@@ -47,16 +47,14 @@ const CallUpdate = ({ add, clickfun, ids }) => {
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {result1.filter((list) =>
-                            list.EnquiryID === ids
-                        ).map((item, index) => (
+                        {result1.map((item, index) => (
                             <CTableRow key={index}>
                                 <CTableDataCell>{index + 1}</CTableDataCell>
                                 <CTableDataCell>{item.Name}</CTableDataCell>
                                 <CTableDataCell>{item.Contact}</CTableDataCell>
-                                <CTableDataCell>{item.CallStatus}</CTableDataCell>
-                                <CTableDataCell>{moment(item.CallDate).format("LL")}</CTableDataCell>
-                                <CTableDataCell>{moment(item.Time, "HH:mm").format("hh:mm A")}</CTableDataCell>
+                                <CTableDataCell>{item.Type_Of_Calls}</CTableDataCell>
+                                <CTableDataCell>{moment(item.Date).format("LL")}</CTableDataCell>
+                                <CTableDataCell>{moment(item.Timing, "HH:mm").format("hh:mm A")}</CTableDataCell>
                                 <CTableDataCell>{item.Discussion}</CTableDataCell>
                                 <CTableDataCell>{item.Counseller}</CTableDataCell>
                             </CTableRow>

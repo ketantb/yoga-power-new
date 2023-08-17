@@ -2,6 +2,7 @@ import { CForm, CCard, CNav, CCol, CFormInput, CRow, CButton, CFormSelect } from
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { useSelector } from "react-redux"
+import { useUniqAdminObjeact} from "src/views/Custom-hook/adminValidation"
 
 function DietPlanTempletForm({ closeFormFun, getClientDietData,edit,editData }) {
 
@@ -14,6 +15,7 @@ function DietPlanTempletForm({ closeFormFun, getClientDietData,edit,editData }) 
     })
     
     const url = useSelector((el)=>el.domainOfApi) 
+    const uniqAdminObject = useUniqAdminObjeact()
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -26,7 +28,7 @@ function DietPlanTempletForm({ closeFormFun, getClientDietData,edit,editData }) 
             'Content-Type': 'application/json',
         }
         
-        if(edit){
+        if(edit&&editData?._id){
             try{
             axios.put(`${url}/dietPlanTempLate/update/${editData?._id}`,diteplan ,{headers}).then(()=>{
                 alert('Save successfully ')
@@ -39,11 +41,10 @@ function DietPlanTempletForm({ closeFormFun, getClientDietData,edit,editData }) 
         }
          
         try{
-         axios.post(`${url}/dietPlanTempLate/create`,diteplan ,{headers}).then(()=>{
+         axios.post(`${url}/dietPlanTempLate/create`,{...diteplan,...uniqAdminObject} ,{headers}).then(()=>{
             alert('Save successfully ')
             getClientDietData()
         })
-        alert('Save successfully ')
         }catch(error){
             console.log(error)
         }

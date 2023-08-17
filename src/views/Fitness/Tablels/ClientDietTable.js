@@ -44,12 +44,13 @@ const  headers = {
   const getClientDietData = useCallback(async ()=>{
     const {data} = await axios.get(`${url}/allDietClient/${pathVal}`,{headers})
 
+    console.log(data,"hello",id)
+
     
-  if(id==='all-client-fitness'){
+  if(id?.trim()==='all-client-fitness'){
     setClientDite(data)
     return 
 }else if(id){
-    console.log(data,"hello")
     setClientDite(data.filter((el)=>el['Member_Id']===id))
     return 
 }
@@ -98,6 +99,7 @@ return<>
  edit={edit}
  editData={editData}
  allMemberData={allMemberData}
+ id={id}
 />}
 
 <CTable className='m-3 p-2' align="middle" bordered style={{ borderColor: "#0B5345",width:'180%' }} hover responsive>

@@ -5,10 +5,12 @@ import { useSelector } from "react-redux"
 import axios from "axios"
 import CustomSelectInput from "../CustomSelectInput/CustomSelectInput"
 import { useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation"
+import CustomSelectinput from "src/views/hr/CustomSelectinput"
 
-function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,edit,editData  }) {
+function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,edit,editData,employeeData,id}) {
     const url = useSelector((el)=>el.domainOfApi) 
     const uniqObjVal = useUniqAdminObjeact()
+
 
     const [mesurmentData,setMesurmentData] = useState({
         username:'',
@@ -36,7 +38,7 @@ function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,e
         createdAt:new Date(),
         updatedAt:'',
         NextFollowup_Date:'',
-        ... uniqObjVal
+        ClientId:'',
     })
 
 
@@ -46,6 +48,7 @@ function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,e
     const token = user.token;
      
     
+
      
  
 
@@ -57,28 +60,30 @@ const  headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
 }
-if(edit){
+if(edit && editData?._id){
     axios.post(`${url}/fitnessDetail/update/${editData?._id}`,mesurmentData ,{headers}).then((res)=>{
         alert('Successfully save')
         getAllmembersData()
-
         }).catch((error)=>{
         console.log(error)
         })
-}
-
-axios.post(`${url}/fitnessDetail/create`,mesurmentData ,{headers}).then((res)=>{
+}else{
+   axios.post(`${url}/fitnessDetail/create`,{... uniqObjVal,...mesurmentData},{headers}).then((res)=>{
 alert('Successfully save')
 getAllmembersData()
 }).catch((error)=>{
 console.log(error)
-})
+}) 
+}
+
+
  }
 
  function clientObj(obj){
    setMesurmentData( prev=>({...prev,ContactNumber:obj.ContactNumber}))
    setMesurmentData(prev=>({...prev,Fullname:obj.Fullname}))
    setMesurmentData(prev=>({...prev,Member_ID:obj._id}))
+   setMesurmentData(prev=>({...prev,ClientId:obj.ClientId}))
  }
 
  useEffect(()=>{
@@ -112,8 +117,12 @@ console.log(error)
     })
     },[editData?._id])
 
+   const getCounsellerInfo = ()=>{
 
-    return <CCard className="m-3 overflow-hidden" >
+   }
+
+
+    return <CCard className="m-3 " >
         <CNav className="p-2 px-3" style={{ background: '#0B5345' }}>
             <h3 className="text-white"  >Measurment Form</h3>
         </CNav>
@@ -132,7 +141,12 @@ console.log(error)
 
                   <div className="w-50">
 
-                  <CustomSelectInput data={allMemberData} title={mesurmentData?.Fullname?.trim()?mesurmentData?.Fullname:"Select client name"} getData={clientObj}/>
+                  <CustomSelectInput 
+                  data={allMemberData} 
+                  title={mesurmentData?.Fullname?.trim()?mesurmentData?.Fullname:"Select client name"} 
+                  getData={clientObj}
+                  id={id}
+                  />
 
                   </div>
                 </CCol>
@@ -208,8 +222,8 @@ console.log(error)
                         type="number"
                         className="ms-4 w-50"
                         placeholder="Enter about Your Right Calf"
-                        value={mesurmentData.Age}
-                        onChange={(e)=>setMesurmentData((prev)=>({...prev,Age:e.target.value}))}   
+                        value={mesurmentData.CalfR}
+                        onChange={(e)=>setMesurmentData((prev)=>({...prev,CalfR:e.target.value}))}   
                     />
                 </CCol>
 
@@ -219,8 +233,8 @@ console.log(error)
                         type="number"
                         className="w-50"
                         placeholder="Enter about Your Left Calf"
-                        value={mesurmentData.CalfR}
-                        onChange={(e)=>setMesurmentData((prev)=>({...prev,CalfR:e.target.value}))}   
+                        value={mesurmentData.CalfL}
+                        onChange={(e)=>setMesurmentData((prev)=>({...prev,CalfL:e.target.value}))}   
 
                     />
                 </CCol>
@@ -391,16 +405,12 @@ console.log(error)
 
                 <CCol className='d-flex justify-content-between my-2' lg={6} >
                     <h5 className="me-1">Counseller</h5>
-                    <CFormInput
-                        type="text"
-                        placeholder="Enter Counseller "
-                        className="w-50"
-                        value={mesurmentData.Counseller}
-                        onChange={(e)=>setMesurmentData((prev)=>({...prev,CounsellerI:e.target.value}))}
-
-
+                    <div className="w-50">
+                    <CustomSelectinput
+                     data={employeeData}
+                     getData={getCounsellerInfo}
                     />
-
+                    </div>
                 </CCol>
             </CRow>
             <CRow className='mt-lg-4'>
@@ -411,12 +421,11 @@ console.log(error)
                 <CCol className='d-flex justify-content-between my-2' lg={6} >
                     <h5 className="me-1">Next Follow Up Date</h5>
                     <CFormInput
-                        type="date"
                         className="w-50"
+                        type="date"
                         value={mesurmentData.NextFollowup_Date}
                         onChange={(e)=>setMesurmentData((prev)=>({...prev,NextFollowup_Date:e.target.value}))}
                     />
-
                 </CCol>
             </CRow>
 

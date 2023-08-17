@@ -54,6 +54,7 @@ const Fitness = () => {
 
     const [active, setActiveButton] = useState(1)
     const [allMemberData,setAllmemBerData] = useState([]) 
+    const [employeeData,setEmployeeData] = useState([])
     // Forms 
     const [showForm, setForm] = useState(false)
     // Barriar Token 
@@ -62,9 +63,6 @@ const Fitness = () => {
 
     const {id} = useParams()
     const {i} = useParams()
-
-    console.log(id)
-    console.log(i)
 
 
     const closeFormFun = () => {
@@ -80,12 +78,21 @@ const Fitness = () => {
     .catch((error) => {console.error(error)})
  }
 
+ const getCounslerData = async ()=>{
+    axios.get(`${url1}/employeeform/${pathVal}`, {headers: {'Authorization': `Bearer ${token}`}})
+    .then((res) => {setEmployeeData(res.data.filter((list)=>list.selected === 'Select' ))})
+    .catch((error) => {console.error(error)})
+}
+
+
 useEffect(()=>{
 getClientMemData()
+getCounslerData()
 },[])
 
+
     return (
-        <CCard style={{ overflow: 'hidden' }}>
+        <CCard >
 
             <CNav variant="pills" role="tablist" style={{ background: '#0B5345' }}>
                 <CNavLink className='m-2 p-2' style={{ color: 'white', cursor: 'pointer' }} active={active === 1} onClick={() => { setActiveButton(1), closeFormFun() }}>
@@ -94,16 +101,16 @@ getClientMemData()
                 <CNavLink className='m-2 p-2' style={{ color: 'white', cursor: 'pointer' }} active={active === 2} onClick={() => { setActiveButton(2), closeFormFun() }}>
                     ALL Diet Client
                 </CNavLink>
-                <CNavLink className='m-2 p-2' style={{ color: 'white', cursor: 'pointer' }} active={active === 3} onClick={() => { setActiveButton(3), closeFormFun() }}>
+                <CNavLink className={id?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 3} onClick={() => { setActiveButton(3), closeFormFun() }}>
                     Diet Plan Templet
                 </CNavLink>
-                <CNavLink className='m-2 p-2' style={{ color: 'white', cursor: 'pointer' }} active={active === 4} onClick={() => { setActiveButton(4), closeFormFun() }}>
+                <CNavLink className={id?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 4} onClick={() => { setActiveButton(4), closeFormFun() }}>
                     Work out Templet
                 </CNavLink>
-                <CNavLink className='m-2 p-2' style={{ color: 'white', cursor: 'pointer' }} active={active === 5} onClick={() => { setActiveButton(5), closeFormFun() }}>
+                <CNavLink className={id?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 5} onClick={() => { setActiveButton(5), closeFormFun() }}>
                     Exercise Libiry
                 </CNavLink>
-                <CNavLink className='m-2 p-2' style={{ color: 'white', cursor: 'pointer' }} active={active === 6} onClick={() => { setActiveButton(6), closeFormFun() }}>
+                <CNavLink className={id?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 6} onClick={() => { setActiveButton(6), closeFormFun() }}>
                     Daily Workout Scheduling
                 </CNavLink>
             </CNav >
@@ -115,7 +122,7 @@ getClientMemData()
             {showForm && active === 6 ? <DailyWorkoutScheduling  closeFormFun={closeFormFun} /> : ''}
 
 
-            {active === 1 && <MeasurementTable id={id}  allMemberData={allMemberData} showForm={showForm}  token={token} closeFormFun={closeFormFun} setForm={setForm} />}
+            {active === 1 && <MeasurementTable id={id} employeeData={employeeData}  allMemberData={allMemberData} showForm={showForm}  token={token} closeFormFun={closeFormFun} setForm={setForm} />}
             {active === 2 && <ClientDietTable id={id}  allMemberData={allMemberData} showForm={showForm}  token={token} closeFormFun={closeFormFun} setForm={setForm} />}
             {active === 3 && <DietPlanTable id={id} idVal={+i===9} showForm={showForm}  token={token} closeFormFun={closeFormFun} setForm={setForm} />}
             {active === 4 && <WorkOutTempletTable id={id} idVal={+i===9}  allMemberData={allMemberData} Token={token} />}

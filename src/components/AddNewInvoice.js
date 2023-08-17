@@ -362,7 +362,7 @@ setServiceDays(el.Days)
                                 >
                                     <option>Select Service</option>
                                     {subService.map((item) => (
-                                (item.Status=== true && (item.Service.toLocaleLowerCase().trim()))))
+                                (item.Status=== true && (item.Service.toLowerCase().trim()))))
                             .filter((el,i,arr)=>i===arr.indexOf(el)).map((el,i)=><option key={i}>{el}</option>)}
                                 </CFormSelect>
                             </CCol>
@@ -378,7 +378,7 @@ setServiceDays(el.Days)
                                 >
                                     <option>Select Package</option>
                                     {[...subService.filter((el)=>{
-                return  el.Service.toLocaleLowerCase().trim()=== ser1                                
+                return  el.Service.toLowerCase().trim()=== ser1                                
             })].map((el,i)=><option key={i}>{el.Package_Name
                 }</option>)
             }   
@@ -442,7 +442,7 @@ setServiceDays(el.Days)
                  <option>Select Duration</option>
                    {[...subService.filter((el)=>{
                   
-                 return  el.Service.toLocaleLowerCase().trim()=== ser1                                  
+                 return  el.Service.toLowerCase().trim()=== ser1                                  
             })].map((el,i)=><option key={i}>{el.Duration
                 }</option>)
             }   
@@ -463,7 +463,7 @@ setServiceDays(el.Days)
                         >
                             <option>Select Fees</option>
                             {[...subService.filter((el)=>{
-            return   el.Service.toLocaleLowerCase().trim()=== ser1                                    
+            return   el.Service.toLowerCase().trim()=== ser1                                    
             })].map((el,i)=><option key={i}>{el.Fees
 
                 }</option>)

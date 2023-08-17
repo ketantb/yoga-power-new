@@ -20,7 +20,7 @@ import {
 
 
 
-function MeasurementTable({closeFormFun,token,showForm,setForm,allMemberData,id}){
+function MeasurementTable({closeFormFun,token,showForm,setForm,allMemberData,id,employeeData}){
     const [allMeasurmentMembers,setAllMeasurmentMembers] =useState([])
     const [edit,setEdit] = useState(true)
     const [editData,setEditData] = useState(true)
@@ -34,10 +34,11 @@ function MeasurementTable({closeFormFun,token,showForm,setForm,allMemberData,id}
   const getAllmembersData = useCallback(async ()=>{
 
     const {data} = await axios.get(`${url}/fitnessDetail/${pathVal}`,{headers})
-    if(id==='all-client-fitness'){
+    console.log('Member Data',data)
+    if(id?.trim()==='all-client-fitness'){
         setAllMeasurmentMembers(data)
         return 
-    }else if(id){
+    }else{
         setAllMeasurmentMembers(data.filter((el)=>el['Member_ID']===id))
         return 
     }
@@ -84,14 +85,15 @@ const editClientDataFun =(el)=>{
  edit={edit}
  editData={editData}
  allMemberData={allMemberData}
+ employeeData={employeeData}
+ id={id}
 />}
 
-     <CTable className='m-3 ' align="middle" bordered style={{ borderColor: "#0B5345",width:'440%' }} hover responsive>
+     <CTable className='m-3 ' align="middle" bordered style={{ borderColor: "#0B5345"}} hover responsive>
     <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
         <CTableRow >
-            <CTableHeaderCell>Measurement_Date</CTableHeaderCell>
+            <CTableHeaderCell >Measurement_Date</CTableHeaderCell>
             <CTableHeaderCell>Member_ID</CTableHeaderCell>
-            {/* <CTableHeaderCell>Apply Date</CTableHeaderCell> */}
             <CTableHeaderCell>Name</CTableHeaderCell>
             <CTableHeaderCell>Contact</CTableHeaderCell>
             <CTableHeaderCell>Weight</CTableHeaderCell>
@@ -103,7 +105,6 @@ const editClientDataFun =(el)=>{
             <CTableHeaderCell>Shoulder</CTableHeaderCell>
             <CTableHeaderCell>Chest</CTableHeaderCell>
             <CTableHeaderCell>Arms(R)</CTableHeaderCell>
-
             <CTableHeaderCell>Arms(L)</CTableHeaderCell>
             <CTableHeaderCell>ForArms</CTableHeaderCell>
             <CTableHeaderCell>Waist</CTableHeaderCell>
@@ -126,7 +127,7 @@ const editClientDataFun =(el)=>{
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
-                    style={{ minWidth: "60px" }}
+                    style={{ minWidth: "120px" }}
                     type="text"
                     aria-describedby="exampleFormControlInputHelpInline"
                 />
@@ -151,7 +152,7 @@ const editClientDataFun =(el)=>{
                 <CFormInput
                     className="mb-1"
                     type="text"
-                    style={{ minWidth: "90px" }}
+                    style={{ minWidth: "120px" }}
                    
                     aria-describedby="exampleFormControlInputHelpInline"
                 />
@@ -160,7 +161,7 @@ const editClientDataFun =(el)=>{
                 <CFormInput
                     className="mb-1"
                     type="number"
-                    style={{ minWidth: "100px" }}
+                    style={{ minWidth: "120px" }}
                 
                 />
             </CTableDataCell>
@@ -168,18 +169,23 @@ const editClientDataFun =(el)=>{
                 <CFormInput
                     className="mb-1"
                     type="text"
+                    style={{ minWidth: "120px" }}
+
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
                     type="text"
+                    style={{ minWidth: "120px" }}
+
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
                     type="text"
+                    style={{ minWidth: "120px" }}
                    
                 />
             </CTableDataCell>
@@ -187,104 +193,118 @@ const editClientDataFun =(el)=>{
                 <CFormInput
                     className="mb-1"
                     type="text"
+                    style={{ minWidth: "120px" }}
+
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
                     type="text"
+                    style={{ minWidth: "120px" }}
+
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
                     type="text"
+                    style={{ minWidth: "120px" }}
+
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
-                    type="number"                                           
-                />
-            </CTableDataCell>
-            <CTableDataCell>
-                <CFormInput
-                    className="mb-1"
-                    type="text"
-                />
-            </CTableDataCell>
-            <CTableDataCell>
-                <CFormInput
-                    className="mb-1"
-                    type="text"
+                    type="number"     
+                    style={{ minWidth: "120px" }}
+                                      
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
                     type="text"
+                    style={{ minWidth: "120px" }}
+
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
-                    style={{ minWidth: "70px" }}
+                    type="text"
+                    style={{ minWidth: "120px" }}
+
+                />
+            </CTableDataCell>
+            <CTableDataCell>
+                <CFormInput
+                    className="mb-1"
+                    type="text"
+                    style={{ minWidth: "120px" }}
+
+                />
+            </CTableDataCell>
+            <CTableDataCell>
+                <CFormInput
+                    className="mb-1"
+                    style={{ minWidth: "120px" }}
                     type="text"
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
-                    style={{ minWidth: "100px" }}
+                    style={{ minWidth: "120px" }}
                     type="text"
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
-                    style={{ minWidth: "70px" }}
+                    style={{ minWidth: "120px" }}
                     type="text"
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
-                    style={{ minWidth: "70px" }}
+                    style={{ minWidth: "120px" }}
                     type="text"
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
-                    style={{ minWidth: "70px" }}
+                    style={{ minWidth: "120px" }}
                     type="text"
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
-                    style={{ minWidth: "70px" }}
+                    style={{ minWidth: "120px" }}
                     type="text"
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
-                    style={{ minWidth: "70px" }}
+                    style={{ minWidth: "120px" }}
                     type="text"
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
-                    style={{ minWidth: "70px" }}
+                    style={{ minWidth: "120px" }}
                     type="text"
                 />
             </CTableDataCell>
             <CTableDataCell>
                 <CFormInput
                     className="mb-1"
-                    style={{ minWidth: "70px" }}
+                    style={{ minWidth: "120px" }}
                     type="text"
                 />
             </CTableDataCell>
