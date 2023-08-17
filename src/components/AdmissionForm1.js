@@ -306,10 +306,11 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
          
          return 
         }
-        if(!num){ 
+        
+        if(num){ 
+            return 
+        }else if(!num){
             num++ 
-        }else if(num){
-           return 
         }
         
         let data = {
@@ -348,9 +349,9 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
                 setMemberId(data._id);
                 alert("successfully submitted")
                 setVisi(true)     
+                num=0
                 if(getEnquiry){
                     getEnquiry()
-                    num=0
                 }
 
         }).catch((error) => {
