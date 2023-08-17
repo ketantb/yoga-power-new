@@ -236,8 +236,6 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
         const memberFormData = allData[4]?.data
         const batchesData = allData[5]?.data
 
-        console.log(batchesData)
-
         setLeadArr(leadSourseData)
         setPackageArr(packageData)
         setStaff(staffData)
@@ -327,11 +325,14 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
             BackPain, BoneFracture, CarpalTunnel, AsthmaCOPD, DigestiveDisorder,
             Diabetes, Epilepsy, FootPain, Glaucoma, HeartDiseaseCondition, HerniaDiastasisRecti,
             HighBloodPressure, Other: OtherText, Weight, Height, fitnessLevel,
-            fitnessGoal, idealWeight, suggestion, comments, status: 'active'
-            ,ClientReferenceName:(clientReferance.name||' '),ClientReferrenceId:(clientReferance.id||ids._id),
+            fitnessGoal, idealWeight, suggestion, comments, status: 'active',
             EnquiryId:ids._id,
             typeOFBatchClasses,...unikqValidateObj,
             isAdmin:isAdmin,ClientId:`${centerCode}MEM${10+mem.length}`            
+        }
+
+        if(clientReferance.name?.trim()&&clientReferance.id?.trim()){
+            data = {...data,...{ClientReferenceName:(clientReferance.name||' '),ClientReferrenceId:(clientReferance.id||'')}}
         }
 
 

@@ -121,7 +121,6 @@ const headers   = {
            setYears([...new Set(classiFyAcordingToMonth.map((el)=>el.Year))])
 
 // console.log()
-console.log(classiFyAcordingToMonth)
 
 
  const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
@@ -149,7 +148,6 @@ console.log(classiFyAcordingToMonth)
 serviceRevenueData.forEach((el)=>{
     let num =0;
     data1.forEach(el2=> {
-        console.log(el2.serviceName)
         if(el2.serviceName === el.typeOfService && new Date(el2.createdAt).getMonth()  === el.month){
                num++
                el.noOfClient  = num 

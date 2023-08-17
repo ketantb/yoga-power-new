@@ -415,7 +415,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             <CCol xs={4}>
                                                 <CFormSwitch size="xl" label="SMS"
                                                     checked={sms}
-                                                    onChange={() => setsms(!sms)}
 
                                                     />
                                             </CCol>
@@ -623,25 +622,21 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             <CListGroupItem>
                                                 <CFormCheck label="Back Pain"
                                                     checked={BackPain}
-                                                    onChange={() => setBackPain(!BackPain)} 
                                                     />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Bone Fracture"
                                                     checked={BoneFracture}
-                                                    onChange={() => setBoneFracture(!BoneFracture)}
                                                     />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Carpal Tunnel"
                                                     checked={CarpalTunnel}
-                                                    onChange={() => setCarpalTunnel(!CarpalTunnel)}
                                                     />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Diabetes"
                                                     checked={Diabetes}
-                                                    onChange={() => setDiabetes(!Diabetes)}
                                                 />
                                             </CListGroupItem>
                                         </CListGroup>
@@ -651,26 +646,22 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             <CListGroupItem>
                                                 <CFormCheck label="Pregnancy"
                                                     checked={HeartDiseaseCondition}
-                                                    onChange={() => setHeartDiseaseCondition(!HeartDiseaseCondition)} 
                                                     />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Shoulder Pain"
                                                     checked={Epilepsy}
-                                                    onChange={() => setEpilepsy(!Epilepsy)}
 
                                                     />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Foot Pain"
                                                     checked={FootPain}
-                                                    onChange={() => setFootPain(!FootPain)} 
                                                     />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Knee Replacement"
                                                     checked={Glaucoma}
-                                                    onChange={() => setGlaucoma(!Glaucoma)} 
                                                     />
                                             </CListGroupItem>
                                         </CListGroup>
@@ -681,27 +672,21 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             <CListGroupItem>
                                                 <CFormCheck label="Joint Pain"
                                                     checked={AsthmaCOPD}
-                                                    onChange={() => setAsthmaCOPD(!AsthmaCOPD)} 
                                                     />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Surgery"
                                                     checked={HerniaDiastasisRecti}
-                                                    onChange={() => setHerniaDiastasisRecti(!HerniaDiastasisRecti)} 
-
                                                     />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="High Blood Pressure"
                                                     checked={HighBloodPressure}
-                                                    onChange={() => setHighBloodPressure(!HighBloodPressure)}
                                                     />
                                             </CListGroupItem>
                                             <CListGroupItem>
                                                 <CFormCheck label="Other"
-                                                    checked={Other}
-                                                    onChange={() => setOther(!Other)}
-                                                    
+                                                    checked={Other}                                                    
                                                     />
                                             </CListGroupItem>
                                         </CListGroup>
@@ -713,7 +698,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                                 type="text"
                                                 id="exampleFormControlInput1"
                                                 value={OtherText}
-                                                onChange={(e) => setOtherText(e.target.value)}
                                                 label="Other Reason"
                                                 placeholder="Enter Other Reason"
                                                 disabled
@@ -733,7 +717,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             type="text"
                                             id="exampleFormControlInput1"
                                             value={Height}
-                                            onChange={(e) => setHeight(e.target.value)}
                                             label="Height"
                                             placeholder="Enter height"
                                             disabled
@@ -745,7 +728,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             type="text"
                                             id="exampleFormControlInput1"
                                             value={Weight}
-                                            onChange={(e) => setWeight(e.target.value)}
                                             label="Weight"
                                             placeholder="Enter Weight"
                                             disabled
@@ -758,7 +740,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                             className="mb-1"
                                             aria-label="Select Currency"
                                             value={fitnessLevel}
-                                            onChange={(e) => setfitnessLevel(e.target.value)}
                                             label="Fitness Level"
                                             disabled                                            
                                         />
@@ -767,7 +748,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                         <CFormInput
                                             className="mb-1"
                                             value={fitnessGoal}
-                                            onChange={(e) => setfitnessGoal(e.target.value)}
                                             aria-label="Select Currency"
                                             label="Fitness Goal"
                                             disabled
@@ -777,7 +757,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                         <CFormInput
                                             className="mb-1"
                                             value={idealWeight}
-                                            onChange={(e) => setidealWeight(e.target.value)}
                                             type="text"
                                             id="exampleFormControlInput1"
                                             label="Ideal Weight"
@@ -789,7 +768,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                         <CFormTextarea
                                             id="exampleFormControlTextarea1"
                                             value={suggestion}
-                                            onChange={(e) => setsuggestion(e.target.value)}
                                             label="Suggestion"
                                             rows="2"
                                             text="Must be 8-20 words long."
@@ -801,7 +779,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                                         <CFormTextarea
                                             id="exampleFormControlTextarea1"
                                             value={comments}
-                                            onChange={(e) => setcomments(e.target.value)}
                                             label="Comments"
                                             rows="2"
                                             text="Must be 8-20 words long."

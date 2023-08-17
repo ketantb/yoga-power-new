@@ -105,6 +105,7 @@ const AllEnquires = () => {
     const [appointmentfor, setappointmentfor] = useState("");
 
     const [ServiceVariation, setServiceVariation] = useState("");
+    const [totalEnquire,setTotalEnquire] = useState(0)
 
     
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -148,7 +149,7 @@ const AllEnquires = () => {
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
             const json = XLSX.utils.sheet_to_json(worksheet);
-            importDataFun(json,getEnquiry,result1.length)
+            importDataFun(json,getEnquiry,totalEnquire)
         };
         reader.readAsArrayBuffer(event.target.files[0]);
 
@@ -381,9 +382,11 @@ const AllEnquires = () => {
             }
         })
             .then((res) => {
-               res.data.reverse()
-                setResult1(res.data)
-                setOgList(res.data)
+                if(res.status===200){
+                    setTotalEnquire(res.data.length)
+                    setResult1(res.data)
+                    setOgList(res.data)
+                }
             })
             .catch((error) => {
                 console.error(error)
@@ -532,7 +535,7 @@ const AllEnquires = () => {
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">All Enquires <span className='float-end'>Total Enquires: 
-                        {result1.filter((list) => list ).length}
+                        {totalEnquire}
                         </span></strong>
                     </CCardHeader>
                     <CCardBody>

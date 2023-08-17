@@ -143,7 +143,7 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
 
     useEffect(()=>{
      if(edit){
-        setFullName((editData.Fullname||''))
+        setFullName((editData?.Fullname||''))
         setEmailAddress((editData.Emailaddress||''))
         setCountryCode(((editData?.CountryCode&&"+"+editData?.CountryCode)||' '))
         setContactNumber((+editData.ContactNumber||''))
@@ -168,7 +168,7 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
         setappointmentDate(editData.appointmentDate?moment(new Date(editData.appointmentDate)).format('YYYY-MM-DD'):'')
         setappointmentTime((editData.appointmentTime||''))
         setappointmentfor((editData.identifyStage||''))
-        setCounseller((editData.Counseller||''))
+        setCounseller((editData.employeeMongoId||''))
         setClientReferance((editData.ClientReferenceName||'')) 
         setCenterName((editData.CenterName||''))
         setDateofBirth(editData.DateofBirth?moment(new Date(editData.DateofBirth)).format('YYYY-MM-DD'):'')
@@ -220,7 +220,6 @@ useEffect(()=>{
 console.log(imageUrl)
                                        
 const saveEnquiry = () => {
-console.log(Fullname ,Email,Emailaddress,CountryCode, ContactNumber+"".length===10 , ContactNumber,  ContactNumber)
 
 if(!PersionalDetailsValidation){
 setError('Please Fill all Require Personal Details')
@@ -245,7 +244,7 @@ return
        const center = centerPartnerData.find((el)=>el._id===CenterName)
 
        const uniqObj2  = {
-        empNameC:Counseller.FullName,
+        empNameC:Counseller?.FullName,
         employeeIDC:Counseller._id,
         employeeMongoId:Counseller._id,
         centerNameC:center.center,
@@ -262,11 +261,11 @@ return
             address, Area, city, Profession,
             StaffName:staffName.FullName, CenterName:center.center, CallStatus, Message,
             person_Name, Relation, CountryCode2: CountryCode2, ContactNumber2: ContactNumber2,
-            EnquiryDate, ServiceName, ServiceVariation, Customertype,enquirytype, appointmentDate,
+            createdAt:EnquiryDate, ServiceName, ServiceVariation, Customertype,enquirytype, appointmentDate,
             appointmentTime, appointmentfor:editData?.appointmentfor?appointmentfor:'',identifyStage:  appointmentfor,
             Counseller:Counseller.FullName,trialDate, trialDate, status: "all_enquiry",ClientReferenceName:clientReferance,
             ClientReferrenceId:clientId,
-            image: imageUrl
+            image: imageUrl,EnquiryDate
         }
 
 

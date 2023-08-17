@@ -25,7 +25,6 @@ return      function downloadAsExcel(data){
        ['Center Name']:el.centerNameC,
        ['City']:el.city,
        ['Profession']:el.Profession,
-       ['DateofBirth']:moment(el.DateofBirth).format("DD-MM-YYYY"),
    } })   
    
        const worksheet = XLSX.utils.json_to_sheet(data1);

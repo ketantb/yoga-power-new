@@ -20,6 +20,7 @@ const centerCode = user.user.centerCode
 
 return function insertManyCollection(collection,getData=()=>{},number){
 
+
     const data = collection.map((el,i)=>{
         return {
         ['EnquiryId']:(centerCode+"Q"+(number+1+i)),
@@ -39,7 +40,6 @@ return function insertManyCollection(collection,getData=()=>{},number){
         ['centerNameC']:el['Center Name'],
         ['city']:el['City'],
         ['Profession']:el['Profession'],
-        ['DateofBirth']:el['DateofBirth'],
         ...unikqValidateObj
     } })  
 
@@ -51,7 +51,7 @@ return function insertManyCollection(collection,getData=()=>{},number){
         }
     })
         .then((res) => {
-            alert('Succcessfully Added XLSX Save')
+            alert('Succcessfully Added XLSX ')
             getData()
         })
         .catch((error) => {

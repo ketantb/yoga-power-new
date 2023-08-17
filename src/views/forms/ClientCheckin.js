@@ -22,8 +22,9 @@ import { useUniqAdminObjeact,useAdminValidation } from '../Custom-hook/adminVali
 const ClientCheckin = () => {
 
     const url1 = useSelector((el) => el.domainOfApi)
-
     const pathVal = useAdminValidation()
+    const pathValmaster= useAdminValidation('Master')
+
     const uniqObjectVal = useUniqAdminObjeact()
 
     const [attendance, setAttendance] = useState(0);
@@ -65,7 +66,7 @@ const ClientCheckin = () => {
     }, []);
 
     function getEnquiry() {
-        axios.get(`${ url1 }/clientAttendance/${pathVal}`, {
+        axios.get(`${ url1 }/clientAttendance/${pathValmaster}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -90,15 +91,13 @@ const ClientCheckin = () => {
 
         try {
             const response1 = await axios.get(`${ url1 }/memberForm/${pathVal}`, { headers })
-            const response2 = await axios.get(`${ url1 }/Batch/all`, { headers })
+            const response2 = await axios.get(`${ url1 }/Batch/${pathValmaster}`, { headers })
             const data = await Promise.all([response1, response2])
 
             if (data.every((el) => el.status === 200)) {
-
                 setAllclient(data[0].data)
                 setBatches(data[1].data)
                 setInnerProsseccActive(false)
-
             }
         } catch (error) {
             console.log(error)
@@ -177,7 +176,6 @@ const ClientCheckin = () => {
             allClient.filter((list) =>
                 list.AttendanceID.includes(attendanceID.trim())
             ).map((data) => (
-                console.log(data),
                 setClient(data.Fullname),
                 setAttendanceID(data.AttendanceID),
                 setCentarId(data.CenterID),
@@ -376,7 +374,7 @@ const ClientCheckin = () => {
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {result1.filter((list) => list.username === username).map((item, index) => (
+                        {result1.filter((list) => list).map((item, index) => (
                             <CTableRow key={index}>
                                 <CTableDataCell>{index + 1}</CTableDataCell>
                                 <CTableDataCell>{item.ClientName}</CTableDataCell>
