@@ -60,6 +60,15 @@ useEffect(()=>{
 },[slectedInvoiceData])
 
 
+function findLeftService(endDate){
+    const time =  (new Date(endDate) -new Date())
+    const days = Math.ceil(time/(1000*60*60*24))
+          if((days<=0)){
+             return false 
+          }
+          return true   
+   }
+    
 
     return (
         <CRow>
@@ -95,7 +104,10 @@ useEffect(()=>{
                      
             <CCol xs={3} lg={3} sm={3}>
         
-                     <p>{invoiceData?.status}</p>
+                     <div className='mb-1'>{findLeftService(invoiceData?.endDate)?
+                     <CButton size='sm'  >Active Service</CButton>:
+                     <CButton size='sm' color="danger" >Deactive Service</CButton>
+                     } </div>
                      <p>{ getDate(invoiceData?.startDate,true)}</p>
                      <p> Rs {invoiceData?.amount}</p>
                      <p>Referrals Value(0)</p>
@@ -109,7 +121,7 @@ useEffect(()=>{
                         <CFormSelect 
                             aria-label="Select Currency"
                             size='sm'
-                            value={setAllInvoiceData}
+                            value={slectedInvoiceData}
                             onChange={(e)=>setSelectedInvoiceData(e.target.value)}
                         >
                             <option value=''>Select Service </option>
@@ -143,72 +155,90 @@ useEffect(()=>{
     </CTable>
     </div>
             </CCol>
-
             <CCol xs={12}>
-                <CCard style={{ padding: '15px' }} className='mt-2'>
-                    <CRow>
-                         <CCol className='d-flex '>
-                        <CCol>
-                            <b>Service Name</b> :<br/>
-                            {invoiceData?.ServiceName}
-                        </CCol>
-                        <CCol>
-                            <b>Duration:</b><br/> {invoiceData?.duration}
-                        </CCol>
-                        <CCol>
-                             <b>Packages:</b> <br/>{invoiceData?.PackageName}
-                        </CCol>
-                        </CCol>
-
-                        <CCol className='d-flex '>
-                       
-                        <CCol>
-                             <b>TOTAL DAYS</b> <br/>
-
-                             {
-                            Math.ceil(new Date(invoiceData?.endDate) -new Date(invoiceData?.startDate))/(1000*60*60*24) 
-                             } days
-                        </CCol>
-                        <CCol>
-                              <b>START DATE</b> <br/>{getDate(invoiceData?.startDate,true)}
-                        </CCol>
-                        <CCol>
-                              <b>EXPIRY DATE</b> <br/>{getDate(invoiceData?.endDate,true)}
-                        </CCol>
-                        <CCol>
-                              <b>Status </b><br/>{invoiceData?.status}
-                        </CCol>  
-                        </CCol>    
-  
-                        
- 
-                    </CRow>
-                    <CRow>
-                        {/* <CCol>Duration: {result?.PackageName}</CCol> */}
-                    </CRow>
-                    {/* <CRow><CCol>PT Staff: {result?.counseller}</CCol></CRow>
-                    <CRow><CCol>Sessions : Not Applicable</CCol></CRow> */}
-                    <CRow>
-                        {/* <CCol>Status : {result?.status}</CCol> */}
-                        {/* <CCol>Last visited on : - <CButton>Attendance</CButton></CCol> */}
-                        <CCol></CCol>
-                    </CRow>
-                    <CRow>
-                        {/* <CCol>
-
-                            <div className='d-flex justify-content-between mb-2'>
-                                <div className='justify-content-around'>
-                                    <CButton style={{ margin: '5px' }}>Upgrade</CButton>
-                                    <CButton style={{ margin: '5px' }}>Suspend</CButton>
-                                    <CButton style={{ margin: '5px' }}>Staff Update</CButton>
-                                    <CButton style={{ margin: '5px' }}>Add Appointment</CButton>
-                                    <CButton style={{ margin: '5px' }}>Cancel/Refund</CButton>
-                                </div>
-                            </div>
-                        </CCol> */}
-                    </CRow>
-                </CCard>
-            </CCol>
+                         <CCard style={{ padding: '15px' }} className='mt-2'>
+                             <CRow>
+                                  <CCol className='d-flex '>
+                                 <CCol>
+                                     <b>Service Name</b> :<br/>
+                                     {invoiceData?.ServiceName}
+                                 </CCol>
+                                 <CCol>
+                                     <b>Duration:</b><br/> {invoiceData?.duration}
+                                 </CCol>
+                                 <CCol>
+                                      <b>Packages:</b> <br/>{invoiceData?.PackageName}
+                                 </CCol>
+                                 </CCol>
+         
+                                 <CCol className='d-flex '>
+                                
+                                 <CCol>
+                                      <b>TOTAL DAYS</b> <br/>
+         
+                                      {
+                                     Math.ceil(new Date(invoiceData?.endDate) -new Date(invoiceData?.startDate))/(1000*60*60*24) 
+                                      } days
+                                 </CCol>
+                                 <CCol>
+                                       <b>START DATE</b> <br/>{getDate(invoiceData?.startDate,true)}
+                                 </CCol>
+                                 <CCol>
+                                       <b>EXPIRY DATE</b> <br/>{getDate(invoiceData?.endDate,true)}
+                                 </CCol>
+                                 <CCol>
+                                       <b>Status </b><br/>{invoiceData?.status}
+                                 </CCol>  
+                                 </CCol>    
+           
+                                 
+          
+                             </CRow>
+                         </CCard>
+                     </CCol>
+             {allInvoiceData.filter((el)=>el._id!==slectedInvoiceData).map((invoiceData)=>
+                         <CCol xs={12}>
+                         <CCard style={{ padding: '15px' }} className='mt-2'>
+                             <CRow>
+                                  <CCol className='d-flex '>
+                                 <CCol>
+                                     <b>Service Name</b> :<br/>
+                                     {invoiceData?.ServiceName}
+                                 </CCol>
+                                 <CCol>
+                                     <b>Duration:</b><br/> {invoiceData?.duration}
+                                 </CCol>
+                                 <CCol>
+                                      <b>Packages:</b> <br/>{invoiceData?.PackageName}
+                                 </CCol>
+                                 </CCol>
+         
+                                 <CCol className='d-flex '>
+                                
+                                 <CCol>
+                                      <b>TOTAL DAYS</b> <br/>
+         
+                                      {
+                                     Math.ceil(new Date(invoiceData?.endDate) -new Date(invoiceData?.startDate))/(1000*60*60*24) 
+                                      } days
+                                 </CCol>
+                                 <CCol>
+                                       <b>START DATE</b> <br/>{getDate(invoiceData?.startDate,true)}
+                                 </CCol>
+                                 <CCol>
+                                       <b>EXPIRY DATE</b> <br/>{getDate(invoiceData?.endDate,true)}
+                                 </CCol>
+                                 <CCol>
+                                       <b>Status </b><br/>{invoiceData?.status}
+                                 </CCol>  
+                                 </CCol>    
+           
+                                 
+          
+                             </CRow>
+                         </CCard>
+                     </CCol>
+             )}
         </CRow>
     )
 }

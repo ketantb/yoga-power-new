@@ -1,20 +1,10 @@
 import {
     CButton,
-    CCard,
-    CCardBody,
-    CCardHeader,
     CCardTitle,
     CCol,
     CForm,
     CFormInput,
     CFormSelect,
-    CFormSwitch,
-    CModal,
-    CModalBody,
-    CModalHeader,
-    CModalTitle,
-    CPagination,
-    CPaginationItem,
     CRow,
     CTable,
     CTableBody,
@@ -178,8 +168,8 @@ const Documents = ({ id }) => {
                                     onChange={(e) => setName(e.target.value)}
                                 >
                                     <option >Select</option>
-                                    {staff.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                                        item.username === username && (
+                                    {staff.filter((list) => list.selected === 'Select').map((item, index) => (
+                                       (
                                             <option key={index}>{item.FullName}</option>
                                         )
                                     ))}

@@ -326,7 +326,7 @@ const getUniqCllientCallData = (id)=>{
 function findLeftClient(list){
     const time =  (new Date(list.endDate) -new Date())
     const days = Math.ceil(time/(1000*60*60*24))
-          if((days<=0 && list.plan===true)){
+          if((days<=0 )){
             console.log(list.invoiceId)
              return true 
           }
@@ -793,7 +793,7 @@ function findLeftClient(list){
                                                <CButton size='sm' onClick={()=>NavigateFitnnesofClient(item._id)} >View Fitness</CButton>
                                             </CTableDataCell>
                                             <CTableDataCell>
-                                                <Link index={-1} style={{ textDecoration: 'none' }}
+                                                <Link index={-1} style={{textDecoration: 'none'}}
                                                  to={`/clients/member-details/${item._id}/5`}
                                                   ><BsPlusCircle id={item._id}
                                                    style={{ cursor: 'pointer', markerStart: '10px' }} />

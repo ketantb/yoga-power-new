@@ -36,7 +36,7 @@ import { useSelector } from 'react-redux'
 const url = 'https://yog-seven.vercel.app'
 const url2 = 'https://yog-seven.vercel.app'
 
-const ProfileDetails = ({ ids, deleteId }) => {
+const ProfileDetails = ({ ids, deleteId,clinetData }) => {
 
     const adId = JSON.parse(localStorage.getItem('adId'))
     console.log(adId);
@@ -105,26 +105,16 @@ const ProfileDetails = ({ ids, deleteId }) => {
     const [idealWeight, setidealWeight] = useState('')
     const [suggestion, setsuggestion] = useState('')
     const [comments, setcomments] = useState('')
-    const url1 = useSelector((el)=>el.domainOfApi) 
 
   
     let user = JSON.parse(localStorage.getItem('user-info'))
-    const token = user.token;
    
 
     useEffect(() => {
-        getDetails(ids)
-    }, [])
+        getDetails(clinetData)
+    }, [clinetData?._id])
   
-    function getDetails(id) {
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'My-Custom-Header': 'foobar'
-        };
-        axios.get(`${url1}/memberForm/${id}`, { headers },
-        )
-            .then(({data}) => {
-                console.log(data)
+    function getDetails(data) {
                 setFullname(data?.Fullname)
                 setEmail(data?.Email)
                 setCountryCode(data?.CountryCode)
@@ -179,10 +169,6 @@ const ProfileDetails = ({ ids, deleteId }) => {
                 setcomments(data?.comments)
                 setImageUrl(data?.image)         
                 setAssignStaff(data?.AssignStaff)      
-            })
-            .catch((error) => {
-                console.error(error)
-            })
     }
 
 
