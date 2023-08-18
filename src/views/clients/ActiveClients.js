@@ -42,6 +42,7 @@ import ClientEditForm from './ClientEditForm/ClientEditForm'
 import { Link } from 'react-router-dom'
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 import useExportHook from '../leads/leaadCutomHook/useExportHook'
+import { useNavigate } from 'react-router-dom'
 
 
 const ActiveClients = () => {
@@ -50,7 +51,10 @@ const ActiveClients = () => {
     const [followForm, setFollowForm] = useState()
     const [visible, setVisible] = useState(false)
     const pathVal = useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
     const uniqObjectVal = useUniqAdminObjeact()
+    const navigateFitnees = useNavigate()
+
 
     const [Search1, setSearch1] = useState('')
     const [Search2, setSearch2] = useState('')
@@ -104,7 +108,7 @@ const ActiveClients = () => {
     useEffect(() => {
         getEnquiry()
         getStaff()
-        axios.get(`${url}/subservice/${pathVal}`, {
+        axios.get(`${url}/subservice/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -120,14 +124,13 @@ const ActiveClients = () => {
 
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url}/employeeform/${pathVal}`, {
+        axios.get(`${url}/employeeform/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
                 setStaff(res.data)
-                console.log(res.data);
             })
             .catch((error) => {
                 console.error(error)
@@ -148,6 +151,8 @@ const ActiveClients = () => {
             resp.json().then(() => {
                 getEnquiry()
             })
+        }).then((error)=>{
+            console.log(error)    
         })
     }
 
@@ -190,6 +195,16 @@ const ActiveClients = () => {
       }
 
   
+      function findLeftClient(list){
+        const time =  (new Date(list.endDate) -new Date())
+        const days = Math.ceil(time/(1000*60*60*24))
+              if((days<=0 && list.plan===true)){
+                console.log(list.invoiceId)
+                 return true 
+              }
+              return false   
+       }
+        
     
 
     const [ogList, setOgList] = useState([])
@@ -200,7 +215,7 @@ const ActiveClients = () => {
             }
         })
             .then((res) => {
-                const data = res.data.filter((list) =>   list.status === 'active')
+                const data = res.data.filter((list) =>   list.status === 'active' && !findLeftClient(list))
                 setPrevData(data)
                 setResult1(data)
                 setOgList(data)
@@ -314,41 +329,6 @@ const ActiveClients = () => {
 
     const [invId, setinvId] = useState()
     const [cliId, setCliId] = useState()
-    function handleInvoice(inId, clId) {
-
-        setinvId(null)
-        setCliId(null)
-        if (inId && clId != null) {
-            axios.get(`${url}/invoice/${inId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-                .then((res) => {
-                    console.log(res.data)
-                    setinvId(res.data)
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
-            axios.get(`${url}/memberForm/${clId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-                .then((res) => {
-                    console.log(res.data)
-                    setCliId(res.data)
-
-                    if (invId != null && res.data != null) {
-                        setViewInvoice(true)
-                    }
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
-        }
-    }
 
 
    
@@ -370,13 +350,17 @@ const clearFilter = ()=>{
    setSubFilter('')
 }
 
+function NavigateFitnnesofClient(id){
+    navigateFitnees(`/clients/member-details/${id}/9`)   
+   }
+
     return (
         <CRow>
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">Active Clients <span className='float-end'>Total Active Clients : 
-                        {result1.filter((list) =>  list.plan === true && list.status === 'active').length}</span></strong>
+                        {result1.filter((list) =>   list.status === 'active').length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>
@@ -603,7 +587,7 @@ const clearFilter = ()=>{
                             <ViewInvoice add={viewInvoice} clickfun={() => setViewInvoice(false)} invoiceId={invId} clientId={cliId} />
                         }
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead  >
+                            <CTableHead color={'darkGreen'} >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell>Member ID</CTableHeaderCell>
                                     <CTableHeaderCell>Name</CTableHeaderCell>
@@ -782,7 +766,7 @@ const clearFilter = ()=>{
                                 </CTableRow>
                                 {result1.filter((list) =>
                                      moment(list.createdAt).format("MM-DD-YYYY").includes(select)&&
-                                     list.plan === true && list.status === 'active'&&
+                                      list.status === 'active'&&
                                      (list.ClientId||' ').toLowerCase().includes(Search1.toLowerCase()) &&
                                      (list.Fullname||' ').toLowerCase().includes(Search2.toLowerCase()) &&
                                      (list.ContactNumber+"").includes(Search3)&&
@@ -806,7 +790,7 @@ const clearFilter = ()=>{
                                             <CTableDataCell>{item?.duration}</CTableDataCell>
                                             <CTableDataCell>{moment(item.startDate).format("DD-MM-YYYY")}</CTableDataCell>
                                             <CTableDataCell>{moment(item.endDate).format("DD-MM-YYYY")}</CTableDataCell>
-                                            <CTableDataCell>{item.fitnessGoal}</CTableDataCell>
+                                            <CTableDataCell>  <CButton size='sm' onClick={()=>NavigateFitnnesofClient(item._id)} >View Fitness</CButton></CTableDataCell>
                                             <CTableDataCell><Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/5`} target="_black"><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} /></Link></CTableDataCell>
                                             <CTableDataCell><CButton onClick={() => { setCalls(true), setCallUpdateID(item._id) }}>View</CButton></CTableDataCell>
                                             <CTableDataCell className='text-center'>{item.status === 'active' ? <>

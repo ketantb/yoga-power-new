@@ -156,9 +156,7 @@ const AllClients = () => {
             }
         })
             .then((res) => {
-                const data = res.data.filter((list) =>   list.status === 'active').reverse()
-                console.log(data)
-
+                const data = res.data.reverse()
                 setPrevData(data)
                 setResult1(data)
                 setOgList(data)
@@ -172,10 +170,6 @@ const AllClients = () => {
     const [arr, setArr] = useState([])
 
    
-
-
-
-
     function deleteEnquiry(id) {
 
         if (confirm('Do you want to delete this')) {
@@ -203,7 +197,6 @@ const AllClients = () => {
     }
 
     function getCallReport(item) {  
-        setUpdateItem(item)
         setName(item.Fullname)
         setContact(item.ContactNumber)
         setServiceName1(item.serviceName?.trim()?.toLowerCase())
@@ -330,6 +323,15 @@ const getUniqCllientCallData = (id)=>{
                 setUniqClientId(id)
                 setCalls(true)        
 }
+function findLeftClient(list){
+    const time =  (new Date(list.endDate) -new Date())
+    const days = Math.ceil(time/(1000*60*60*24))
+          if((days<=0 && list.plan===true)){
+            console.log(list.invoiceId)
+             return true 
+          }
+          return false   
+   }
 
     return (
         <CRow>
@@ -561,7 +563,7 @@ const getUniqCllientCallData = (id)=>{
                          />}
                        
                         <CTable className='mt-3' align="middle" bordered  hover responsive>
-                            <CTableHead  >
+                            <CTableHead color={'darkGreen'} >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell>Member ID</CTableHeaderCell>
                                     <CTableHeaderCell>Name</CTableHeaderCell>
@@ -798,7 +800,13 @@ const getUniqCllientCallData = (id)=>{
                                                    </Link>
                                                    </CTableDataCell>
                                             <CTableDataCell><CButton onClick={() => {getUniqCllientCallData(item._id) }}>View</CButton></CTableDataCell>
-                                            <CTableDataCell className='text-center'>{item.status === 'active' ? <><CButton className='mt-1' color='success' onClick={() => updateRec(item._id, 'inactive')} >Active</CButton></> : <CButton className='mt-1' color='danger' onClick={() => updateRec(item._id, 'active')}>Inactive</CButton>}</CTableDataCell>
+                                        <CTableDataCell className='text-center'>
+                                            {
+                                        (findLeftClient(item)&&<CButton className='mt-1' color='danger' >Left</CButton>||
+                                        item.status === 'active'&& !findLeftClient(item) &&<CButton className='mt-1' color='success' onClick={() => updateRec(item._id, 'inactive')} >Active</CButton>||
+                                        item.status !== 'active' && !findLeftClient(item)&&  <CButton className='mt-1' color='danger' onClick={() => updateRec(item._id, 'active')}>Inactive</CButton>)
+                                        }
+                                        </CTableDataCell>
                                             <CTableDataCell className='text-center'>
                                                 <a href={`tel:${item.CountryCode}${item.ContactNumber}`} target='_black'>
                                                     <MdCall style={{ cursor: 'pointer', markerStart: '10px' }} 
@@ -812,7 +820,7 @@ const getUniqCllientCallData = (id)=>{
                                                                  </a> 
                                                                  
                                                                  <BsPlusCircle id={item._id} style={{ cursor: 'pointer'
-                                                                 , markerStart: '10px' }} onClick={() => {setVisible(true),handleFollowup(item._id,item.ClientId)
+                                                                 , markerStart: '10px' }} onClick={() => {setVisible(true),handleFollowup(item._id,item.ClientId,item)
                                                                  }} />
                                                                  </CTableDataCell>
                                             <CTableDataCell className='text-center'>

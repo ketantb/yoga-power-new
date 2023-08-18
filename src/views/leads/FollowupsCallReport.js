@@ -126,7 +126,7 @@ const FollowupCallReport = () => {
                         </div>
                       
                         <CTable className='mt-3' align="middle" bordered  hover responsive>
-                            <CTableHead >
+                            <CTableHead color={'darkGreen'} >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry ID</CTableHeaderCell>
                                     <CTableHeaderCell>Date</CTableHeaderCell>

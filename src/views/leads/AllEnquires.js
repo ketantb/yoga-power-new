@@ -383,6 +383,7 @@ const AllEnquires = () => {
         })
             .then((res) => {
                 if(res.status===200){
+                    res.data.reverse()
                     setTotalEnquire(res.data.length)
                     setResult1(res.data)
                     setOgList(res.data)
