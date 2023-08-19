@@ -795,8 +795,8 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Client Transfer Master',
-        to: '/master/clients/client-transfer',
+        name: 'T&C',
+        to: '/master/clients/t&c-master',
         id:'masterClientTransferMaster'
       }
     ],

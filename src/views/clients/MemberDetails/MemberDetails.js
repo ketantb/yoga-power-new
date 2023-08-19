@@ -128,7 +128,7 @@ const MemberDetails = () => {
                                 { id: '7', heading: 'Shop',com:<ProductSalesReport onlyOneClient={true} id={id}/> },
                                 { id: '8', heading: 'Calls', com: <CallUpdate id={id}  /> },
                                 { id: '9', heading: 'Fitness' , com: <FitnessProfile />} ,
-                                { id: '10', heading: 'Docs', com: <Documents id={id}  /> },
+                                { id: '10', heading: 'Docs', com: <Documents id={id} clinetData={clinetData} /> },
                                 { id: '11', heading: 'T&C', com: <Teams id={id} /> },
                             ].filter((el,i)=>(+el.id===+activeKey)).map((item, index) => (
                                 <CTabPane key={index} role="tabpanel" aria-labelledby="home-tab" visible={true}>

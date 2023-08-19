@@ -138,7 +138,7 @@ const BudgetingMaster = React.lazy(() => import('./views/Master/finance/Budgetin
 const ExpressCategoryMaster = React.lazy(() => import('./views/Master/finance/ExpressCategoryMaster'))
 const InvoiceMaster = React.lazy(() => import('./views/Master/finance/InvoiceMaster'))
 const TaxSetupMaster = React.lazy(() => import('./views/Master/finance/TaxSetupMaster'))
-const ClientTransferMaster = React.lazy(() => import('./views/Master/client/ClientTransferMaster'))
+const TncMaster = React.lazy(() => import('./views/Master/client/TncMaster'))
 const Support = React.lazy(()=>import('./views/Master/Support/Support'))
 const JobProfileMaster  = React.lazy(()=>import('./views/Master/HRMaster/JobProfile'))
 const LeaveSetupMaster = React.lazy(()=>import('./views/Master/HRMaster/LeaveSetup'))
@@ -359,7 +359,7 @@ const routes = [
 
 
   { path: '/master/clients', name: 'Marketing Master', element: Designation, exact: true },
-  { path: '/master/clients/client-transfer', name: 'Client Tranfer', element: ClientTransferMaster, exact: true },
+  { path: '/master/clients/t&c-master', name: 'T&C Master', element: TncMaster, exact: true },
 
   { path: '/master/marketing', name: 'Marketing Master', element: Designation, exact: true },
   { path: '/master/marketing/emailsmsTemplate', name: 'Template', element: EmailSMSMaster, exact: true },

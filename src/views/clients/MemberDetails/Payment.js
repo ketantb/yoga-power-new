@@ -1,26 +1,29 @@
 import { CButton, CCardTitle, CCol, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import moment from 'moment'
-import ViewInvoice from 'src/components/ViewInvoice'
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
 import { useSelector } from 'react-redux'
+import {BsEye } from 'react-icons/bs'
 
 const  AddNewInvoice  = React.lazy(()=>import('src/components/AddNewInvoice'))
 
+const Invoice = React.lazy(()=>import('../Invoice'))
 
 
-const Payment = ({ id }) => {
+
+
+
+const Payment = ({ id,clinetData }) => {
 
     const [viewInvoice, setViewInvoice] = useState(false);
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
-    const centerCode = user.user.centerCode;
     const [invoiceData, setInvoiceData] = useState([]);
     const [clinetInfoData,setClientInfo] = useState([])
+
+    const [allIvoiceOfaUser,setAllInvoiceOfUser] = useState([])
+    const [ClientData,setClient] = useState([])
+    const [showInvoiceModal,setInvoceModal] = useState(false)
     const url1 = useSelector((el)=>el.domainOfApi) 
 
     const headers = {
@@ -55,6 +58,12 @@ const {data} = await axios.get(`${url1}/memberForm/${id}`,{headers})
   setClientInfo(data)
 }
 
+function ShowUserInvoceHandler (id,item){
+    setAllInvoiceOfUser([item])    
+    setClient(clinetData)
+    setInvoceModal(true)      
+} 
+
 
 
 
@@ -62,6 +71,11 @@ const {data} = await axios.get(`${url1}/memberForm/${id}`,{headers})
 
     return (
         <CRow>
+            {<Invoice 
+            allIvoiceOfaUser={allIvoiceOfaUser} 
+            ClientData={ClientData} setInvoceModal={setInvoceModal}
+            showInvoiceModal={showInvoiceModal}            
+            />}
              {<AddNewInvoice data23={clinetInfoData}
              viewInvoice ={viewInvoice}
              setViewInvoice={setViewInvoice}
@@ -94,6 +108,7 @@ const {data} = await axios.get(`${url1}/memberForm/${id}`,{headers})
                         <CTableRow>
                             <CTableHeaderCell scope="col">Invoice Date</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Member Name</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Service </CTableHeaderCell>
                             <CTableHeaderCell scope="col">
                                 Invoice No
                             </CTableHeaderCell>
@@ -102,7 +117,7 @@ const {data} = await axios.get(`${url1}/memberForm/${id}`,{headers})
                             <CTableHeaderCell scope="col">Paid</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Pending</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Mode</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">View</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
@@ -110,16 +125,19 @@ const {data} = await axios.get(`${url1}/memberForm/${id}`,{headers})
                             <CTableRow key={index}>
                                 <CTableDataCell>{getDate(item.createdAt)}</CTableDataCell>
                                 <CTableDataCell>{item.MemberName}</CTableDataCell>
+                                <CTableDataCell>{item.ServiceName}</CTableDataCell>
                                 <CTableDataCell>{item.InvoiceNo}</CTableDataCell>
                                 <CTableDataCell>{item.amount}</CTableDataCell>
                                 <CTableDataCell>{item.fees / 100 * item.tax }</CTableDataCell>
                                 <CTableDataCell>{item.paidAmount}</CTableDataCell>
                                 <CTableDataCell>{item.pendingAmount}</CTableDataCell>
                                 <CTableDataCell>{item.paymode}</CTableDataCell>
-                                <CTableDataCell>{item.paymode}</CTableDataCell>
-
-
-                            </CTableRow>
+                                <CTableDataCell >{
+                                        <CButton size='sm' onClick={()=>ShowUserInvoceHandler(item._id,item)}>
+                                            <BsEye />
+                                    </CButton>}
+                                </CTableDataCell>
+                           </CTableRow>
                         ))}
                     </CTableBody>
                 </CTable>

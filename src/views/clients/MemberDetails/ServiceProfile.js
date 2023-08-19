@@ -5,7 +5,6 @@ import ProfileIcon from 'src/assets/images/avatars/profile_icon.png'
 import { useSelector } from 'react-redux'
 
 const ServiceProfile = ({ id }) => {
-    console.log(id ,"service profile")
     const url1 = useSelector((el)=>el.domainOfApi) 
 
     const [result, setResult] = useState([])
@@ -14,7 +13,6 @@ const ServiceProfile = ({ id }) => {
     const [slectedInvoiceData,setSelectedInvoiceData] = useState()
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
 
     useEffect(() => {

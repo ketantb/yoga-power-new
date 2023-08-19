@@ -173,12 +173,10 @@ const TotalInvoice = () => {
  }   
 
 
-    console.log(result1)
     useEffect(()=>{
         setPagination(10)
     },[serviceName])
-    console.log(startDate)
-console.log(startDate ,endDate)
+
 
 
 const  compareDate = (date1,date2,type)=>{      

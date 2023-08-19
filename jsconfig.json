@@ -2,5 +2,5 @@
   "compilerOptions": {
     "baseUrl": "."
   },
-  "include": ["src", "src/views/hr/HolidaysList.js"]
+  "include": ["src", "src/views/hr/HolidaysList.js", "src/views/Master/client/TncMaster.js"]
 }
