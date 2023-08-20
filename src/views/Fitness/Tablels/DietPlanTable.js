@@ -13,7 +13,6 @@ import {
   } from '@coreui/react'
 
   import { useSelector } from 'react-redux'
-  import { BsWhatsapp } from "react-icons/bs";
   import { MdCall, MdDelete, MdEdit, MdMail } from "react-icons/md";
   import DietPlanTempletForm from '../form/DietPlanTempletForm';
 import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';

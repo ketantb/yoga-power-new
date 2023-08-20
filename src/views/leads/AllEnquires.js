@@ -175,12 +175,13 @@ const AllEnquires = () => {
 
     const [staff, setStaff] = useState([])
 
+    
+
     const unikqValidateObj = {
         ...unikqObj,
-        employeeMongoId:Counseller,
-        empNameC:staff.find((el)=>el._id===Counseller)?.FullName
+        employeeMongoId:(Counseller||unikqObj.employeeMongoId),
+        empNameC:(staff.find((el)=>el._id===Counseller)?.FullName||unikqObj.empNameC)
     }
-
 
 
     function getStaff() {
@@ -200,7 +201,6 @@ const AllEnquires = () => {
 
 
 
-
     const saveCallReportP = ()=>{
 
         var currentdate = new Date();
@@ -212,10 +212,10 @@ const AllEnquires = () => {
 
         let data2 = {
             username: username,
-            EnquiryID: followForm, CallDate: date, Time: time,
+            EnquiryID:  (result1.find((el)=>el._id===followForm.trim())?.EnquiryId||''), CallDate: date, Time: time,
             Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate,
              AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, 
-             FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: staff.find((el)=>el._id===Counseller)?.FullName , Discussion: Discussion,
+             FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: (staff.find((el)=>el._id===Counseller)?.FullName||'') , Discussion: Discussion,
             status: 'CallReport',... unikqValidateObj 
         }
 
@@ -245,7 +245,7 @@ const AllEnquires = () => {
 
         if (enquiryStage === 'Appointment') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: enquiryStage,identifyStage:enquiryStage,
-            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName,...unikqValidateObj,
+            CallStatus: CallStatus1,Counseller: (staff.find((el)=>el._id===Counseller)?.FullName||''),...unikqValidateObj,
         
         }
              saveCallReportP()
@@ -268,7 +268,7 @@ const AllEnquires = () => {
             })
         } else if (enquiryStage === 'Trial Session') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: enquiryStage,identifyStage:enquiryStage,
-            CallStatus: CallStatus1,Counseller: staff.find((el)=>el._id===Counseller)?.FullName,...unikqValidateObj,
+            CallStatus: CallStatus1,Counseller: (staff.find((el)=>el._id===Counseller)?.FullName||''),...unikqValidateObj,
         }
             saveCallReportP()
 
@@ -299,7 +299,7 @@ const AllEnquires = () => {
             saveCallReportP()
            
             const data1 = { 
-                Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                Counseller:(staff.find((el)=>el._id===Counseller)?.FullName||''), CallStatus:CallStatus1,
                 appointmentfor:enquiryStage,
                 identifyStage:enquiryStage,
                 PFollowupDate:FollowupDate,
@@ -479,6 +479,7 @@ const AllEnquires = () => {
         setFollowForm(id)
         getProspect(id)
         setFollowUPdata(item)
+        setServiceName1(item.ServiceName)
 
     }
 
@@ -771,7 +772,7 @@ const AllEnquires = () => {
                                                 {result.map((item, index) => (
                                                     (
                                                         item.status === true && (
-                                                            <option key={index} value={item.id}>{item.selected_service}</option>
+                                                            <option key={index} >{item.selected_service}</option>
                                                         )
                                                     )
                                                 ))}

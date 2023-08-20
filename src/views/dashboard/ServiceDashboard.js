@@ -36,25 +36,6 @@ import { FaEye,FaEyeSlash } from 'react-icons/fa'
 
 import {
   cibCcAmex,
-  cibCcApplePay,
-  cibCcMastercard,
-  cibCcPaypal,
-  cibCcStripe,
-  cibCcVisa,
-  cibGoogle,
-  cibFacebook,
-  cibLinkedin,
-  cifBr,
-  cifEs,
-  cifFr,
-  cifIn,
-  cifPl,
-  cifUs,
-  cibTwitter,
-  cilCloudDownload,
-  cilUser,
-  cilUserFemale,
-  cilPeople,
 } from '@coreui/icons'
 
 
@@ -76,7 +57,6 @@ const ServiceDashboard = () => {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
    }
-
     
   const navigate = useNavigate()
   const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights?.crmDashboard?.rights) 

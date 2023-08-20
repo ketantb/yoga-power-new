@@ -19,7 +19,7 @@ function AllDietClientForm({allMemberData, closeFormFun, getClientDietData,edit,
         EndDate: ' ',
         Package: ' ',
         DietitianName:' ',
-        Action:'no action',
+        Action:'',
     })
 
     
@@ -41,7 +41,7 @@ const  sumbitFormInfoHandler = async (e)=>{
         try{
 
        if(edit){
-          axios.post(`${url}/allDietClient/update/${editData._id}`,allDiietClientData ,{headers}).then((el)=>{
+          axios.post(`${url}/allDietClient/update/${editData._id}`,{...allDiietClientData,...uniqObjVal} ,{headers}).then((el)=>{
            alert('Successfully save')
            getClientDietData()
           })
@@ -61,6 +61,8 @@ function clientObj(obj){
     setAllDietClient((prev)=>({...prev,Mobile_No:obj.ContactNumber}))
     setAllDietClient((prev)=>({...prev,Name:obj.Fullname}))
     setAllDietClient((prev)=>({...prev,Member_Id:obj._id}))
+    setAllDietClient((prev)=>({...prev,Action:obj.ClientId}))
+
  }
 
 

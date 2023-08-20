@@ -28,8 +28,6 @@ import {
     CTableRow,
 } from '@coreui/react'
 import axios from 'axios';
-import { MdCall, MdDelete, MdEdit, MdMail } from 'react-icons/md';
-import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { useAdminValidation } from '../Custom-hook/adminValidation'
@@ -45,9 +43,14 @@ const FollowupCallReport = () => {
     const [Search6, setSearch6] = useState('')
     const [Search7, setSearch7] = useState('')
     const [Search8, setSearch8] = useState('')
+    const [Search9, setSearch9] = useState('')
+    const [Search10, setSearch10] = useState('')
+    const preMonth = new Date().getMonth()
+    let pageNumber = 0
 
     const [dateFilterObj,setDteFilterObj] = useState({
-        startDate:moment(new Date(new Date().getFullYear(),0,1)).format('YYYY-MM-DD'),
+        
+        startDate:moment(new Date(new Date().getFullYear(),preMonth,1)).format('YYYY-MM-DD'),
         endDate:moment(new Date()).format('YYYY-MM-DD')
       })
 
@@ -80,7 +83,7 @@ const FollowupCallReport = () => {
                 console.error(error)
             })
     }
-  
+  console.log(result1)
 
     return (
         <CRow>
@@ -154,18 +157,8 @@ const FollowupCallReport = () => {
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
-                                            style={{ minWidth: "120px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
                                             type="text"
                                             style={{ minWidth: "120px" }}
-                                            disabled
                                             value={Search1}
                                             onChange={(e) => setSearch1(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -176,7 +169,6 @@ const FollowupCallReport = () => {
                                             className="mb-1"
                                             type="text"
                                             style={{ minWidth: "90px" }}
-                                            disabled
                                             value={Search2}
                                             onChange={(e) => setSearch2(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -198,7 +190,6 @@ const FollowupCallReport = () => {
                                             type="text"
                                             style={{ minWidth: "120px" }}
                                             value={Search4}
-                                            disabled
                                             onChange={(e) => setSearch4(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
@@ -247,16 +238,39 @@ const FollowupCallReport = () => {
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
                                             type="text"
-                                            disabled
+                                            value={Search9}
+                                            onChange={(e) => setSearch9(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                   
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            style={{ minWidth: "120px" }}
+                                            type="text"
+                                            value={Search10}
+                                            onChange={(e) => setSearch10(e.target.value)}
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
                                 </CTableRow>
-                                {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
+                                {result1.filter((list) =>
+                                   (list.EnquiryID||'').toLowerCase().includes(Search1.toLowerCase()) && 
+                                   moment(list.CallDate).format("DD-MM-YYYY").includes(Search2.toLowerCase()) &&
+                                   (list.Name||'').toLowerCase().includes(Search4.toLowerCase()) &&
+                                   (list.Email||'').toLowerCase().includes(Search5.toLowerCase()) &&
+                                   (list.Contact+""||'').toLowerCase().includes(Search6.toLowerCase()) &&
+                                   (list.ServiceName||'').toLowerCase().includes(Search7.toLowerCase()) &&
+                                   (list.CallStatus||'').toLowerCase().includes(Search8.toLowerCase()) &&
+                                   (list.Discussion||'').toLowerCase().includes(Search9.toLowerCase()) &&
+                                   (list.Counseller||'').toLowerCase().includes(Search10.toLowerCase()) 
+                                ).filter((el)=>{
+                                    pageNumber++
+                                    return el
+                              }).slice(paging * 10, paging * 10 + 10).map((item, index) => (
                                     <CTableRow key={index}>
                                         <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-                                        <CTableDataCell>{item.centerCodeC}Q{index + 10 + (paging * 10)}</CTableDataCell>
+                                        <CTableDataCell>{item.EnquiryID}</CTableDataCell>
                                         <CTableDataCell className='text-center'>{moment(item.CallDate).format("DD-MM-YYYY")}</CTableDataCell>
                                         <CTableDataCell>{moment(item.Time, "HH:mm").format("hh:mm A")}</CTableDataCell>
                                         <CTableDataCell>{item.Name}</CTableDataCell>
@@ -279,11 +293,11 @@ const FollowupCallReport = () => {
                             <span aria-hidden="true">&laquo;</span>
                         </CPaginationItem>
                         <CPaginationItem style={{ cursor: 'pointer' }} active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {result1.length > (paging + 1) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
+                        {pageNumber > (paging + 1) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
                             onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
-                        {result1.length > (paging + 2) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
+                        {pageNumber > (paging + 2) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
                             onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {result1.length > (paging + 1) * 10 ?
+                        {pageNumber > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" style={{ cursor: 'pointer' }} onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>

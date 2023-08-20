@@ -54,6 +54,8 @@ const ColdEnquires = () => {
     var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
     var year = currentdate.getFullYear();
 
+    let pageNumber = 0
+
     const [select, setSelect] = useState('')
     const [followForm, setFollowForm] = useState()
     const [edit, setEdit] = useState()
@@ -131,10 +133,17 @@ const ColdEnquires = () => {
     
     const [staff, setStaff] = useState([])
 
+     const selctedCounseller = staff.find((el)=>el._id===Counseller)
+     const enquiryId = (result1.find((el)=>el._id===followForm)?.EnquiryId||'')
+
+    useEffect(()=>{
+     setCounseller(uniqObj.employeeMongoId)  
+    },[uniqObj.employeeMongoId])
+
     const unikqValidateObj = {
         ...uniqObj,
-        employeeMongoId:Counseller,
-        empNameC:staff.find((el)=>el._id===Counseller)?.FullName
+        employeeMongoId:(selctedCounseller?._id||uniqObj.employeeMongoId),
+        empNameC:(selctedCounseller?.FullName||uniqObj.empNameC)
     }
     function getStaff() {
         axios.get(`${url2}/employeeform/${pathRouteVal}`, {
@@ -184,15 +193,15 @@ const ColdEnquires = () => {
 
         if (enquiryStage === 'Appointment') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment',  
-            Counseller: staff.find((el)=>el._id===Counseller)?.FullName,identifyStage:'Appointment',...unikqValidateObj,
+            Counseller: (selctedCounseller?.FullName||''),identifyStage:'Appointment',...unikqValidateObj,
             EmployeeId:Counseller,CallStatus: CallStatus1 }
             let data2 = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
+                EnquiryID: enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, 
                 AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1,
                  FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Discussion: Discussion,
-                 Counseller: staff.find((el)=>el._id===Counseller)?.FullName,
+                 Counseller: (selctedCounseller?.FullName||''),
                  EmployeeId:Counseller,
                 status: 'CallReport',
             }
@@ -229,15 +238,15 @@ const ColdEnquires = () => {
 
         } else if (enquiryStage === 'Trial Session') {
             const data1 = { appointmentDate, appointmentTime,CallStatus: CallStatus1,
-                 appointmentfor: 'Trial Session', Counseller: Counseller,identifyStage:'Trial Session',...unikqValidateObj}
+                 appointmentfor: 'Trial Session', Counseller: (selctedCounseller?.FullName||''),identifyStage:'Trial Session',...unikqValidateObj}
             let data2 = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
+                EnquiryID:  enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, 
                 ServiceName: ServiceName1, AppointmentDate: appointmentDate,
                  AppointmentTime: appointmentTime, enquiryStage: enquiryStage, 
                  CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, 
-                 Counseller: staff.find((el)=>el._id===Counseller)?.FullName,
+                 Counseller: (selctedCounseller?.FullName||''),
                  EmployeeId:Counseller,
                  Discussion: Discussion,
                 status: 'CallReport'
@@ -279,16 +288,16 @@ const ColdEnquires = () => {
         } else if (enquiryStage === 'Prospect') {
             let data2 = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
+                EnquiryID:  enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, 
                 AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage,
                 CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp,
-                Counseller: staff.find((el)=>el._id===Counseller)?.FullName, EmployeeId:Counseller, Discussion: Discussion,
+                Counseller: (selctedCounseller?.FullName||''), EmployeeId:Counseller, Discussion: Discussion,
                 status: 'CallReport',...unikqValidateObj
             }
            
             const data1 = { 
-                Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                Counseller:(selctedCounseller?.FullName||''), CallStatus:CallStatus1,
                 appointmentfor:enquiryStage,
                 identifyStage:enquiryStage,
                 PFollowupDate:FollowupDate,
@@ -355,10 +364,10 @@ const ColdEnquires = () => {
             + currentdate.getMinutes();
         let data = {
             username: username,
-            EnquiryID: followForm, CallDate: date, Time: time,
+            EnquiryID:  enquiryId, CallDate: date, Time: time,
             Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
              CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, 
-             Counseller: staff.find((el)=>el._id===Counseller)?.FullName, 
+             Counseller:(selctedCounseller?.FullName||''), 
              EmployeeId: Counseller, Discussion: Discussion,
             status: 'CallReport',...unikqValidateObj
         }
@@ -376,7 +385,7 @@ const ColdEnquires = () => {
                 setVisible(false)
             })
         })
-        const data1 = {  Counseller: staff.find((el)=>el._id===Counseller)?.FullName, 
+        const data1 = {  Counseller:(selctedCounseller?.FullName||''), 
             EmployeeId: Counseller,...unikqValidateObj }
 
         fetch(`${url1}/enquiryForm/update/${followForm}`, {
@@ -480,9 +489,11 @@ const ColdEnquires = () => {
             .filter(e => arr[e]).map(e => arr[e]);
         return unique;
     }
-    const handleFollowup = (id) => {
+    const handleFollowup = (id,item) => {
         setFollowForm(id)
         getProspect(id)
+        setServiceName1(item.ServiceName)
+
     }
 
     const handleCallReport = (id) => {
@@ -523,35 +534,6 @@ const ColdEnquires = () => {
                                         <option value={year}>This Year</option>
                                      
                                     </CFormSelect>
-                                    {select === 'Custom Date' && (
-                                        <CInputGroup className='mt-2 mb-2' >
-
-                                            <CInputGroupText
-                                                component="label"
-                                                htmlFor="inputGroupSelect01"
-                                            >
-                                                Form
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                type="date"
-                                                required
-                                            /><CInputGroupText
-                                                component="label"
-                                                htmlFor="inputGroupSelect01"
-                                            >
-                                                To
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                type="date"
-                                                required
-                                            />
-                                            <CButton type="button" color="primary">
-                                                Go
-                                            </CButton>
-                                        </CInputGroup>
-
-                                    )}
-
                                 </CInputGroup>
                             </CCol>
                             <CCol lg={6} sm={6} md={6}>
@@ -788,7 +770,7 @@ const ColdEnquires = () => {
                                                 {result.map((item, index) => (
                                                   (
                                                         item.status === true && (
-                                                            <option key={index} value={item.id}>{item.selected_service}</option>
+                                                            <option key={index} >{item.selected_service}</option>
                                                         )
                                                     )
                                                 ))}
@@ -1000,16 +982,6 @@ const ColdEnquires = () => {
                                             className="mb-1"
                                             style={{ minWidth: "120px" }}
                                             type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
-                                            disabled
                                             value={Search1}
                                             onChange={(e) => setSearch1(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -1019,8 +991,7 @@ const ColdEnquires = () => {
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            style={{ minWidth: "90px" }}
-                                            disabled
+                                            style={{ minWidth: "120px" }}
                                             value={Search2}
                                             onChange={(e) => setSearch2(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -1030,8 +1001,9 @@ const ColdEnquires = () => {
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            style={{ minWidth: "120px" }}
+                                            style={{ minWidth: "90px" }}
                                             value={Search3}
+                                            disabled
                                             onChange={(e) => setSearch3(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
@@ -1041,19 +1013,28 @@ const ColdEnquires = () => {
                                             className="mb-1"
                                             type="text"
                                             style={{ minWidth: "120px" }}
-                                            value={Search4}
-                                            disabled
-                                            onChange={(e) => setSearch4(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            value={Search4}
+                                            onChange={(e) => setSearch4(e.target.value)}
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
+                                            style={{ minWidth: "120px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
                                             value={Search5}
                                             onChange={(e) => setSearch5(e.target.value)}
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            type="text"
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            value={Search6}
+                                            onChange={(e) => setSearch6(e.target.value)}
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
@@ -1061,19 +1042,9 @@ const ColdEnquires = () => {
                                             className="mb-1"
                                             type="text"
                                             style={{ minWidth: "80px" }}
-                                            value={Search6}
-                                            onChange={(e) => setSearch6(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "100px" }}
                                             value={Search7}
                                             onChange={(e) => setSearch7(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
@@ -1081,9 +1052,19 @@ const ColdEnquires = () => {
                                             className="mb-1"
                                             type="text"
                                             style={{ minWidth: "100px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
                                             value={Search8}
                                             onChange={(e) => setSearch8(e.target.value)}
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            type="text"
+                                            style={{ minWidth: "100px" }}
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            value={Search9}
+                                            onChange={(e) => setSearch9(e.target.value)}
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
@@ -1101,8 +1082,8 @@ const ColdEnquires = () => {
                                             className="mb-1"
                                             type="text"
                                             style={{ minWidth: "100px" }}
-                                            value={Search9}
-                                            onChange={(e) => setSearch9(e.target.value)}
+                                            value={Search10}
+                                            onChange={(e) => setSearch10(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
@@ -1110,10 +1091,8 @@ const ColdEnquires = () => {
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            value={Search10}
                                             style={{ minWidth: "100px" }}
                                             disabled
-                                            onChange={(e) => setSearch10(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
@@ -1136,14 +1115,22 @@ const ColdEnquires = () => {
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
-                                {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
+                                {result1.filter((list) =>
                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select) &&
-                                     list.CallStatus === 'Cold' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
-                                    list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && 
-                                    list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && 
-                                    list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
-                                    && list.StaffName.toLowerCase().includes(Search9.toLowerCase())
-                                ).map((item, index) => (
+                                     list.CallStatus === 'Cold' &&
+                                     (list.EnquiryId||'').toLowerCase().includes(Search1.toLowerCase()) &&
+                                     (moment(list.createdAt).format("DD-MM-YYYY")||'').includes(Search2.toLowerCase()) &&
+                                     (list.Fullname||'').toLowerCase().includes(Search4.toLowerCase()) &&
+                                     (list.ContactNumber+""||'').toLowerCase().includes(Search5.toLowerCase())&&
+                                     (list.ServiceName||'').toLowerCase().includes(Search6.toLowerCase())&&
+                                     (list.enquirytype||'').toLowerCase().includes(Search7.toLowerCase())&&
+                                     (list.appointmentfor||'').toLowerCase().includes(Search8.toLowerCase())&&
+                                     (list.CallStatus||'').toLowerCase().includes(Search9.toLowerCase())&&
+                                     (list.StaffName||'').toLowerCase().includes(Search10.toLowerCase())
+                                ).filter((el)=>{
+                                    pageNumber++
+                                    return el
+                                }).slice(paging * 10, paging * 10 + 10).map((item, index) => (
                                     (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
@@ -1159,7 +1146,7 @@ const ColdEnquires = () => {
                                             <CTableDataCell>{item.Message}</CTableDataCell>
                                             <CTableDataCell>{item.StaffName}</CTableDataCell>
                                             <CTableDataCell>{item.Counseller}</CTableDataCell>
-                                            <CTableDataCell style={{display:(isAdmin|| coldAdd)?'':'none'}} className='text-center'><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id)} /></CTableDataCell>
+                                            <CTableDataCell style={{display:(isAdmin|| coldAdd)?'':'none'}} className='text-center'><a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${item.Emailaddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id,item)} /></CTableDataCell>
                                             <CTableDataCell style={{display:(isAdmin|| coldEdit||coldDelete)?'':'none'}}
                                              className='text-center'>
                                                 {coldEdit&&<MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }}
@@ -1180,22 +1167,10 @@ const ColdEnquires = () => {
                             <span aria-hidden="true">&laquo;</span>
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {result1.filter((list) =>
-                              moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
-                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
-                            && list.StaffName.toLowerCase().includes(Search9.toLowerCase())
-                        ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {pageNumber > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                        {result1.filter((list) =>
-                              moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
-                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
-                            && list.StaffName.toLowerCase().includes(Search9.toLowerCase())
-                        ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {result1.filter((list) =>
-                              moment(list.createdAt).format("MM-DD-YYYY").includes(select) && list.CallStatus === 'Cold' && list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
-                            list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) && list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) && list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
-                            && list.StaffName.toLowerCase().includes(Search9.toLowerCase())
-                        ).length > (paging + 1) * 10 ?
+                        {pageNumber > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {pageNumber > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>

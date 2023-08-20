@@ -144,11 +144,21 @@ const FollowupScheduling = () => {
 
     const [staff, setStaff] = useState([])
 
+
+    const selctedCounseller = staff.find((el)=>el._id===Counseller)
+    const enquiryId = (result1.find((el)=>el._id===followForm)?.EnquiryId||'')
+
+    useEffect(()=>{
+     setCounseller(uniqObjeact.employeeMongoId)  
+    },[uniqObjeact.employeeMongoId])
+
     const unikqValidateObj = {
         ...uniqObjeact,
-        employeeMongoId:Counseller,
-        empNameC:staff.find((el)=>el._id===Counseller)?.FullName
+        employeeMongoId:(selctedCounseller?._id||uniqObjeact.employeeMongoId),
+        empNameC:(selctedCounseller?.FullName||uniqObjeact.empNameC)
     }
+
+
 
     function getStaff() { 
         axios.get(`${url1}/employeeForm/${pathValMaster}`, {
@@ -174,11 +184,13 @@ const FollowupScheduling = () => {
 
         if (enquiryStage === 'Appointment') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment',CallStatus: CallStatus1,
-             Counseller: Counseller,...unikqValidateObj }
+             Counseller:(selctedCounseller?.FullName||''),...unikqValidateObj }
             let data2 = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                EnquiryID: enquiryId, CallDate: date, Time: time,
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
+                 AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, 
+                 CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: (selctedCounseller?.FullName||''), Discussion: Discussion,
                 status: 'CallReport',...unikqValidateObj
             }
 
@@ -215,14 +227,14 @@ const FollowupScheduling = () => {
 
         } else if (enquiryStage === 'Trial Session') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session', 
-            Counseller: Counseller,CallStatus: CallStatus1,...unikqValidateObj
+            Counseller: (selctedCounseller?.FullName||''),CallStatus: CallStatus1,...unikqValidateObj
          }
             let data2 = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
+                EnquiryID: enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate,
                  AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1,
-                  FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                  FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: (selctedCounseller?.FullName||''), Discussion: Discussion,
                 status: 'CallReport',...unikqValidateObj
             }
 
@@ -260,7 +272,8 @@ const FollowupScheduling = () => {
         } else if (enquiryStage === 'Prospect') {
            
             const data1 = { 
-                Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                Counseller:(selctedCounseller?.FullName||''), 
+                CallStatus:CallStatus1,
                 appointmentfor:enquiryStage,
                 identifyStage:enquiryStage,
                 PFollowupDate:FollowupDate,
@@ -304,10 +317,10 @@ const FollowupScheduling = () => {
 
                 let data2 = {
                     username: username,
-                    EnquiryID: followForm, CallDate: date, Time: time,
+                    EnquiryID: enquiryId, CallDate: date, Time: time,
                     Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, 
                     AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1,
-                     FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                     FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: (selctedCounseller?.FullName||''), Discussion: Discussion,
                     status: 'CallReport'
                 }
                 fetch(`${url}/prospect/create`, {
@@ -340,7 +353,7 @@ const FollowupScheduling = () => {
                 + currentdate.getMinutes();
         
             const data1 = { 
-                Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                Counseller:(selctedCounseller?.FullName||''), CallStatus:CallStatus1,
                 appointmentfor:enquiryStage,
                 identifyStage:enquiryStage,
 
@@ -384,10 +397,10 @@ const FollowupScheduling = () => {
 
             let data = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
+                EnquiryID: enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, 
                 AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate,
-                TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,...unikqValidateObj,
+                TimeFollowp: TimeFollowp, Counseller: (selctedCounseller?.FullName||''), Discussion: Discussion,...unikqValidateObj,
                 status: 'prospect'
             }
 
@@ -464,28 +477,20 @@ const FollowupScheduling = () => {
                 console.error(error)
             })
     }
-    function getUpdate(id) {
-        axios.get(`${url}/enquiryForm/${id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setUpdateItem(res.data)
-                setName(res.data.PName)
-                setContact(res.data.PContact)
-                setServiceName1(res.data.PServiceName)
-                setCallStatus1(res.data.CallStatus)
-                setEmail(res.data.PEmail)
-                setFollowupDate(moment(res.data.PFollowupDate).utc().format('YYYY-MM-DD'))
-                setCounseller(res.data.Counseller)
-                setDiscussion(res.data.PDiscussion)
-                setEnquiryStage(res.data.appointmentfor)
+    function getUpdate(item) {
+        
+                setUpdateItem(item)
+                setName(item.PName)
+                setContact(item.PContact)
+                setServiceName1(item.PServiceName)
+                setCallStatus1(item.CallStatus)
+                setEmail(item.PEmail)
+                setFollowupDate(moment(item.PFollowupDate).utc().format('YYYY-MM-DD'))
+                setCounseller(item.Counseller)
+                setDiscussion(item.PDiscussion)
+                setEnquiryStage(item.appointmentfor)
                 setVisible1(true)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
+           
     }
 
     function deleteProspect(id) {
@@ -519,7 +524,7 @@ const FollowupScheduling = () => {
             EnquiryID: followForm, CallDate: date, Time: time,
             Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, 
             CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, 
-            Counseller: Counseller, Discussion: Discussion,
+            Counseller: (selctedCounseller?.FullName||''), Discussion: Discussion,
             status: 'CallReport'
         }
 
@@ -536,7 +541,7 @@ const FollowupScheduling = () => {
                 setVisible(false)
             })
         })
-        const data1 = { Counseller,...unikqValidateObj}
+        const data1 = { Counseller:(selctedCounseller?.FullName||''),...unikqValidateObj}
 
         fetch(`${url}/enquiryForm/update/${followForm}`, {
             method: "POST",
@@ -588,9 +593,9 @@ const FollowupScheduling = () => {
     }
 
 
-    function handleEnquiry(id) {
+    function handleEnquiry(id,item) {
         setEdit(id)
-        getUpdate(id)
+        getUpdate(item)
     }
 
     useEffect(()=>{
@@ -741,7 +746,7 @@ const FollowupScheduling = () => {
                                                 {result.map((item, index) => (
                                                      (
                                                         item.status === true && (
-                                                            <option key={index} value={item.id}>{item.selected_service}</option>
+                                                            <option key={index} >{item.selected_service}</option>
                                                         )
                                                     )
                                                 ))}
@@ -815,6 +820,187 @@ const FollowupScheduling = () => {
                                 <CButton type='submit' color="primary" onClick={() => saveCallReport()}>Save Call Report</CButton>
                             </CModalFooter>
                         </CModal>
+                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible1} color='' onClose={() => setVisible1(false)} >
+                            <CModalHeader  >
+                                <CModalTitle>Prospect Form</CModalTitle>
+                            </CModalHeader>
+                            <CModalBody>
+                                <CForm >
+                                    <label style={{ color: 'red' }}>{error}</label>
+                                    <CRow>
+                                        <CCol lg={4} md={6} sm={12}>
+                                            <CFormInput
+                                                className="mb-1"
+                                                type="text"
+                                                id="exampleFormControlInput1"
+                                                label="Name"
+                                                value={Name}
+                                                onChange={(e) => setName(e.target.value)}
+                                                placeholder="Enter Name"
+                                            />
+                                        </CCol>
+                                        <CCol lg={4} md={6} sm={12}>
+                                            <CFormInput
+                                                className="mb-1"
+                                                type="email"
+                                                id="exampleFormControlInput1"
+                                                label="Email Address"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                placeholder="name@example.com"
+                                                aria-describedby="exampleFormControlInputHelpInline"
+                                            />
+                                        </CCol>
+
+                                        <CCol lg={4} md={6} sm={12}>
+                                            <CFormInput
+                                                className="mb-1"
+                                                type="number"
+                                                value={Contact}
+                                                onChange={(e) => setContact(e.target.value)}
+                                                id="exampleFormControlInput1"
+                                                label="Contact No"
+                                                placeholder="Enter Number"
+                                            />
+                                        </CCol>
+                                        <CCol lg={6} md={6} sm={12}>
+                                            <CFormSelect
+                                                className="mb-1"
+                                                aria-label="Select Service Name"
+                                                value={ServiceName1}
+                                                onChange={(e) => setServiceName1(e.target.value)}
+                                                label="Service Name"
+
+                                            >
+                                                <option>Select Service</option>
+                                                {result.map((item, index) => (
+                                                    item.username === username && (
+                                                        item.status === true && (
+                                                            <option key={index} value={item.id}>{item.selected_service}</option>
+                                                        )
+                                                    )
+                                                ))}
+                                            </CFormSelect>
+                                        </CCol>
+                                        <CCol lg={4} md={6} sm={12}>
+
+                                            <CFormSelect
+                                                className="mb-1"
+                                                aria-label="Select Assign Staff"
+                                                value={Counseller}
+                                                onChange={(e) => setCounseller(e.target.value)}
+                                                label='Counseller'
+                                            >
+                                                <option>Select Counseller</option>
+                                                {staff.filter((list) =>list.selected === 'Select')
+                                                .map((item, index) => (
+                                                     (
+                                                        <option key={index} value={item._id} >{[item.FullName,item.EmployeeID].join('\n')}</option>                                                    )
+                                                ))}</CFormSelect>
+                                        </CCol>
+                                        <CCol lg={4} md={6} sm={12}>
+                                            <CFormSelect
+                                                className="mb-1"
+                                                aria-label="Select Call Status"
+                                                value={enquiryStage}
+                                                onChange={(e) => setEnquiryStage(e.target.value)}
+                                                label="Prospect Stage"
+                                                options={[
+                                                    "Select",
+                                                    { label: "Appointment", value: "Appointment" },
+                                                    { label: "Trial Session", value: "Trial Session" },
+                                                    { label: "Join", value: "Join" },
+                                                    { label: 'Enquiry', value: 'Enquiry' }
+                                                ]}
+                                            />
+                                        </CCol>
+
+                                        {(enquiryStage === 'Appointment' || enquiryStage === 'Trial Session') &&
+                                            <>
+                                                <CCol lg={4} md={6} sm={12}>
+                                                    <CFormInput
+                                                        className="mb-1"
+                                                        label="Appointment Date"
+                                                        type="date"
+                                                        value={appointmentDate}
+                                                        onChange={(e) => setappointmentDate(e.target.value)}
+                                                        id="exampleFormControlInput1"
+                                                    />
+                                                </CCol>
+                                                <CCol lg={4} md={6} sm={12}>
+                                                    <CFormInput
+                                                        className="mb-1"
+                                                        label="Appointment Time"
+                                                        type="time"
+                                                        id="exampleFormControlInput1"
+                                                        value={appointmentTime}
+                                                        onChange={(e) => setappointmentTime(e.target.value)}
+
+                                                    />
+                                                </CCol>
+                                            </>
+                                        }
+                                        <CCol lg={4} md={6} sm={12}>
+                                            <CFormSelect
+                                                className="mb-1"
+                                                aria-label="Select Call Status"
+                                                value={CallStatus1}
+                                                onChange={(e) => setCallStatus1(e.target.value)}
+                                                label="Call Status"
+                                                options={[
+                                                    "Select",
+                                                    { label: "Cold", value: "Cold" },
+                                                    { label: "Warm", value: "Warm" },
+                                                    { label: "Hot", value: "Hot" },
+                                                ]}
+                                            />
+                                        </CCol>
+                                        {(enquiryStage === 'Join' || enquiryStage === 'Enquiry') &&
+                                            <>
+
+                                                <CCol lg={4} md={6} sm={12}>
+                                                    <CFormInput
+                                                        className="mb-1"
+                                                        label="FollowUp Date"
+                                                        type="date"
+                                                        value={FollowupDate}
+                                                        onChange={(e) => setFollowupDate(e.target.value)}
+                                                        id="exampleFormControlInput1"
+                                                    />
+                                                </CCol>
+                                                <CCol lg={4} md={6} sm={12}>
+                                                    <CFormInput
+                                                        className="mb-1"
+                                                        label="FollowUp Time"
+                                                        type="time"
+                                                        id="exampleFormControlInput1"
+                                                        value={TimeFollowp}
+                                                        onChange={(e) => setTimeFollowp(e.target.value)}
+
+                                                    />
+                                                </CCol>
+                                            </>
+                                        }
+                                        <CCol>
+                                            <CFormTextarea
+                                                id="exampleFormControlTextarea1"
+                                                label="Discussion"
+                                                value={Discussion}
+                                                onChange={(e) => setDiscussion(e.target.value)}
+                                                rows="2"
+                                                text="Must be 8-20 words long."
+                                            ></CFormTextarea>
+                                        </CCol>
+                                    </CRow>
+                                </CForm>
+                            </CModalBody>
+                            <CModalFooter>
+                                <CButton color="secondary" onClick={() => setVisible1(false)}>
+                                    Close
+                                </CButton>
+                                <CButton type='submit' color="primary" onClick={() => updateProspect()}>Update Prospect</CButton>
+                            </CModalFooter>
+                        </CModal>
 
                         <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible} color='' onClose={() => setVisible(false)} >
                             <CModalHeader  >
@@ -871,7 +1057,7 @@ const FollowupScheduling = () => {
                                                 {result.map((item, index) => (
                                                      (
                                                         item.status === true && (
-                                                            <option key={index} value={item.id}>{item.selected_service}</option>
+                                                            <option key={index} value={item._id}>{item.selected_service}</option>
                                                         )
                                                     )
                                                 ))}
@@ -889,7 +1075,7 @@ const FollowupScheduling = () => {
                                                 <option>Select Counseller</option>
                                                 {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                                      (
-                                                        <option key={index}>{[item.FullName,item.EmployeeID].join('\n')}</option>
+                                                        <option key={index} value={item._id} >{[item.FullName,item.EmployeeID].join('\n')}</option>
                                                     )
                                                 ))}</CFormSelect>
                                         </CCol>
@@ -1027,188 +1213,7 @@ const FollowupScheduling = () => {
                             </CModalFooter>
                         </CModal>
 
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible1} color='' onClose={() => setVisible1(false)} >
-                            <CModalHeader  >
-                                <CModalTitle>Prospect Form</CModalTitle>
-                            </CModalHeader>
-                            <CModalBody>
-                                <CForm >
-                                    <label style={{ color: 'red' }}>{error}</label>
-                                    <CRow>
-                                        <CCol lg={4} md={6} sm={12}>
-                                            <CFormInput
-                                                className="mb-1"
-                                                type="text"
-                                                id="exampleFormControlInput1"
-                                                label="Name"
-                                                value={Name}
-                                                onChange={(e) => setName(e.target.value)}
-                                                placeholder="Enter Name"
-                                            />
-                                        </CCol>
-                                        <CCol lg={4} md={6} sm={12}>
-                                            <CFormInput
-                                                className="mb-1"
-                                                type="email"
-                                                id="exampleFormControlInput1"
-                                                label="Email Address"
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                placeholder="name@example.com"
-                                                aria-describedby="exampleFormControlInputHelpInline"
-                                            />
-                                        </CCol>
-
-                                        <CCol lg={4} md={6} sm={12}>
-                                            <CFormInput
-                                                className="mb-1"
-                                                type="number"
-                                                value={Contact}
-                                                onChange={(e) => setContact(e.target.value)}
-                                                id="exampleFormControlInput1"
-                                                label="Contact No"
-                                                placeholder="Enter Number"
-                                            />
-                                        </CCol>
-                                        <CCol lg={6} md={6} sm={12}>
-                                            <CFormSelect
-                                                className="mb-1"
-                                                aria-label="Select Service Name"
-                                                value={ServiceName1}
-                                                onChange={(e) => setServiceName1(e.target.value)}
-                                                label="Service Name"
-
-                                            >
-                                                <option>Select Service</option>
-                                                {result.map((item, index) => (
-                                                     (
-                                                        item.status === true && (
-                                                            <option key={index} value={item.id}>{item.selected_service}</option>
-                                                        )
-                                                    )
-                                                ))}
-                                            </CFormSelect>
-                                        </CCol>
-                                        <CCol lg={4} md={6} sm={12}>
-
-                                            <CFormSelect
-                                                className="mb-1"
-                                                aria-label="Select Assign Staff"
-                                                value={Counseller}
-                                                onChange={(e) => setCounseller(e.target.value)}
-                                                label='Counseller'
-                                            >
-                                                <option>Select Counseller</option>
-                                                {staff.filter((list) =>  list.selected === 'Select')
-                                                .map((item, index) => (
-                                                     (
-                                                        <option key={index}>{[item.FullName,item.EmployeeID].join('\n')}</option>
-                                                    )
-                                                ))}</CFormSelect>
-                                        </CCol>
-                                        <CCol lg={4} md={6} sm={12}>
-                                            <CFormSelect
-                                                className="mb-1"
-                                                aria-label="Select Call Status"
-                                                value={enquiryStage}
-                                                onChange={(e) => setEnquiryStage(e.target.value)}
-                                                label="Prospect Stage"
-                                                options={[
-                                                    "Select",
-                                                    { label: "Appointment", value: "Appointment" },
-                                                    { label: "Trial Session", value: "Trial Session" },
-                                                    { label: "Join", value: "Join" },
-                                                    { label: 'Prospect', value: 'Prospect' }
-                                                ]}
-                                            />
-                                        </CCol>
-
-                                        {(enquiryStage === 'Appointment' || enquiryStage === 'Trial Session') &&
-                                            <>
-                                                <CCol lg={4} md={6} sm={12}>
-                                                    <CFormInput
-                                                        className="mb-1"
-                                                        label="Appointment Date"
-                                                        type="date"
-                                                        value={appointmentDate}
-                                                        onChange={(e) => setappointmentDate(e.target.value)}
-                                                        id="exampleFormControlInput1"
-                                                    />
-                                                </CCol>
-                                                <CCol lg={4} md={6} sm={12}>
-                                                    <CFormInput
-                                                        className="mb-1"
-                                                        label="Appointment Time"
-                                                        type="time"
-                                                        id="exampleFormControlInput1"
-                                                        value={appointmentTime}
-                                                        onChange={(e) => setappointmentTime(e.target.value)}
-
-                                                    />
-                                                </CCol>
-                                            </>
-                                        }
-                                        <CCol lg={4} md={6} sm={12}>
-                                            <CFormSelect
-                                                className="mb-1"
-                                                aria-label="Select Call Status"
-                                                value={CallStatus1}
-                                                onChange={(e) => setCallStatus1(e.target.value)}
-                                                label="Call Status"
-                                                options={[
-                                                    "Select",
-                                                    { label: "Cold", value: "Cold" },
-                                                    { label: "Warm", value: "Warm" },
-                                                    { label: "Hot", value: "Hot" },
-                                                ]}
-                                            />
-                                        </CCol>
-                                        {(enquiryStage === 'Join' || enquiryStage === 'Enquiry') &&
-                                            <>
-
-                                                <CCol lg={4} md={6} sm={12}>
-                                                    <CFormInput
-                                                        className="mb-1"
-                                                        label="FollowUp Date"
-                                                        type="date"
-                                                        value={FollowupDate}
-                                                        onChange={(e) => setFollowupDate(e.target.value)}
-                                                        id="exampleFormControlInput1"
-                                                    />
-                                                </CCol>
-                                                <CCol lg={4} md={6} sm={12}>
-                                                    <CFormInput
-                                                        className="mb-1"
-                                                        label="FollowUp Time"
-                                                        type="time"
-                                                        id="exampleFormControlInput1"
-                                                        value={TimeFollowp}
-                                                        onChange={(e) => setTimeFollowp(e.target.value)}
-
-                                                    />
-                                                </CCol>
-                                            </>
-                                        }
-                                        <CCol>
-                                            <CFormTextarea
-                                                id="exampleFormControlTextarea1"
-                                                label="Discussion"
-                                                value={Discussion}
-                                                onChange={(e) => setDiscussion(e.target.value)}
-                                                rows="2"
-                                                text="Must be 8-20 words long."
-                                            ></CFormTextarea>
-                                        </CCol>
-                                    </CRow>
-                                </CForm>
-                            </CModalBody>
-                            <CModalFooter>
-                                <CButton color="secondary" onClick={() => setVisible1(false)}>
-                                    Close
-                                </CButton>
-                                <CButton type='submit' color="primary" onClick={() => updateProspect()}>Update Prospect</CButton>
-                            </CModalFooter>
-                        </CModal>
+                   
                         <CTable className='mt-3' align="middle" bordered  hover responsive scrollable>
                             <CTableHead color={'darkGreen'} >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
@@ -1409,7 +1414,7 @@ const FollowupScheduling = () => {
                                            
                                             {prospectEdit&&
                                                 <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }}
-                                             onClick={() => handleEnquiry(item._id)} size='20px' />
+                                             onClick={() => handleEnquiry(item._id,item)} size='20px' />
                                              }
 
                                             {prospectDelete&&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 

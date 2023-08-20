@@ -157,7 +157,7 @@ const LeftClients = () => {
          postRequest('upgradeCalls')
         }else if(enquiryStage==='Renewals Calls'){
          postRequest('renewalsCalls')
-        }else if(enquiryStage==='Cross Cell Cals'){
+        }else if(enquiryStage==='Cross Sales Calls'){
          postRequest('crosssaleCalls')
         }
       
@@ -509,7 +509,7 @@ function NavigateFitnnesofClient(id){
                                             > 
                                                 <option>Upgrade Calls</option>
                                                 <option>Renewals Calls</option>
-                                                <option>Cross Cell Cals</option>
+                                                <option>Cross Sales Calls</option>
                                                 </CFormSelect>
                                         </CCol>
                                       

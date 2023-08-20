@@ -180,7 +180,7 @@ const SalesCall = ({}) => {
                                     className="text-white"
 
                                 >
-                                    Cross-Cell Calls
+                                    Cross Sales Calls
                                 </CNavLink>
                             </CNavItem>}                            
                         </CNav>

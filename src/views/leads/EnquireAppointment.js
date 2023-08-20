@@ -141,11 +141,21 @@ const EnquireAppointment = () => {
     }, []);
     const [staff, setStaff] = useState([])
 
+    const selctedCounseller = staff.find((el)=>el._id===Counseller)
+    const enquiryId = (result1.find((el)=>el._id===followForm)?.EnquiryId||'')
+
+
+    useEffect(()=>{
+     setCounseller(uniqObjeact.employeeMongoId)  
+    },[uniqObjeact.employeeMongoId])
+
+
     const unikqValidateObj = {
         ...uniqObjeact,
-        employeeMongoId:Counseller,
-        empNameC:staff.find((el)=>el._id===Counseller)?.FullName
+        employeeMongoId:(selctedCounseller?._id||uniqObjeact.employeeMongoId),
+        empNameC:(selctedCounseller?.FullName||uniqObjeact.empNameC)
     }
+
 
     function getStaff() {
         axios.get(`${url}/employeeform/${pathNameMaster}`, {
@@ -165,7 +175,6 @@ const EnquireAppointment = () => {
         setAdmissionData(data)
     }
 
-
     const saveProspect = () => {
         var currentdate = new Date();
         var date = currentdate.getDay() + "-" + currentdate.getMonth()
@@ -176,17 +185,18 @@ const EnquireAppointment = () => {
 
         if (enquiryStage === 'Appointment') {
             const data1 = { appointmentDate, appointmentTime,
-                 appointmentfor: 'Appointment', Counseller: Counseller,identifyStage:'Appointment',CallStatus: CallStatus1,
+                 appointmentfor: 'Appointment', Counseller: (selctedCounseller?.FullName||''),identifyStage:'Appointment',
+                 CallStatus: CallStatus1,
                  ... unikqValidateObj
                 }
                  
             let data2 = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
+                EnquiryID: enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
                  AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, 
                  enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate,
-                  TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                  TimeFollowp: TimeFollowp, Counseller:  (selctedCounseller?.FullName||''), Discussion: Discussion,
                 status: 'CallReport',... unikqValidateObj
             }
 
@@ -223,17 +233,17 @@ const EnquireAppointment = () => {
 
         } else if (enquiryStage === 'Trial Session') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Trial Session',
-            identifyStage:'Trial Session', Counseller: Counseller,CallStatus: CallStatus1,
+            identifyStage:'Trial Session', Counseller:  (selctedCounseller?.FullName||''),CallStatus: CallStatus1,
             ... unikqValidateObj
          }
 
             let data2 = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
+                EnquiryID:  enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
                 AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, 
                 enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate,
-                TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                TimeFollowp: TimeFollowp, Counseller:  (selctedCounseller?.FullName||''), Discussion: Discussion,
                 status: 'CallReport',... unikqValidateObj
             }
 
@@ -273,11 +283,11 @@ const EnquireAppointment = () => {
             
             let data2 = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
+                EnquiryID:  enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
                  AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, 
                  enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, 
-                 TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                 TimeFollowp: TimeFollowp, Counseller:  (selctedCounseller?.FullName||''), Discussion: Discussion,
                 status: 'CallReport',... unikqValidateObj
             }
            
@@ -296,7 +306,8 @@ const EnquireAppointment = () => {
                 })
 
                 const data1 = { 
-                    Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                    Counseller: (selctedCounseller?.FullName||''),
+                     CallStatus:CallStatus1,
                     appointmentfor:enquiryStage,
                     identifyStage:enquiryStage,
                     PFollowupDate:FollowupDate,
@@ -349,8 +360,9 @@ const EnquireAppointment = () => {
             + currentdate.getMinutes();
         let data = {
             username: username,
-            EnquiryID: followForm, CallDate: date, Time: time,
-            Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+            EnquiryID:  enquiryId, CallDate: date, Time: time,
+            Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, CallStatus: CallStatus1, FollowupDate: FollowupDate, 
+            TimeFollowp: TimeFollowp, Counseller:  (selctedCounseller?.FullName||''), Discussion: Discussion,
             status: 'CallReport',... unikqValidateObj
         }
 
@@ -367,7 +379,7 @@ const EnquireAppointment = () => {
                 setVisible(false)
             })
         })
-        const data1 = { Counseller, ...unikqValidateObj }
+        const data1 = { Counseller: (selctedCounseller?.FullName||''), ...unikqValidateObj }
 
         fetch(`${url1}/enquiryForm/update/${followForm}`, {
             method: "POST",
@@ -771,7 +783,7 @@ const EnquireAppointment = () => {
                                                 {result.map((item, index) => (
                                                     (
                                                         item.status === true && (
-                                                            <option key={index} value={item.id}>{item.selected_service}</option>
+                                                            <option key={index} >{item.selected_service}</option>
                                                         )
                                                     )
                                                 ))}
@@ -789,7 +801,7 @@ const EnquireAppointment = () => {
                                                 <option>Select Counseller</option>
                                                 {staff.filter((list) =>list.selected === 'Select').map((item, index) => (
                                                      (
-                                                        <option key={index}>{[item.FullName,item.EmployeeID].join('\n')}</option>
+                                                        <option key={index} value={item._id} >{[item.FullName,item.EmployeeID].join('\n')}</option>
                                                     )
                                                 ))}</CFormSelect>
                                         </CCol>

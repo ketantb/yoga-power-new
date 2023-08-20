@@ -101,16 +101,16 @@ getCounslerData()
                 <CNavLink className='m-2 p-2' style={{ color: 'white', cursor: 'pointer' }} active={active === 2} onClick={() => { setActiveButton(2), closeFormFun() }}>
                     ALL Diet Client
                 </CNavLink>
-                <CNavLink className={id?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 3} onClick={() => { setActiveButton(3), closeFormFun() }}>
+                <CNavLink className={i?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 3} onClick={() => { setActiveButton(3), closeFormFun() }}>
                     Diet Plan Templet
                 </CNavLink>
-                <CNavLink className={id?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 4} onClick={() => { setActiveButton(4), closeFormFun() }}>
+                <CNavLink className={i?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 4} onClick={() => { setActiveButton(4), closeFormFun() }}>
                     Work out Templet
                 </CNavLink>
-                <CNavLink className={id?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 5} onClick={() => { setActiveButton(5), closeFormFun() }}>
+                <CNavLink className={i?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 5} onClick={() => { setActiveButton(5), closeFormFun() }}>
                     Exercise Libiry
                 </CNavLink>
-                <CNavLink className={id?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 6} onClick={() => { setActiveButton(6), closeFormFun() }}>
+                <CNavLink className={i?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 6} onClick={() => { setActiveButton(6), closeFormFun() }}>
                     Daily Workout Scheduling
                 </CNavLink>
             </CNav >

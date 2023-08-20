@@ -140,11 +140,20 @@ const TrialEnquires = () => {
     }, []);
     const [staff, setStaff] = useState([])
 
-    const unikqValidateObj = {
-        ...uniqObjeact,
-        employeeMongoId:Counseller,
-        empNameC:staff.find((el)=>el._id===Counseller)?.FullName
-    }
+
+    const selctedCounseller = staff.find((el)=>el._id===Counseller)
+    const enquiryId = (result1.find((el)=>el._id===followForm)?.EnquiryId||'')
+
+   useEffect(()=>{
+    setCounseller(uniqObjeact.employeeMongoId)  
+   },[uniqObjeact.employeeMongoId])
+
+   const unikqValidateObj = {
+       ...uniqObjeact,
+       employeeMongoId:(selctedCounseller?._id||uniqObjeact.employeeMongoId),
+       empNameC:(selctedCounseller?.FullName||uniqObjeact.empNameC)
+   }
+
 
     function getStaff() {
         axios.get(`${ url2 }/employeeForm/${ pathRouteMaster }`, {
@@ -175,11 +184,11 @@ const TrialEnquires = () => {
 
         if (enquiryStage === 'Appointment') {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment',
-             Counseller: Counseller, CallStatus: CallStatus1,...unikqValidateObj }
+             Counseller: (selctedCounseller?.FullName||''), CallStatus: CallStatus1,...unikqValidateObj }
             let data2 = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
-                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                EnquiryID:  enquiryId, CallDate: date, Time: time,
+                Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: (selctedCounseller?.FullName||''), Discussion: Discussion,
                 status: 'CallReport',...unikqValidateObj
             }
 
@@ -218,15 +227,15 @@ const TrialEnquires = () => {
 
             const data1 = {
                 appointmentDate, appointmentTime, appointmentfor: 'Trial Session',
-                Counseller: Counseller, identifyStage: 'Trial Session', CallStatus: CallStatus1,
+                Counseller: (selctedCounseller?.FullName||''), identifyStage: 'Trial Session', CallStatus: CallStatus1,
                 ...unikqValidateObj
             }
 
             let data2 = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
+                EnquiryID:  enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
-                AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,
+                AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: (selctedCounseller?.FullName||''), Discussion: Discussion,
                 status: 'CallReport',...unikqValidateObj
             }
 
@@ -265,10 +274,10 @@ const TrialEnquires = () => {
         } else if (enquiryStage === 'Prospect') {
             let data = {
                 username: username,
-                EnquiryID: followForm, CallDate: date, Time: time,
+                EnquiryID:  enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1,
                 AppointmentDate: appointmentDate, AppointmentTime: appointmentTime, enquiryStage: enquiryStage, 
-                CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: Counseller, 
+                CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Counseller: (selctedCounseller?.FullName||''), 
                 Discussion: Discussion,...unikqValidateObj,
                 status: 'prospect'
             }
@@ -289,7 +298,7 @@ const TrialEnquires = () => {
 
 
             const data1 = { 
-                Counseller:staff.find((el)=>el._id===Counseller)?.FullName, CallStatus:CallStatus1,
+                Counseller:(selctedCounseller?.FullName||''), CallStatus:CallStatus1,
                 appointmentfor:enquiryStage,
                 identifyStage:enquiryStage,
                 PFollowupDate:FollowupDate,
@@ -344,7 +353,7 @@ const TrialEnquires = () => {
             + currentdate.getMinutes();
         let data = {
             username: username,
-            EnquiryID: followForm, CallDate: date, Time: time,
+            EnquiryID:  enquiryId, CallDate: date, Time: time,
             Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, CallStatus: CallStatus1, FollowupDate: FollowupDate,
             TimeFollowp: TimeFollowp, Counseller: Counseller, Discussion: Discussion,...unikqValidateObj,
             status: 'CallReport'
@@ -363,7 +372,7 @@ const TrialEnquires = () => {
                 setVisible(false)
             })
         })
-        const data1 = { Counseller,...unikqValidateObj }
+        const data1 = { Counseller:(selctedCounseller?.FullName||''),...unikqValidateObj }
 
         fetch(`${ url1 }/enquiryForm/update/${ followForm }`, {
             method: "POST",
@@ -691,7 +700,7 @@ const TrialEnquires = () => {
                                                 {result.map((item, index) => (
                                                     (
                                                         item.status === true && (
-                                                            <option key={index} value={item.id}>{item.selected_service}</option>
+                                                            <option key={index} >{item.selected_service}</option>
                                                         )
                                                     )
                                                 ))}
@@ -839,7 +848,7 @@ const TrialEnquires = () => {
                                                 <option>Select Counseller</option>
                                                 {staff.filter((list) => list.selected === 'Select').map((item, index) => (
                                                     (
-                                                        <option key={index}>{[item.FullName,item.EmployeeID].join('\n')}</option>
+                                                        <option key={index} value={item._id}>{[item.FullName,item.EmployeeID].join('\n')}</option>
                                                     )
                                                 ))}</CFormSelect>
                                         </CCol>

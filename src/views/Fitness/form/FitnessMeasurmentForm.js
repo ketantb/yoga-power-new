@@ -12,6 +12,7 @@ function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,e
     const uniqObjVal = useUniqAdminObjeact()
 
 
+
     const [mesurmentData,setMesurmentData] = useState({
         username:'',
         Age:'',
@@ -39,6 +40,7 @@ function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,e
         updatedAt:'',
         NextFollowup_Date:'',
         ClientId:'',
+       ...uniqObjVal
     })
 
 
@@ -60,7 +62,7 @@ const  headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
 }
-if(edit && editData?._id){
+if(editData?._id){
     axios.post(`${url}/fitnessDetail/update/${editData?._id}`,mesurmentData ,{headers}).then((res)=>{
         alert('Successfully save')
         getAllmembersData()
@@ -80,14 +82,34 @@ console.log(error)
  }
 
  function clientObj(obj){
-   setMesurmentData( prev=>({...prev,ContactNumber:obj.ContactNumber}))
-   setMesurmentData(prev=>({...prev,Fullname:obj.Fullname}))
-   setMesurmentData(prev=>({...prev,Member_ID:obj._id}))
-   setMesurmentData(prev=>({...prev,ClientId:obj.ClientId}))
+   setMesurmentData( prev=>({...prev,
+    ContactNumber:obj.ContactNumber,
+    Fullname:obj.Fullname,
+    Member_ID:obj._id,
+    ClientId:obj.ClientId
+}))
  }
+ const getCounsellerInfo = (obj)=>{
+    setMesurmentData((prev)=>({...prev,
+        employeeMongoId:obj._id,
+        empNameC:obj.FullName,
+        Counseller:obj.FullName
+    }))
+}
 
+
+ const selectedMember = allMemberData.find((el)=>el._id===id?.trim())
+ const selectedStaff = employeeData.find((el)=>el._id===uniqObjVal.employeeMongoId?.trim())
+
+ 
  useEffect(()=>{
-    if(!edit)return 
+    if(selectedMember){
+        clientObj(selectedMember) 
+    }
+    if(selectedStaff){
+        getCounsellerInfo(selectedStaff)
+    }
+    if(!editData?._id)return 
     setMesurmentData({
         username: ' ',
         Age:editData.Age,
@@ -114,12 +136,10 @@ console.log(error)
         createdAt:'',
         updatedAt:new Date(),
         NextFollowup_Date:editData.NextFollowup_Date,
+        ...uniqObjVal
     })
-    },[editData?._id])
+    },[editData?._id,selectedMember?._id,selectedStaff?._id])
 
-   const getCounsellerInfo = ()=>{
-
-   }
 
 
     return <CCard className="m-3 " >
@@ -142,7 +162,7 @@ console.log(error)
                   <div className="w-50">
 
                   <CustomSelectInput 
-                  data={allMemberData} 
+                  data={allMemberData?.filter((el)=>id?.trim()?el._id===id?.trim():el)} 
                   title={mesurmentData?.Fullname?.trim()?mesurmentData?.Fullname:"Select client name"} 
                   getData={clientObj}
                   id={id}
@@ -409,6 +429,7 @@ console.log(error)
                     <CustomSelectinput
                      data={employeeData}
                      getData={getCounsellerInfo}
+                     employeeId={uniqObjVal.employeeMongoId}
                     />
                     </div>
                 </CCol>

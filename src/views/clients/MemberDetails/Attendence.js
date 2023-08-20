@@ -10,11 +10,10 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import moment from 'moment/moment'
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
 import { useSelector } from 'react-redux'
 
-const Attendence = ({ id }) => {
+const Attendence = ({ id,clinetData2 }) => {
     const [viewInvoice, setViewInvoice] = useState(false);
 
 
@@ -41,6 +40,7 @@ const Attendence = ({ id }) => {
     const [bacth2,setBatch2] =useState('')
     const [adDuration,setAdDuration] = useState('')
     const [showAttendedForm,setAttendanceForm] = useState(false)
+    const pathValMaster = useAdminValidation('Master')
 
     const time = null;
     const [ctime, setDate] = useState(time);
@@ -57,6 +57,9 @@ const Attendence = ({ id }) => {
         'My-Custom-Header': 'foobar'
     };
 
+    useEffect(()=>{
+        setAttendanceID(clinetData2.AttendanceID)
+    },[clinetData2._id])
    
 
     const submitBtn = () => {
@@ -97,17 +100,17 @@ const Attendence = ({ id }) => {
     }, []);
 
     function getEnquiry() {
-        axios.get(`${url1}/clientAttendance/all`, {headers})
+        axios.get(`${url1}/clientAttendance/${pathValMaster}`, {headers})
             .then((res) => {setResult1(res.data.filter((el)=>el.clientId===id).reverse())})
             .catch((error) => {console.error(error)})
     }
     function getClient() {
-        axios.get(`${url1}/memberForm/all`, {headers})
+        axios.get(`${url1}/memberForm/${pathValMaster}`, {headers})
        .then((res) => {setAllclient(res.data)})
        .catch((error) => {console.error(error) })
     }
     function getBatch() {
-        axios.get(`${url1}/Batch/all`, {headers})
+        axios.get(`${url1}/Batch/${pathValMaster}`, {headers})
         .then((res) => {setBatches(res.data)})
         .catch((error) => {console.error(error)})
     }
@@ -346,7 +349,7 @@ admissionDuration:adDuration
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                    {result1.filter((list) => list.username === username).map((item, index) => (
+                    {result1.map((item, index) => (
                             <CTableRow key={index}>
                                 <CTableDataCell>{index + 1}</CTableDataCell>
                                 <CTableDataCell>{moment(item.checkDate).format("LL")}</CTableDataCell>

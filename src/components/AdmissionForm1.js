@@ -1687,10 +1687,10 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                     <CCol lg={12} className='text-center'><CImage src={logo} width="100px" height='100px' /></CCol>
                                     <CCol lg={12} className='text-center mt-2'><h5>Yog Power International </h5></CCol>
                                     <CCol className='mt-2' style={{ marginLeft: '10px' }}>
-                                        {/* <h6>Client Name: {Fullname}</h6>
+                                        <h6>Client Name: {Fullname}</h6>
                                         <div>Client Number: {ContactNumber}</div>
                                         Customer ID : {AttendanceID}<br />
-                                        Email-Id : {Email}<br /> */}
+                                        Email-Id : {Email}<br />
                                     </CCol>
                                     <CCol className='mt-2' style={{ marginRight: '30px' }}>
                                         <div className='float-end'>

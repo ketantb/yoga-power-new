@@ -17,13 +17,17 @@ import {
   import { MdDelete,MdEdit } from 'react-icons/md';
   import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 
-
-
-
 function MeasurementTable({closeFormFun,token,showForm,setForm,allMemberData,id,employeeData}){
     const [allMeasurmentMembers,setAllMeasurmentMembers] =useState([])
     const [edit,setEdit] = useState(true)
     const [editData,setEditData] = useState(true)
+    const [searchFilter,setSearchFilter] = useState({
+        search1:'',
+        search2:'',
+        search3:'',
+        search4:'',
+    })
+
 
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal =   useAdminValidation()
@@ -82,7 +86,6 @@ const editClientDataFun =(el)=>{
 {showForm && <FitnessMeasurmentForm
  closeFormFun={closeFormFun} 
  getAllmembersData={ getAllmembersData}
- edit={edit}
  editData={editData}
  allMemberData={allMemberData}
  employeeData={employeeData}
@@ -92,8 +95,8 @@ const editClientDataFun =(el)=>{
      <CTable className='m-3 ' align="middle" bordered style={{ borderColor: "#0B5345"}} hover responsive>
     <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
         <CTableRow >
-            <CTableHeaderCell >Measurement_Date</CTableHeaderCell>
-            <CTableHeaderCell>Member_ID</CTableHeaderCell>
+            <CTableHeaderCell >Measurement Date</CTableHeaderCell>
+            <CTableHeaderCell>Member ID</CTableHeaderCell>
             <CTableHeaderCell>Name</CTableHeaderCell>
             <CTableHeaderCell>Contact</CTableHeaderCell>
             <CTableHeaderCell>Weight</CTableHeaderCell>
@@ -117,7 +120,7 @@ const editClientDataFun =(el)=>{
             <CTableHeaderCell>Calf(L)</CTableHeaderCell>
 
             <CTableHeaderCell>Counseller</CTableHeaderCell>
-            <CTableHeaderCell>NextFollowup_Date</CTableHeaderCell>
+            <CTableHeaderCell>NextFollowup Date</CTableHeaderCell>
             <CTableHeaderCell>Edit/Delete</CTableHeaderCell>
 
         </CTableRow>
@@ -130,6 +133,8 @@ const editClientDataFun =(el)=>{
                     style={{ minWidth: "120px" }}
                     type="text"
                     aria-describedby="exampleFormControlInputHelpInline"
+                    value={searchFilter.search1}
+                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search1:e.target.value}))}
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -138,6 +143,8 @@ const editClientDataFun =(el)=>{
                     style={{ minWidth: "120px" }}
                     type="text"
                     aria-describedby="exampleFormControlInputHelpInline"
+                    value={searchFilter.search2}
+                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search2:e.target.value}))}
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -146,6 +153,8 @@ const editClientDataFun =(el)=>{
                     type="text"
                     style={{ minWidth: "120px" }}
                     aria-describedby="exampleFormControlInputHelpInline"
+                    value={searchFilter.search3}
+                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search3:e.target.value}))}
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -153,8 +162,9 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     type="text"
                     style={{ minWidth: "120px" }}
-                   
                     aria-describedby="exampleFormControlInputHelpInline"
+                    value={searchFilter.search4}
+                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search4:e.target.value}))}
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -162,7 +172,8 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     type="number"
                     style={{ minWidth: "120px" }}
-                
+                    disabled
+               
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -170,6 +181,15 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     type="text"
                     style={{ minWidth: "120px" }}
+                    disabled
+                />
+            </CTableDataCell>
+            <CTableDataCell>
+                <CFormInput
+                    className="mb-1"
+                    type="text"
+                    style={{ minWidth: "120px" }}
+                    disabled
 
                 />
             </CTableDataCell>
@@ -178,7 +198,8 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     type="text"
                     style={{ minWidth: "120px" }}
-
+                    disabled
+            
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -186,7 +207,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     type="text"
                     style={{ minWidth: "120px" }}
-                   
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -194,7 +215,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     type="text"
                     style={{ minWidth: "120px" }}
-
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -202,15 +223,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     type="text"
                     style={{ minWidth: "120px" }}
-
-                />
-            </CTableDataCell>
-            <CTableDataCell>
-                <CFormInput
-                    className="mb-1"
-                    type="text"
-                    style={{ minWidth: "120px" }}
-
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -218,6 +231,8 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     type="number"     
                     style={{ minWidth: "120px" }}
+                    disabled
+
                                       
                 />
             </CTableDataCell>
@@ -226,6 +241,15 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     type="text"
                     style={{ minWidth: "120px" }}
+                    disabled
+                />
+            </CTableDataCell>
+            <CTableDataCell>
+                <CFormInput
+                    className="mb-1"
+                    type="text"
+                    style={{ minWidth: "120px" }}
+                    disabled
 
                 />
             </CTableDataCell>
@@ -234,15 +258,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     type="text"
                     style={{ minWidth: "120px" }}
-
-                />
-            </CTableDataCell>
-            <CTableDataCell>
-                <CFormInput
-                    className="mb-1"
-                    type="text"
-                    style={{ minWidth: "120px" }}
-
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -250,6 +266,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     style={{ minWidth: "120px" }}
                     type="text"
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -257,6 +274,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     style={{ minWidth: "120px" }}
                     type="text"
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -264,6 +282,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     style={{ minWidth: "120px" }}
                     type="text"
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -271,6 +290,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     style={{ minWidth: "120px" }}
                     type="text"
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -278,6 +298,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     style={{ minWidth: "120px" }}
                     type="text"
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -285,6 +306,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     style={{ minWidth: "120px" }}
                     type="text"
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -292,6 +314,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     style={{ minWidth: "120px" }}
                     type="text"
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -299,6 +322,7 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     style={{ minWidth: "120px" }}
                     type="text"
+                    disabled
                 />
             </CTableDataCell>
             <CTableDataCell>
@@ -306,16 +330,22 @@ const editClientDataFun =(el)=>{
                     className="mb-1"
                     style={{ minWidth: "120px" }}
                     type="text"
+                    disabled
                 />
             </CTableDataCell>
            
         </CTableRow>
          
-                  {allMeasurmentMembers.map((el)=>
+                  {allMeasurmentMembers.filter((el)=>{
+                     return     (new Date(el.createdAt).toLocaleDateString()+"" || ' ').toLowerCase().includes(searchFilter.search1.trim().toLowerCase()) &&
+                     (el.ClientId|| ' ').toLowerCase().includes(searchFilter.search2.trim().toLowerCase()) &&
+                     (el.Fullname || ' ').toLowerCase().includes(searchFilter.search3.trim().toLowerCase()) &&
+                     (el.ContactNumber+"" || ' ').includes(searchFilter.search4.trim().toLowerCase()) 
+
+                  }).map((el)=>
                    <CTableRow>                       
                     <CTableDataCell>{new Date(el.createdAt).toLocaleDateString()}</CTableDataCell>
-                    <CTableDataCell>{el['Member_ID']}</CTableDataCell>
-                    {/* <CTableDataCell>{new Date(el.updatedAt).toLocaleDateString()}</CTableDataCell> */}
+                    <CTableDataCell>{el['ClientId']}</CTableDataCell>
                     <CTableDataCell>{el.Fullname}</CTableDataCell>
                     <CTableDataCell>{el.ContactNumber}</CTableDataCell>
                     <CTableDataCell>{el.Weight}</CTableDataCell>

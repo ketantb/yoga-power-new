@@ -49,7 +49,7 @@ const CustomSelectInput = ({title,data,dataneed,getData,id}) => {
 
         {data?.filter((el)=>el.Fullname.includes(inputvalName)).map((el)=>{
                         return <li  id='data-li-c' onClick={(e)=>getDataFun(e,el)} >{el.Fullname }<br/>
-                        {el.ContactNumber}
+                        {el.ContactNumber}<br/>{el.ClientId}
                         </li>
                     })}
         </ul>

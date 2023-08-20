@@ -129,14 +129,13 @@ const empSubRigthFun = useRight(setRightObject,'crmEmployee')
                 <CFormSwitch size="lg" 
               checked={crmSalesCall1.value}
               onChange={(e)=>empSubRigthFun(true,'crmSalesCall1',e.target.checked)}/>
-
-              </span>
+            </span>
             </h5>
 
             <CCol>
                 <CFormSwitch size="xl" label="Upgrade Calls"  checked={checkDashRights(empLoyeeeRights.upgradeCalls,'crmSalesCall1')} onChange={()=>totoggaleRights(empLoyeeeRights.upgradeCalls,'crmSalesCall1')} />
                 <CFormSwitch size="xl" label="Renewals Calls"  checked={checkDashRights(empLoyeeeRights.renewalsCalls,'crmSalesCall1')} onChange={()=>totoggaleRights(empLoyeeeRights.renewalsCalls,'crmSalesCall1')} />
-                <CFormSwitch size="xl" label="Cross-Cell Calls"  checked={checkDashRights(empLoyeeeRights.crossCellCalls,'crmSalesCall1')} onChange={()=>totoggaleRights(empLoyeeeRights.crossCellCalls,'crmSalesCall1')} />
+                <CFormSwitch size="xl" label="Cross Sales Calls"  checked={checkDashRights(empLoyeeeRights.crossCellCalls,'crmSalesCall1')} onChange={()=>totoggaleRights(empLoyeeeRights.crossCellCalls,'crmSalesCall1')} />
             </CCol>
            
         </CRow>

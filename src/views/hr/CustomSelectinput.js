@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import './CustomSelectinput.css'
 import {AiOutlineDown,AiOutlineUp,AiOutlineSearch} from 'react-icons/ai'
 
-const CustomSelectinput = ({data,getData}) => {
+const CustomSelectinput = ({data,getData,employeeId}) => {
 
     const [visibale,setVisibale] = useState(false)
     const [inputvalName,setInputValName] = useState('')
@@ -18,7 +18,12 @@ const CustomSelectinput = ({data,getData}) => {
        }
     }
 
-  
+  useEffect(()=>{
+if(employeeId){
+  const employeeName= data.find((el)=>el._id===employeeId?.trim())?.FullName
+  setSelectedName((employeeName||'Select Employee Name'))
+}
+  },[employeeId,data?.length])
 
   return (
  <div className='input-containenr'>

@@ -185,7 +185,10 @@ function findLeftService(endDate){
                                        <b>EXPIRY DATE</b> <br/>{getDate(invoiceData?.endDate,true)}
                                  </CCol>
                                  <CCol>
-                                       <b>Status </b><br/>{invoiceData?.status}
+                                 <div className='mb-1'>{findLeftService(invoiceData?.endDate)?
+                     <CButton size='sm'  >Active Service</CButton>:
+                     <CButton size='sm' color="danger" >Deactive Service</CButton>
+                     } </div>
                                  </CCol>  
                                  </CCol>    
            
@@ -227,7 +230,10 @@ function findLeftService(endDate){
                                        <b>EXPIRY DATE</b> <br/>{getDate(invoiceData?.endDate,true)}
                                  </CCol>
                                  <CCol>
-                                       <b>Status </b><br/>{invoiceData?.status}
+                                 <div className='mb-1'>{findLeftService(invoiceData?.endDate)?
+                     <CButton size='sm'  >Active Service</CButton>:
+                     <CButton size='sm' color="danger" >Deactive Service</CButton>
+                     } </div>
                                  </CCol>  
                                  </CCol>    
            
