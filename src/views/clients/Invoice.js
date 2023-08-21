@@ -28,7 +28,6 @@ function Invoice ({allIvoiceOfaUser,showInvoiceModal,setInvoceModal,ClientData})
 
     
 
-    console.log(allIvoiceOfaUser)
     const getDate = (date,val) => {
         const date2 = new Date(date).getDate() + "/" + (new Date(date).getMonth() + (val? 1:0)) + "/" + new Date(date).getFullYear()
         if (date2 === 'NaN/NaN/NaN') {
@@ -67,7 +66,7 @@ return <div  className='my-5' >
                                  <CCol className='mt-2' style={{ marginLeft: '10px' }}>
                                      <h6>Client Name: {ClientData?.Fullname}</h6>
                                      <div>Client Number: {ClientData?.ContactNumber}</div>
-                                     Customer ID : {ClientData?.AttendanceID}<br />
+                                     Customer ID : {ClientData?.ClientId}<br />
                                      Email-Id : {ClientData?.Email}<br />
                                  </CCol>
                                  <CCol className='mt-2' style={{ marginRight: '30px' }}>
@@ -219,7 +218,7 @@ return <div  className='my-5' >
                                             <CTableDataCell>{getDate(el2.NewSlipDate,true)}</CTableDataCell>
                                             <CTableDataCell>{el.InvoiceNo +"RN"+ +(1+i)}</CTableDataCell>
                                             <CTableDataCell>{el.InvoiceNo}</CTableDataCell>
-                                            <CTableDataCell>{el.MemberId}</CTableDataCell>
+                                            <CTableDataCell>{ClientData?.ClientId}</CTableDataCell>
                                             <CTableDataCell>{el2.Pay_Mode}</CTableDataCell>                                     
                                             <CTableDataCell>{el2.Counseller}</CTableDataCell>
                                             <CTableDataCell>{el2.PaidAmount}</CTableDataCell>

@@ -20,8 +20,6 @@ const CreateTask = () => {
 
   const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpTaskList.items.erpTaskListCalender.rights) 
 
-
-  console.log(rightsData)
      const access = rightsData?rightsData:[]
      const isAdmin = useSelector((el)=>el.isAdmin) 
 

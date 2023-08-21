@@ -10,13 +10,12 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import moment from 'moment/moment'
-import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
+import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
 import { useSelector } from 'react-redux'
 
 const Attendence = ({ id,clinetData2 }) => {
     const [viewInvoice, setViewInvoice] = useState(false);
-
-
+    const uniqObjVal = useUniqAdminObjeact()
 
     const url1 = useSelector((el) => el.domainOfApi)
     const AllowedServcieToAttended =  ['yoga','yoga pt']
@@ -139,7 +138,8 @@ const Attendence = ({ id,clinetData2 }) => {
          contact,
 admissionBatch:bacth2,
 admissionPackageName:pakageName,
-admissionDuration:adDuration
+admissionDuration:adDuration,
+...uniqObjVal
     }
 
     fetch(`${url1}/clientAttendance/create`, {

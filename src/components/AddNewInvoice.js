@@ -96,12 +96,11 @@ const handlePrint = useReactToPrint({
     const [serviceDays,setServiceDays] = useState('')
     const [errorMessage,setErrorMessage] = useState('')
     const [printInvoiceActive,setPrintInoiceActive]=useState(false)
+    const [staff,setStaff] = useState([])
 
 
     const uniqObj = useUniqAdminObjeact()
 
-    const [visi, setVisi] = useState(false);
-    const [mem, setMem] = useState([]);
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -117,15 +116,39 @@ const handlePrint = useReactToPrint({
             'Authorization': `Bearer ${token}`,
             'My-Custom-Header': 'foobar'
     };
-    
- const getInvoiceNoFun =async ()=>{
-      await  axios.get(`${url1}/invoice/${pathVal}`,{headers}).then(({data})=>{
-        setInvoice(data.length)
-      })
-     }
 
+    const getRequireData = async ()=>{
+        try{
+       
+        const headers = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    
+        const response1 =  axios.get(`${url1}/employeeform/${pathVal}`,headers)
+        const response2 =  axios.get(`${url1}/packageMaster/${pathVal}`,headers)
+        const response3 =  axios.get(`${url1}/invoice/${pathVal}`,headers)
+    
+    
+    
+        const allData = await Promise.all([response1,response2,response3])
+    
+        const staffData = allData[0]?.data
+        const pacKgaeMasterData = allData[1]?.data
+        const invoice = allData[2]?.data
+    
+    
+        setStaff(staffData)
+        setService(pacKgaeMasterData)
+        setInvoice(invoice.length)
+    }catch(error){
+        console.log(error)
+    }
+}
+    
      useEffect(()=>{
-        getInvoiceNoFun()
+        getRequireData()
     },[])
 
 
@@ -152,20 +175,8 @@ if(RenewedObj){
 
 }
 
-const [staff, setStaff] = useState([])
-function getStaff() {
-    axios.get(`${url1}/employeeform/${pathVal}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-        .then((res) => {
-            setStaff(res.data)
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-}
+
+
 
 const selectedStaff = staff.find((el)=>el._id===ser5)
 
@@ -274,27 +285,7 @@ return
 
 
 
-function getSubService() {
-    axios.get(`${url1}/packageMaster/${pathVal}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-        .then((res) => {
-            setService(res.data)
-          
-            console.log(res.data,"Package Master")
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-}
 
-
-useEffect(()=>{
-getStaff()
-getSubService()
-},[])
 
 
 const handleTaxTotal = (e) => {
@@ -733,7 +724,7 @@ setServiceDays(el.Days)
     {errorMessage&& <CCol className="text-end px-5"><p style={{color:'red',fontSize:'15px'}}>{errorMessage}</p></CCol>}
 
     <CModalFooter>
-        <CButton color="secondary" onClick={() => { setVisi(false) }}>
+        <CButton color="secondary" onClick={() => { setViewInvoice(false) }}>
             Close
         </CButton>
         <CButton color="primary" onClick={() => saveInvoice()}>Submit</CButton>
@@ -741,7 +732,9 @@ setServiceDays(el.Days)
 </CModal>
 </div>
 <CModal size="xl" alignment="center" scrollable visible={printInvoiceActive} onClose={() =>{
+           if(clickfun){
             clickfun('btn btn-close')
+           }
             setPrintInoiceActive(false)
             setViewInvoice(false)
 } }>

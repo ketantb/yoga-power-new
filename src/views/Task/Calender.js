@@ -10,23 +10,23 @@ const Time = ['7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM',
 
 const StyleCalenderHead ={
   background:'#0B5345',
-  minHeight:'100px',
+  minHeight:'50px',
   color:'white',
   fontSize:'18px', 
   textAlign:'center',
-  padding:'10px',
+  padding:'5px',
   borderRight:'1px solid white',
   minWidth:'70px' 
 }
 
 const StyleCalenderHead2 ={
-  height:'250px',
+  height:'150px',
   color:'black',
   textAlign:'center',
-  padding:'10px',
+  padding:'5px',
   borderRight:'1px solid black',
   borderBottom:'1px solid black',
-  minWidth:'50px', 
+  minWidth:'30px', 
   overflowY:'scroll'
 }
 
@@ -39,7 +39,7 @@ const Calender = ({CurrentDate,CurrentMonth,CurrentYear,userInfo,size}) => {
  <CCard className=" mt-4" style={{overflowX:'scroll'}}> 
     <CContainer style={{minWidth:'270px',maxWidth:'10000000000000000000000000000000px',width:`${width}%`,cuiGutterX:"0rem",border:'1px solid',padding:'0'}}>
       <CRow xs={{ gutterX: 0 }}>
-      <CCol style={{...StyleCalenderHead,borderBottom:'1px solid white'}} ><h2>{`${+CurrentDate} ${monthNames[+CurrentMonth]} ${CurrentYear} `}</h2></CCol>
+      <CCol style={{...StyleCalenderHead,borderBottom:'1px solid white'}} ><h4>{`${+CurrentDate} ${monthNames[+CurrentMonth]} ${CurrentYear} `}</h4></CCol>
       </CRow>
   <CRow xs={{ gutterX: 0 }}>
     <CCol style={{flex:"0"}} >

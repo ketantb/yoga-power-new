@@ -37,11 +37,8 @@ const CreateInvoice = ({visible,setActiveKey1,clientReferance,toPrintInvoice}) =
     const username = user.user.username;
     const centerCode = user.user.centerCode;
 
-    const [staff, setStaff] = useState([])
     const url1 = useSelector((el) => el.domainOfApi)
-    const pathVal = useAdminValidation()
     const uniqObjVal = useUniqAdminObjeact()
-    const [invoiceNum,setInvoice] = useState([])
 
     const clothStore = useSelector((el)=>el.stockDataClothData)  
     const auravedaStore = useSelector((el)=>el.stockDataAuravedaData)  
@@ -69,7 +66,6 @@ const CreateInvoice = ({visible,setActiveKey1,clientReferance,toPrintInvoice}) =
     const totalAmount = allProduct.reduce((crr,el)=>crr+(el.productDetails.Product_Price*el.item),0)
 
     const allProduct2 = allProduct.map((el)=>{
-        console.log(el,'stock')
 return {
 Product_Code:el?.productCode,
 Product_Name:el?.productName,
@@ -89,37 +85,7 @@ item:el?.item,
         'Authorization': `Bearer ${token}`
     }
 
-   async  function toGetSelectInputData(){
-    try{
-   const response1 = await   axios.get(`${url1}/employeeform/${pathVal}`, {headers})   
-   setStaff(response1.data)
-    }catch(error){
-     console.log(error)
-    }
-    }
-
-
-    useEffect(() => {
-    toGetSelectInputData()
-    }, [])
-
-    const getInvoiceNoFun =async ()=>{
-        const headers = {
-                'Authorization': `Bearer ${token}`,
-                'My-Custom-Header': 'foobar'
-        };
-        
-          await  axios.get(`${url1}/productInvoice/${pathVal}`,{headers}).then(({data})=>{
-            setInvoice(data.length +1)
-          })
-         }
-        
-        
-        
-         useEffect(()=>{
-            getInvoiceNoFun()
-        },[])
-
+  
 
     const saveInvoice = () => {
 
@@ -128,7 +94,7 @@ item:el?.item,
             username: username,
             date: new Date(),
             centerName: centerCode,
-            InvoiceNo: `${centerCode}INV${invoiceNum}INVEN`,
+            InvoiceNo: `${centerCode}INV${clientReferance.InvoiceNo}`,
             MemberId: clientReferance.MemberId,
             counseller:clientReferance.StatffName, 
             totalAmount,
@@ -142,7 +108,7 @@ item:el?.item,
             amount: totalAmount,
             paymode:modeOfPayment, 
             pendingAmount:'0',
-            ...uniqObjVal
+            ...{...uniqObjVal,employeeMongoId:(clientReferance?.EmpId||uniqObjVal.employeeMongoId)}
         }
 
            
@@ -162,8 +128,6 @@ item:el?.item,
                 clearFunction2('clear')
                 clearFunction3('clear')
                 clearFunction4('clear')
-
-                console.log(resp.data,"ekfmkemfm new invoice no")
                 toPrintInvoice(resp.data)           
                 getInvoiceNoFun()     
                 alert("successfully submitted")
@@ -198,7 +162,7 @@ item:el?.item,
                     <CCol lg={4} className='text-center mt-4'><h4>Invoice</h4></CCol>
                     <CCol >
                         Date : {moment(new Date()).format('YYYY-MM-DD')}<br />
-                        Invoice No : {centerCode}INV{invoiceNum} <br />
+                        Invoice No : {centerCode}INV{clientReferance.InvoiceNo} <br />
                         <CRow>
                             <CCol lg={9}>
                                 <CInputGroup>

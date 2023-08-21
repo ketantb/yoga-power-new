@@ -40,9 +40,6 @@ import ProfileIcon from 'src/assets/images/avatars/profile_icon.png'
 import axios from "axios";
 import { getDownloadURL, ref,  uploadBytesResumable } from 'firebase/storage'
 import { storage } from "src/firebase";
-import logo from 'src/assets/images/avatars/icon.png'
-import { v4 } from "uuid";
-import { useReactToPrint } from 'react-to-print'
 import { useSelector } from 'react-redux'
 import moment from "moment/moment";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
@@ -206,7 +203,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
 
 
     const getAdmisionRequireData = async  ()=>{
-       
+       try{
         const headers = {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -237,6 +234,9 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
         setMem(memberFormData)
         setBatches(batchesData)
         setAttendanceID(`CLA${memberFormData.length+1}`)
+    }catch(error){
+      console.log(error)  
+    }
     }
     
 

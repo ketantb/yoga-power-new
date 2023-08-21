@@ -41,10 +41,11 @@ const AuravedaTotalTable = lazy(()=>import("./customTableComponent.js/AuravedaTo
 const FitnessProductTotalTable = lazy(()=>import("./customTableComponent.js/FitnessProductTotalTable")) 
 const FoodProductTable = lazy(()=>import( "./customTableComponent.js/FoodProductTable")) 
 import CustomSelectInput from "src/views/Fitness/CustomSelectInput/CustomSelectInput";
-import GeneralProduct from "./GeneralProduct";
-import GeneralProductTable from "./customTableComponent.js/GeneralProductTable";
+const GeneralProductTable = lazy(()=>import( "./customTableComponent.js/GeneralProductTable")) 
+const GeneralProduct = lazy(()=>import( "./GeneralProduct")) 
+
 import Invoice from "./Invoice/Invoice";
-import { useAdminValidation } from "src/views/Custom-hook/adminValidation";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
@@ -59,6 +60,7 @@ function ClientInvoice(){
     const genralProduct = useSelector((el)=>el.genralProduct) 
  
     const pathValMaster= useAdminValidation('Master')
+    const uniqObjVal = useUniqAdminObjeact()
 
     const [clientData,setClientData]= useState([])
     const [enquiryData,setEnquiryData] = useState([])
@@ -76,6 +78,7 @@ function ClientInvoice(){
         StatffName:'',
         MemberId:'',
         EmpId:'',
+        InvoiceNo:''
     }})
 
     const [clientReferance,setClientReferance] =  useState(obj)
@@ -116,16 +119,19 @@ if(validation){
 }
  },[validation,clientReferance.Fullname,clientReferance.StatffName])
 
+ const emp =   staff.find((el)=>el._id===selectedStaffId)
+
  useEffect(()=>{
-if(selectedStaffId.trim()){
+if(selectedStaffId?.trim()){
  setError1(false)   
  setError4(false)
- const emp =   staff.find((el)=>el._id===selectedStaffId)
  setClientReferance((prev)=>{
     return {...prev,StatffName:emp?.FullName,EmpId:emp?._id,EmployeeId:emp?.EmployeeID}
  })
+}else{
+    setSelectedStaffId(uniqObjVal.employeeMongoId)
 }
- },[selectedStaffId])
+ },[selectedStaffId,uniqObjVal.employeeMongoId])
 
 
  const headers =  {
@@ -137,11 +143,13 @@ try{
 const response1 =     axios.get(`${url}/memberForm/${pathValMaster}`, {headers})   
 const response2 =    axios.get(`${url}/enquiryForm/${pathValMaster}`, {headers})  
 const response3 = axios.get(`${url}/employeeform/${pathValMaster}`,{headers}) 
+const response4 = axios.get(`${url}/productInvoice/${pathValMaster}`,{headers})
 
-const data = await Promise.all([response1,response2,response3])
+const data = await Promise.all([response1,response2,response3,response4])
 setClientData(data[0].data)
 setEnquiryData(data[1].data)
 setStaff(data[2].data)
+setClientReferance((prev)=>({...prev,InvoiceNo:data[3]?.data?.length}))
 
 }catch(error){
  console.log(error)
@@ -160,14 +168,17 @@ toGetSelectInputData()
 
 
  function clientObj(obj){
-    setClientReferance({
+    setClientReferance((prev)=>
+    
+    ({...prev,...{
         Fullname:obj?.Fullname,
         ContactNumber:obj?.ContactNumber,
         CustomerId:obj?.ClientId?obj?.ClientId:obj?.EnquiryId,
         EmailId:obj?.Email?obj?.Email:obj?.Emailaddress,
         ClientId:obj?._id,
-        MemberId:obj?._id
-    })    
+        MemberId:obj?._id,
+        StatffName:emp?.FullName,
+    }}))    
  }
 
 
@@ -296,7 +307,7 @@ return   <>
                                 <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 7}>
                                     <CreateInvoice  visible={activeKey === 7} 
                                     setActiveKey1={setActiveKey}  
-                                    clientReferance={clientReferance}
+                                    clientReferance={{...clientReferance,StatffName:emp?.FullName,EmpId:emp?._id}}
                                     toPrintInvoice={toPrintInvoice}
                                     />
                                 </CTabPane>
@@ -354,7 +365,7 @@ return   <>
 
                      <div className="ps-4">
                          <CFormSelect
-                         label="Select staff"
+                         label="Counselor"
                          onChange={(e)=>setSelectedStaffId( e.target.value)}                                                                                                                                  
                                     >
                                 <option >Select Staff</option>
