@@ -27,7 +27,7 @@ import { useSelector } from 'react-redux'
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 import { useReactToPrint } from 'react-to-print'
 import moment from "moment";
-function AddNewInvoice({id,data23,viewInvoice,setViewInvoice,getDetails,isFirstInoice}){
+function AddNewInvoice({id,data23,viewInvoice,setViewInvoice,getDetails,isFirstInoice,clickfun}){
 
  const pathVal = useAdminValidation('Master')   
  const [getInvoiceInfo,setInvoiceInfo]  = useState({
@@ -98,7 +98,7 @@ const handlePrint = useReactToPrint({
     const [printInvoiceActive,setPrintInoiceActive]=useState(false)
 
 
-    const uniqObjeact = useUniqAdminObjeact()
+    const uniqObj = useUniqAdminObjeact()
 
     const [visi, setVisi] = useState(false);
     const [mem, setMem] = useState([]);
@@ -152,7 +152,33 @@ if(RenewedObj){
 
 }
 
+const [staff, setStaff] = useState([])
+function getStaff() {
+    axios.get(`${url1}/employeeform/${pathVal}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then((res) => {
+            setStaff(res.data)
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+}
 
+const selectedStaff = staff.find((el)=>el._id===ser5)
+
+
+useEffect(()=>{
+    setSer5(uniqObj.employeeMongoId)
+    },[uniqObj.employeeMongoId])
+
+    const uniqObjeact ={
+        ...uniqObj,
+        centerNameC:(selectedStaff?.FullName||uniqObj.centerNameC),
+        employeeMongoId:(ser5||uniqObj.employeeMongoId)
+      }
 
 const saveInvoice = () => {
 if(!validation) {
@@ -160,7 +186,6 @@ if(!validation) {
 return 
 }
 
-   const selectedStaff = staff.find((el)=>el._id===ser5)
 
 
     let data = {
@@ -247,20 +272,6 @@ return
 
 }
 
-const [staff, setStaff] = useState([])
-function getStaff() {
-    axios.get(`${url1}/employeeform/${pathVal}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-        .then((res) => {
-            setStaff(res.data)
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-}
 
 
 function getSubService() {
@@ -346,8 +357,10 @@ setServiceDays(el.Days)
 
 
 
+
     return  <>
-     <CModal size="xl" alignment="center" scrollable visible={viewInvoice} onClose={() => {setViewInvoice(false) }}
+    <div className={(viewInvoice && !printInvoiceActive )?'d-none':''}>
+     <CModal size="xl" alignment="center" scrollable visible={(viewInvoice && !printInvoiceActive )} onClose={() => {setViewInvoice(false) }}
     
     >
     <CModalHeader>
@@ -386,7 +399,7 @@ setServiceDays(el.Days)
                             <option>Select Assign Staff</option>
                                 {staff.filter((list) => 
                                  list.selected === 'Select').map((item, index) => (
-                                    <option key={index} value={item._id}>{item.FullName}</option>
+                                    <option key={index} value={item._id}>{item.FullName} {item.EmployeeID}</option>
                                 ))}
 
                             </CFormSelect>
@@ -726,8 +739,12 @@ setServiceDays(el.Days)
         <CButton color="primary" onClick={() => saveInvoice()}>Submit</CButton>
     </CModalFooter>
 </CModal>
-
-<CModal size="xl" alignment="center" scrollable visible={printInvoiceActive} onClose={() => setPrintInoiceActive(false)}>
+</div>
+<CModal size="xl" alignment="center" scrollable visible={printInvoiceActive} onClose={() =>{
+            clickfun('btn btn-close')
+            setPrintInoiceActive(false)
+            setViewInvoice(false)
+} }>
                             <CModalHeader>
                                 <CModalTitle>Invoice Preview</CModalTitle>
                             </CModalHeader>

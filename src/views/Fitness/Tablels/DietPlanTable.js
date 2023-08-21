@@ -28,7 +28,7 @@ const [Diteplan,setDitePlan] =useState([])
 const [edit,setEdit] = useState(true)
 const [editData,setEditData] = useState(true)
 
-const pathVal =  useAdminValidation()
+const pathVal =  useAdminValidation('Master')
 
 
 const  headers = {

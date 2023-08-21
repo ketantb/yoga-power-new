@@ -114,20 +114,16 @@ getCounslerData()
                     Daily Workout Scheduling
                 </CNavLink>
             </CNav >
-            <CCol className='m-4 mt-1 p-4' style={{ position: 'relative' }}>
+            {active >4 && <CCol className='m-4 mt-1 p-4' style={{ position: 'relative' }}>
                 <CButton style={{ position: 'absolute', right: '0' }} onClick={() => setForm((value) => !value)}>Add New</CButton>
-            </CCol>
-            {showForm && active === 4 ? <WorkoutTempletForm closeFormFun={closeFormFun} /> : ''}
-            {showForm && active === 5 ? <ExerciseLbiiry closeFormFun={closeFormFun} /> : ''}
-            {showForm && active === 6 ? <DailyWorkoutScheduling  closeFormFun={closeFormFun} /> : ''}
-
+            </CCol>}
 
             {active === 1 && <MeasurementTable id={id} employeeData={employeeData}  allMemberData={allMemberData} showForm={showForm}  token={token} closeFormFun={closeFormFun} setForm={setForm} />}
             {active === 2 && <ClientDietTable id={id}  allMemberData={allMemberData} showForm={showForm}  token={token} closeFormFun={closeFormFun} setForm={setForm} />}
             {active === 3 && <DietPlanTable id={id} idVal={+i===9} showForm={showForm}  token={token} closeFormFun={closeFormFun} setForm={setForm} />}
-            {active === 4 && <WorkOutTempletTable id={id} idVal={+i===9}  allMemberData={allMemberData} Token={token} />}
-            {active === 5 && <ExerciseLibiryTable id={id} idVal={+i===9}  allMemberData={allMemberData} Token={token} />}           
-            {active === 6 && <DailyWorkoutSchedulingTable id={id} idVal={+i===9}  allMemberData={allMemberData} Token={token} />}
+            {active === 4 && <p className='text-center'>Coming Soon</p>}
+            {active === 5 && <p className='text-center'>Coming Soon</p>}           
+            {active === 6 && <p className='text-center'>Coming Soon</p>}
 
 
         </CCard>
