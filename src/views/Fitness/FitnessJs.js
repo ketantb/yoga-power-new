@@ -114,7 +114,7 @@ getCounslerData()
                     Daily Workout Scheduling
                 </CNavLink>
             </CNav >
-            {active >4 && <CCol className='m-4 mt-1 p-4' style={{ position: 'relative' }}>
+            {active <4 && <CCol className='m-4 mt-1 p-4' style={{ position: 'relative' }}>
                 <CButton style={{ position: 'absolute', right: '0' }} onClick={() => setForm((value) => !value)}>Add New</CButton>
             </CCol>}
 
