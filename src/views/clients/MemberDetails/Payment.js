@@ -80,7 +80,7 @@ function ShowUserInvoceHandler (id,item){
              viewInvoice ={viewInvoice}
              setViewInvoice={setViewInvoice}
              getDetails={getDetails}
-             
+             isFirstInoice={false}           
               id={id}/>}
 
             <CCol xs={12}>

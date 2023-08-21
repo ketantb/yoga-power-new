@@ -27,7 +27,7 @@ import { useSelector } from 'react-redux'
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 import { useReactToPrint } from 'react-to-print'
 import moment from "moment";
-function AddNewInvoice({id,data23,viewInvoice,setViewInvoice,getDetails}){
+function AddNewInvoice({id,data23,viewInvoice,setViewInvoice,getDetails,isFirstInoice}){
 
  const pathVal = useAdminValidation('Master')   
  const [getInvoiceInfo,setInvoiceInfo]  = useState({
@@ -52,7 +52,7 @@ function AddNewInvoice({id,data23,viewInvoice,setViewInvoice,getDetails}){
  const RenewedObj  = [data23].find((list) =>{
         const time =  (new Date(data23.endDate) -new Date())
         const days = Math.ceil(time/(1000*60*60*24))
-              if((days<=15)){           
+              if((days<=15 &&!isFirstInoice)){           
                  return true 
               }
               return false                                                                         
@@ -193,15 +193,15 @@ return
             setInvoiceInfo({
                 Fullname:resp.data.MemberName,
                 ContactNumber:resp.data.contact,
-                ClientId:data23.clientId,
+                ClientId:data23.ClientId,
                 Email:data23.Email,
                 datetime:datetime,
                 InvoiceNo:resp.data.InvoiceNo,
                 StaffFullName:resp.data.counseller,
                 PackageName:resp.data.PackageName,
                 ServiceName:resp.data.ServiceName,
-                startDate:moment(resp.data.startDate).format('DD-MM-YYY'),
-                endDate:moment(resp.data.endDate).format('DD-MM-YYY')
+                startDate:moment(resp.data.startDate).format('DD-MM-YYYY'),
+                endDate:moment(resp.data.endDate).format('DD-MM-YYYY')
              })
              setPrintInoiceActive(true)
         }                   
@@ -212,27 +212,28 @@ return
             let startDate1 =data23.startDate
             let endDate1 =data23.endDate
 
-            if(!compareDateFun(startDate,data23.startDate)){
+            if(!compareDateFun(startDate,data23.startDate)||isFirstInoice){
                 startDate1=startDate
             }
-            if(compareDateFun(endDate,data23.endDate)){
+            if(compareDateFun(endDate,data23.endDate)||isFirstInoice){
                 endDate1 = endDate
             }
 
 
             let data1 = { invoiceId: resp.data._id, invoiceNum: resp.data.InvoiceNo, startDate:startDate1,duration:ser2,
-                endDate:endDate1,plan: true,renewedDate:(RenewedObj?new Date():'')
+                status:'active',endDate:endDate1,plan: true,renewedDate:(RenewedObj?new Date():data23?.renewedDate)
              }
 
              axios.all([
-                axios.post(`${url1}/enquiryForm/update/${data23._id}`, {
+                axios.post(`${url1}/enquiryForm/update/${data23?.EnquiryId}`, {
                     invEmployeeId:selectedStaff?._id,
                     invEmployeeName:selectedStaff?.FullName,
                     invoiceId:resp.data._id,
                 }, { headers}),
                 axios.post(`${url1}/memberForm/update/${id}`, data1, { headers },)]
+                ).then((res) => {
+                    console.log(res) 
 
-                ).then(() => {
             }).catch((error) => {
                 console.error(error)
             })

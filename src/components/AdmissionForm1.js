@@ -48,7 +48,7 @@ import moment from "moment/moment";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 import { cilArrowCircleBottom} from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-
+import AddNewInvoice from './AddNewInvoice'
 
 const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => {
     
@@ -59,6 +59,8 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
     const pathValMaster = useAdminValidation('Master')
     const [imgPrograss,setImgPrograss] = useState(0)
     const [imageUrl, setImageUrl] = useState(null)
+    const [clinetInfoData,setClientInfo] = useState({})
+
 
     const imgRef = useRef(null)
     const imageInput = useRef('')
@@ -291,9 +293,9 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
 
 
 
+      let num = 0
 
     const saveMember = () => {
-        let num = 0
         if(!AttendanceID){
            alert('AttendanceID  is Required please select AttendanceID') 
            return
@@ -346,14 +348,16 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
                 enquirestatus:'notshow',
                 enquiryConvertedDate:new Date()}, { headers}),
             axios.post(`${url1}/memberForm/create`, data, { headers },)]
-            ).then(() => {
-                setMemberId(data._id);
-                alert("successfully submitted")
-                setVisi(true)     
-                num=0
-                if(getEnquiry){
-                    getEnquiry()
-                }
+            ).then((res) => {
+                if(res[1].status===200){
+                    setClientInfo(res[1].data);
+                    alert("successfully submitted")
+                    setVisi(true)
+                    num = 0
+                    if (getEnquiry) {
+                        getEnquiry()
+                    }
+                }               
 
         }).catch((error) => {
                 console.error(error)
@@ -1325,8 +1329,16 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                 </CForm>
                             </CTabPane>
                         </CTabContent>
+                        <div>
+                          <AddNewInvoice data23={clinetInfoData}
+                                    viewInvoice ={visi}
+                                   setViewInvoice={setVisi}
+                                   getDetails={()=>{}}     
+                                   isFirstInoice={true}        
+                                   id={clinetInfoData._id}/>
+                        </div>
 
-                        <CModal size="xl"  aria-labelledby="invoice-model" alignment="center" scrollable visible={visi} onClose={() => {clickFun2('invoice-cancel')}}
+                        {/* <CModal size="xl"  aria-labelledby="invoice-model" alignment="center" scrollable visible={visi} onClose={() => {clickFun2('invoice-cancel')}}
                             >
                             <CModalHeader>
                                 <CModalTitle>Invoice</CModalTitle>
@@ -1676,9 +1688,9 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                                 </CButton>
                                 <CButton color="primary" onClick={() => saveInvoice()}>Submit</CButton>
                             </CModalFooter>
-                        </CModal>
+                        </CModal> */}
 
-                        <CModal size="xl" alignment="center" scrollable visible={visi1} onClose={() => setVisi1(false)}>
+                        {/* <CModal size="xl" alignment="center" scrollable visible={visi1} onClose={() => setVisi1(false)}>
                             <CModalHeader>
                                 <CModalTitle>Invoice Preview</CModalTitle>
                             </CModalHeader>
@@ -1841,7 +1853,7 @@ const selectedStaff = staff.find((el)=>el._id===ser5)
                             <CModalFooter>
                                 <CButton color="primary" onClick={handlePrint}>Print</CButton>
                             </CModalFooter>
-                        </CModal>
+                        </CModal> */}
                     </CCardBody>
                 </CCard>
             </CModalBody>
