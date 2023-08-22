@@ -372,7 +372,7 @@ return   <>
 
                                         {staff.filter((list) => 
                                             list.selected === 'Select').map((item, index) => (
-                                                <option key={index} value={item._id}>{item.FullName}</option>
+                                                <option key={index} value={item._id}>{item.FullName} {item.EmployeeID}</option>
                                             ))}
                                     </CFormSelect>
 

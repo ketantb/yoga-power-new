@@ -48,6 +48,7 @@ const FeedBackCall = ({visible,filterObj,id}) => {
 
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
     const uniValiObject =  useUniqAdminObjeact()
 
     const [feedBackCallsData,setWelcomeCallsData] = useState([])
@@ -62,6 +63,9 @@ const FeedBackCall = ({visible,filterObj,id}) => {
     const [staff, setStaff] = useState([])
 
 
+    useEffect(()=>{
+        setFollowUpid(uniValiObject.employeeMongoId)
+        },[uniValiObject.employeeMongoId])
 
     
     function getAllMemberData() {
@@ -78,7 +82,7 @@ const FeedBackCall = ({visible,filterObj,id}) => {
                 if(!!id){
                     data =  [res.data]
                 }
-                setWelcomeCallsData(data.filter((list) => list.username === username ).reverse())
+                setWelcomeCallsData(data?.reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -92,7 +96,7 @@ const FeedBackCall = ({visible,filterObj,id}) => {
 
 
     function getStaff() {
-        axios.get(`${url}/employeeForm/${pathVal}`, {
+        axios.get(`${url}/employeeForm/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -134,7 +138,8 @@ const obj2 = {
     clientName:uniqClient.Fullname,
     phone: uniqClient.ContactNumber,
     empolyeeId:emp._id,
-    ...uniValiObject
+    ...{...uniValiObject,employeeMongoId:(emp._id|| uniValiObject.employeeMongoId)}
+
 }
 
         axios.post(`${url}/memberForm/update/${followupId}`,obj, { headers },
@@ -199,7 +204,7 @@ const obj2 = {
                onChange={(e)=>setUpdateForm(prev=>({...prev,feedBackCallFollowupby:e.target.value}))}
                >
                           <option>Select Assign Staff</option>
-                          {staff.filter((list) => list.username === username &&
+                          {staff.filter((list) => 
                               list.selected === 'Select').map((item, index) => (
                                   <option key={index} value={item._id} >{item.FullName}</option>
                               ))}

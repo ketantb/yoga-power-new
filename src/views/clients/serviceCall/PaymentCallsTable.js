@@ -49,7 +49,10 @@ const PaymentCallsTable = ({visible,filterObj,id}) => {
 
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
     const uniqObjectVal = useUniqAdminObjeact()
+
+   
 
     const [AllInvoiceData,setAllInvoiceData] = useState([])
     const [visibalCallUpdateForm,setVisibalCallUpdateForm] = useState(false)
@@ -61,6 +64,10 @@ const PaymentCallsTable = ({visible,filterObj,id}) => {
         followUpDate:''
     })
     const [staff, setStaff] = useState([])
+
+    useEffect(()=>{
+      setFollowUpid(uniqObjectVal.employeeMongoId)
+      },[uniqObjectVal.employeeMongoId])
 
 const getAllInvoiceData = async ()=>{
 
@@ -83,7 +90,7 @@ const getAllInvoiceData = async ()=>{
   },[])
 
   function getStaff() {
-    axios.get(`${url}/employeeForm/${pathVal}`, {
+    axios.get(`${url}/employeeForm/${pathValMaster}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -122,7 +129,7 @@ const getAllInvoiceData = async ()=>{
       clientName:uniqClient.MemberName ,
       phone: uniqClient.contact ,
       empolyeeId:emp._id,
-      ...uniqObjectVal
+      ...{...uniqObjectVal,employeeMongoId:(emp._id|| uniqObjectVal.employeeMongoId)}
   }
   
 
@@ -187,7 +194,7 @@ const getAllInvoiceData = async ()=>{
                onChange={(e)=>setUpdateForm(prev=>({...prev,followupby:e.target.value}))}
                >
                           <option>Select Assign Staff</option>
-                          {staff.filter((list) => list.username === username &&
+                          {staff.filter((list) => 
                               list.selected === 'Select').map((item, index) => (
                                   <option key={index} value={item._id} >{item.FullName}</option>
                               ))}

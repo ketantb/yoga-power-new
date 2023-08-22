@@ -44,6 +44,9 @@ import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/ad
 const WelcomeCalls = ({visible,filterObj,id}) => {
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal  =  useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
+
+
     const uniObjVal = useUniqAdminObjeact()
 
 
@@ -58,6 +61,9 @@ const WelcomeCalls = ({visible,filterObj,id}) => {
     })
     const [staff, setStaff] = useState([])
 
+    useEffect(()=>{
+    setFollowUpid(uniObjVal.employeeMongoId)
+    },[uniObjVal.employeeMongoId])
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -75,7 +81,6 @@ const WelcomeCalls = ({visible,filterObj,id}) => {
               return false      
     }
 
- console.log(id)
 
     function getAllMemberData() {
         const urlPath = !id?`${url}/memberForm/${pathVal}`:`${url}/memberForm/${id}`
@@ -91,7 +96,6 @@ const WelcomeCalls = ({visible,filterObj,id}) => {
                     data =  [res.data]
                 }
                 setWelcomeCallsData(data.filter((list) =>
-                 list.username === username &&
                   findRenevalClient(list)).reverse())
             })
             .catch((error) => {
@@ -106,7 +110,7 @@ const WelcomeCalls = ({visible,filterObj,id}) => {
 
 
     function getStaff() {
-        axios.get(`${url}/employeeForm/${pathVal}`, {
+        axios.get(`${url}/employeeform/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -148,7 +152,7 @@ const WelcomeCalls = ({visible,filterObj,id}) => {
             clientName:uniqClient.Fullname,
             phone: uniqClient.ContactNumber,
             empolyeeId:emp._id,
-            ...uniObjVal
+            ...{...uniObjVal,employeeMongoId:(emp._id|| uniObjVal.employeeMongoId)}
         }
 
 
@@ -174,7 +178,6 @@ const WelcomeCalls = ({visible,filterObj,id}) => {
  }
 
 
- console.log(welcomecallsData)
 
   return (
     <>

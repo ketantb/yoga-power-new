@@ -49,6 +49,7 @@ const username = user.user.username;
 const GreetingCall = ({visible,filterObj,id}) => {
     
     const pathVal = useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
     const uniObjectVal = useUniqAdminObjeact()
 
     const url = useSelector((el)=>el.domainOfApi) 
@@ -66,8 +67,11 @@ const GreetingCall = ({visible,filterObj,id}) => {
     const [staff, setStaff] = useState([])
 
 
+    useEffect(()=>{
+        setFollowUpid(uniObjectVal.employeeMongoId)
+        },[uniObjectVal.employeeMongoId])
     function getStaff() {
-        axios.get(`${url}/employeeForm/${pathVal}`, {
+        axios.get(`${url}/employeeForm/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -150,7 +154,8 @@ const saveCallUpDate = async ()=>{
        clientName:uniqClient.Fullname,
        phone: uniqClient.ContactNumber,
        empolyeeId:emp._id,
-       ...uniObjectVal
+       ...{...uniObjectVal,employeeMongoId:(emp._id|| uniObjectVal.employeeMongoId)}
+
 }
     axios.post(`${url}/memberForm/update/${followupId}`,obj, { headers },
         )

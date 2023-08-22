@@ -46,11 +46,11 @@ const username = user.user.username;
 
 const IrregularMemberCall = ({visible,filterObj,id}) => {
 
-    const pathVal  = useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
+
     const uniValiObject = useUniqAdminObjeact()
 
     const url = useSelector((el)=>el.domainOfApi) 
-    const [AllInvoiceData,setAllInvoiceData] = useState([])
     const [visibalCallUpdateForm,setVisibalCallUpdateForm] = useState(false)
     const [reggularMemberData,setReggularMemberData] = useState([])
     const [followupId,setFollowUpid] = useState('')
@@ -62,8 +62,12 @@ const IrregularMemberCall = ({visible,filterObj,id}) => {
     })
     const [staff, setStaff] = useState([])
 
+      useEffect(()=>{
+        setFollowUpid(uniValiObject.employeeMongoId)
+        },[uniValiObject.employeeMongoId])
+
     function getIrregularMemberCall() {
-        axios.get(`${url}/clientAttendance/${pathVal}`, {
+        axios.get(`${url}/clientAttendance/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -103,7 +107,7 @@ const IrregularMemberCall = ({visible,filterObj,id}) => {
 
 
     function getStaff() {
-        axios.get(`${url}/employeeForm/${pathVal}`, {
+        axios.get(`${url}/employeeForm/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -153,7 +157,7 @@ const IrregularMemberCall = ({visible,filterObj,id}) => {
         clientName:uniqClient.ClientName,
         phone: uniqClient.contact,
         empolyeeId:emp._id,
-        ... uniValiObject
+       ...{...uniValiObject,employeeMongoId:(emp._id|| uniValiObject.employeeMongoId)}
 
     }
         axios.post(`${url}/clientAttendance/update/${followupId}`,obj, { headers },

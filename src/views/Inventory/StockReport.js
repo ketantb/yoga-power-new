@@ -134,7 +134,7 @@ const StockReport = () => {
                 <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                     <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                         <CTableRow >
-                            <CTableHeaderCell>Sr.No</CTableHeaderCell>
+                            <CTableHeaderCell>Sr.Nokj</CTableHeaderCell>
                             <CTableHeaderCell>Product Code</CTableHeaderCell>
                             <CTableHeaderCell>Product Name</CTableHeaderCell>
                             <CTableHeaderCell>Brand Name</CTableHeaderCell>
@@ -989,7 +989,10 @@ const StockReport = () => {
                             </CTableDataCell>
                         </CTableRow>
                         {result1.filter((list) =>
-                            list.username === username && list.productName.includes(search2) && list.brandName.includes(search3) && list.category.includes(search4) && list.color.includes(search5) &&
+                             list.productName.includes(search2) && 
+                             list.brandName.includes(search3) && 
+                             list.category.includes(search4) && 
+                             list.color.includes(search5) &&
                             list.productPrice.toString().includes(search6.toString())
                         ).map((item, index) => (
                             <CTableRow key={index}>

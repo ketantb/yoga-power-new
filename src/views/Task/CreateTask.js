@@ -5,18 +5,21 @@ import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { useUniqAdminObjeact,useAdminValidation } from "../Custom-hook/adminValidation";
 import { taskCalender } from '../hr/Rights/rightsValue/erpRightsValue'
+import CustomSelectInput from '../Fitness/CustomSelectInput/CustomSelectInput'
 
 
 
 const CreateTask = () => {
   const url = useSelector((el)=>el.domainOfApi) 
-  const [userName, setUserName] = useState()
+  const [userName, setUserName] = useState('')
   const [date, setDate] = useState('')
   const [Time, setTime] = useState('')
   const [selectedTask, setSelectedTask] = useState('')
   const [toggaleValue, setToggaleValue] = useState(false)
   const [filterDate, setFilterDate] = useState(false)
   const [error, setError] = useState('')
+  const [allMemberData,setAllmemBerData] = useState([]) 
+
 
   const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpTaskList.items.erpTaskListCalender.rights) 
 
@@ -28,7 +31,7 @@ const CreateTask = () => {
   let user = JSON.parse(localStorage.getItem('user-info'))
   const token = user.token;
 
-  const pathVal = useAdminValidation()
+  const pathVal = useAdminValidation('Master')
   const uniqObjVal = useUniqAdminObjeact()
 
 
@@ -125,9 +128,6 @@ const  postCalenderData =   useCallback(async function(obj) {
         month: `${ +date.split("-")[1] }`,
         year: `${ +date.split("-")[0] }`,
       }
-      console.log(+Time.split(":")[0] <= 20)
-      console.log(+Time.split(":")[0] >= 7)
-      console.log(Time)
 
       if (+Time.split(":")[0] > 21 || +Time.split(":")[0] < 7) {
         setError('Please Enter Task Time between 7AM and 10PM')
@@ -174,6 +174,24 @@ const  postCalenderData =   useCallback(async function(obj) {
     }
   }
 
+  const getClientMemData = ()=>{
+
+    axios.get(`${url}/memberForm/${pathVal}`, {headers: {'Authorization': `Bearer ${token}`}})
+    .then((res) => {setAllmemBerData(res.data)})
+    .catch((error) => {console.error(error)})
+ }
+
+useEffect(()=>{
+getClientMemData()
+},[])
+
+function clientObj(obj){
+setUserName(obj.Fullname+" "+obj.ClientId)
+}
+
+console.log(TaskData)
+
+
   return (
 
     <>
@@ -185,24 +203,12 @@ const  postCalenderData =   useCallback(async function(obj) {
           <CCol lg={12} sm={12}>
             <CRow>
               <CCol lg={6} md={6} sm={12}>
-                <CFormInput
-                  className="mb-1"
-                  type="text"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                  list="username"
-                  label="Name"
-                  placeholder="Enter Your Name"
-                  name="username"
-                />
-
-                <datalist id='username'>
-                  <option value="Jonas" />
-                  <option value="Jonas1" />
-                  <option value="Jonas2" />
-                  <option value="Jonas3" />
-                  <option value="Jonas4" />
-                </datalist>
+              <div   className="mb-2">Select Client Name</div>
+                <CustomSelectInput 
+                  data={allMemberData} 
+                  title={userName?.trim()?userName:"Select client name"} 
+                  getData={clientObj}
+                  />
               </CCol>
               
 
@@ -291,6 +297,8 @@ const  postCalenderData =   useCallback(async function(obj) {
       }
       ) : <h4 className='m-2' style={{ color: '#f9b115' }}>No task allocated </h4>}
 
+
+    
     </>
   )
 }

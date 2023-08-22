@@ -45,9 +45,8 @@ const ServiceCall = ({id}) => {
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
-
-    const pathVal = useAdminValidation()
+ 
+    const pathValMaster = useAdminValidation('Master')
 
 
     const [staff, setStaff] = useState([])
@@ -90,7 +89,7 @@ const ServiceCall = ({id}) => {
 
    
     function getStaff() {
-        axios.get(`${url}/employeeForm/${pathVal}`, {headers: {'Authorization': `Bearer ${token}`}})
+        axios.get(`${url}/employeeForm/${pathValMaster}`, {headers: {'Authorization': `Bearer ${token}`}})
             .then((res) => {
                 setStaff(res.data)
             })
@@ -251,7 +250,7 @@ const ServiceCall = ({id}) => {
                                             onChange={(e)=>setFilterObj(prev=>({...prev,staffName:e.target.value}))}                                                
                                             >
                                             <option>Select Assign Staff</option>
-                                          {staff.filter((list) => list.username === username &&
+                                          {staff.filter((list) => 
                                                 list.selected === 'Select').map((item, index) => (
                                          <option key={index}>{item.FullName}</option>
                                              ))}
@@ -266,7 +265,7 @@ const ServiceCall = ({id}) => {
                   </CCol>
                   </> 
                     }
-                  
+                
                                 <div style={{overflowY:'scroll'}} >
                         <CTabContent>
                             {activeKey === 1 &&<WelcomeCalls id={id} visible={activeKey === 1} filterObj={filterObj} />}

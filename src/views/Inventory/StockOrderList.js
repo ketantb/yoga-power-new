@@ -7,7 +7,9 @@ import {CCard,CTable,CCol,CTableHead,CTableRow,CTableHeaderCell,
     CTabPane,
     CTabContent,
     CFormSelect,
-    CFormCheck
+    CFormCheck,
+    CPagination,
+    CPaginationItem,
  } from '@coreui/react'
 
  import { useSelector } from 'react-redux'
@@ -40,6 +42,11 @@ function StockOrderList (){
     const [allProductData,setAllProductData] = useState([])
     const [noofProduct,setNoOfProduct] = useState([])
     const [activeToIncrement,setActiveToIncrement] = useState([])
+    const [pagination,setPagination] = useState({
+        pagination1:0,
+        pagination2:0,
+        pagination3:0,
+    })
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpInventory.items.erpStockList.rights) 
 
@@ -69,7 +76,7 @@ function StockOrderList (){
     const pathVal = useAdminValidation()
     const pathValMaster = useAdminValidation('Master')
 
-    const uniqObjVal =  useUniqAdminObjeact()
+    const uniqObj =  useUniqAdminObjeact()
 
 
 
@@ -144,6 +151,18 @@ if(!!activeCExcelCheck.length){
 useEffect(()=>{
 setSelectedStaff('')
 },[activeKey])
+
+
+
+useEffect(()=>{
+    setSelectedStaff(uniqObj.employeeIDC)
+},[uniqObj.employeeIDC,activeKey])
+
+const uniqObjVal = {
+    ...uniqObj,
+    employeeMongoId:(staff.find((el)=>el._id===selectedStaff)?._id||uniqObj.employeeMongoId),
+    empNameC:(staff.find((el)=>el._id===selectedStaff)?.FullName||uniqObj.employeeMongoId) 
+}
 
 function ConfirmProduct(id){
 if(!selectedStaff.trim()){
@@ -252,7 +271,7 @@ const UpdateObj = {
 }
 
 
-axios.post(`${url}/stockorderlist/update/${item._id}`, UpdateObj,{headers})
+axios.post(`${url}/stockorderlist/update/${item._id}`, {...UpdateObj,...uniqObjVal},{headers})
 .then((res) => {
     getStockAssigningR()
     getStockOrderList()
@@ -275,7 +294,6 @@ function getStockAssigningR() {
    }
 
 
-console.log(orderList)
 
     return (
         <CCard >
@@ -327,7 +345,7 @@ console.log(orderList)
                <option value=''>Select Assign Staff</option>
                                 {staff.filter((list) => 
                                  list.selected === 'Select').map((item, index) => (
-                                    <option key={index} value={item._id}>{item.FullName}</option>
+                                    <option key={index} value={item._id}>{item.FullName} {item.EmployeeID}</option>
                                 ))}
             </CFormSelect>
             <div>
@@ -441,7 +459,11 @@ console.log(orderList)
                        </CTableHead>
                        <CTableBody>
                            
-                       {   orderList.filter((el)=>el?.Status!=='Recevied').map((item,i)=>{        
+                       {   orderList.filter((el)=>el?.Status!=='Recevied').filter((el)=>{
+
+                       })
+                       .slice(pagination.pagination1 * 10,
+                        pagination.pagination1 * 10 + 10).map((item,i)=>{        
                   
                          return <CTableRow >
                                <CTableDataCell style={{display:
@@ -469,11 +491,9 @@ console.log(orderList)
                                 <CButton  onClick={()=>ordeReceived(item)}>Received?</CButton>
                                 </CTableDataCell>                                                                                                            
                            </CTableRow>                   
-                       })}
-                      
-                 
-                         
+                       })}                         
                        </CTableBody>
+                    
          </CTable>
 
 

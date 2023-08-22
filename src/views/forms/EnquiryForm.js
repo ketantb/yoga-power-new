@@ -216,8 +216,6 @@ useEffect(()=>{
         return 
     }
 },[PersionalDetailsValidation,LeadInformationValidation,ScheduleenquiryfollowUp,editData?._id])
-
-console.log(imageUrl)
                                        
 const saveEnquiry = () => {
 
@@ -257,13 +255,13 @@ return
             username: username,
             EnquiryId: editData?.EnquiryId?editData?.EnquiryId:enqId,
             Fullname, Emailaddress, CountryCode,
-            ContactNumber, Gander, DateofBirth, 
+            ContactNumber:+ContactNumber, Gander, DateofBirth, 
             address, Area, city, Profession,
-            StaffName:staffName.FullName, CenterName:center.center, CallStatus, Message,
+            StaffName:staffName?.FullName, CenterName:center.center, CallStatus, Message,
             person_Name, Relation, CountryCode2: CountryCode2, ContactNumber2: ContactNumber2,
             createdAt:EnquiryDate, ServiceName, ServiceVariation, Customertype,enquirytype, appointmentDate,
             appointmentTime, appointmentfor:editData?.appointmentfor?appointmentfor:'',identifyStage:  appointmentfor,
-            Counseller:Counseller.FullName,trialDate, trialDate, status: "all_enquiry",ClientReferenceName:clientReferance,
+            Counseller:Counseller?.FullName,trialDate, trialDate, status: "all_enquiry",ClientReferenceName:clientReferance,
             ClientReferrenceId:clientId,
             image: imageUrl,EnquiryDate
         }

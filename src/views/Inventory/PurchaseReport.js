@@ -30,6 +30,7 @@ import { useAdminValidation } from "../Custom-hook/adminValidation";
 
 const AllSuppilerList = () => {
 
+    let pageNo = 0
 
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
@@ -54,12 +55,12 @@ const AllSuppilerList = () => {
     const [search5, setSearch5] = useState('')
     const [search6, setSearch6] = useState('')
     const [search7, setSearch7] = useState('')
+    const [search8, setSearch8] = useState('')
+    const [search9, setSearch9] = useState('')
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
-    const username = user.user.username;
     const [paging, setPaging] = useState(0);
     useEffect(() => {
         getImpCall()
@@ -221,7 +222,6 @@ const AllSuppilerList = () => {
                                 type="text"
                                 style={{ minWidth: "120px" }}
                                 value={search1}
-                                disabled
                                 onChange={(e) => setSearch1(e.target.value)}
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
@@ -281,7 +281,6 @@ const AllSuppilerList = () => {
                                 className="mb-1"
                                 style={{ minWidth: "120px" }}
                                 type="number"
-                                disabled
                                 value={search7}
                                 onChange={(e) => setSearch7(e.target.value)}
                                 aria-describedby="exampleFormControlInputHelpInline"
@@ -292,9 +291,8 @@ const AllSuppilerList = () => {
                                 className="mb-1"
                                 style={{ minWidth: "120px" }}
                                 type="number"
-                                disabled
-                                value={search7}
-                                onChange={(e) => setSearch7(e.target.value)}
+                                value={search8}
+                                onChange={(e) => setSearch8(e.target.value)}
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
                         </CTableDataCell>
@@ -303,18 +301,31 @@ const AllSuppilerList = () => {
                                 className="mb-1"
                                 style={{ minWidth: "120px" }}
                                 type="number"
-                                disabled
-                                value={search7}
-                                onChange={(e) => setSearch7(e.target.value)}
+                                value={search9}
+                                onChange={(e) => setSearch9(e.target.value)}
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
                         </CTableDataCell>
                     </CTableRow>
                     
-                    {result1.map((item, index) => (
+                    {result1.filter((list)=>{
+                     return new Date(list.date).toISOString()?.split('T')?.[0]?.includes(search1?.toLowerCase())&&
+                     (list.productName||'').toLowerCase().includes(search2.toLowerCase())&&
+                     (list.productCode||'').toLowerCase().includes(search3.toLowerCase())&&
+                     (list.openingStock+""||'').toLowerCase().includes(search4.toLowerCase())&&
+                     (list.purchaseStock+""||'').toLowerCase().includes(search5.toLowerCase())&&
+                     (list.totalStock+""||'').toLowerCase().includes(search6.toLowerCase())&&
+                     (list.consumptionQty+""||'').toLowerCase().includes(search7.toLowerCase())&&
+                     (list.opningConsumptionOty+""||'').toLowerCase().includes(search8.toLowerCase())&&
+                     (list.closingStock+""||'').toLowerCase().includes(search9.toLowerCase())
+                    }).filter((el)=>{
+                        pageNo++
+                        return el
+                    })
+                    .slice(paging * 10, paging * 10 + 10).map((item, index) => (
                         <CTableRow key={index} className="text-center">
                             <CTableDataCell>{index + 1 }</CTableDataCell>
-                            <CTableDataCell>{new Date(item.date).toDateString()}</CTableDataCell>
+                            <CTableDataCell>{new Date(item.date).toISOString()?.split('T')?.[0]}</CTableDataCell>
                             <CTableDataCell>{item.productName}</CTableDataCell>
                             <CTableDataCell>{item.productCode}</CTableDataCell>
                             <CTableDataCell className="text-dark"><b>{item.openingStock}</b></CTableDataCell>
@@ -327,11 +338,24 @@ const AllSuppilerList = () => {
                     ))}
                 </CTableBody>
             </CTable>
-            </div >
-
-
-        
+            </div >        
         </CRow>
+        <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {pageNo> (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {pageNo> (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {pageNo> (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+       </CPagination>
         </CCard>
 
 

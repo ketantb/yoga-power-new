@@ -1163,7 +1163,7 @@ const AllEnquires = () => {
                                            list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
 
                                 }).map((item, index) => (
-                                    <CTableRow key={index} className='border-1'>
+                                    <CTableRow key={index} className='border-1' color={item?.appointmentfor?.trim()?'success':''}>
                                         <CTableDataCell>{((result1.filter((list)=>list.enquirestatus!=='notshow').length - index)) - (paging * 10)}</CTableDataCell>
                                         <CTableDataCell>{item.EnquiryId}</CTableDataCell>
                                         <CTableDataCell className='text-center'>{moment(item.createdAt).format("DD-MM-YYYY")}</CTableDataCell>
