@@ -166,7 +166,7 @@ const SalesTarget = () => {
                     </CCardHeader>
                     <CCardBody>
                         <CTabContent>
-                          
+                    
                             {activeKey===1&& <SalesTargetTable EmployeeData ={employeeData}/>}
                             {activeKey===2&&<ClinetTargetTabel EmployeeData ={employeeData}/>}
                             {activeKey===3&&<CallesTargetTable EmployeeData ={employeeData}/>} 

@@ -67,7 +67,6 @@ const Recruitment = () => {
             }
         })
             .then((res) => {
-                console.log(res.data)
                 setLeadArr(res.data)
             })
             .catch((error) => {
@@ -145,6 +144,8 @@ useEffect(()=>{
                     setSource('')
                     setgrade('')
                     setComment('')
+                    setImgPrograss(0)
+                    setResumePrograss(0)
                     alert("successfully submitted")
                 })
             })
@@ -522,7 +523,7 @@ useEffect(()=>{
                            
                             <CButton className="mt-4" onClick={() => {
                                 saveRecruitment()
-                            }}>Savelj</CButton>
+                            }}>Save</CButton>
                            
                         </CForm>
                     </CCardBody>

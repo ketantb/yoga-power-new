@@ -156,23 +156,12 @@ function percentage(partialValue, totalValue) {
                     >
                         Year
                     </CInputGroupText>
-                   <CFormSelect
+                   <CFormInput
                    value={selectedYear}
                    onChange={(e)=>setSelectedYear(e.target.value)}
                    >
-                      <option>Select Year</option>
-                      <option>{new Date().getFullYear() - 9}</option>
-                        <option >{new Date().getFullYear() - 8}</option>
-                        <option >{new Date().getFullYear() - 7}</option>
-                        <option >{new Date().getFullYear() - 6}</option>
-                        <option> {new Date().getFullYear()-5}</option>
-                        <option>{new Date().getFullYear() - 4}</option>
-                        <option >{new Date().getFullYear() - 3}</option>
-                        <option >{new Date().getFullYear() - 2}</option>
-                        <option >{new Date().getFullYear() - 1}</option>
-                        <option> {new Date().getFullYear()}</option>
-
-                   </CFormSelect>
+                    
+                   </CFormInput>
                     
                 </CInputGroup>
                 
@@ -275,7 +264,7 @@ function percentage(partialValue, totalValue) {
                             <CPaginationItem active >{pagination / 10}</CPaginationItem>
                             {num > pagination / 10 * 10 && <CPaginationItem onClick={() => setPagination((val) => val < num ? val + 10 : val)}>{pagination / 10 + 1}</CPaginationItem>}
                             {num > pagination / 10 * 20 && <CPaginationItem onClick={() => setPagination((val) => val < num ? val + 10 : val)}>{pagination / 10 + 2}</CPaginationItem>}
-                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < num.length ? val + 10 : val)}>
+                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < num ? val + 10 : val)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>
                     </CPagination>

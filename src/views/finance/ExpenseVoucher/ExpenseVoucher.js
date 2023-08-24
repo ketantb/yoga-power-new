@@ -160,6 +160,7 @@ axios.post(`${url1}/dailyExpence/create`,{...ExpenseObjeact,...uniObjVal},{heade
 }}).then(({data})=>{
 alert('Successfully Save')
 getLengthofVoucher()
+naviGate('/finance/daily-expense')
 })
 
 }

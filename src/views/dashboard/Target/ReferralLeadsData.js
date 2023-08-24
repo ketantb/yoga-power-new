@@ -111,6 +111,14 @@ const getLiveClasses = useCallback(async function () {
         return (100 * partialValue) / totalValue;
      } 
 
+          
+     const clearFilter = ()=>{
+        setSselectedEmployee('')
+        setSelectedYear('')
+        setSelectedMonth('')
+     }
+
+
     return <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={true}>
          <CRow className='mb-3'>
             <CCol sm={3}>
@@ -153,24 +161,11 @@ const getLiveClasses = useCallback(async function () {
                     >
                         Year
                     </CInputGroupText>
-                   <CFormSelect
+                   <CFormInput
                    value={selectedYear}
                    onChange={(e)=>setSelectedYear(e.target.value)}
-                   >
-                      <option>Select Year</option>
-                      <option>{new Date().getFullYear() - 9}</option>
-                        <option >{new Date().getFullYear() - 8}</option>
-                        <option >{new Date().getFullYear() - 7}</option>
-                        <option >{new Date().getFullYear() - 6}</option>
-                        <option> {new Date().getFullYear()-5}</option>
-                        <option>{new Date().getFullYear() - 4}</option>
-                        <option >{new Date().getFullYear() - 3}</option>
-                        <option >{new Date().getFullYear() - 2}</option>
-                        <option >{new Date().getFullYear() - 1}</option>
-                        <option> {new Date().getFullYear()}</option>
-
-                   </CFormSelect>
-                    
+                   />
+                
                 </CInputGroup>
                 
             </CCol>
@@ -199,6 +194,11 @@ const getLiveClasses = useCallback(async function () {
                 </CInputGroup>
             </CCol>
             
+        </CRow>
+        <CRow className='my-3'>
+            <CCol>
+                <CButton onClick={()=>clearFilter()}>Clear Filter</CButton>
+            </CCol>
         </CRow>
         <CTable bordered borderColor="black" responsive>
             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >

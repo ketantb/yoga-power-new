@@ -637,13 +637,9 @@ const ColdEnquires = () => {
 
                                             >
                                                 <option>Select Service</option>
-                                                {result.map((item, index) => (
-                                                  (
-                                                        item.status === true && (
-                                                            <option key={index} value={item.id}>{item.selected_service}</option>
-                                                        )
-                                                    )
-                                                ))}
+                                                {result.map((el)=>el.selected_service.toLowerCase().trim())
+                                                .filter((el,i,arr)=>{return arr.indexOf(el)===i})
+                                     .map((el,i)=><option key={i}>{el}</option>)}
                                             </CFormSelect>
                                         </CCol>
                                         <CCol lg={6} md={6} sm={12}>
@@ -767,13 +763,9 @@ const ColdEnquires = () => {
 
                                             >
                                                 <option>Select Service</option>
-                                                {result.map((item, index) => (
-                                                  (
-                                                        item.status === true && (
-                                                            <option key={index} >{item.selected_service}</option>
-                                                        )
-                                                    )
-                                                ))}
+                                                {result.map((el)=>el.selected_service.toLowerCase().trim())
+                                                .filter((el,i,arr)=>{return arr.indexOf(el)===i})
+                                     .map((el,i)=><option key={i}>{el}</option>)}
                                             </CFormSelect>
                                         </CCol>
                                         <CCol lg={4} md={6} sm={12}>

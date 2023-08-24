@@ -207,7 +207,10 @@ const PackageMaster = () => {
                                     
                                     <option>Select Service</option>
                                   
-                                     {subService.map((el,i)=><option key={i}>{el.selected_service}</option>)}  
+                                     {subService.map((el)=>el.selected_service.toLowerCase().trim()).filter((el,i,arr)=>{
+                                      return arr.indexOf(el)===i
+                                     })
+                                     .map((el,i)=><option key={i}>{el}</option>)}  
 
                                     </CFormSelect>
                      </CCol>
@@ -223,7 +226,10 @@ const PackageMaster = () => {
                                        
                                     >
                                    <option>Select Variation</option>
-                                    {subService.map((el,i)=><option key={i}>{el.sub_Service_Name}</option>)
+                                    {subService.filter((el)=>{
+                                    return el.selected_service.toLowerCase().trim() ===newservice
+                                    })
+                                    .map((el,i)=><option key={i}>{el.sub_Service_Name}</option>)
                                     }                                                         
                                     </CFormSelect>
                                   

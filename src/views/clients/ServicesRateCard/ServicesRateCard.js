@@ -4,16 +4,10 @@ import CIcon from '@coreui/icons-react'
 import { MdCall, MdDelete, MdEdit, MdMail } from 'react-icons/md';
 import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs';
 import {
-    CButton,
-    CButtonGroup,
     CCard,
     CCardBody,
     CCardHeader,
     CCol,
-    CFormInput,
-    CFormSelect,
-    CInputGroup,
-    CInputGroupText,
     CNav,
     CNavItem,
     CNavLink,
@@ -46,7 +40,11 @@ const ServicesRateCard = () => {
 
     const  getSalesCallData = useCallback(async function() {
         try{
-        const response1 = await axios.get(`${url}/packagemaster`)
+        const response1 = await axios.get(`${url}/packageMaster/${pathVal}`,{
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            }
+        })
         setServicesRateCard(response1.data)
         }catch(error) {
                 console.error(error)

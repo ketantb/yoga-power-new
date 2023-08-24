@@ -796,13 +796,10 @@ const AllEnquires = () => {
 
                                             >
                                                 <option>Select Service</option>
-                                                {result.map((item, index) => (
-                                                    (
-                                                        item.status === true && (
-                                                            <option key={index} >{item.selected_service}</option>
-                                                        )
-                                                    )
-                                                ))}
+                                                {result.map((el)=>el.selected_service.toLowerCase().trim())
+                                                .filter((el,i,arr)=>{return arr.indexOf(el)===i})
+                                     .map((el,i)=><option key={i}>{el}</option>)}
+                                                
                                             </CFormSelect>
                                         </CCol>
                                         <CCol lg={4} md={6} sm={12}>
@@ -1190,7 +1187,7 @@ const AllEnquires = () => {
                                            list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
 
                                 }).map((item, index) => (
-                                    <CTableRow key={index} className='border-1' color={validateFollowUparray.includes(item?.appointmentfor?.trim().toLowerCase())?'success':''}>
+                                    <CTableRow key={index} className='border-1' color={!(validateFollowUparray.includes(item?.appointmentfor?.trim().toLowerCase()))?'success':''}>
                                         <CTableDataCell>{((result1.filter((list)=>list.enquirestatus!=='notshow').length - index)) - (paging * 10)}</CTableDataCell>
                                         <CTableDataCell>{item.EnquiryId}</CTableDataCell>
                                         <CTableDataCell className='text-center'>{moment(item.createdAt).format("DD-MM-YYYY")}</CTableDataCell>

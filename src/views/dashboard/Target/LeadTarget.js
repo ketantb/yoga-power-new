@@ -67,6 +67,12 @@ function LeadTarget({EmployeeData}) {
 
 const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','Sep','Oct','Nov','Dec']
 
+const clearFilter = ()=>{
+    setSselectedEmployee('')
+    setSelectedYear('')
+    setSelectedMonth('')
+ }
+
 
     const getLiveClasses = useCallback(async function () {
         try {
@@ -169,24 +175,11 @@ const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','
                     >
                         Year
                     </CInputGroupText>
-                   <CFormSelect
+                   <CFormInput
                    value={selectedYear}
                    onChange={(e)=>setSelectedYear(e.target.value)}
-                   >
-                      <option>Select Year</option>
-                      <option>{new Date().getFullYear() - 9}</option>
-                        <option >{new Date().getFullYear() - 8}</option>
-                        <option >{new Date().getFullYear() - 7}</option>
-                        <option >{new Date().getFullYear() - 6}</option>
-                        <option> {new Date().getFullYear()-5}</option>
-                        <option>{new Date().getFullYear() - 4}</option>
-                        <option >{new Date().getFullYear() - 3}</option>
-                        <option >{new Date().getFullYear() - 2}</option>
-                        <option >{new Date().getFullYear() - 1}</option>
-                        <option> {new Date().getFullYear()}</option>
+                   />
 
-                   </CFormSelect>
-                    
                 </CInputGroup>
                 
             </CCol>
@@ -215,6 +208,11 @@ const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','
                 </CInputGroup>
             </CCol>
             
+        </CRow>
+        <CRow className='my-3'>
+            <CCol>
+                <CButton onClick={()=>clearFilter()}>Clear Filter</CButton>
+            </CCol>
         </CRow>
         <CTable bordered borderColor="black" responsive>
             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
@@ -288,9 +286,9 @@ const allMonthName  = ['Jan','Feb','March','April','May','Jun','July','August','
                                 <span aria-hidden="true" >&laquo;</span>
                             </CPaginationItem>
                             <CPaginationItem active >{pagination / 10}</CPaginationItem>
-                            {leadTargetData.length > pagination / 10 * 10 && <CPaginationItem onClick={() => setPagination((val) => val < leadTargetData.length ? val + 10 : val)}>{pagination / 10 + 1}</CPaginationItem>}
-                            {leadTargetData.length > pagination / 10 * 20 && <CPaginationItem onClick={() => setPagination((val) => val < leadTargetData.length ? val + 10 : val)}>{pagination / 10 + 2}</CPaginationItem>}
-                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < leadTargetData.length ? val + 10 : val)}>
+                            {num > pagination / 10 * 10 && <CPaginationItem onClick={() => setPagination((val) => val < num ? val + 10 : val)}>{pagination / 10 + 1}</CPaginationItem>}
+                            {num > pagination / 10 * 20 && <CPaginationItem onClick={() => setPagination((val) => val < num ? val + 10 : val)}>{pagination / 10 + 2}</CPaginationItem>}
+                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < num ? val + 10 : val)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>
                  </CPagination>
