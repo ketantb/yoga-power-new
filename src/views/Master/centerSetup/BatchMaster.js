@@ -95,7 +95,7 @@ const BatchMaster = () => {
         })
             .then((res) => {
                 console.log(res.data)
-                setResult(res.data)
+                setResult(res.data.reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -141,7 +141,9 @@ const BatchMaster = () => {
             body: JSON.stringify(item)
         }).then((result) => {
             result.json().then((resp) => {
-                getBatch()
+               
+                    getBatch()
+                
             })
         })
     }
@@ -215,7 +217,7 @@ const sendData = async (type)=>{
        return  axios.post(`${url1}/Batch/create`, data, { headers },)
        }else{
        return axios.all([
-            axios.put(`${url1}/employeeform/${selectedStaff._id}`, {
+            axios.post(`${url1}/employeeform/update/${selectedStaff._id}`, {
                 ...selectedStaff,trainerStatus:true
             }, { headers}),
             axios.post(`${url1}/Batch/create`, data, { headers },)       

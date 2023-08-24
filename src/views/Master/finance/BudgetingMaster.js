@@ -257,7 +257,7 @@ return
     return (
         <CCard className="mb-3 border-success">
             <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
-                <CCardTitle>Budgeting Master</CCardTitle>
+                <CCardTitle>Center Expenses BudgetingMaster</CCardTitle>
             </CCardHeader>
             <CCardBody>
                 <CForm className="mb-2">

@@ -3,6 +3,7 @@ import {useEffect, useState} from 'react'
 import axios from "axios"
 import { useSelector } from "react-redux"
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation"
+import { useNavigate } from "react-router-dom"
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -10,7 +11,6 @@ const token = user.token;
 const username = user.user.username;
 
 function ExpenseVoucher (){
-  //dailyexpense
  
 const [voucherNo,setVoucehrNo] = useState('')
 const [date,setDate] = useState('')
@@ -31,10 +31,7 @@ const pathValMaster = useAdminValidation('Master')
 const [getExpenceMaster,setExpenceMaster] = useState([])
 const [balanceAmount,setBalanceAmount] = useState('')
 const [eltoUPdate,setEltoUpdate] = useState(0)
-
-
-
-
+const naviGate = useNavigate()
 
 
 const ExpenseObjeact = {
@@ -205,7 +202,6 @@ function getStaff() {
     })
         .then((res) => {
             setStaff(res.data)
-            console.log(res.data);
         })
         .catch((error) => {
             console.error(error)
