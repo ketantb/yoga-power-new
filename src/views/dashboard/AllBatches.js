@@ -58,7 +58,7 @@ const AllBatches = () => {
 
 
      const url = useSelector((el)=>el.domainOfApi) 
-     const pathVal = useAdminValidation()
+     const pathVal = useAdminValidation('Master')
 
      const [selectedMonth,setMonth] = useState(new Date().getMonth())
      const [selectedYear,setYear] = useState(new Date().getFullYear())
@@ -100,11 +100,13 @@ const AllBatches = () => {
         const  memBerData =  data[1].data
 
         setClientAttendence2(clientAttendanceData.filter((el)=>el.category==='Studio Batches'))  
-        setMemberData(memBerData)
+        setMemberData(memBerData.filter((el)=>el.typeOFBatchClasses==='Studio Batches'))
             
         const dateWithAttendance =      getDaysInMonth(new Date().getMonth(),new Date().getFullYear())
         
-        const attendedData =  updateAttendance(clientAttendanceData.filter((el)=>el.category==='Studio Batches'),dateWithAttendance,memBerData)
+        const attendedData =  updateAttendance(clientAttendanceData.filter((el)=>el.category==='Studio Batches')
+        ,dateWithAttendance,memBerData.filter((el)=>el.typeOFBatchClasses==='Studio Batches'))
+        HandleTotalAtten(attendedData,dateWithAttendance)
         setClientAttendenceReg(attendedData)
         setMonthlyReport(updateMonthlyReport(clientAttendanceData.filter((el)=>el.category==='Studio Batches'),memBerData))
         setDailyReport(updateDailyReport(clientAttendanceData.filter((el)=>el.category==='Studio Batches')))     
@@ -133,8 +135,8 @@ const AllBatches = () => {
             setDateOfMonth(newDate)
             if(!clientAttendenceReg[0] && !memBerData2[0])return
             const  attendedData = updateAttendance(clientAttendance2.filter((el)=>el.category==='Studio Batches'),newDate,memBerData2)
-            HandleTotalAtten(attendedData,newDate)
             const monhtlyReportData=  updateMonthlyReport(clientAttendance2.filter((el)=>el.category==='Studio Batches'),memBerData2)
+            HandleTotalAtten(attendedData,newDate)
             setMonthlyReport(monhtlyReportData)
             setClientAttendenceReg(attendedData)
           },[selectedMonth,selectedYear])

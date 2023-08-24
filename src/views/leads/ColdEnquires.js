@@ -410,8 +410,8 @@ const ColdEnquires = () => {
             }
         })
             .then((res) => {
-                setResult1(res.data.filter((list) =>  list.CallStatus === 'Cold' &&  list.enquirestatus!=='notshow').reverse())
-                setOgList(res.data.filter((list) =>   list.CallStatus === 'Cold' &&  list.enquirestatus!=='notshow').reverse())
+                setResult1(res.data.filter((list) =>  list.CallStatus === 'Cold' && list?.appointmentfor?.trim()&&  list.enquirestatus!=='notshow').reverse())
+                setOgList(res.data.filter((list) =>   list.CallStatus === 'Cold' && list?.appointmentfor?.trim() && list.enquirestatus!=='notshow').reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -1117,7 +1117,7 @@ const ColdEnquires = () => {
                                 </CTableRow>
                                 {result1.filter((list) =>
                                    moment(list.createdAt).format("MM-DD-YYYY").includes(select) &&
-                                     list.CallStatus === 'Cold' &&
+                                     list.CallStatus === 'Cold' && list?.appointmentfor?.trim()&&
                                      (list.EnquiryId||'').toLowerCase().includes(Search1.toLowerCase()) &&
                                      (moment(list.createdAt).format("DD-MM-YYYY")||'').includes(Search2.toLowerCase()) &&
                                      (list.Fullname||'').toLowerCase().includes(Search4.toLowerCase()) &&

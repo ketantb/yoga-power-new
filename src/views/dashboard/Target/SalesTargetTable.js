@@ -63,7 +63,7 @@ function SalesTargetTable({EmployeeData}) {
     const getLiveClasses = useCallback(async function () {
         try {
             const response1 =  axios.get(`${ url }/salesTarget/${pathValMaster}`,{headers})
-            const response2 =  axios.get(`${url}/invoice/${pathValMaster}`,{headers})
+            const response2 =  axios.get(`${url}/invoice/${pathVal}`,{headers})
             const data  =  await Promise.all([response1,response2])
 
             console.log(data[0],data[1])

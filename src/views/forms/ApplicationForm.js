@@ -4,15 +4,12 @@ import React from 'react'
 import ProfileIcon from 'src/assets/images/avatars/profile_icon.png'
 import { storage } from 'src/firebase'
 import { useSelector } from 'react-redux';
-
+import { useAdminValidation } from '../Custom-hook/adminValidation';
 import { useState,useEffect,useRef } from 'react'
 import axios from 'axios';
 
 import { getDownloadURL, ref,  uploadBytesResumable } from 'firebase/storage'
-
-
 const ApplicationForm = ({shouldEdit,data,editEnquiry,getStaff}) => {
-    console.log(data)
 
 const imgRef = useRef(null)
 const [fullName,setFullName] = useState('')
@@ -33,11 +30,10 @@ const [comment,setComment]  = useState('')
 const [result, setResult] = useState([])
 const [leadArr, setLeadArr] = useState([]);
 const [typesOfTime,setTypesOfTime] = useState('')
-
 const [imgPrograss,setImgPrograss] = useState(0)
-
 const imageInput = useRef('')
 
+const pathVal = useAdminValidation('Master')
 
     const  formRenderParentObjeact = {  
             height:'100vh', 
@@ -65,10 +61,6 @@ const imageInput = useRef('')
 }
 
 
-
-
-
-console.log(data)
 const AllowEditHandler = ()=>{
     setFullName(data.FullName)
     setContactNumber(data.ContactNumber)
@@ -123,7 +115,7 @@ const username = user.user.username;
 
 function Edit() {
         fetch(`${url}/employeeform/update/${data._id}`, {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -141,12 +133,11 @@ function Edit() {
 
 
 function getDesignation() {
-    axios.get(`${`https://yog-seven.vercel.app`}/designation/all`, { headers: {
+    axios.get(`${url}/designation/${pathVal}`, { headers: {
             'Authorization': `Bearer ${token}`
         }
     })
         .then((res) => {
-        console.log(res.data)
             setResult(res.data.reverse())
         })
         .catch((error) => {
@@ -160,7 +151,7 @@ getLeadSource()
 
 
 function getLeadSource() {
-    axios.get(`${url}/leadSourceMaster/all`, {
+    axios.get(`${url}/leadSourceMaster/${pathVal}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -345,7 +336,7 @@ const handleImage = event => {
                               <option>Select Department</option>
 
                            {result.map((item, index) => (
-                                   item.username === username && (
+                                   (
                             item.status === true && (
                            <option key={index} value={item.department}>{item.department}</option>
                            ))))}
@@ -362,7 +353,7 @@ const handleImage = event => {
                               
                             >
                                         {result.map((item, index) => (
-                                            item.username === username && department === item.department &&
+                                            department === item.department &&
                                             item.status === true && (
                                                 <option key={index} value={item.jobDesignation}>{item.jobDesignation}</option>
                                             )

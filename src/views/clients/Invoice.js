@@ -1,4 +1,4 @@
-import React, { useRef} from 'react'
+import React, { useRef,useEffect,useState} from 'react'
 import {
     CButton,   
     CCol,
@@ -20,13 +20,36 @@ import {
 
 import logo from 'src/assets/images/avatars/icon.png'
 import { useReactToPrint } from 'react-to-print'
-
+import { useSelector } from 'react-redux'
+import axios from 'axios'
 
 
 
 function Invoice ({allIvoiceOfaUser,showInvoiceModal,setInvoceModal,ClientData}){
 
-    
+    let user = JSON.parse(localStorage.getItem('user-info'))
+    const token = user.token;
+
+    const [clientData,setClientData] = useState({})
+    const   url = useSelector((el)=>el.domainOfApi) 
+
+    async function clinetInfo(){
+        const {data,status} = await axios.get(`${url}/memberForm/${allIvoiceOfaUser[0]?.MemberId}`,{ headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+        if(status===200){
+            setClientData(data)
+        }
+        }
+
+ useEffect(()=>{
+if(Object.values((ClientData||[])).join('').trim()||allIvoiceOfaUser?.[0]?.MemberId){
+    clinetInfo()
+}else{
+    setClientData(ClientData)
+}
+ },[allIvoiceOfaUser[0]?._id,allIvoiceOfaUser?.length])       
+        
 
     const getDate = (date,val) => {
         const date2 = new Date(date).getDate() + "/" + (new Date(date).getMonth() + (val? 1:0)) + "/" + new Date(date).getFullYear()
@@ -64,10 +87,10 @@ return <div  className='my-5' >
 
                             <CRow>                                                                   
                                  <CCol className='mt-2' style={{ marginLeft: '10px' }}>
-                                     <h6>Client Name: {ClientData?.Fullname}</h6>
-                                     <div>Client Number: {ClientData?.ContactNumber}</div>
-                                     Customer ID : {ClientData?.ClientId}<br />
-                                     Email-Id : {ClientData?.Email}<br />
+                                     <h6>Client Name: {clientData?.Fullname}</h6>
+                                     <div>Client Number: {clientData?.ContactNumber}</div>
+                                     Customer ID : {clientData?.ClientId}<br />
+                                     Email-Id : {clientData?.Email}<br />
                                  </CCol>
                                  <CCol className='mt-2' style={{ marginRight: '30px' }}>
                                      <div className='float-end'>

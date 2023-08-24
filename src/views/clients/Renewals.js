@@ -152,7 +152,7 @@ const Renewals = () => {
 function findRenevalClient(list){
     const time =  (new Date(list.endDate) -new Date())
     const days = Math.ceil(time/(1000*60*60*24))
-          if((days<=15 && days>=1)){
+          if((days<15 && days>=0)){
        
              return true 
           }
@@ -767,7 +767,7 @@ const saveCalls = () => {
                                 }).map((item, index) => (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-                                            <CTableDataCell>{centerCode}MEM{index + 10 + (paging * 10)}</CTableDataCell>
+                                            <CTableDataCell>{item.ClientId}</CTableDataCell>
                                             <CTableDataCell><Link index={-1} style={{ textDecoration: 'none' }} 
                                             to={`/clients/member-details/${item._id}/1`} target="_black">{item.Fullname}</Link></CTableDataCell>
                                             <CTableDataCell>{item.ContactNumber}</CTableDataCell>

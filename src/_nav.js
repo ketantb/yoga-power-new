@@ -406,7 +406,7 @@ const _nav = [
           },
           {
             component: CNavItem,
-            name: 'Comments Of written Off Invoice',
+            name: 'Comments Of Cancelled Invoice',
             to: '/finance/comment-written',
             id:'erpCommentsOfWrittenOffInvoice'
           },

@@ -457,7 +457,7 @@ const  compareDate = (date1,date2,type)=>{
                                     <CTableHeaderCell scope="col">Client Name</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Service</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Service Duration</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Counseller</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Counsellor</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Total Amount</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Paid Amount</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Balance</CTableHeaderCell>

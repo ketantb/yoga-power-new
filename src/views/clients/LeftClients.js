@@ -95,6 +95,7 @@ const LeftClients = () => {
     console.log(user);
     const token = user.token;
 
+    
     const [result1, setResult1] = useState([]);
     const [result, setResult] = useState([]);
     const [updateItem, setUpdateItem] = useState([]);
@@ -177,8 +178,7 @@ const LeftClients = () => {
 function findLeftClient(list){
     const time =  (new Date(list.endDate) -new Date())
     const days = Math.ceil(time/(1000*60*60*24))
-          if((days<=0 )){
-            console.log(list.invoiceId)
+          if((days<0 )){
              return true 
           }
           return false   

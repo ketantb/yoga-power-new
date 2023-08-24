@@ -58,6 +58,7 @@ useEffect(()=>{
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }})       
+
         const getAllYearToCompare  = 
        [...data?.reverse()?.map((el)=>{
         return {
@@ -67,8 +68,21 @@ useEffect(()=>{
         }}
 
         )    
-        ].sort((a,b)=>b.Year-a.Year)
-        const AllYear = [...getAllYearToCompare].reduce((crr,el,i)=>{
+        ]
+
+        const reciptsData = data.reduce((crr,el)=>{
+            return  el.Receipts.length?[...crr,...el.Receipts]:crr
+        },[])
+
+        const getAllYearToResipts = [...reciptsData?.reverse()?.map((el)=>{
+            return {
+               Year:new Date(el.NewSlipDate).getFullYear(),
+               Month:new Date(el.NewSlipDate).getMonth(),
+               date:new Date(el.NewSlipDate)
+        }}) ]
+
+
+        const AllYear = [...getAllYearToCompare,...getAllYearToResipts].sort((a,b)=>b.Year-a.Year).reduce((crr,el,i)=>{
          if(!crr.length){crr.push(el)}
         else if(crr?.length) {
         const val =  crr.some((el2)=>   el2.Year  === el.Year && el2.Month  === el.Month)
@@ -85,31 +99,30 @@ let revenueDetails = {
 } 
 
 
-
-
-
 const total = AllYear.map((el)=>{
 
-   return  {...el,...data.reverse().reduce((crr,el2)=>{
+
+  const obj = {...el,...data.reverse().reduce((crr,el2)=>{
           if(new Date(el2.createdAt).getFullYear()  === el.Year && new Date(el2.createdAt).getMonth()  === el.Month){
             crr.totaLInvoiceAmount += (+el2.amount)
             crr.totalColectionAmount += (+el2.paidAmount)
             crr.totalBalanceAmoutn+= (+el2.pendingAmount)
-
-                  if(el2.Receipts.length){
-                    el2?.Receipts.forEach((el3)=>{
-                     crr.totalColectionAmount += (+el3.PaidAmount)
-                    })
-                }       
-}
+            }
 return crr
 },{...revenueDetails})}
+
+const obj2 = reciptsData.reverse().reduce((crr,el2)=>{
+    if(new Date(el2.NewSlipDate).getFullYear()  === el.Year && new Date(el2.NewSlipDate).getMonth()  === el.Month){
+            crr.totalColectionAmount += (+el2.PaidAmount)
+      }
+return crr
+},obj)          
+return obj2
 })
 
 
 setAllYearToInfo(total)
-
-    } 
+} 
     
     useEffect(()=>{
        getAllInvoiceData()

@@ -489,7 +489,7 @@ function findLeftClient(list){
                                                 <option>Select Counseller</option>
                                                 {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                                    (
-                                                        <option key={index}>{item.FullName}</option>
+                                                        <option key={index}>{item.FullName} {item.FullName}</option>
                                                     )
                                                 ))}</CFormSelect>
                                         </CCol>

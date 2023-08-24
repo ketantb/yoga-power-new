@@ -69,11 +69,13 @@ const allApiData = await Promise.all([response1,response2,response3])
 const invoiceData = allApiData[0].data
 const clientData = allApiData[1].data
 const enquiryData = allApiData[2].data 
-console.log(enquiryData)
+const toConvertLowerCase = (service)=>{
+    return ((service||'')?.toLowerCase()?.trim()||'')
+  }
 
 const serviceAcordingToMonth   = ([...enquiryData.filter((list) => list)?.reverse()?.map((el)=>{
                 return {
-                   Service:el?.ServiceName,
+                   Service:toConvertLowerCase(el?.ServiceName),
                    Month:new Date(el.createdAt).getMonth(),
                    Year:new Date(el.createdAt).getFullYear()
                 }}       
@@ -83,7 +85,7 @@ const serviceAcordingToMonth   = ([...enquiryData.filter((list) => list)?.revers
 const classiFyAcordingToMonth = [...serviceAcordingToMonth].reduce((crr,el,i)=>{
     if(!crr.length){crr.push(el)}
    else if(crr?.length) {
-   const val =  crr.some((el2)=>   el2.Service  === el.Service && el2.Month  === el.Month)
+   const val =  crr.some((el2)=>  toConvertLowerCase(el2.Service)  === toConvertLowerCase(el.Service) && el2.Month  === el.Month)
    if(!val){crr.push(el)}} return crr
 },[])
 
@@ -92,7 +94,7 @@ const classiFyAcordingToMonth = [...serviceAcordingToMonth].reduce((crr,el,i)=>{
     let num =0;
     const obj = {
        month:el.Month,
-       typeOfService:el.Service,
+       typeOfService:toConvertLowerCase(el.Service),
        noOfClient:0,
        noOfLeads:0,
        amount:0 ,
@@ -100,7 +102,8 @@ const classiFyAcordingToMonth = [...serviceAcordingToMonth].reduce((crr,el,i)=>{
        year:el.Year
     }
  return   enquiryData.reduce((crr,el2)=>{
-    if(el2.ServiceName === el.Service && new Date(el2.createdAt).getMonth()  === el.Month){
+    if(toConvertLowerCase(el2.ServiceName) === toConvertLowerCase(el.Service) &&
+     new Date(el2.createdAt).getMonth()  === el.Month){
         num++
        crr.noOfLeads  = num 
        return crr
@@ -114,18 +117,13 @@ const FilterFirstInvoiceData = [...clientData.filter((list) => list)].map((el)=>
 }).filter((el)=>el)
         
 
-console.log(serviceRevenueData)
-
-
-   
-console.log(serviceRevenueData.filter((el,i,arr)=>arr.indexOf(el.year)===i))
-
 
 
     serviceRevenueData.forEach(element => {
             let num =0
         clientData.forEach((el)=>{
-        if(element.typeOfService===el.serviceName && new Date(el.createdAt).getMonth()  === element.month){
+        if(toConvertLowerCase(element.typeOfService)===toConvertLowerCase(el.serviceName) 
+        && new Date(el.createdAt).getMonth()  === element.month){
         num++
         element.noOfClient = num
         }
@@ -136,11 +134,8 @@ console.log(serviceRevenueData.filter((el,i,arr)=>arr.indexOf(el.year)===i))
     serviceRevenueData.forEach(element => {    
         let amount =0
     FilterFirstInvoiceData.forEach((el)=>{
-        if(element.typeOfService===el.ServiceName && new Date(el.createdAt).getMonth()  === element.month ){
-            console.log(element.typeOfService,'kff')
-            console.log(el.ServiceName)
-            console.log(amount)
-
+        if(toConvertLowerCase(element.typeOfService)===toConvertLowerCase(el.ServiceName) &&
+         new Date(el.createdAt).getMonth()  === element.month ){
              amount += el.amount
             element.amount = amount
     }})  

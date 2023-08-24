@@ -155,8 +155,8 @@ setSelectedStaff('')
 
 
 useEffect(()=>{
-    setSelectedStaff(uniqObj.employeeIDC)
-},[uniqObj.employeeIDC,activeKey])
+    setSelectedStaff(uniqObj.employeeMongoId)
+},[uniqObj.employeeMongoId,activeKey])
 
 const uniqObjVal = {
     ...uniqObj,
@@ -165,12 +165,16 @@ const uniqObjVal = {
 }
 
 function ConfirmProduct(id){
-if(!selectedStaff.trim()){
+
+    const fullName = staff.find((el)=>el._id===selectedStaff)?.FullName
+
+if(!fullName.trim()){
         setError(true)
         return 
 }
 
 const selctedProduct =  noofProduct.filter((el)=>el._id===id).map((el)=>{
+
     return {
         Order_Date: new Date(),
         Product_Category:el.productCategory,
@@ -180,7 +184,7 @@ const selctedProduct =  noofProduct.filter((el)=>el._id===id).map((el)=>{
         Product_Price: el.productPrize,
         Orders_Quantity:el.item,
         Total_Price:+el.productPrize * +el.item,
-        EmployeeName:staff.find((el)=>el._id===selectedStaff).FullName,
+        EmployeeName:fullName,
         EmployeeId:selectedStaff,
         Color:el.Color,
         Status:'Not Recevied yet',
@@ -191,6 +195,7 @@ const selctedProduct =  noofProduct.filter((el)=>el._id===id).map((el)=>{
 
 axios.post(`${url}/stockorderlist/create`, {...selctedProduct[0],...uniqObjVal},{headers})
 .then((res) => {
+    console.log(res)
     getStockOrderList()
     alert('successfully Save')
     setNoOfProduct(prev=>prev.filter((el)=>el._id!==id))
@@ -257,7 +262,9 @@ setExcelData(orderList.filter((el)=>el?.Status!=='Recevied'))
 
 function ordeReceived(item){
 
-if(!selectedStaff.trim()){
+    const fullName = staff.find((el)=>el._id===selectedStaff)?.FullName
+
+if(!fullName?.trim()){
         setError(true)
         return 
 }
@@ -266,8 +273,9 @@ const UpdateObj = {
     StatOfStock:'InStock',
     Status:'Recevied',
     receivedDate:new Date(),
-    receivedBy:staff.find((el)=>el._id===selectedStaff).FullName,
+    receivedBy:fullName,
     receiverId:selectedStaff,
+    ...uniqObj,
 }
 
 
@@ -459,11 +467,7 @@ function getStockAssigningR() {
                        </CTableHead>
                        <CTableBody>
                            
-                       {   orderList.filter((el)=>el?.Status!=='Recevied').filter((el)=>{
-
-                       })
-                       .slice(pagination.pagination1 * 10,
-                        pagination.pagination1 * 10 + 10).map((item,i)=>{        
+                       {   orderList.filter((el)=>el?.Status!=='Recevied').map((item,i)=>{        
                   
                          return <CTableRow >
                                <CTableDataCell style={{display:

@@ -91,9 +91,9 @@ const headers   = {
         const data1 = bothApiData[0].data
 
 
-         console.log(data)
-
-
+      const toConvertLowerCase = (service)=>{
+        return ((service||'')?.toLowerCase()?.trim()||'')
+      }
 
 
 
@@ -101,7 +101,7 @@ const headers   = {
 
        const serviceAcordingToMonth   = ([...data?.reverse()?.map((el)=>{
                     return {
-                       Service:el?.ServiceName,
+                       Service:toConvertLowerCase(el?.ServiceName),
                        Month:new Date(el.createdAt).getMonth(),
                        date:new Date(el.createdAt),
                        Year:new Date(el.createdAt).getFullYear()
@@ -115,7 +115,8 @@ const headers   = {
          const classiFyAcordingToMonth = [...serviceAcordingToMonth].reduce((crr,el,i)=>{
             if(!crr.length){crr.push(el)}
            else if(crr?.length) {
-           const val =  crr.some((el2)=>   el2.Service  === el.Service && el2.Month  === el.Month)
+           const val =  crr.some((el2)=>   toConvertLowerCase(el2.Service)  === toConvertLowerCase(el.Service)
+            && el2.Month  === el.Month)
            if(!val){crr.push(el)}} return crr
            },[])
            setYears([...new Set(classiFyAcordingToMonth.map((el)=>el.Year))])
@@ -124,18 +125,18 @@ const headers   = {
 
 
  const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
-            let num =0;
             let amount =0
             const obj = {
                month:el.Month,
-               typeOfService:el.Service,
+               typeOfService:toConvertLowerCase(el.Service),
                noOfClient:0,
                amount:0 ,
                date:el.date,
                year:el.Year
             }
          return   data.reduce((crr,el2,i)=>{
-            if(el2.ServiceName === el.Service && new Date(el2.createdAt).getMonth()  === el.Month){
+            if(toConvertLowerCase(el2.ServiceName) === toConvertLowerCase(el.Service) &&
+             new Date(el2.createdAt).getMonth()  === el.Month){
                amount +=el2.amount
                crr.amount = amount
                return crr
@@ -148,14 +149,13 @@ const headers   = {
 serviceRevenueData.forEach((el)=>{
     let num =0;
     data1.forEach(el2=> {
-        if(el2.serviceName === el.typeOfService && new Date(el2.createdAt).getMonth()  === el.month){
+        if(toConvertLowerCase(el2.serviceName) === toConvertLowerCase(el.typeOfService)
+         && new Date(el2.createdAt).getMonth()  === el.month){
                num++
                el.noOfClient  = num 
             } 
     });
 })
-
-console.log(serviceRevenueData)
 
 
 setServiceRevenueData(serviceRevenueData)

@@ -256,7 +256,7 @@ const obj2 = {
                           <CTableDataCell>{el?.feedBackCallInfo?.feedBackCallFollowUpDate}</CTableDataCell>
                           <CTableDataCell>{el?.feedBackCallInfo?.feedBackCallTimeing}</CTableDataCell>
                           <CTableDataCell>{el.ClientId}</CTableDataCell>
-                          <CTableDataCell>{el.Name}</CTableDataCell>
+                          <CTableDataCell>{el.Fullname}</CTableDataCell>
                           <CTableDataCell>{el.ContactNumber}</CTableDataCell>
                           <CTableDataCell>{el.serviceName}</CTableDataCell>
                           <CTableDataCell>{el?.feedBackCallInfo?.feedBackCallDiscussion}</CTableDataCell>

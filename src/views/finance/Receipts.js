@@ -107,7 +107,6 @@ const Receipt = () => {
             ))       
                   
   }  
-console.log(resiptData2)
 
 
 

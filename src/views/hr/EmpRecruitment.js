@@ -81,8 +81,7 @@ const EmpRecruitment = () => {
   
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
-    const centerCode = user.user.centerCode;
+  
 
     const headers = {
         headers: {
@@ -173,11 +172,14 @@ const EmpRecruitment = () => {
     return (
         <CRow>
             <CCol lg={12} sm={12}>
-                {showEditFrom[0]&&<ApplicationForm getStaff={getStaff}  shouldEdit ={true} data={showEditFrom[1]} editEnquiry={editEnquiry} />}
+                {showEditFrom[0]&&<ApplicationForm getStaff={getStaff}  shouldEdit ={true}
+                 data={showEditFrom[1]} editEnquiry={editEnquiry}
+                 AttendenceLength={staff.length} 
+                  />}
                 { showEmpRecrument[0]&& 
 
                 <EmployeeForm
-                 AttendenceLength={staff.filter((list) => list.selected === 'Select').length} 
+                 AttendenceLength={staff.length} 
                  getStaff={getStaff}
                  token={token} userdata={userdata} data={staff}
                  showEmpRecrumentFormFun={showEmpRecrumentFormFun}/>}

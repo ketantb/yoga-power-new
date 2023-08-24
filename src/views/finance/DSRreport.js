@@ -42,7 +42,7 @@ const [years,setYears]= useState([])
 const [selectedYear,setSelectedYear] = useState('')
 const [month,setMonth] = useState('')
 
-const pathVal = useAdminValidation()
+const pathVal = useAdminValidation('Master')
 
    const allDsrReport = [] 
    let num =0

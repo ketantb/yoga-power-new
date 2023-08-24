@@ -20,7 +20,7 @@ return      function downloadAsExcel(data){
        ['Counseller']:el.Counseller,
        ['Address']:el.Address,
        ['Email']:el.Emailaddress,
-       ['Gander']:el.Gander,
+       ['Gender']:el.Gander,
        ['Center Code']:el.centerCodeC,
        ['Center Name']:el.centerNameC,
        ['City']:el.city,

@@ -67,6 +67,8 @@ const AllEnquires = () => {
     const pathRoute = useAdminValidation()
     const pathRouteMasterVal = useAdminValidation('Master')
     const unikqObj = useUniqAdminObjeact()
+    const [importStaffId,setImportStaffId] = useState('')
+    const [errorMessage,setErrorMessage] = useState(false)
 
 
     const [select, setSelect] = useState('')
@@ -136,11 +138,14 @@ const AllEnquires = () => {
 
     // Import 
     const HandaleImportClick = () => {
+        if(!importStaffId?.trim()){
+            setErrorMessage(true)
+             return
+        } 
         hiddenXLimportFileInput.current.click()
     }
     const HandaleImportChange = (event) => {
         const importXlFile = event.target.files[0];
-        console.log(importXlFile)
 
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -149,12 +154,11 @@ const AllEnquires = () => {
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
             const json = XLSX.utils.sheet_to_json(worksheet);
-            importDataFun(json,getEnquiry,totalEnquire)
+            importDataFun(json,getEnquiry,totalEnquire,importStaffId)
         };
-        reader.readAsArrayBuffer(event.target.files[0]);
+        reader.readAsArrayBuffer(importXlFile);
 
     }
-    // Export 
  
     useEffect(() => {
         getEnquiry()
@@ -527,6 +531,7 @@ const AllEnquires = () => {
     }
 
 
+    const validateFollowUparray = ['prospect','trial session','appointment']
 
     
     return (
@@ -559,7 +564,28 @@ const AllEnquires = () => {
                         
                                 </CInputGroup>
                             </CCol>
-                            <CCol lg={6} sm={6} md={6}>
+                            <CCol lg={4} md={6} sm={12}>
+                                <CFormSelect
+                                    className="mb-1 ms-auto"
+                                    aria-label="Select Assign Staff"
+                                    value={importStaffId}
+                                    onChange={(e) =>{
+                                        if(!!e.target.value?.trim()){
+                                            setErrorMessage(false)
+                                        }
+                                        setImportStaffId(e.target.value)
+                                    }}
+                                >
+                                    <option value={''}>Select Counseller</option>
+                                    {staff.filter((list) => list.selected === 'Select').map((item, index) => (
+                                        (
+                                            <option key={index} value={item._id}>{[item.FullName, item.EmployeeID].join('\n')}</option>
+                                        )
+                                    ))}</CFormSelect>
+
+                                 {errorMessage&&<label className='text-danger' >Please select the employee before import</label>}  
+                            </CCol>
+                            <CCol lg={4} sm={6} md={6}>
                                 <CButtonGroup className=' mb-2 float-end'>
                                     <CButton onClick={HandaleImportClick} color="primary">
                                         <CIcon icon={cilArrowCircleBottom} />
@@ -575,7 +601,7 @@ const AllEnquires = () => {
                                         {' '}Export
                                     </CButton>
                                 </CButtonGroup>
-                            </CCol>
+                            </CCol>                           
                         </CRow>
                         <CRow className='d-flex justify-content-between mb-2'>
                             <CCol lg={3} sm={12} md={12} className='mb-2'>
@@ -613,7 +639,8 @@ const AllEnquires = () => {
                                     <CCard style={{ margin: "2px" }}>
                                             <CCardBody style={{ padding: "5px" }}>
                                                 Cold: {result1.filter((list) =>
-                                                    list.CallStatus === 'Cold'
+                                                    list.CallStatus === 'Cold'&&
+                                                    list?.appointmentfor?.trim()
                                                     && list.enquirestatus!=='notshow'
                                                 ).length}
                                             </CCardBody>
@@ -1163,7 +1190,7 @@ const AllEnquires = () => {
                                            list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
 
                                 }).map((item, index) => (
-                                    <CTableRow key={index} className='border-1' color={item?.appointmentfor?.trim()?'success':''}>
+                                    <CTableRow key={index} className='border-1' color={validateFollowUparray.includes(item?.appointmentfor?.trim().toLowerCase())?'success':''}>
                                         <CTableDataCell>{((result1.filter((list)=>list.enquirestatus!=='notshow').length - index)) - (paging * 10)}</CTableDataCell>
                                         <CTableDataCell>{item.EnquiryId}</CTableDataCell>
                                         <CTableDataCell className='text-center'>{moment(item.createdAt).format("DD-MM-YYYY")}</CTableDataCell>

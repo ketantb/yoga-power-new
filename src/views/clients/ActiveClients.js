@@ -198,8 +198,7 @@ const ActiveClients = () => {
       function findLeftClient(list){
         const time =  (new Date(list.endDate) -new Date())
         const days = Math.ceil(time/(1000*60*60*24))
-              if((days<=0 && list.plan===true)){
-                console.log(list.invoiceId)
+              if((days<=0)){
                  return true 
               }
               return false   

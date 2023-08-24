@@ -25,6 +25,22 @@ function ClientDietTable ({closeFormFun,token,showForm,setForm,allMemberData,id}
 
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
+    const [search1,setSearch1] = useState('')
+    const [search2,setSearch2] = useState('')
+    const [search3,setSearch3] = useState('')
+    const [search4,setSearch4] = useState('')
+    const [search5,setSearch5] = useState('')
+    const [search6,setSearch6] = useState('')
+    const [search7,setSearch7] = useState('')
+    const [search8,setSearch8] = useState('')
+
+
+
+
+
+
+
+
 
 
 
@@ -43,9 +59,6 @@ const  headers = {
 
   const getClientDietData = useCallback(async ()=>{
     const {data} = await axios.get(`${url}/allDietClient/${pathVal}`,{headers})
-
-    console.log(data,"hello",id)
-
     
   if(id?.trim()==='all-client-fitness'){
     setClientDite(data)
@@ -129,6 +142,10 @@ return<>
                 style={{ minWidth: "60px" }}
                 type="text"
                 aria-describedby="exampleFormControlInputHelpInline"
+                value={search1}
+                onChange={(e)=>{
+                     setSearch1(e.target.value)
+                }}
             />
         </CTableDataCell>
         <CTableDataCell>
@@ -137,6 +154,10 @@ return<>
                 style={{ minWidth: "120px" }}
                 type="text"
                 aria-describedby="exampleFormControlInputHelpInline"
+                value={search2}
+                onChange={(e)=>{
+                     setSearch2(e.target.value)
+                }}
             />
         </CTableDataCell>
         <CTableDataCell>
@@ -145,6 +166,10 @@ return<>
                 type="text"
                 style={{ minWidth: "120px" }}
                 aria-describedby="exampleFormControlInputHelpInline"
+                value={search3}
+                onChange={(e)=>{
+                     setSearch3(e.target.value)
+                }}
             />
         </CTableDataCell>
         <CTableDataCell>
@@ -152,7 +177,10 @@ return<>
                 className="mb-1"
                 type="text"
                 style={{ minWidth: "90px" }}
-               
+                value={search4}
+                onChange={(e)=>{
+                     setSearch4(e.target.value)
+                }}
                 aria-describedby="exampleFormControlInputHelpInline"
             />
         </CTableDataCell>
@@ -161,6 +189,10 @@ return<>
                 className="mb-1"
                 type="number"
                 style={{ minWidth: "100px" }}
+                value={search5}
+                onChange={(e)=>{
+                     setSearch5(e.target.value)
+                }}
             
             />
         </CTableDataCell>
@@ -168,38 +200,61 @@ return<>
             <CFormInput
                 className="mb-1"
                 type="text"
+                value={search6}
+                onChange={(e)=>{
+                     setSearch6(e.target.value)
+                }}
             />
         </CTableDataCell>
         <CTableDataCell>
             <CFormInput
                 className="mb-1"
                 type="text"
+                value={search7}
+                onChange={(e)=>{
+                     setSearch7(e.target.value)
+                }}
             />
         </CTableDataCell>
         <CTableDataCell>
             <CFormInput
                 className="mb-1"
                 type="text"
-               
+                value={search8}
+                onChange={(e)=>{
+                     setSearch8(e.target.value)
+                }}
             />
         </CTableDataCell>
         <CTableDataCell>
             <CFormInput
                 className="mb-1"
                 type="text"
+
             />
         </CTableDataCell>
         <CTableDataCell>
             <CFormInput
                 className="mb-1"
                 type="text"
+                disabled
             />
         </CTableDataCell>
        
         
        
     </CTableRow>
-    {clientDite.map((el)=>
+    {clientDite.filter((el)=>{
+      return (el.Action||'').toLowerCase().includes(search1.toLowerCase())&&
+      (el.Start_Date||'').toLowerCase().includes(search2.toLowerCase())&&
+      (el.Name||'').toLowerCase().includes(search3.toLowerCase())&&
+      (el.Mobile_No+""||'').toLowerCase().includes(search4.toLowerCase())&&
+      (el.Gender||'').toLowerCase().includes(search5.toLowerCase())&&
+      (el.EndDate||'').toLowerCase().includes(search6.toLowerCase())&&
+      (el.Package||'').toLowerCase().includes(search7.toLowerCase())&&
+      (el.DietitianName||'').toLowerCase().includes(search8.toLowerCase())
+    })
+    .map((el)=>
 
     <CTableRow>                               
       <CTableDataCell>{el.Action}</CTableDataCell>

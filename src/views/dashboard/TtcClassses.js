@@ -104,14 +104,13 @@ const TtcClasses = () => {
                const  memBerData =  data[1].data               
 
 
-              console.log(clientAttendanceData)
 
                const dateWithAttendance =getDaysInMonth(new Date().getMonth(),new Date().getFullYear())
                const attendedData = updateAttendance(clientAttendanceData.filter((el)=>el.category==="TTC Classes"),
-               dateWithAttendance,memBerData)
+               dateWithAttendance,memBerData.filter((el)=>el.typeOFBatchClasses==="PT Classes"))
                setClientAttendenceReg(attendedData)
                setClientAttendence2(clientAttendanceData)    
-               setMemberData(memBerData) 
+               setMemberData(memBerData.filter((el)=>el.typeOFBatchClasses==="PT Classes")) 
                HandleTotalAtten(attendedData,dateWithAttendance)
                setttClassesDailyreportData(ttCClassesDailyReport(clientAttendanceData.filter((el)=>el.category==="TTC Classes")))  
                setTtcMonthlyReport(ttcMonthLyReport(clientAttendanceData.filter((el)=>el.category==="TTC Classes"),memBerData))

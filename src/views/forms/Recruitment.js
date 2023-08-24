@@ -522,7 +522,7 @@ useEffect(()=>{
                            
                             <CButton className="mt-4" onClick={() => {
                                 saveRecruitment()
-                            }}>Save</CButton>
+                            }}>Savelj</CButton>
                            
                         </CForm>
                     </CCardBody>

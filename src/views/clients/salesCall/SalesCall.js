@@ -38,6 +38,7 @@ import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
 const SalesCall = ({}) => {
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
     ?.crmEmployee?.items?.crmSalesCall1?.rights) 
@@ -82,14 +83,14 @@ const SalesCall = ({}) => {
             "Authorization": `Bearer ${token}`} })
 
      if(!id){
-        setUppgradeCallsData(response1.data)
-        setRenevalsCallData(response2.data)
-        setCrossCellCallsData(response3.data)
+        setUppgradeCallsData(response1.data.reverse())
+        setRenevalsCallData(response2.data.reverse())
+        setCrossCellCallsData(response3.data.reverse())
      }else{
         console.log(response2.data)
-        setUppgradeCallsData(response1.data.filter((el)=>el.Member_Id ===id))
-        setRenevalsCallData(response2.data.filter((el)=>el.Member_Id  ===id))
-        setCrossCellCallsData(response3.data.filter((el)=>el.Member_Id ===id))
+        setUppgradeCallsData(response1.data.filter((el)=>el.Member_Id ===id).reverse())
+        setRenevalsCallData(response2.data.filter((el)=>el.Member_Id  ===id).reverse())
+        setCrossCellCallsData(response3.data.filter((el)=>el.Member_Id ===id).reverse())
      }  
            
         }catch(error) {
@@ -109,7 +110,11 @@ const SalesCall = ({}) => {
 
     async function getEmployee() {
         try {
-            const { data } = await axios.get(`${url}/employeeForm/${pathVal}`)
+            const { data } = await axios.get(`${url}/employeeform/${pathValMaster}`, {
+                headers: {
+                    'Authorization': `Bearer ${ token }`
+                }
+            })
             setEmployeeData(data)
         } catch (error) {
             console.log(error)

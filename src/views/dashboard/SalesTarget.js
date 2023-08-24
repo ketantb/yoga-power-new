@@ -30,7 +30,7 @@ const token = user.token;
 
 const SalesTarget = () => {
     const url = useSelector((el) => el.domainOfApi)
-    const pathVal = useAdminValidation() 
+    const pathVal = useAdminValidation('Master') 
     const [employeeData, setEmployeeData] = useState([])
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights

@@ -35,14 +35,22 @@ const EmployeeForm = ({showEmpRecrumentFormFun,token,userdata,data,AttendenceLen
     
 
 useEffect(()=>{
-
 const id = nanoid().split("_").join("");
-let attendanceId = "AID" + id.slice(id.length-6, id.length).toUpperCase();
-let employeeId = "EID" + id.slice(id.length-6, id.length).toUpperCase();
+let attendanceId = "AID" + id.slice(id.length-5, id.length).toUpperCase();
+let employeeId = "EID" + id.slice(id.length-5, id.length).toUpperCase();
 
-setAttendanceID(attendanceId)
-setEmployeeID(employeeId)
-},[])
+if(userdata){
+    setAttendanceID(((userdata?.AttendanceID?.trim()||'')||attendanceId))
+    setEmployeeID(((userdata?.EmployeeID?.trim()||'')||employeeId))
+    setJoiningDate((userdata?.joiningDate?.trim()||'')||joiningDate)
+    setAnniversary((userdata?.Anniversary?.trim()||'')||Anniversary)
+    setAccountNo((userdata?.AccountNo?.trim()||'')||accountNo)
+    setPANNo(((userdata?.PANCard?.trim()||'')||PANNo))
+    setIFSCCode(((userdata?.IFSC?.trim()||'')||IFSCCode))
+    setDateOfBirth(((userdata?.DateofBirth?.trim()||'')||dateOfBirth))
+    setEmpCategory(((userdata?.EmployeeCategory?.trim()||'')||empCategory))
+}
+},[userdata._id])
 
 const  formRenderParentObjeact = {  
         background:'rgb(0,0,0,0.1)',
@@ -88,9 +96,7 @@ const getEmployeeDataFun =  ()=>{
                 "status":true
             }
             
-    console.log(userdata._id)      
 const obj ={...userdata,...Step2data}
-console.log(obj)  
 
 
 const sendDatawithSlectedData = async ()=>{

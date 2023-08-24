@@ -100,7 +100,7 @@ function clientObj(obj){
                     <h5>Name</h5>
                     
                     <div className="w-50">
-                    <CustomSelectInput  data={allMemberData}
+                    <CustomSelectInput  data={allMemberData?.filter((el)=>id?.trim()!=='all-client-fitness'?el._id===id?.trim():el)}
                      title={allDiietClientData?.Name?.trim()?allDiietClientData?.Name:"Select client name"}
                      getData={clientObj}
                      id={id}

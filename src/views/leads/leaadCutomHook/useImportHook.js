@@ -18,8 +18,7 @@ const centerCode = user.user.centerCode
 
 
 
-return function insertManyCollection(collection,getData=()=>{},number){
-
+return function insertManyCollection(collection,getData=()=>{},number,importStaffId){
 
     const data = collection.map((el,i)=>{
         return {
@@ -35,12 +34,12 @@ return function insertManyCollection(collection,getData=()=>{},number){
         ['Counseller']:el['Counseller'],
         ['Address']:el['Address'],
         ['Emailaddress']:el['Email'],
-        ['Gender']:el['Gander'],
+        ['Gander']:el['Gander'],
         ['centerCodeC']:el['Center Code'],
         ['centerNameC']:el['Center Name'],
         ['city']:el['City'],
         ['Profession']:el['Profession'],
-        ...unikqValidateObj
+        ...{...unikqValidateObj,employeeMongoId:(importStaffId||unikqValidateObj.employeeMongoId)}
     } })  
 
     axios.post(`${url1}/${route}`,data, {

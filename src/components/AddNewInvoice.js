@@ -248,16 +248,17 @@ return
             let startDate1 =data23.startDate
             let endDate1 =data23.endDate
 
-            if(!compareDateFun(startDate,data23.startDate)||isFirstInoice){
+            if(!compareDateFun(startDate,data23.startDate)||isFirstInoice || !data23.startDate){
                 startDate1=startDate
             }
-            if(compareDateFun(endDate,data23.endDate)||isFirstInoice){
+            if(compareDateFun(endDate,data23.endDate)||isFirstInoice||!data23.endDate){
                 endDate1 = endDate
             }
 
 
-            let data1 = { invoiceId: resp.data._id, invoiceNum: resp.data.InvoiceNo, startDate:startDate1,duration:ser2,
-                status:'active',endDate:endDate1,plan: true,renewedDate:(RenewedObj?new Date():data23?.renewedDate)
+
+            let data1 = { invoiceId: resp.data._id, invoiceNum: resp.data.InvoiceNo, startDate:new Date(startDate1),duration:ser2,
+                status:'active',endDate:new Date(endDate1),plan: true,renewedDate:(RenewedObj?new Date():new Date(data23?.renewedDate))
              }
 
              axios.all([

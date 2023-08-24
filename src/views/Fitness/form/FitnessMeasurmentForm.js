@@ -162,7 +162,7 @@ console.log(error)
                   <div className="w-50">
 
                   <CustomSelectInput 
-                  data={allMemberData?.filter((el)=>id?.trim()?el._id===id?.trim():el)} 
+                  data={allMemberData?.filter((el)=>id?.trim()!=='all-client-fitness'?el._id===id?.trim():el)} 
                   title={mesurmentData?.Fullname?.trim()?mesurmentData?.Fullname:"Select client name"} 
                   getData={clientObj}
                   id={id}

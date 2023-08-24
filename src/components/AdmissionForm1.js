@@ -322,7 +322,8 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
             fitnessGoal, idealWeight, suggestion, comments, status: 'active',
             EnquiryId:ids._id,
             typeOFBatchClasses,...unikqValidateObj,
-            isAdmin:isAdmin,ClientId:`${centerCode}MEM${10+mem.length}`            
+            isAdmin:isAdmin,ClientId:`${centerCode}MEM${10+mem.length}`,
+            endDate:new Date(),startDate:new Date()            
         }
 
         if(clientReferance.name?.trim()&&clientReferance.id?.trim()){
@@ -940,7 +941,7 @@ if (deleteId != undefined && deleteId != null) {
                                                         onChange={(e) => setCenterID(e.target.value)}
                                                         label="Center ID">
                                                         <option>Select Center ID</option>
-                                                        <option>{username}</option>
+                                                        <option>{centerCode}</option>
                                                     </CFormSelect>
                                                 </CCol>
                                                 <CCol xs={6}>

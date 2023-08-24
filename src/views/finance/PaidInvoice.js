@@ -68,6 +68,10 @@ const PaidInvoice = () => {
     const [employeeData, setEmployeeData] = useState([])
     const [selectedEmployee, setSselectedEmployee] = useState('')
 
+    
+    const functionRemoveDuplicate = (data)=>{
+        return data?.filter((el,i,arr)=>(arr.indexOf(el)===i&&el?.trim()))
+     }
 
     const getAllInvoiceData = async ()=>{
         const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
@@ -76,26 +80,14 @@ const PaidInvoice = () => {
                 }})
         
         setAllInvoiceData(data.reverse())     
+        setResult(functionRemoveDuplicate(data.map((el)=>el.ServiceName)))  
+        setEmployeeData(functionRemoveDuplicate(data.map((el)=>el.counseller)))
+                
                 
     } 
     
   
-  
-
-    function getPackage() {
-        axios.get(`${url1}/packagemaster`, {
-    
-        })
-            .then((res) => {
-                setResult(res.data)
-                console.log(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
     useEffect(()=>{
-        getPackage()
         getAllInvoiceData()
     },[])
     
@@ -103,7 +95,6 @@ const PaidInvoice = () => {
     setPagination(10)
     },[serviceName])
 
-    console.log(AllInvoiceData)
 
     
     const getDate = (date,val) => {
@@ -152,35 +143,16 @@ const PaidInvoice = () => {
 
  }   
 
-
-    console.log(result1)
     useEffect(()=>{
         setPagination(10)
     },[serviceName,endDate,startDate,selectedEmployee])
 
-
-    useEffect(() => {
-        getEmployee()
-    }, [])
+    const  compareDate = (date1,date,date2)=>{  
+        const getTime =    new Date(date).getTime()    
     
-    async function getEmployee() {
-        try {
-            const { data } = await axios.get(`${ url1 }/employeeform/${pathVal}`)
-            setEmployeeData(data)
-        } catch (error) {
-            console.log(error)
-        }
+    return new Date(date1).getTime()<=getTime&&
+    getTime<=new Date(new Date(date2).setDate(new Date(date2).getDate()+1)).getTime()
     }
-    
-
-    const  compareDate = (date1,date2,type)=>{      
-        if(type==='start'){
-        return moment(date1).format('YYYY-MM-DD')<=moment(date2).format('YYYY-MM-DD')
-        }
-        if(type==='end'){  
-        return   moment(date1).format('YYYY-MM-DD')>=moment(date2).format('YYYY-MM-DD')
-        }
-        }
 
 
         const clearFilter=()=>{
@@ -255,9 +227,9 @@ const PaidInvoice = () => {
                 >
                     <option >Select Staff </option>
 
-                    {employeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
-                            <option key={index} value={item.FullName} >{item.FullName}</option>
+                    {employeeData.map((item, index) => (
+                         (
+                            <option key={index} value={item.FullName} >{item}</option>
                         )
                     ))}
 
@@ -272,9 +244,9 @@ const PaidInvoice = () => {
                                     >
                                     <option>Select Service</option>
                                         {result.map((item, index) => (
-                                            item.username === username && (
-                                               item.Status=== true && (
-                                                    <option key={index}>{item.Service }</option>                                                  
+                                         (
+                                             (
+                                                    <option key={index}>{item}</option>                                                  
                                                 )
                                             
                                             )))}
@@ -314,8 +286,7 @@ const PaidInvoice = () => {
                                 {AllInvoiceData.filter((el)=>{
                                  return el.counseller?.includes(selectedEmployee)})
                                 .filter((el)=>{ if(startDate&&endDate){
-                                return compareDate(startDate,el.startDate,'start') &&
-                                compareDate(endDate,el.endDate,'end')}return true})
+                                return compareDate(startDate,el.createdAt,endDate)}return true})
                                 .filter((el)=>{if(serviceName){num =0
                                  return serviceName=== el.ServiceName}return el}).filter((el, i) => {
                                     num++

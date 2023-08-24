@@ -40,7 +40,7 @@ const LiveClasses = () => {
      const updateMonthlyReport = useMonthlyReport()
      const updateDailyReport = useDailyBatchAtten()
 
-     const pathVal = useAdminValidation()
+     const pathVal = useAdminValidation('Master')
      
      const url = useSelector((el)=>el.domainOfApi) 
      const [selectedMonth,setMonth] = useState(new Date().getMonth())
@@ -102,12 +102,12 @@ try{
        const  clientAttendanceData  = data[0].data
        const  memBerData =  data[1].data
   
-        setClientAttendence2(clientAttendanceData)    
-        setMemberData(memBerData) 
+        setClientAttendence2(clientAttendanceData.filter((el)=>el.category==='Live Classes'))    
+        setMemberData(memBerData.filter((el)=>el.typeOFBatchClasses==='Live Classes')) 
 
           const dateWithAttendance =getDaysInMonth(new Date().getMonth(),new Date().getFullYear())
           const attendedData = updateAttendance(clientAttendanceData.filter((el)=>el.category==='Live Classes'),
-          dateWithAttendance,memBerData)
+          dateWithAttendance,memBerData.filter((el)=>el.typeOFBatchClasses==='Live Classes'))
           HandleTotalAtten(attendedData,dateWithAttendance)
           setClientAttendenceReg(attendedData)
           setDailyReport(updateDailyReport(clientAttendanceData.filter((el)=>el.category==='Live Classes')))     
@@ -170,7 +170,6 @@ function HandleTotalAtten (data,date){
 let allTotalOfAttendance = 0
 
 
- console.log(clientAttendenceReg)
 
 
     return (

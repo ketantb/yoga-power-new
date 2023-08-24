@@ -105,15 +105,13 @@ function compareDateFun(date1,date2){
                const  clientAttendanceData  = data[0].data
                const  memBerData =  data[1].data               
 
-               console.log(memBerData)
-               console.log(clientAttendanceData)
 
                const dateWithAttendance =getDaysInMonth(new Date().getMonth(),new Date().getFullYear())
                const attendedData = updateAttendance(clientAttendanceData.filter((el)=>el.category==="PT Classes"),
-               dateWithAttendance,memBerData)
+               dateWithAttendance,memBerData.filter((el)=>el.typeOFBatchClasses==="PT Classes"))
                setClientAttendenceReg(attendedData)
                setClientAttendence2(clientAttendanceData)    
-               setMemberData(memBerData) 
+               setMemberData(memBerData.filter((el)=>el.typeOFBatchClasses==="PT Classes")) 
                HandleTotalAtten(attendedData,dateWithAttendance)
                setDailyAttendence(ptDailyReport(clientAttendanceData.filter((el)=>el.category==="PT Classes")))   
                setPtMonthLeyReport(ptMonthLyReport(clientAttendanceData.filter((el)=>el.category==="PT Classes"),memBerData))      
