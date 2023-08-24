@@ -80,7 +80,7 @@ const PaidInvoice = () => {
                 }})
         
         setAllInvoiceData(data.reverse())     
-        setResult(functionRemoveDuplicate(data.map((el)=>el.ServiceName)))  
+        setResult(functionRemoveDuplicate(data.map((el)=>el.ServiceName?.toLowerCase()?.trim())))  
         setEmployeeData(functionRemoveDuplicate(data.map((el)=>el.counseller)))
                 
                 
@@ -229,7 +229,7 @@ const PaidInvoice = () => {
 
                     {employeeData.map((item, index) => (
                          (
-                            <option key={index} value={item.FullName} >{item}</option>
+                            <option key={index}>{item}</option>
                         )
                     ))}
 
@@ -288,7 +288,7 @@ const PaidInvoice = () => {
                                 .filter((el)=>{ if(startDate&&endDate){
                                 return compareDate(startDate,el.createdAt,endDate)}return true})
                                 .filter((el)=>{if(serviceName){num =0
-                                 return serviceName=== el.ServiceName}return el}).filter((el, i) => {
+                                 return serviceName=== el.ServiceName?.toLowerCase()?.trim()}return el}).filter((el, i) => {
                                     num++
                                     
                   if (pagination - 10 < i + 1 && pagination >= i + 1) {

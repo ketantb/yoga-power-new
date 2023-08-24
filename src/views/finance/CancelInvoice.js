@@ -65,6 +65,9 @@ const CancelInvoice = () => {
     const access = rightsData?rightsData:[]
     const isAdmin = useSelector((el)=>el.isAdmin) 
 
+    const functionRemoveDuplicate = (data)=>{
+        return data?.filter((el,i,arr)=>(arr.indexOf(el)===i&&el?.trim()))
+     }
     
     const getAllInvoiceData = async ()=>{
         const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
@@ -73,29 +76,14 @@ const CancelInvoice = () => {
                 }})
         
         setAllInvoiceData(data.reverse())     
+        setResult(functionRemoveDuplicate(data.map((el)=>el.ServiceName?.toLowerCase()?.trim())))  
+        setEmployeeData(functionRemoveDuplicate(data.map((el)=>el.counseller)))
                 
     } 
-    
-    
-   
-
-    function getPackage() {
-        axios.get(`${url1}/packagemaster`, {
-    
-        })
-            .then((res) => {
-                setResult(res.data)
-                console.log(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
 
 
    
     useEffect(()=>{
-        getPackage()
         getAllInvoiceData()
     },[])
     
@@ -155,36 +143,21 @@ const CancelInvoice = () => {
 
  }   
 
-
-    console.log(result1)
     useEffect(()=>{
         setPagination(10)
     },[serviceName])
 
 
 
-    useEffect(() => {
-        getEmployee()
-    }, [])
-    
-    async function getEmployee() {
-        try {
-            const { data } = await axios.get(`${ url1 }/employeeform/${pathVal}`)
-            setEmployeeData(data)
-        } catch (error) {
-            console.log(error)
-        }
+
+
+    const  compareDate = (date1,date,date2)=>{  
+    const getTime =    new Date(date).getTime()    
+    return new Date(date1).getTime()<=getTime&&
+    getTime<=new Date(new Date(date2).setDate(new Date(date2).getDate()+1)).getTime()
     }
     
     
-    const  compareDate = (date1,date2,type)=>{      
-        if(type==='start'){
-        return moment(date1).format('YYYY-MM-DD')<=moment(date2).format('YYYY-MM-DD')
-        }
-        if(type==='end'){  
-        return   moment(date1).format('YYYY-MM-DD')>=moment(date2).format('YYYY-MM-DD')
-        }
-        }
     
     
         const clearFilter=()=>{
@@ -260,9 +233,9 @@ const CancelInvoice = () => {
                 >
                     <option >Select Staff </option>
 
-                    {employeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
-                            <option key={index} value={item.FullName} >{item.FullName}</option>
+                    {employeeData.map((item, index) => (
+                       (
+                            <option key={index} value={item} >{item}</option>
                         )
                     ))}
 
@@ -277,9 +250,9 @@ const CancelInvoice = () => {
                                     >
                                     <option>Select Service</option>
                                         {result.map((item, index) => (
-                                            item.username === username && (
-                                               item.Status=== true && (
-                                                    <option key={index}>{item.Service }</option>                                                  
+                                            (
+                                                (
+                                                    <option key={index}>{item}</option>                                                  
                                                 )
                                             
                                             )))}
@@ -323,10 +296,9 @@ const CancelInvoice = () => {
                                 {AllInvoiceData.filter((el)=>el.status==='cancel').filter((el)=>{
                                  return el.counseller.includes(selectedEmployee)})
                                 .filter((el)=>{ if(startDate&&endDate){
-                                return compareDate(startDate,el.startDate,'start') &&
-                                compareDate(endDate,el.endDate,'end')}return true})
+                                return compareDate(startDate,el.createdAt,endDate)}return true})
                                 .filter((el)=>{if(serviceName){num =0
-                                 return serviceName=== el.ServiceName}return el}).filter((el, i) => {
+                                 return serviceName=== el.ServiceName?.toLowerCase()?.trim()}return el}).filter((el, i) => {
                                     num++                                    
                                  if (pagination - 10 < i + 1 && pagination >= i + 1) {return el
                                  }}).map((el,i)=>{

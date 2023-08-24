@@ -77,11 +77,6 @@ const headers   = {
 }
 
 
-        // const {data} = await axios.get(`${url1}/invoice/all`,{ 
-        //         headers: {
-        //             'Authorization': `Bearer ${token}`
-        //         }})
-
         const response2 = axios.get(`${url1}/memberForm/${ pathVal }`,{headers})
         const response3 = axios.get(`${url1}/invoice/${ pathVal }`,{headers})
 
@@ -120,7 +115,6 @@ const headers   = {
            if(!val){crr.push(el)}} return crr
            },[])
            setYears([...new Set(classiFyAcordingToMonth.map((el)=>el.Year))])
-
 // console.log()
 
 
@@ -159,28 +153,13 @@ serviceRevenueData.forEach((el)=>{
 
 
 setServiceRevenueData(serviceRevenueData)
-              
+setserviceData([...new Set(serviceRevenueData.map((el)=>el.typeOfService))])
+             
 
     }   
 
-
-
-
-    function getPackage() {
-        axios.get(`${url1}/packagemaster`, {
-    
-        })
-            .then((res) => {
-                setserviceData(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
     useEffect(()=>{
       getAllInvoiceData()
-      getPackage()
     },[])
             
    
@@ -226,8 +205,8 @@ setServiceRevenueData(serviceRevenueData)
                                     <option>Select Service</option>
                                         {serviceData.map((item, index) => (
                                            (
-                                               item.Status=== true && (
-                                                    <option key={index}>{item.Service }</option>                                                  
+                                             (
+                                                    <option key={index}>{item}</option>                                                  
                                                 )
                                             
                                             )))}

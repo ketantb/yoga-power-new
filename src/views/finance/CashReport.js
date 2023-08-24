@@ -98,7 +98,7 @@ const CashReport = () => {
                                                                                                                                
                             >
                             <option>Select By Staff</option>
-                                {staff.filter((list) => list.username === username &&
+                                {staff.filter((list) => 
                                  list.selected === 'Select').map((item, index) => (
                                     <option key={index}>{item.FullName}</option>
                                 ))}
@@ -129,9 +129,8 @@ const CashReport = () => {
                             </CTableHead>
                             <CTableBody>
                                 {cashData.filter((el)=>{
-                                    return el.counseller.includes(staffS)
+                                    return el?.counseller?.includes(staffS)
                                 }) .map((el,i)=>{
-                                    console.log(el)
                                     return  <CTableRow>
                                     <CTableDataCell>{i+1}</CTableDataCell>
                                         <CTableDataCell>{moment(el.date).format('MM-DD-YYYY')}</CTableDataCell>

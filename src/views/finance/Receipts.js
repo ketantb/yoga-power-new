@@ -46,7 +46,6 @@ const Receipt = () => {
     const [ClientData,setClient] = useState([])
     const [showInvoiceModal,setInvoceModal] = useState(false)
     const [allIvoiceOfaUser,setAllInvoiceOfUser] = useState([])
-    const [result1,setResult1] = useState([])
     const [showReceipts,setShowReceipts] = useState(false)
     const [receptsData,setResiptsData] = useState('')
     const [receptsInvoiceData,setReceptsInvoiceData] = useState('')
@@ -77,21 +76,13 @@ const Receipt = () => {
         },[serviceName,endDate,startDate,selectedEmployee])
 
         useEffect(()=>{
-            getPackage()
         },[])
 
-    function getPackage() {
-        axios.get(`${url1}/packagemaster`, {
-    
-        })
-            .then((res) => {
-                setResult(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
 
+
+    const functionRemoveDuplicate = (data)=>{
+        return data?.filter((el,i,arr)=>(arr.indexOf(el)===i&&el?.trim()))
+     }
 
     const getAllInvoiceData = async ()=>{
         const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
@@ -99,8 +90,8 @@ const Receipt = () => {
                       'Authorization': `Bearer ${token}`
                   }})  
                   
-                  console.log(data)
-
+          setResult(functionRemoveDuplicate(data.map((el)=>el.ServiceName?.toLowerCase()?.trim())))  
+          setEmployeeData(functionRemoveDuplicate(data.map((el)=>el.counseller)))
           setResiptData2(data.reverse().flatMap((el)=>el.Receipts.map((el2,i)=>{
             delete el2._id
             return{...el,...el2,length:i+1}}) 
@@ -143,27 +134,14 @@ setResiptNo(num)
 setShowReceipts(true)
 }
 
-useEffect(() => {
-    getEmployee()
-}, [])
-
-async function getEmployee() {
-    try {
-        const { data } = await axios.get(`${ url1 }/employeeform/${pathVal}`)
-        setEmployeeData(data)
-    } catch (error) {
-        console.log(error)
-    }
-}
 
 
-const  compareDate = (date1,date2,type)=>{      
-    if(type==='start'){
-    return moment(date1).format('YYYY-MM-DD')<=moment(date2).format('YYYY-MM-DD')
-    }
-    if(type==='end'){  
-    return   moment(date1).format('YYYY-MM-DD')>=moment(date2).format('YYYY-MM-DD')
-    }
+
+const  compareDate = (date1,date,date2)=>{  
+    const getTime =    new Date(date).getTime()    
+
+return new Date(date1).getTime()<=getTime&&
+getTime<=new Date(new Date(date2).setDate(new Date(date2).getDate()+1)).getTime()
 }
 
 
@@ -251,9 +229,9 @@ const toCheckValiDate= (val)=>{
                 >
                     <option >Select Staff </option>
 
-                    {employeeData.filter((list) => list.username === username && list.selected === 'Select').map((item, index) => (
-                        item.username === username && (
-                            <option key={index} value={item.FullName} >{item.FullName}</option>
+                    {employeeData.map((item, index) => (
+                        (
+                            <option key={index} value={item} >{item}</option>
                         )
                     ))}
 
@@ -268,9 +246,9 @@ const toCheckValiDate= (val)=>{
                                     >
                                     <option>Select Service</option>
                                         {result.map((item, index) => (
-                                            item.username === username && (
-                                               item.Status=== true && (
-                                                    <option key={index}>{item.Service }</option>                                                  
+                                           (
+                                               (
+                                                    <option key={index}>{item}</option>                                                  
                                                 )
                                             
                                             )))}
@@ -305,10 +283,9 @@ const toCheckValiDate= (val)=>{
                                 {resiptData2.filter((el)=>{
                                  return el.counseller.includes(selectedEmployee)})
                                 .filter((el)=>{ if(startDate&&endDate){
-                                return compareDate(startDate,el.startDate,'start') &&
-                                compareDate(endDate,el.endDate,'end')}return true})
+                                return compareDate(startDate,el.NewSlipDate,endDate)}return true})
                                 .filter((el)=>{if(serviceName){num =0
-                                 return serviceName=== el.ServiceName}return el})
+                                 return serviceName=== el.ServiceName?.toLowerCase()?.trim()}return el})
                                 .filter((el, i) => { num++
                                  if (pagination - 10 < i + 1 && pagination >= i + 1) {
                                  return el}}).map((el,i)=>{

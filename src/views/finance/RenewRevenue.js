@@ -35,8 +35,7 @@ const RenewRevenue = () => {
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
-    const centerCode = user.user.centerCode;
+   
   let InVoiceData =[]
 
     const [upgradeInvoiceData,setUpgradeInvoiceData] = useState([])
@@ -95,6 +94,9 @@ let num =0
         return InVoiceData?.find((el1)=>el._id===el1.MemberId)
    }
 
+   const toConvertLowerCase = (service)=>{
+    return ((service||'')?.toLowerCase()?.trim()||'')
+  }
 
 
    function getUpgradeInvoiceData (){
@@ -103,7 +105,7 @@ let num =0
 
         const serviceAcordingToMonth   = ([...data?.reverse()?.map((el)=>{
             return {
-               Service:el?.serviceName,
+               Service:toConvertLowerCase(el?.serviceName),
                TotalRenaval:'',
                Month:new Date(el.createdAt).getMonth(),
                date:new Date(el.createdAt),
@@ -117,7 +119,7 @@ let num =0
         const classiFyAcordingToMonth = [...serviceAcordingToMonth].reduce((crr,el,i)=>{
                 if(!crr.length){crr.push(el)}
                else if(crr?.length) {
-               const val =  crr.some((el2)=>   el2.Service  === el.Service && el2.Month  === el.Month)
+               const val =  crr.some((el2)=>   toConvertLowerCase(el2.Service)  === toConvertLowerCase(el.Service) && el2.Month  === el.Month)
                if(!val){crr.push(el)}} return crr
         },[])
 
@@ -143,9 +145,8 @@ const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
             }
 
          return   data.reduce((crr,el2)=>{
-            console.log(el2.serviceName === el.Service)
 
-            const validation = el2.serviceName === el.Service && new Date(el2.createdAt).getMonth()  === el.Month      
+            const validation = toConvertLowerCase(el2.serviceName) === toConvertLowerCase(el.Service) && new Date(el2.createdAt).getMonth()  === el.Month      
 
                         
             if(el2.renewed && validation){
@@ -204,8 +205,8 @@ const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
             return crr
            },{...obj})
         }) 
-    
-        console.log(serviceRevenueData)
+
+        setserviceData(serviceRevenueData.map((el)=>el.typeOfService))
         setRenewRevenueData(serviceRevenueData)
       }).catch((error)=>{
         console.error(error)
@@ -222,7 +223,6 @@ const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
 
    const getInvoiceInfo = async ()=>{
     axios.get(`${url1}/invoice/${pathVal}`,{headers}).then((res)=>{
-    // console.log(res.data)
     InVoiceData = res.data
     setUpgradeInvoiceData(res.data)
     getUpgradeInvoiceData()
@@ -241,21 +241,7 @@ const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
 }
 
 
-function getPackage() {
-    axios.get(`${url1}/packagemaster`, {
 
-    })
-        .then((res) => {
-            setserviceData(res.data)
-            console.log(res.data)
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-}
-useEffect(()=>{
-getPackage()                    
-},[])
 
 
 
@@ -295,9 +281,9 @@ getPackage()
                                     >
                                     <option>Select Service</option>
                                         {serviceData.map((item, index) => (
-                                            item.username === username && (
-                                               item.Status=== true && (
-                                                    <option key={index}>{item.Service }</option>                                                  
+                                          (
+                                               (
+                                                    <option key={index}>{item}</option>                                                  
                                                 )
                                             
                                             )))}

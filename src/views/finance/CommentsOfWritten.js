@@ -52,22 +52,19 @@ const CommentOfWritten = () => {
 
     useEffect(()=>{
         setPagination(10)
-        getPackage()
         },[serviceName])
 
 
-    function getPackage() {
-        axios.get(`${url1}/packagemaster`)
-            .then((res) => {
-                setResult(res.data)
-                console.log(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
+        const functionRemoveDuplicate = (data)=>{
+            return data?.filter((el,i,arr)=>(arr.indexOf(el)===i&&el?.trim()))
+         }
 
-
+        const  compareDate = (date1,date,date2)=>{  
+            const getTime =    new Date(date).getTime()    
+        
+        return new Date(date1).getTime()<=getTime&&
+        getTime<=new Date(new Date(date2).setDate(new Date(date2).getDate()+1)).getTime()
+        }
 
     const getAllInvoiceData = async ()=>{
         const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
@@ -76,6 +73,8 @@ const CommentOfWritten = () => {
                 }})
         
         setAllInvoiceData(data.reverse())     
+        setResult(functionRemoveDuplicate(data.map((el)=>el.ServiceName?.toLowerCase()?.trim())))  
+        setEmployeeData(functionRemoveDuplicate(data.map((el)=>el.counseller)))
                 
     } 
     useEffect(()=>{
@@ -107,14 +106,6 @@ async function getEmployee() {
 }
 
 
-const  compareDate = (date1,date2,type)=>{      
-    if(type==='start'){
-    return moment(date1).format('YYYY-MM-DD')<=moment(date2).format('YYYY-MM-DD')
-    }
-    if(type==='end'){  
-    return   moment(date1).format('YYYY-MM-DD')>=moment(date2).format('YYYY-MM-DD')
-    }
-    }
 
 
     const clearFilter=()=>{
@@ -179,9 +170,9 @@ const  compareDate = (date1,date2,type)=>{
                 >
                     <option >Select Staff </option>
 
-                    {employeeData.filter((list) => list.selected === 'Select').map((item, index) => (
+                    {employeeData.map((item, index) => (
                          (
-                            <option key={index} value={item.FullName} >{item.FullName}</option>
+                            <option key={index} value={item} >{item}</option>
                         )
                     ))}
 
@@ -197,8 +188,8 @@ const  compareDate = (date1,date2,type)=>{
                                     <option>Select Service</option>
                                         {result.map((item, index) => (
                                             (
-                                               item.Status=== true && (
-                                                    <option key={index}>{item.Service }</option>                                                  
+                                           (
+                                                    <option key={index}>{item}</option>                                                  
                                                 )
                                             
                                             )))}
@@ -231,10 +222,9 @@ const  compareDate = (date1,date2,type)=>{
                        {AllInvoiceData.filter((el)=>el.commentsofwrite&&el.status==="cancel").filter((el)=>{
                                  return el.counseller.includes(selectedEmployee)})
                                 .filter((el)=>{ if(startDate&&endDate){
-                                return compareDate(startDate,el.startDate,'start') &&
-                                compareDate(endDate,el.endDate,'end')}return true})
+                                return compareDate(startDate,el.createdAt,endDate)}return true})
                                 .filter((el)=>{if(serviceName){num =0
-                                 return serviceName=== el.ServiceName}return el}).filter((el, i) => {num++                                    
+                                 return serviceName=== el.ServiceName?.toLowerCase()?.trim()}return el}).filter((el, i) => {num++                                    
                                  if (pagination - 10 < i + 1 && pagination >= i + 1) {
                                  return el}}).map((el,i)=>
                                 <CTableRow>

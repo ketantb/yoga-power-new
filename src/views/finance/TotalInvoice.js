@@ -84,7 +84,7 @@ const TotalInvoice = () => {
                     'Authorization': `Bearer ${token}`
                 }})
         setAllInvoiceData(data.reverse())  
-        setResult(functionRemoveDuplicate(data.map((el)=>el.ServiceName)))  
+        setResult(functionRemoveDuplicate(data.map((el)=>el.ServiceName?.toLowerCase()?.trim())))  
         setEmployeeData(functionRemoveDuplicate(data.map((el)=>el.counseller)))
                 
     } 
@@ -315,7 +315,7 @@ return  (access.includes(val)||isAdmin) ?'':'none'
                                 return compareDate(startDate,el.createdAt,endDate) 
                                 } return true})
                                 .filter((el)=>{if(serviceName){num =0
-                                 return serviceName=== el.ServiceName}return el}).
+                                 return serviceName=== el.ServiceName?.toLowerCase()?.trim()}return el}).
 
                                  filter((el, i) => {num++
                                 if (pagination - 10 < i + 1 && pagination >= i + 1) {return el}}).map((el,i)=>{

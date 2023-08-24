@@ -130,7 +130,7 @@ const FilterFirstInvoiceData = [...clientData.filter((list) => list)].map((el)=>
         })
     })
 
-    
+    setserviceData([...new Set(serviceRevenueData.map((el)=>el.typeOfService))])
     serviceRevenueData.forEach(element => {    
         let amount =0
     FilterFirstInvoiceData.forEach((el)=>{
@@ -152,7 +152,6 @@ const AllYear = [...serviceRevenueData,  {Year:2022,Month:2},{Year:2021,Month:5}
    },[])
 
 setYears([...new Set(AllYear.map((el)=>el.year)).filter((el)=>el)])
-
 }catch{
 
 }
@@ -224,8 +223,8 @@ useEffect(()=>{
                                     <option>Select Service</option>
                                         {serviceData.map((item, index) => (
                                              (
-                                               item.Status=== true && (
-                                                    <option key={index}>{item.Service }</option>                                                  
+                                                (
+                                                    <option key={index}>{item}</option>                                                  
                                                 )
                                             
                                             )))}

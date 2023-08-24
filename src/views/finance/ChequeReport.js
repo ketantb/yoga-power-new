@@ -137,7 +137,7 @@ const [staff, setStaff] = useState([])
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                                {cheque.filter((el)=>el.counseller.includes(staffS)).map((el,i)=>{                                    
+                                {cheque.filter((el)=>el?.counseller?.includes(staffS)).map((el,i)=>{                                    
                                     const splitCheck =(el)=>{
                                         return el.split(' ').map((el)=>{
                                             return <><b>{el}</b><br/></>

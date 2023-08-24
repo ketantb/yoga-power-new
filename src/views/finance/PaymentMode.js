@@ -17,6 +17,8 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
+    CPagination,
+    CPaginationItem
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
@@ -42,8 +44,9 @@ const pathVal = useAdminValidation()
 const [paymetData,setPaymentData] = useState([])
 const [paymentType,setPyamentType] = useState([])
 const [staffS,setStaffS] = useState('')
+const [pagination,setPagination] = useState(10)
 
-
+let paginationum  =0
 
 let allPaymentType =[
     { label: "Cash", value: false },
@@ -177,11 +180,15 @@ function clearFilter(){
                             </CTableHead>
                             <CTableBody>
                                 {paymetData.filter((el)=>{
-                                    return el.counseller.includes(staffS) && el.label.includes(paymentType)
-                                }).map((el,i)=>{
-                                   console.log(el)
+                                    return el.counseller?.toLowerCase()?.includes(staffS.toLowerCase()) && el.label?.includes(paymentType)
+                                }).filter((el)=>{
+                                    paginationum++
+                                    return el
+                                }).filter((el, i) => {
+                                    if (pagination - 10 < i + 1 && pagination >= i + 1) {
+                                    return el}}).map((el,i)=>{
                                return <CTableRow>
-                                    <CTableDataCell>{i+1}</CTableDataCell>
+                                    <CTableDataCell>{i+pagination-10+1}</CTableDataCell>
                                     <CTableDataCell>{moment(el.date).format("MM-DD-YYYY")}</CTableDataCell>
                                     <CTableDataCell className='text-center'>{el.label==='Cash'?<CButton className="h5 text-white" color='success' ><AiOutlineCheckCircle/></CButton>:''}</CTableDataCell>
                                     <CTableDataCell className='text-center'>{el.label==='GPay'?<CButton className="h5 text-white" color='success' ><AiOutlineCheckCircle/></CButton>:''}</CTableDataCell>
@@ -195,6 +202,19 @@ function clearFilter(){
                                 })}                               
                             </CTableBody>
                         </CTable>
+                        <div className='d-flex justify-content-center mt-3' >
+                        <CPagination aria-label="Page navigation example" style={{cursor:'pointer'}}>
+                            <CPaginationItem aria-label="Previous" onClick={() => setPagination((val) => val > 10 ? val - 10 : 10)}>
+                                <span aria-hidden="true" >&laquo;</span>
+                            </CPaginationItem>
+                            <CPaginationItem active >{pagination / 10}</CPaginationItem>
+                            {paginationum > pagination / 10 * 10 && <CPaginationItem onClick={() => setPagination((val) => val < paginationum  ? val + 10 : val)}>{pagination / 10 + 1}</CPaginationItem>}
+                            {paginationum  > pagination / 10 * 20 && <CPaginationItem onClick={() => setPagination((val) => val < paginationum  ? val + 10 : val)}>{pagination / 10 + 2}</CPaginationItem>}
+                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < paginationum ? val + 10 : val)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        </CPagination>
+                            </div>
                     </CCardBody>
                 </CCard>
             </CCol>
