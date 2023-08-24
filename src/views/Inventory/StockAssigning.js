@@ -26,7 +26,6 @@ import { inventoryRight } from '../hr/Rights/rightsValue/erpRightsValue';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const username = user.user.username;
 
 function StockAssigning() {
     const url = useSelector((el) => el.domainOfApi)
@@ -34,14 +33,12 @@ function StockAssigning() {
     const pathVal = useAdminValidation('')
     const uniAdminObjVal = useUniqAdminObjeact()
 
+
     const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpInventory.items.erpOfficeInventory.rights) 
 
     const access = rightsData?rightsData:[]
     const isAdmin = useSelector((el)=>el.isAdmin) 
 
-
-    // const pathValMaster =  useAd
-    const [result1, setResult1] = useState([])
 
     const [allProductData, setAllProductData] = useState([])
     const [noofProduct, setNoOfProduct] = useState([])
@@ -78,6 +75,10 @@ function StockAssigning() {
         getStockAssigning()
     }, [])
 
+    useEffect(()=>{
+      setSelectedStaff(uniAdminObjVal.employeeMongoId)
+    },[uniAdminObjVal.employeeMongoId])
+
     function getStockProduct() {
         axios.get(`${ url }/inventoryListingMaster/${ pathValMaster }`, { headers })
 
@@ -93,7 +94,7 @@ function StockAssigning() {
 
 
     function getStaff() {
-        axios.get(`${ url }/employeeform/${ pathVal }`, {
+        axios.get(`${ url }/employeeform/${ pathValMaster }`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -197,7 +198,6 @@ function StockAssigning() {
         axios.get(`${ url }/stockAssigning/${ pathVal }`, { headers })
             .then((res) => {
                 setStockAssigning(res.data.reverse())
-                console.log(res.data);
             })
             .catch((error) => {
                 console.error(error)
@@ -241,7 +241,7 @@ function StockAssigning() {
                             onChange={(e) => setSelectedStaff(e.target.value)}
                         >
                             <option value=''>Select Assign Staff</option>
-                            {staff.filter((list) => list.username === username &&
+                            {staff.filter((list) =>
                                 list.selected === 'Select').map((item, index) => (
                                     <option key={index} value={item._id}>{item.FullName}</option>
                                 ))}
@@ -259,7 +259,7 @@ function StockAssigning() {
                             onChange={(e) => setSelectedStaff2(e.target.value)}
                         >
                             <option value=''>Select Assign Staff</option>
-                            {staff.filter((list) => list.username === username &&
+                            {staff.filter((list) => 
                                 list.selected === 'Select').map((item, index) => (
                                     <option key={index} value={item._id}>{item.FullName}</option>
                                 ))}
@@ -344,10 +344,7 @@ function StockAssigning() {
 
 
                 <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={activeKey === 2}>
-
-
                     <CTable className='mt-3 ' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-
                         <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                             <CTableRow >
                                 <CTableHeaderCell>Sr.No</CTableHeaderCell>
@@ -380,17 +377,10 @@ function StockAssigning() {
                                 </CTableRow>
                             )}
 
-
-
                         </CTableBody>
                     </CTable>
                 </CTabPane>
-
-
-
             </CTabContent>
-
-
         </CCardBody>
     </CCard>
 
