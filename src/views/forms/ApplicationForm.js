@@ -157,7 +157,6 @@ function getLeadSource() {
         }
     })
         .then((res) => {
-            console.log(res.data)
             setLeadArr(res.data)
         })
         .catch((error) => {
@@ -396,12 +395,14 @@ const handleImage = event => {
                                 label="Source"
                                 value={payoutType}
                                 onChange={(e)=>setPayouttype(e.target.value)}
-                                options={[
-                                    "Select Grade",
-                                    { label: "Employee", value: "1" },
-                                    { label: "Consultant", value: "2" },
-                                ]}
-                            />                            
+                            >
+                            <option>Select Source</option>
+                                {leadArr.map((item, index) => (
+                                                    (                                                     
+                                                        <option key={index}>{item.LeadSource}</option>
+                                                    )
+                                    ))}
+                            </CFormSelect>                            
                         </CCol>
                     </CRow>
                     <CRow>
