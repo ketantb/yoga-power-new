@@ -51,7 +51,6 @@ function CallesTargetTable({EmployeeData}) {
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    const username = user.user.username;
     const token = user.token;
 
     const headers = {
@@ -64,15 +63,8 @@ function CallesTargetTable({EmployeeData}) {
 
             const response1 =  axios.get(`${url}/callsTarget/${pathValMaster}`,{headers})
             const response2 =  axios.get(`${url}/memberCallReport/${pathVal}`,{headers})
-            const response3 =  axios.get(`${url}/prospect/${pathVal}`,{headers})
+            const response3 =  axios.get(`${url}/prospect/${new Date(2023,1)}/${new Date(2023)}/${pathVal}`,{headers})
             const data  =  await Promise.all([response1,response2,response3])
-
-            console.log(data[0].data)
-            console.log(data[1].data)
-            console.log(data[2].data)
-
-            
-
 
             data[0].data?.forEach(el => {
                 const memBerCallHistory = data[1].data.filter((el2)=>el2.empolyeeId===el.Sr_No )   

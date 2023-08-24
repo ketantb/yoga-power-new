@@ -95,7 +95,7 @@ return <div  className='my-5' >
                                  <CCol className='mt-2' style={{ marginRight: '30px' }}>
                                      <div className='float-end'>
                                          Date : { getDate(el?.date,true)}<br />
-                                         Invoice No {el?.centerName}:{el?.InvoiceNo} <br />
+                                         Invoice No {el.InvoiceNo} <br />
                                          Counseller : {el?.counseller}
                                      </div>
                                  </CCol>
