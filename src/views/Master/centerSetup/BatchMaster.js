@@ -42,6 +42,7 @@ const BatchMaster = () => {
     const url = url1
     const pathVal = useAdminValidation('Master')
     const uniqObjVal =  useUniqAdminObjeact()
+    const [pagination, setPagination] = useState(10)
 
     const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterCenterSetup?.items?.masterBatchTimeMaster?.rights) 
     const access = rightsData?rightsData:[]

@@ -146,6 +146,7 @@ const ShiftTimingManagmentMastr = React.lazy(()=>import('./views/Master/HRMaster
 const PayrollMaster = React.lazy(()=>import('./views/Master/HRMaster/PayrollMaster'))
 const EmpJoiningMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpJoining'))
 const EmpPerformanceMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpPrformanceMaster'))
+// const InvoiceMaster = React.lazy(()=>import('./views/Master/finance/InvoiceMaster'))
 // Base
 const TrainerSalarySlipMaster = React.lazy(()=>import('./views/Master/HRMaster/TrainerSalarySlipMaster'))
 // const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
