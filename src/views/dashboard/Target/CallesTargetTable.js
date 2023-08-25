@@ -192,6 +192,11 @@ function percentage(partialValue, totalValue) {
             </CCol>
             
         </CRow>
+        <CRow className='my-3'>
+            <CCol>
+                <CButton onClick={()=>clearFilter()}>Clear Filter</CButton>
+            </CCol>
+        </CRow>
         <CTable bordered borderColor="black" responsive>
             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                 <CTableRow>

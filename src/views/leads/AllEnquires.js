@@ -1176,7 +1176,7 @@ const AllEnquires = () => {
 
                                 {result1.filter((list)=>list.enquirestatus!=='notshow').slice(paging * 10, paging * 10 + 10)
                                 .filter((list) => {
-                                    return moment(list.createdAt, "HH:mm").format("hh:mm A")?.toLowerCase()?.includes(Search1.toLowerCase())
+                                    return moment(list.createdAt).format("DD-MM-YYYY")?.toLowerCase()?.includes(Search1.toLowerCase())
                                     &&list.Fullname?.toLowerCase()?.includes(Search3.toLowerCase())
                                     &&list.EnquiryId?.toLowerCase()?.includes(Search2.toLowerCase())&&
                                     list.ContactNumber+""?.includes(Search4)

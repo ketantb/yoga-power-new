@@ -1143,17 +1143,17 @@ const EnquireAppointment = () => {
                                     </CTableDataCell>
                                 </CTableRow>
                                 {result1.filter((list) =>list.enquirestatus!=='notshow'&&
-                                   moment(list.createdAt).format("MM-DD-YYYY").includes(select) && 
-                                   moment(list.createdAt).format("MM-DD-YYYY").includes(Search2) && 
-                                   list.appointmentfor === 'Appointment' && 
-                                   list.EnquiryId.toLowerCase().includes(Search1.toLowerCase()) && 
-                                   list.Fullname.toLowerCase().includes(Search3.toLowerCase()) && 
-                                   list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-                                    list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) &&
-                                     list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) &&
-                                      list.CallStatus.toLowerCase().includes(Search8.toLowerCase()) &&
-                                      list.Counseller.toLowerCase().includes(Search10.toLowerCase()) &&
-                                      list.ContactNumber+"".includes(Search4) 
+                                   moment(list.createdAt).format("MM-DD-YYYY")?.includes(select) && 
+                                   moment(list.createdAt).format("DD-MM-YYYY")?.includes(Search2) && 
+                                   list?.appointmentfor === 'Appointment' && 
+                                   list?.EnquiryId.toLowerCase()?.includes(Search1.toLowerCase()) && 
+                                   list?.Fullname.toLowerCase()?.includes(Search3.toLowerCase()) && 
+                                   list?.StaffName.toLowerCase()?.includes(Search9.toLowerCase()) &&
+                                    list?.ServiceName.toLowerCase()?.includes(Search5.toLowerCase()) &&
+                                     list?.enquirytype.toLowerCase()?.includes(Search6.toLowerCase()) &&
+                                      list?.CallStatus.toLowerCase()?.includes(Search8.toLowerCase()) &&
+                                      list?.Counseller.toLowerCase()?.includes(Search10.toLowerCase()) &&
+                                      list?.ContactNumber+""?.includes(Search4) 
 
                                 ).slice(paging * 10, paging * 10 + 10).map((item, index) => (
                                     (

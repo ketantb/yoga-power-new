@@ -67,7 +67,7 @@ const CommentOfWritten = () => {
         }
 
     const getAllInvoiceData = async ()=>{
-        const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{ 
+        const {data} = await axios.get(`${url1}/cancelInvoiceReport/${pathVal}`,{ 
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }})

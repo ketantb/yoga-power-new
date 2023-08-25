@@ -1198,15 +1198,15 @@ const TrialEnquires = () => {
                                 </CTableRow>
                                 {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
                                     moment(list.createdAt).format("MM-DD-YYYY").includes(select) &&
-                                    list.EnquiryId?.toLowerCase().includes(Search1.toLowerCase()) &&
-                                    list.createdAt?.toLowerCase().includes(Search2.toLowerCase()) &&
+                                    list.EnquiryId?.toLowerCase().includes(Search1?.toLowerCase()) &&
+                                    moment(list.createdAt)?.format("DD-MM-YYYY")?.includes(Search2) &&
                                     (list.ContactNumber+"").includes(Search4) &&
-                                    list.Counseller.includes(Search10.toLowerCase()) &&
-                                    list.Fullname.toLowerCase().includes(Search3.toLowerCase()) &&
-                                    list.StaffName.toLowerCase().includes(Search9.toLowerCase()) &&
-                                    list.ServiceName.toLowerCase().includes(Search5.toLowerCase()) &&
-                                    list.enquirytype.toLowerCase().includes(Search6.toLowerCase()) &&
-                                    list.CallStatus.toLowerCase().includes(Search8.toLowerCase())
+                                    list.Counseller?.includes(Search10.toLowerCase()) &&
+                                    list.Fullname?.toLowerCase()?.includes(Search3?.toLowerCase()) &&
+                                    list.StaffName?.toLowerCase()?.includes(Search9?.toLowerCase()) &&
+                                    list.ServiceName?.toLowerCase()?.includes(Search5?.toLowerCase()) &&
+                                    list.enquirytype?.toLowerCase()?.includes(Search6?.toLowerCase()) &&
+                                    list.CallStatus?.toLowerCase()?.includes(Search8?.toLowerCase())
                                 ).map((item, index) => (
                                     (
                                         <CTableRow key={index}>

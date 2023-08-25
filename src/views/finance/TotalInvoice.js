@@ -132,26 +132,40 @@ const TotalInvoice = () => {
 
   }
 
-  const postRequestInvoice = (value,id,commentValue)=>{
-    const status = value
-    axios.post(`${url1}/invoice/update/${id}`,{status:status,commentsofwrite:commentValue},{ 
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }}).then((res)=>{
-            console.log(res.data)
-        getAllInvoiceData()    
-     })
+
+  const headers = {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    }
   }
 
- async function  StatusOpration(value,id){
+  const postRequestInvoice = (value,id,commentValue,item)=>{
+    const status = value
+    if(status!=='cancel'){
+        axios.post(`${url1}/invoice/update/${id}`,{status:status,commentsofwrite:commentValue},headers)
+        .then((res)=>{
+        getAllInvoiceData()    
+     })
+
+    }else if(status==='cancel'){
+        axios.all([
+            axios.post(`${url1}/invoice/update/${id}`,{status:status,commentsofwrite:commentValue},headers),
+            axios.post(`${url1}/cancelInvoiceReport/create`,{...item,status:status,commentsofwrite:commentValue},headers)       
+        ]).then((res)=>{
+            getAllInvoiceData()    
+         })
+    }}
+
+//cancelInvoiceReport
+ async function  StatusOpration(value,id,item){
  const status = value
  if(status==='cancel'){
     let commentValue = prompt("Why you want to cancel")
 
     if(commentValue){
-        postRequestInvoice(value,id,commentValue)
+        postRequestInvoice(value,id,commentValue,item)
     }
  }else if(status==='done'||status==='active'){
     postRequestInvoice(value,id)
@@ -351,9 +365,9 @@ return  (access.includes(val)||isAdmin) ?'':'none'
                                             <BsEye />
                                       </CButton>}</CTableDataCell>
                                     <CTableDataCell style={{display:toCheckValiDate(financeRight.totalStatus) }}>
-                                        {el.status==='cancel'&&<CButton color='danger' size='sm'  onClick={()=>StatusOpration('active',el._id)} >Cancel</CButton>  }
-                                        {el.status==='active'&& <CButton color='warning' size='sm' onClick={()=>StatusOpration('done',el._id)}>Panding..</CButton> }
-                                        {el.status==='done'&&<CButton color='success' size='sm' onClick={()=>StatusOpration('cancel',el._id)} >Done</CButton>  }                                        
+                                        {el.status==='cancel'&&<CButton color='danger' size='sm'  onClick={()=>StatusOpration('active',el._id,el)} >Cancel</CButton>  }
+                                        {el.status==='active'&& <CButton color='warning' size='sm' onClick={()=>StatusOpration('done',el._id,el)}>Panding..</CButton> }
+                                        {el.status==='done'&&<CButton color='success' size='sm' onClick={()=>StatusOpration('cancel',el._id,el)} >Done</CButton>  }                                        
                                         </CTableDataCell>  
                                     <CTableDataCell style={{display:toCheckValiDate(financeRight.deleteTotalInvoice),cursor:'pointer'}}
                                      className='text-center' >{
