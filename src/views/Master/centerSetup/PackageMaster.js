@@ -18,6 +18,8 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
+    CPagination,
+    CPaginationItem
 } from "@coreui/react";
 import axios from "axios";
 import React, { useState } from "react";
@@ -42,6 +44,8 @@ const PackageMaster = () => {
     const username = user.user.username;
     const token = user.token;
 
+    let pageNumber =0
+
 
     const headers = {
         headers: {
@@ -60,6 +64,8 @@ const PackageMaster = () => {
     const [variation,setVariation] = useState('')
     const [duration, setDuration] = useState("");
     const [subService,setService] = useState([])
+    const [pagination, setPagination] = useState(10)
+
 
 
 
@@ -77,7 +83,6 @@ const PackageMaster = () => {
         axios.get(`${url}/subservice/${pathVal}`, headers)
             .then((res) => {
                 setService(res.data)
-                console.log(res.data)
             })
             .catch((error) => {
                 console.error(error)
@@ -136,21 +141,21 @@ const PackageMaster = () => {
            "Action": "edit",
            "username": username,
        }
-        // console.warn(data);
+        console.warn(data);
         fetch(`${url1}/packageMaster/create`, {
             method: "POST",
             ...headers,
             body: JSON.stringify({...data,...uniqObjVal })
         }).then((resp) => {
-            console.log(resp)
             resp.json().then(() => {
-                alert("successfully submitted")
                 setPackageName('')
                 setFees('')
                 setPackages('')
                 setDuration('')
-                setStatus('')
+                setStatus(false)
                 getPackage()
+                alert("successfully submitted")
+
             })
         })
     }
@@ -298,8 +303,8 @@ const PackageMaster = () => {
                                 </CCol>
                                 <CCol lg={6} md={6} sm={12} className='mt-1'>
                                     <CFormSwitch size="xl" label="Status" style={{ defaultChecked: 'false' }}
-                                        value={status}
-                                        onChange={() => setStatus(!status)} />
+                                        checked={status}
+                                        onChange={() => setStatus(prev=>!prev)} />
                                     <CButton className="mt-2" onClick={savePackage}>Save</CButton>
                                 </CCol>
                       </CRow>
@@ -320,10 +325,10 @@ const PackageMaster = () => {
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {result.map((item, index) => (
+                        {result.slice((pagination - 10),pagination).map((item, i) => (
                              (
-                                <CTableRow key={index}>
-                                    <CTableDataCell>{index + 1}</CTableDataCell>
+                                <CTableRow key={i}>
+                                    <CTableDataCell>{i + 1 + pagination - 10}</CTableDataCell>
                                     <CTableDataCell>{item.Service}</CTableDataCell>
                                     <CTableDataCell>{item.Variation}</CTableDataCell>
                                     <CTableDataCell>{item.Package_Name}</CTableDataCell>
@@ -345,6 +350,19 @@ const PackageMaster = () => {
                         ))}
                     </CTableBody>
                 </CTable>
+                <div className='d-flex justify-content-center mt-3' >
+                        <CPagination aria-label="Page navigation example" style={{cursor:'pointer'}}>
+                            <CPaginationItem aria-label="Previous" onClick={() => setPagination((val) => val > 10 ? val - 10 : 10)}>
+                                <span aria-hidden="true" >&laquo;</span>
+                            </CPaginationItem>
+                            <CPaginationItem active >{pagination / 10}</CPaginationItem>
+                            {result.length > pagination / 10 * 10 && <CPaginationItem onClick={() => setPagination((val) => val < result.length ? val + 10 : val)}>{pagination / 10 + 1}</CPaginationItem>}
+                            {result.length > pagination / 10 * 20 && <CPaginationItem onClick={() => setPagination((val) => val < result.length ? val + 10 : val)}>{pagination / 10 + 2}</CPaginationItem>}
+                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < result.length ? val + 10 : val)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        </CPagination>
+      </div>
             </CCardBody>
         </CCard >
     );

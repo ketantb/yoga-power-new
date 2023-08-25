@@ -68,6 +68,7 @@ function ClientInvoice(){
     const [selectedStaffId,setSelectedStaffId] = useState('')
     const [prinInvoiceData,setPrintInvoiceData] = useState([])
     const [prinInvoice,setPrinInvoice] = useState(false)
+    
 
     const obj = useMemo(()=>{return{
         Fullname:'',
@@ -78,7 +79,8 @@ function ClientInvoice(){
         StatffName:'',
         MemberId:'',
         EmpId:'',
-        InvoiceNo:''
+        InvoiceNo:'',
+        typeOfClient:'',
     }})
 
     const [clientReferance,setClientReferance] =  useState(obj)
@@ -167,7 +169,7 @@ toGetSelectInputData()
 }, [])
 
 
- function clientObj(obj){
+ function clientObj(obj,type){
     setClientReferance((prev)=>
     
     ({...prev,...{
@@ -178,6 +180,7 @@ toGetSelectInputData()
         ClientId:obj?._id,
         MemberId:obj?._id,
         StatffName:emp?.FullName,
+        typeOfClient:type
     }}))    
  }
 
@@ -343,7 +346,7 @@ return   <>
                                     <CustomSelectInput data={clientData} 
                                  title={clientReferance.Fullname?.trim()?
                                     clientReferance.Fullname:"Select Enquiry"}
-                                     getData={clientObj}/>
+                                     getData={(obj)=>clientObj(obj,'Client')}/>
 
                                 </CCol>
 
@@ -354,7 +357,7 @@ return   <>
                                  <CustomSelectInput data={enquiryData} 
                                  title={clientReferance.Fullname?.trim()?
                                     clientReferance.Fullname:"Select Enquiry"}
-                                  getData={clientObj}
+                                  getData={(obj)=>clientObj(obj,'Enquiry')}
                                   />
 
                              </CCol>

@@ -768,8 +768,8 @@ const saveCalls = () => {
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{item.ClientId}</CTableDataCell>
-                                            <CTableDataCell><Link index={-1} style={{ textDecoration: 'none' }} 
-                                            to={`/clients/member-details/${item._id}/1`} target="_black">{item.Fullname}</Link></CTableDataCell>
+                                            <CTableDataCell><Link  style={{ textDecoration: 'none' }} 
+                                            to={`/clients/member-details/${item._id}/1`}>{item.Fullname}</Link></CTableDataCell>
                                             <CTableDataCell>{item.ContactNumber}</CTableDataCell>
                                             <CTableDataCell>{item.invoiceNum}</CTableDataCell>
                                             <CTableDataCell>{item.AttendanceID}</CTableDataCell>
@@ -778,8 +778,8 @@ const saveCalls = () => {
                                             <CTableDataCell>{ getDate(item.startDate,true)}</CTableDataCell>
                                             <CTableDataCell>{ getEndDate(item.endDate)}</CTableDataCell>
                                             <CTableDataCell> <CButton size='sm' onClick={()=>NavigateFitnnesofClient(item._id)} >View Fitness</CButton></CTableDataCell>
-                                            <CTableDataCell><Link index={-1} style={{ textDecoration: 'none' }}
-                                             to={`/clients/member-details/${item._id}/5`} target="_black">
+                                            <CTableDataCell><Link  style={{ textDecoration: 'none' }}
+                                             to={`/clients/member-details/${item._id}/5`} >
                                                 <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} /></Link></CTableDataCell>
                                             <CTableDataCell><CButton onClick={() => { setCalls(true), setUniqClientId(item._id) }}>View</CButton></CTableDataCell>
                                             

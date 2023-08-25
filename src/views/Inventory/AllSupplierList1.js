@@ -44,16 +44,12 @@ const AllSuppilerList = () => {
     const [search4, setSearch4] = useState('')
     const [search5, setSearch5] = useState('')
     const [search6, setSearch6] = useState('')
-    const [search7, setSearch7] = useState('')
-    const [search8, setSearch8] = useState('')
-    const [search9, setSearch9] = useState('')
-    const [search10, setSearch10] = useState('')
+
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
     const token = user.token;
     const username = user.user.username;
-    const centerCode = user.user.centerCode;
     const [paging, setPaging] = useState(0);
     useEffect(() => {
         getImpCall()

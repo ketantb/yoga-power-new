@@ -306,8 +306,7 @@ return  (access.includes(val)||isAdmin) ?'':'none'
                                     <CTableHeaderCell scope="col">Service Duration</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Start Date</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">End Date</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Counseller</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Trainer</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Counsellor</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Created By</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Package Amount</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Discount</CTableHeaderCell> 
@@ -317,7 +316,7 @@ return  (access.includes(val)||isAdmin) ?'':'none'
                                     <CTableHeaderCell scope="col">Balance</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Pay Mode</CTableHeaderCell>
                                     <CTableHeaderCell scope="col" style={{display: toCheckValiDate(financeRight.viewTotalInvoice)}} >Invoice</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col"  style={{display:toCheckValiDate(financeRight.totalStatus) }}> Cancel Invoice</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col"  style={{display:toCheckValiDate(financeRight.totalStatus) }}> Invoice Status</CTableHeaderCell>
                                     <CTableHeaderCell scope="col"  style={{display:toCheckValiDate(financeRight.deleteTotalInvoice)}} > Delete</CTableHeaderCell>
 
                                 </CTableRow>
@@ -351,7 +350,6 @@ return  (access.includes(val)||isAdmin) ?'':'none'
                                     <CTableDataCell>{getDate(el.startDate,true)}</CTableDataCell>
                                     <CTableDataCell>{getDate(el.endDate,true)}</CTableDataCell>
                                     <CTableDataCell>{el.counseller}</CTableDataCell>
-                                    <CTableDataCell>{el.clientId}</CTableDataCell>
                                     <CTableDataCell>{el.counseller}</CTableDataCell>
                                     <CTableDataCell>{el.fees}</CTableDataCell>
                                     <CTableDataCell>{el.discount}</CTableDataCell>

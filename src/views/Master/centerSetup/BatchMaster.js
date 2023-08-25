@@ -16,6 +16,8 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
+    CPagination,
+    CPaginationItem
 } from "@coreui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -399,10 +401,10 @@ console.error(error)
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {result.map((item, index) => (
+                        {result.slice((pagination - 10),pagination).map((item, i) => (
                             (
-                                <CTableRow key={index}>
-                                    <CTableDataCell>{index + 1}</CTableDataCell>
+                                <CTableRow key={i}>
+                                    <CTableDataCell>{i + 1 + pagination - 10}</CTableDataCell>
                                     <CTableDataCell>{item.service_variation}</CTableDataCell>
                                     <CTableDataCell>{item.trainer_name}</CTableDataCell>
                                     <CTableDataCell>{item.category}</CTableDataCell>
@@ -416,6 +418,19 @@ console.error(error)
                         ))}
                     </CTableBody>
                 </CTable>
+                <div className='d-flex justify-content-center mt-3' >
+                        <CPagination aria-label="Page navigation example" style={{cursor:'pointer'}}>
+                            <CPaginationItem aria-label="Previous" onClick={() => setPagination((val) => val > 10 ? val - 10 : 10)}>
+                                <span aria-hidden="true" >&laquo;</span>
+                            </CPaginationItem>
+                            <CPaginationItem active >{pagination / 10}</CPaginationItem>
+                            {result.length > pagination / 10 * 10 && <CPaginationItem onClick={() => setPagination((val) => val < result.length ? val + 10 : val)}>{pagination / 10 + 1}</CPaginationItem>}
+                            {result.length > pagination / 10 * 20 && <CPaginationItem onClick={() => setPagination((val) => val < result.length ? val + 10 : val)}>{pagination / 10 + 2}</CPaginationItem>}
+                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < result.length ? val + 10 : val)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        </CPagination>
+      </div>
             </CCardBody>
         </CCard>
     );

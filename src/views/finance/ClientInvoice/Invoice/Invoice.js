@@ -140,7 +140,7 @@ const handlePrint = useReactToPrint({
                    
                 </CModalBody>
                 <CModalFooter>
-                    <CButton color="secondary" onClick={() => { setPrinInvoice(6)}}>
+                    <CButton color="secondary" onClick={() => { setPrinInvoice(false)}}>
                         Close
                     </CButton>
                     <CButton color="primary" onClick={() => handlePrint()}>Print</CButton>

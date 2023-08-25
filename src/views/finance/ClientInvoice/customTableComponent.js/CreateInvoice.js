@@ -108,7 +108,8 @@ item:el?.item,
             amount: totalAmount,
             paymode:modeOfPayment, 
             pendingAmount:'0',
-            ...{...uniqObjVal,employeeMongoId:(clientReferance?.EmpId||uniqObjVal.employeeMongoId)}
+            ...{...uniqObjVal,employeeMongoId:(clientReferance?.EmpId||uniqObjVal.employeeMongoId)},
+            typeOfClient:clientReferance?.typeOfClient
         }
 
            

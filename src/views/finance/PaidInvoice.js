@@ -20,8 +20,7 @@ import {
     CPagination,
     CPaginationItem,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
+
 import {BsEye } from 'react-icons/bs'
 
 import { useSelector } from "react-redux";
@@ -298,7 +297,7 @@ const PaidInvoice = () => {
                                     <CTableHeaderCell scope="col">Total Amount</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Paid</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Bal</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Pay Model</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Pay Mode</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Created By</CTableHeaderCell>
                                     <CTableHeaderCell scope="col" style={{display: toCheckValiDate(financeRight.viewPaidInvoice)}} >view</CTableHeaderCell>
                                     <CTableHeaderCell scope="col" style={{display:toCheckValiDate(financeRight.paidInvoiceStatus) }} >Status</CTableHeaderCell>

@@ -72,26 +72,26 @@ const AllCallList = () => {
                         <CTabContent>
                             <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 1}>
                                 <ImpCallList
-                                 addedval = {(access.includes("imp"+inventoryRight.addCall))}
-                                 editCallval = {(access.includes("imp"+inventoryRight.editCall))}
-                                 deleteICall={(access.includes("imp"+inventoryRight.deleteICall))}
-                                 action1={(access.includes("imp"+inventoryRight.action))}
+                                 addedval = {(access.includes("imp"+inventoryRight.addCall)||isAdmin)}
+                                 editCallval = {(access.includes("imp"+inventoryRight.editCall)||isAdmin)}
+                                 deleteICall={(access.includes("imp"+inventoryRight.deleteICall)||isAdmin)}
+                                 action1={(access.includes("imp"+inventoryRight.action)||isAdmin)}
                                 /> 
                             </CTabPane>
                             <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 2}>
                                 <AllSuppilerList
-                                 addedval = {(access.includes("all"+inventoryRight.addCall))}
-                                 editCallval = {(access.includes("all"+inventoryRight.editCall))}
-                                 deleteICall={(access.includes("all"+inventoryRight.deleteICall))}
-                                 action1={(access.includes("all"+inventoryRight.action))}
+                                 addedval = {(access.includes("all"+inventoryRight.addCall)||isAdmin)}
+                                 editCallval = {(access.includes("all"+inventoryRight.editCall)||isAdmin)}
+                                 deleteICall={(access.includes("all"+inventoryRight.deleteICall)||isAdmin)}
+                                 action1={(access.includes("all"+inventoryRight.action)||isAdmin)}
                                 />
                             </CTabPane>
                             <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 3}>
                                 <GuestList
-                                addedval = {(access.includes("guest"+inventoryRight.addCall))}
-                                editCallval = {(access.includes("guest"+inventoryRight.editCall))}
-                                deleteICall={(access.includes("guest"+inventoryRight.deleteICall))}
-                                action1={(access.includes("guest"+inventoryRight.action))}
+                                addedval = {(access.includes("guest"+inventoryRight.addCall)||isAdmin)}
+                                editCallval = {(access.includes("guest"+inventoryRight.editCall)||isAdmin)}
+                                deleteICall={(access.includes("guest"+inventoryRight.deleteICall)||isAdmin)}
+                                action1={(access.includes("guest"+inventoryRight.action)||isAdmin)}
                                 />
                             </CTabPane>
 

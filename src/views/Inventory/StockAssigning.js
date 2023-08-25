@@ -209,7 +209,7 @@ function StockAssigning() {
         <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
             <CCardTitle  >Office Inventory</CCardTitle>
         </CCardHeader>
-
+        
         <CCardBody>
 
             <CNav variant="tabs" role="tablist" style={{ cursor: 'pointer' }}>

@@ -781,7 +781,7 @@ function NavigateFitnnesofClient(id){
                                         <CTableRow key={index}>
                                             <CTableDataCell>{ (index + 1 + (paging * 10))}</CTableDataCell>
                                             <CTableDataCell>{item.ClientId}</CTableDataCell>
-                                            <CTableDataCell> <Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/1`} target="_black">{item.Fullname}</Link></CTableDataCell>
+                                            <CTableDataCell> <Link style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/1`} >{item.Fullname}</Link></CTableDataCell>
                                             <CTableDataCell>{item.ContactNumber}</CTableDataCell>
                                             <CTableDataCell><label style={{ cursor: 'pointer' }} >{item.invoiceNum}</label> </CTableDataCell>
                                             <CTableDataCell>{item.AttendanceID}</CTableDataCell>
@@ -790,7 +790,7 @@ function NavigateFitnnesofClient(id){
                                             <CTableDataCell>{moment(item.startDate).format("DD-MM-YYYY")}</CTableDataCell>
                                             <CTableDataCell>{moment(item.endDate).format("DD-MM-YYYY")}</CTableDataCell>
                                             <CTableDataCell>  <CButton size='sm' onClick={()=>NavigateFitnnesofClient(item._id)} >View Fitness</CButton></CTableDataCell>
-                                            <CTableDataCell><Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/5`} target="_black"><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} /></Link></CTableDataCell>
+                                            <CTableDataCell><Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/5`} ><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} /></Link></CTableDataCell>
                                             <CTableDataCell><CButton onClick={() => { setCalls(true), setCallUpdateID(item._id) }}>View</CButton></CTableDataCell>
                                             <CTableDataCell className='text-center'>{item.status === 'active' ? <>
                                             <CButton className='mt-1' color='success' onClick={() => updateRec(item._id, 'inactive')} >Active</CButton></> : <CButton className='mt-1' color='danger' onClick={() => updateRec(item._id, 'active')}>Inactive</CButton>}</CTableDataCell>

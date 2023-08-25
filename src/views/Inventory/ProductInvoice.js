@@ -30,15 +30,14 @@ import moment from 'moment/moment';
 import Invoice from '../finance/ClientInvoice/Invoice/Invoice';
 import { useAdminValidation } from '../Custom-hook/adminValidation';
 import { inventoryRight } from '../hr/Rights/rightsValue/erpRightsValue';
+import { Link } from 'react-router-dom'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
     const token = user.token;
-    const username = user.user.username;
 
 
-
-const ProductInvoice = () => {
+const ProductInvoice = ({onLyClient,id}) => {
 
     let num =0
     const [AllInvoiceData,setAllInvoiceData] = useState([])
@@ -63,14 +62,14 @@ const ProductInvoice = () => {
 
 
     const getAllInvoiceData = async ()=>{
-        const {data} = await axios.get(`${url1}/productInvoice/${pathVal}`,{ 
+        const urlPath = onLyClient?`${url1}/productInvoice/MemberId/${id}`:
+        `${url1}/productInvoice/${pathVal}`
+        const {data} = await axios.get(urlPath,{ 
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }})
         
-
-           console.log(data.reverse())     
-
+                console.log(data)
         setAllInvoiceData(data.reverse())     
                 
     } 
@@ -163,6 +162,7 @@ function toPrintInvoice(data){
     setPrinInvoice(true)  
   }
 
+
     return (
         <CRow>
             <Invoice 
@@ -171,12 +171,12 @@ function toPrintInvoice(data){
        InvoiceData={prinInvoiceData}
        />
         
-            <CCol lg={12} sm={12}>
-                <CCard className='mb-3 border-top-success border-top-3'>
-                    <CCardHeader className='d-flex justify-content-between'>
+            <CCol lg={12} sm={12} className={onLyClient?'border-0':'border-1'}>
+                <CCard  className={!onLyClient?'mb-3 border-top-success border-top-3':'border-0'}>
+                   {!onLyClient&& <CCardHeader className='d-flex justify-content-between'>
                         <strong className="mt-2">Total Invoice</strong>
                         <strong className="mt-2" > Total Invoice :{AllInvoiceData.length}</strong>
-                    </CCardHeader>
+                    </CCardHeader>}
                     <CCardBody>
                         
                         <CTable bordered style={{ borderColor: "#106103" }} responsive>
@@ -192,23 +192,26 @@ function toPrintInvoice(data){
                                     <CTableHeaderCell scope="col">Created By</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Pay Mode</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col" style={{display:access.includes(inventoryRight.viewProductInvoice)?'':'none'}}>View</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col" style={{display:access.includes(inventoryRight.deleteProductInvoice)?'':'none'}}> Delete</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:access.includes(inventoryRight.viewProductInvoice)||isAdmin?'':'none'}}>View</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col" style={{display:access.includes(inventoryRight.deleteProductInvoice)||isAdmin?'':'none'}}> Delete</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                                {AllInvoiceData.map((el,i)=>
-                                <CTableRow>
-                                <CTableDataCell>{i+1}</CTableDataCell>
+                                {AllInvoiceData.slice(pagination-10, pagination).map((el,i)=>
+                                <CTableRow color={el.typeOfClient==='Client'?'':'success'}>
+                                <CTableDataCell>{i+1+pagination-10}</CTableDataCell>
                                 <CTableDataCell>{moment(el.followUpDate).format('YYYY-MM-DD')}</CTableDataCell>
                                 <CTableDataCell>{el.clientId}</CTableDataCell>
-                                <CTableDataCell>{el.Fullname}</CTableDataCell>
+                                <CTableDataCell>
+                                {el.typeOfClient==='Client'?<Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${el.MemberId}/1`} 
+                                            >{el.Fullname}</Link>:el.Fullname}
+                                </CTableDataCell>
                                 <CTableDataCell>{el.InvoiceNo}</CTableDataCell>
                                 <CTableDataCell>{el.counseller}</CTableDataCell>
                                 <CTableDataCell>{el.amount}</CTableDataCell>
                                 <CTableDataCell>{el.paymode}</CTableDataCell>
-                                <CTableDataCell style={{display:access.includes(inventoryRight.viewProductInvoice)?'':'none'}}><CButton size='sm' onClick={()=>toPrintInvoice(el)} >View</CButton></CTableDataCell>
-                                <CTableDataCell style={{display:access.includes(inventoryRight.deleteProductInvoice)?'':'none'}}><MdDelete onClick={()=>deleteCall(el._id)} style={{cursor:'pointer'}}/></CTableDataCell>
+                                <CTableDataCell style={{display:access.includes(inventoryRight.viewProductInvoice )||isAdmin?'':'none'}}><CButton size='sm' onClick={()=>toPrintInvoice(el)} >View</CButton></CTableDataCell>
+                                <CTableDataCell style={{display:access.includes(inventoryRight.deleteProductInvoice)||isAdmin?'':'none'}}><MdDelete onClick={()=>deleteCall(el._id)} style={{cursor:'pointer'}}/></CTableDataCell>
                             </CTableRow>
                                 )}
                             </CTableBody>
@@ -218,22 +221,23 @@ function toPrintInvoice(data){
                                 <CCol style={{ width: '100%' }} className='d-flex justify-content-center my-3'>
                                     <YogaSpinnar />
                          </CCol> : ''}
-                </CCard>
-            </CCol>
 
-     <div className='d-flex justify-content-center mt-3' >
+                         
+     <div className={!onLyClient?'d-flex justify-content-center mt-3':'d-flex justify-content-center mt-2'} >
                         <CPagination aria-label="Page navigation example" style={{cursor:'pointer'}}>
                             <CPaginationItem aria-label="Previous" onClick={() => setPagination((val) => val > 10 ? val - 10 : 10)}>
                                 <span aria-hidden="true" >&laquo;</span>
                             </CPaginationItem>
                             <CPaginationItem active >{pagination / 10}</CPaginationItem>
-                            {num > pagination / 10 * 10 && <CPaginationItem onClick={() => setPagination((val) => val < num ? val + 10 : val)}>{pagination / 10 + 1}</CPaginationItem>}
-                            {num > pagination / 10 * 20 && <CPaginationItem onClick={() => setPagination((val) => val < num ? val + 10 : val)}>{pagination / 10 + 2}</CPaginationItem>}
-                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < num ? val + 10 : val)}>
+                            {AllInvoiceData.length > pagination / 10 * 10 && <CPaginationItem onClick={() => setPagination((val) => val < AllInvoiceData.length ? val + 10 : val)}>{pagination / 10 + 1}</CPaginationItem>}
+                            {AllInvoiceData.length > pagination / 10 * 20 && <CPaginationItem onClick={() => setPagination((val) => val < AllInvoiceData.length ? val + 10 : val)}>{pagination / 10 + 2}</CPaginationItem>}
+                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < AllInvoiceData.length ? val + 10 : val)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>
                         </CPagination>
     </div>
+                </CCard>
+            </CCol>
         </CRow>
     )
 }
