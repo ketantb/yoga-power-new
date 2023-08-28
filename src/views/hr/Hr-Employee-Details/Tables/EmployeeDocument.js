@@ -21,14 +21,13 @@ import axios from "axios";
 import { storage } from "src/firebase";
 import {getDownloadURL, ref,uploadBytesResumable } from "firebase/storage";
 import { useParams } from 'react-router-dom'
-import { useAdminValidation } from "src/views/Custom-hook/adminValidation";
+import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
 const EmployeeDocument = ({id}) => {
 
     
 const componentRef = useRef()
-const pathVal = useAdminValidation('Master')
-
+const uniqAdminObject = useUniqAdminObjeact()
 
 
 
@@ -109,7 +108,7 @@ const handlePrint = useReactToPrint({
         try{
           if(type==='Save'){
             response = await  axios.post(`${url}/emplDocument/create`,
-            {...empDocumnet,docview:fileUploaded},{headers})
+            {...empDocumnet,docview:fileUploaded,...uniqAdminObject},{headers})
           }
           if(type==='Update'){
            response = await  axios.post(`${url}/emplDocument/update/${empDocumnet?._id}`,{...empDocumnet},{headers})

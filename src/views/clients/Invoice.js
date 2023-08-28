@@ -21,6 +21,7 @@ import {
 import logo from 'src/assets/images/avatars/icon.png'
 import { useReactToPrint } from 'react-to-print'
 import { useSelector } from 'react-redux'
+import { useAdminValidation } from '../Custom-hook/adminValidation'
 import axios from 'axios'
 
 
@@ -32,11 +33,34 @@ function Invoice ({allIvoiceOfaUser,showInvoiceModal,setInvoceModal,ClientData})
 
     const [clientData,setClientData] = useState({})
     const   url = useSelector((el)=>el.domainOfApi) 
+    const pathVal = useAdminValidation('Master')
+    const [invoiceDataView,setInvoiceDataView] =useState({
+    TNC:'',
+    InvoiceLogo:'',
+    InvoiceTitle:'',
+    Address:""
+})
+
+
+    const getInvoiceLogo = async ()=>{
+        const response = await axios.get(`${url}/center-invoice-setup/${pathVal}`,{ headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+
+        if(response.status===200){
+         setInvoiceDataView(response.data)   
+        }
+      }  
+    
+      useEffect(()=>{
+        getInvoiceLogo()
+      },[])
 
     async function clinetInfo(){
         const {data,status} = await axios.get(`${url}/memberForm/${allIvoiceOfaUser[0]?.MemberId}`,{ headers: {
             'Authorization': `Bearer ${token}`
         }})
+        
         if(status===200){
             setClientData(data)
         }
@@ -48,6 +72,7 @@ if(Object.values((ClientData||[])).join('').trim()||allIvoiceOfaUser?.[0]?.Membe
 }else{
     setClientData(ClientData)
 }
+getInvoiceLogo()
  },[allIvoiceOfaUser[0]?._id,allIvoiceOfaUser?.length])       
         
 
@@ -74,8 +99,8 @@ if(Object.values((ClientData||[])).join('').trim()||allIvoiceOfaUser?.[0]?.Membe
                             </CModalHeader>
                             <CModalBody  ref={componentRef} style={{ padding: '25px' }}>
                                 <CRow>
-                                   <CCol lg={12} className='text-center'><CImage src={logo} width="100px" height='100px' /></CCol>
-                                    <CCol lg={12} className='text-center mt-2'><h5>Yog Power International </h5></CCol>
+                                   <CCol lg={12} className='text-center'><CImage src={invoiceDataView.InvoiceLogo} width="100px" height='100px' /></CCol>
+                                    <CCol lg={12} className='text-center mt-2'><h5>{invoiceDataView.InvoiceTitle}</h5></CCol>
                                 </CRow>
                                
 
@@ -273,16 +298,13 @@ return <div  className='my-5' >
                                         </CTableRow>
                                         <CTableRow>
                                             <CTableDataCell colSpan={4}>
-                                                <div>Fee once paid is not refundable, Non transferable & no package extension, lapsed sessions has to be adjusted within the expiry date. Instructors & timings are subject to change. All packages would be on hourly basis in a day. If a person wishes to workout more than an hour in a day, kindly upgrade your package accordingly. follow guidelines for better result</div>
+                                                <div>{invoiceDataView.TNC}</div>
                                             </CTableDataCell>
                                         </CTableRow>
 
                                         <CTableRow>
                                             <CTableDataCell colSpan={4}>
-                                                <div style={{ fontWeight: 'bold' }}>Address: Shop 24/25, 2nd Floor, V Mall, Thakur Complex, Kandivali East, Mumbai 400 101. India.</div>
-                                                <label style={{ fontWeight: 'bold' }}>Email: info@yogpowerint.com</label>
-                                                <label style={{ fontWeight: 'bold', marginLeft: '10px' }}>Phone: +91 9819 1232 91</label>
-                                                <div style={{ fontWeight: 'bold' }}>Website: https://yogpowerint.com</div>
+                                                <div style={{ fontWeight: 'bold' }}>{invoiceDataView.Address}</div>
                                             </CTableDataCell>
                                         </CTableRow>
                                     </CTableBody>

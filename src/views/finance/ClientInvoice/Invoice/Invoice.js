@@ -27,7 +27,7 @@ import moment from "moment/moment";
 import {RxCross2} from 'react-icons/rx'
 import { useReactToPrint } from "react-to-print";
 
-const Invoice = ({InvoiceData,visibale,setPrinInvoice}) => {
+const Invoice = ({InvoiceData,visibale,setPrinInvoice,viewInvoiceData}) => {
 
 
 const componentRef = useRef()
@@ -48,8 +48,8 @@ const handlePrint = useReactToPrint({
                 </CModalHeader>
                 <CModalBody ref={componentRef} className="p-4">
                     <CRow>
-                        <CCol lg={12} className='text-center'><CImage src={logo} width="100px" height='100px' /></CCol>
-                        <CCol lg={12} className='text-center mt-2'><h5>Yog Power International  </h5></CCol>    
+                        <CCol lg={12} className='text-center'><CImage src={viewInvoiceData.InvoiceLogo} width="100px" height='100px' /></CCol>
+                        <CCol lg={12} className='text-center mt-2'><h5>{viewInvoiceData.InvoiceTitle}</h5></CCol>    
                     </CRow>
                   
                     <CRow className="mt-2">
@@ -125,16 +125,13 @@ const handlePrint = useReactToPrint({
                                             </CTableRow>
                                             <CTableRow>
                                                 <CTableDataCell colSpan={4}>
-                                                    <div>Fee once paid is not refundable, Non transferable & no package extension, lapsed sessions has to be adjusted within the expiry date. Instructors & timings are subject to change. All packages would be on hourly basis in a day. If a person wishes to workout more than an hour in a day, kindly upgrade your package accordingly. follow guidelines for better result</div>
+                                                    <div>{viewInvoiceData.TNC}</div>
                                                 </CTableDataCell>
                                             </CTableRow>
     
                                             <CTableRow>
                                                 <CTableDataCell colSpan={4}>
-                                                    <div style={{ fontWeight: 'bold' }}>Address: Shop 24/25, 2nd Floor, V Mall, Thakur Complex, Kandivali East, Mumbai 400 101. India.</div>
-                                                    <label style={{ fontWeight: 'bold' }}>Email: info@yogpowerint.com</label>
-                                                    <label style={{ fontWeight: 'bold', marginLeft: '10px' }}>Phone: +91 9819 1232 91</label>
-                                                    <div style={{ fontWeight: 'bold' }}>Website: https://yogpowerint.com</div>
+                                                    <div style={{ fontWeight: 'bold' }}>{viewInvoiceData.Address}</div>
                                                 </CTableDataCell>
                                             </CTableRow>
                    

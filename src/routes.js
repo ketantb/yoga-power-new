@@ -146,7 +146,7 @@ const ShiftTimingManagmentMastr = React.lazy(()=>import('./views/Master/HRMaster
 const PayrollMaster = React.lazy(()=>import('./views/Master/HRMaster/PayrollMaster'))
 const EmpJoiningMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpJoining'))
 const EmpPerformanceMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpPrformanceMaster'))
-// const InvoiceMaster = React.lazy(()=>import('./views/Master/finance/InvoiceMaster'))
+const InvoiceMasterLT = React.lazy(()=>import('./views/Master/centerSetup/InvoiceMaster'))
 // Base
 const TrainerSalarySlipMaster = React.lazy(()=>import('./views/Master/HRMaster/TrainerSalarySlipMaster'))
 // const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
@@ -390,6 +390,7 @@ const routes = [
   { path:'/master/hr/emp-Prformance',name:'Employee Performance',element: EmpPerformanceMaster},
   { path:'/master/center-partners',name:'Center Partners',element: CenterPartners},
   { path:'/master/marketing/automated-communication',name:'Center Partners',element: AutomatedCommunication},
+  { path:'/master/center-setup/invoice-master',name:'Invoice Master',element: InvoiceMasterLT},
 
 
 

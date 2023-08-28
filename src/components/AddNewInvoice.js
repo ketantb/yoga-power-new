@@ -22,7 +22,6 @@ import {
 
 import React, { useEffect, useState,useRef } from "react";
 import axios from "axios";
-import logo from 'src/assets/images/avatars/icon.png'
 import { useSelector } from 'react-redux'
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 import { useReactToPrint } from 'react-to-print'
@@ -97,6 +96,17 @@ const handlePrint = useReactToPrint({
     const [errorMessage,setErrorMessage] = useState('')
     const [printInvoiceActive,setPrintInoiceActive]=useState(false)
     const [staff,setStaff] = useState([])
+    const [bankDetails,setBankDetails] = useState({
+        bankName:'',
+        ifcCode:'',
+    })
+    const [invoiceViewData,setViewInvoiceData]  =useState({
+        TNC:'',
+        InvoiceLogo:'',
+        InvoiceTitle:'',
+        Address:""
+    })
+
 
 
     const uniqObj = useUniqAdminObjeact()
@@ -129,19 +139,22 @@ const handlePrint = useReactToPrint({
         const response1 =  axios.get(`${url1}/employeeform/${pathVal}`,headers)
         const response2 =  axios.get(`${url1}/packageMaster/${pathVal}`,headers)
         const response3 =  axios.get(`${url1}/invoice/${pathVal}`,headers)
+        const response4  = axios.get(`${url1}/center-invoice-setup/${pathVal}`,headers)
     
     
     
-        const allData = await Promise.all([response1,response2,response3])
+        const allData = await Promise.all([response1,response2,response3,response4])
     
         const staffData = allData[0]?.data
         const pacKgaeMasterData = allData[1]?.data
         const invoice = allData[2]?.data
+        const invoiceViewData = allData[3]?.data
     
     
         setStaff(staffData)
         setService(pacKgaeMasterData)
         setInvoice(invoice.length)
+        setViewInvoiceData(invoiceViewData)
     }catch(error){
         console.log(error)
     }
@@ -215,7 +228,8 @@ return
         upgrade:(RenewedObj?true:false),
         EmployeeId:selectedStaff?._id, 
         ...uniqObjeact,
-        contact:data23?.ContactNumber
+        contact:data23?.ContactNumber,
+        ...bankDetails
     }
 
     
@@ -360,8 +374,8 @@ setServiceDays(el.Days)
     </CModalHeader>
     <CModalBody>
         <CRow>
-            <CCol lg={12} className='text-center'><CImage src={logo} width="100px" height='100px' /></CCol>
-            <CCol lg={12} className='text-center mt-2'><h5>Yog Power International  </h5></CCol>
+            <CCol lg={12} className='text-center'><CImage src={invoiceViewData.InvoiceLogo} width="100px" height='100px' /></CCol>
+            <CCol lg={12} className='text-center mt-2'><h5>{invoiceViewData.InvoiceTitle}</h5></CCol>
 
         </CRow>
         <CRow className="mt-2">
@@ -681,6 +695,33 @@ setServiceDays(el.Days)
                                     </CTableDataCell>
                                 </CTableRow>
                                 <CTableRow>
+                                    <h6>Optional</h6>
+                                </CTableRow>
+                                <CTableRow>
+                                     <CTableDataCell>Bank Name</CTableDataCell>
+
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            value={bankDetails.bankName}
+                                            onChange={(e) => { setBankDetails(prev=>({
+                                                ...prev,bankName:e.target.value})) }}
+                                            style={{ minWidth: "100px" }}                       
+                                        />
+                                    </CTableDataCell>
+                                </CTableRow>
+                                <CTableRow>
+                                     <CTableDataCell>IFC Code</CTableDataCell>
+
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            value={bankDetails.ifcCode}
+                                            onChange={(e) => { setBankDetails(prev=>({
+                                                ...prev,ifcCode:e.target.value})) }}
+                                            style={{ minWidth: "100px" }}                       
+                                        />
+                                    </CTableDataCell>
                                 </CTableRow>
                             </CTableBody>
                         </CTable>
@@ -706,16 +747,14 @@ setServiceDays(el.Days)
                 </CTableRow>
                 <CTableRow>
                     <CTableDataCell colSpan={4}>
-                        <div>Fee once paid is not refundable, Non transferable & no package extension, lapsed sessions has to be adjusted within the expiry date. Instructors & timings are subject to change. All packages would be on hourly basis in a day. If a person wishes to workout more than an hour in a day, kindly upgrade your package accordingly. follow guidelines for better result</div>
+                        <div>{invoiceViewData.TNC}</div>
                     </CTableDataCell>
                 </CTableRow>
 
                 <CTableRow>
                     <CTableDataCell colSpan={4}>
-                        <div style={{ fontWeight: 'bold' }}>Address: Shop 24/25, 2nd Floor, V Mall, Thakur Complex, Kandivali East, Mumbai 400 101. India.</div>
-                        <label style={{ fontWeight: 'bold' }}>Email: info@yogpowerint.com</label>
-                        <label style={{ fontWeight: 'bold', marginLeft: '10px' }}>Phone: +91 9819 1232 91</label>
-                        <div style={{ fontWeight: 'bold' }}>Website: https://yogpowerint.com</div>
+                        <div style={{ fontWeight: 'bold' }}>{invoiceViewData.Address}</div>
+                      
                     </CTableDataCell>
                 </CTableRow>
             </CTableBody>
@@ -744,8 +783,8 @@ setServiceDays(el.Days)
                             </CModalHeader>
                             <CModalBody ref={componentRef} style={{ padding: '25px' }}>
                                 <CRow>
-                                    <CCol lg={12} className='text-center'><CImage src={logo} width="100px" height='100px' /></CCol>
-                                    <CCol lg={12} className='text-center mt-2'><h5>Yog Power International </h5></CCol>
+                                    <CCol lg={12} className='text-center'><CImage src={invoiceViewData.InvoiceLogo} width="100px" height='100px' /></CCol>
+                                    <CCol lg={12} className='text-center mt-2'><h5>{invoiceViewData.InvoiceTitle}</h5></CCol>
                                     <CCol className='mt-2' style={{ marginLeft: '10px' }}>
                                         <h6>Client Name: {getInvoiceInfo.Fullname}</h6>
                                         <div>Client Number: {getInvoiceInfo.ContactNumber}</div>
@@ -882,16 +921,14 @@ setServiceDays(el.Days)
                                         </CTableRow>
                                         <CTableRow>
                                             <CTableDataCell colSpan={4}>
-                                                <div>Fee once paid is not refundable, Non transferable & no package extension, lapsed sessions has to be adjusted within the expiry date. Instructors & timings are subject to change. All packages would be on hourly basis in a day. If a person wishes to workout more than an hour in a day, kindly upgrade your package accordingly. follow guidelines for better result</div>
+                                                <div>{invoiceViewData.TNC}</div>
                                             </CTableDataCell>
                                         </CTableRow>
 
                                         <CTableRow>
                                             <CTableDataCell colSpan={4}>
-                                                <div style={{ fontWeight: 'bold' }}>Address: Shop 24/25, 2nd Floor, V Mall, Thakur Complex, Kandivali East, Mumbai 400 101. India.</div>
-                                                <label style={{ fontWeight: 'bold' }}>Email: info@yogpowerint.com</label>
-                                                <label style={{ fontWeight: 'bold', marginLeft: '10px' }}>Phone: +91 9819 1232 91</label>
-                                                <div style={{ fontWeight: 'bold' }}>Website: https://yogpowerint.com</div>
+                                                <div style={{ fontWeight: 'bold' }}>{invoiceViewData.Address}</div>
+                                             
                                             </CTableDataCell>
                                         </CTableRow>
                                     </CTableBody>

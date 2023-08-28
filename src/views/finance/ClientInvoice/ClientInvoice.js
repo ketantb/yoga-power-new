@@ -68,6 +68,10 @@ function ClientInvoice(){
     const [selectedStaffId,setSelectedStaffId] = useState('')
     const [prinInvoiceData,setPrintInvoiceData] = useState([])
     const [prinInvoice,setPrinInvoice] = useState(false)
+    const [viewInvoiceData,setViewInvoiceData] = useState({  TNC:'',
+    InvoiceLogo:'',
+    InvoiceTitle:'',
+    Address:""})
     
 
     const obj = useMemo(()=>{return{
@@ -143,16 +147,18 @@ if(selectedStaffId?.trim()){
 async  function toGetSelectInputData(){
 try{
 const response1 =     axios.get(`${url}/memberForm/${pathValMaster}`, {headers})   
-const response2 =    axios.get(`${url}/enquiryForm/${pathValMaster}`, {headers})  
-const response3 = axios.get(`${url}/employeeform/${pathValMaster}`,{headers}) 
-const response4 = axios.get(`${url}/productInvoice/${pathValMaster}`,{headers})
+const response2 =     axios.get(`${url}/enquiryForm/${pathValMaster}`, {headers})  
+const response3 =     axios.get(`${url}/employeeform/${pathValMaster}`,{headers}) 
+const response4 =     axios.get(`${url}/productInvoice/${pathValMaster}`,{headers})
+const response5 =     axios.get(`${url}/center-invoice-setup/${pathValMaster}`,{headers})
 
-const data = await Promise.all([response1,response2,response3,response4])
+
+const data = await Promise.all([response1,response2,response3,response4,response5])
 setClientData(data[0].data)
 setEnquiryData(data[1].data)
 setStaff(data[2].data)
 setClientReferance((prev)=>({...prev,InvoiceNo:data[3]?.data?.length}))
-
+setViewInvoiceData(data[4].data)
 }catch(error){
  console.log(error)
 }
@@ -207,6 +213,7 @@ return   <>
        visibale={prinInvoice} 
        setPrinInvoice={setPrinInvoice}
        InvoiceData={prinInvoiceData}
+       viewInvoiceData={viewInvoiceData}
        />
 
 <CRow>

@@ -44,6 +44,7 @@ const AllClassReport = () => {
                 'Authorization': `Bearer ${token}`
             }
         }).then((res) => {
+                console.log(res.data)
                 setClassReportDta(res.data.reverse())
             })
             .catch((error) => {
@@ -52,7 +53,7 @@ const AllClassReport = () => {
     }
 
     function formatTime(timeString) {
-        const [hourString, minute] = timeString.split(":");
+        const [hourString, minute] = timeString?.split(":");
         const hour = +hourString % 24;
         return (hour % 12 || 12) + ":" + (minute||'00') + (hour < 12 ? "AM" : "PM");
     }
@@ -145,21 +146,21 @@ const AllClassReport = () => {
                                         />
                                     </CTableDataCell> 
                                 </CTableRow>
-                                {classReportData.map((el,i)=>
+                                {/* {classReportData.map((el,i)=>
                                 <CTableRow>
                                        <CTableDataCell>{i+1} </CTableDataCell>
                                        <CTableDataCell>{el.year} {month[el.month]} </CTableDataCell>
-                                        <CTableDataCell >{el.details.trainer_name}</CTableDataCell>
+                                        <CTableDataCell >{el.details?.trainer_name}</CTableDataCell>
 
-                                        <CTableDataCell>{el.details.shiftTimeing}</CTableDataCell>
+                                        <CTableDataCell>{el.details?.shiftTimeing}</CTableDataCell>
 
                                         <CTableDataCell>{el.noOfClasses}</CTableDataCell>
 
-                                        <CTableDataCell>{formatTime(el.details.batch_timing)}</CTableDataCell>
+                                        <CTableDataCell>{formatTime(el.details?.batch_timing)}</CTableDataCell>
                                         <CTableDataCell>Hours {el.time.hours} Minutes {el.time.mins}</CTableDataCell>
 
                                 </CTableRow>                                                              
-                              )}
+                               )} */}
                                 
                             </CTableBody>
                         </CTable>

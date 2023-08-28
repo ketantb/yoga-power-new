@@ -490,71 +490,10 @@ const AllSuppilerList = () => {
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
                         </CTableDataCell>
-                         {/* <CTableDataCell>
-                            <CFormInput
-                                className="mb-1"
-                                style={{ minWidth: "120px" }}
-                                type="number"
-                                disabled
-                                value={search7}
-                                onChange={(e) => setSearch7(e.target.value)}
-                                aria-describedby="exampleFormControlInputHelpInline"
-                            />
-                        </CTableDataCell> */}
-                        {/* <CTableDataCell>
-                            <CFormInput
-                                className="mb-1"
-                                type="number"
-                                style={{ minWidth: "120px" }}
-                                disabled
-                                value={search8}
-                                onChange={(e) => setSearch8(e.target.value)}
-                                aria-describedby="exampleFormControlInputHelpInline"
-                            />
-                        </CTableDataCell>
-                        <CTableDataCell>
-                            <CFormInput
-                                className="mb-1"
-                                type="number"
-                                style={{ minWidth: "120px" }}
-                                disabled
-                                value={search9}
-                                onChange={(e) => setSearch9(e.target.value)}
-                                aria-describedby="exampleFormControlInputHelpInline"
-                            />
-                        </CTableDataCell>
-                        <CTableDataCell>
-                            <CFormInput
-                                className="mb-1"
-                                type="text"
-                                style={{ minWidth: "120px" }}
-                                disabled
-                                value={search10}
-                                onChange={(e) => setSearch10(e.target.value)}
-                                aria-describedby="exampleFormControlInputHelpInline"
-                            />
-                        </CTableDataCell>
-                        <CTableDataCell>
-                            <CFormInput
-                                className="mb-1"
-                                type="text"
-                                style={{ minWidth: "120px" }}
-                                disabled
-                                aria-describedby="exampleFormControlInputHelpInline"
-                            />
-                        </CTableDataCell>
-                        <CTableDataCell>
-                            <CFormInput
-                                className="mb-1"
-                                type="text"
-                                style={{ minWidth: "120px" }}
-                                disabled
-                                aria-describedby="exampleFormControlInputHelpInline"
-                            />
-                        </CTableDataCell>  */}
+                       
                     </CTableRow>
                     {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
-                        list.username === username && list.productName.includes(search2) && list.brandName.includes(search3) && list.category.includes(search4) && list.color.includes(search5) &&
+                         list.productName.includes(search2) && list.brandName.includes(search3) && list.category.includes(search4) && list.color.includes(search5) &&
                         list.productPrice.toString().includes(search6.toString())
                     ).map((item, index) => (
                         <CTableRow key={index}>
@@ -582,16 +521,16 @@ const AllSuppilerList = () => {
                 </CPaginationItem>
                 <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
                 {result1.filter((list) =>
-                    list.username === username && list.productName.includes(search2) && list.brandName.includes(search3) && list.category.includes(search4) && list.color.includes(search5) &&
+                     list.productName.includes(search2) && list.brandName.includes(search3) && list.category.includes(search4) && list.color.includes(search5) &&
                     list.productPrice.toString().includes(search6.toString())
                 ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
                 {result1.filter((list) =>
-                    list.username === username && list.productName.includes(search2) && list.brandName.includes(search3) && list.category.includes(search4) && list.color.includes(search5) &&
+                     list.productName.includes(search2) && list.brandName.includes(search3) && list.category.includes(search4) && list.color.includes(search5) &&
                     list.productPrice.toString().includes(search6.toString())
                 ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
                 {result1.filter((list) =>
-                    list.username === username && list.productName.includes(search2) && list.brandName.includes(search3) && list.category.includes(search4) && list.color.includes(search5) &&
+                     list.productName.includes(search2) && list.brandName.includes(search3) && list.category.includes(search4) && list.color.includes(search5) &&
                     list.productPrice.toString().includes(search6.toString())
                 ).length > (paging + 1) * 10 ?
                     <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>

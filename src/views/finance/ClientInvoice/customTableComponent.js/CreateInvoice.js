@@ -26,11 +26,11 @@ import axios from "axios";
 import logo from 'src/assets/images/avatars/icon.png'
 import moment from "moment/moment";
 import {RxCross2} from 'react-icons/rx'
-import { useUniqAdminObjeact,useAdminValidation } from "src/views/Custom-hook/adminValidation";
+import { useUniqAdminObjeact} from "src/views/Custom-hook/adminValidation";
 
 
 
-const CreateInvoice = ({visible,setActiveKey1,clientReferance,toPrintInvoice}) => {
+const CreateInvoice = ({visible,setActiveKey1,clientReferance,toPrintInvoice,viewInvoiceData}) => {
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;

@@ -53,8 +53,14 @@ const ProductInvoice = ({onLyClient,id}) => {
     const [endDate,setEndDate] = useState('')
     const [employeeData, setEmployeeData] = useState([])
     const [selectedEmployee, setSselectedEmployee] = useState('')
+    const [viewInvoiceData,setViewInvoiceData] = useState({  TNC:'',
+    InvoiceLogo:'',
+    InvoiceTitle:'',
+    Address:""})
 
     const pathVal = useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
+
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpInventory.items.erpProductInvoice.rights) 
     const access = rightsData?rightsData:[]
@@ -64,14 +70,22 @@ const ProductInvoice = ({onLyClient,id}) => {
     const getAllInvoiceData = async ()=>{
         const urlPath = onLyClient?`${url1}/productInvoice/MemberId/${id}`:
         `${url1}/productInvoice/${pathVal}`
-        const {data} = await axios.get(urlPath,{ 
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }})
-        
-                console.log(data)
-        setAllInvoiceData(data.reverse())     
-                
+
+        try{
+          const response1 =     axios.get(urlPath,{headers: {
+                'Authorization': `Bearer ${token}`
+            }})
+          const response2 =     axios.get(`${url1}/center-invoice-setup/${pathValMaster}`,{headers: {
+                'Authorization': `Bearer ${token}`
+            }})
+
+          const allData = await  Promise.all([response1,response2])
+
+          setAllInvoiceData(allData[0].data.reverse())   
+          setViewInvoiceData(allData[1].data)  
+        }catch(error){
+              console.log(error)
+        }           
     } 
     
     
@@ -91,23 +105,11 @@ const ProductInvoice = ({onLyClient,id}) => {
             })
     }
 
-    function getPackage() {
-        axios.get(`${url1}/packagemaster`, {
-    
-        })
-            .then((res) => {
-                setResult(res.data)
-                console.log(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
+
 
 
   
     useEffect(()=>{
-        getPackage()
         getEnquiry()
         
     },[])
@@ -119,19 +121,6 @@ const ProductInvoice = ({onLyClient,id}) => {
     console.log(AllInvoiceData)
 
 
-
-useEffect(() => {
-    getEmployee()
-}, [])
-
-async function getEmployee() {
-    try {
-        const { data } = await axios.get(`${url1}/employeeform`)
-        setEmployeeData(data)
-    } catch (error) {
-        console.log(error)
-    }
-}
 
 
 const clearFilter=()=>{
@@ -169,13 +158,15 @@ function toPrintInvoice(data){
        visibale={prinInvoice} 
        setPrinInvoice={setPrinInvoice}
        InvoiceData={prinInvoiceData}
+       viewInvoiceData={viewInvoiceData}
+
        />
         
             <CCol lg={12} sm={12} className={onLyClient?'border-0':'border-1'}>
                 <CCard  className={!onLyClient?'mb-3 border-top-success border-top-3':'border-0'}>
                    {!onLyClient&& <CCardHeader className='d-flex justify-content-between'>
-                        <strong className="mt-2">Total Invoice</strong>
-                        <strong className="mt-2" > Total Invoice :{AllInvoiceData.length}</strong>
+                        <strong className="mt-2">Product Invoice</strong>
+                        <strong className="mt-2" > Product Invoice :{AllInvoiceData.length}</strong>
                     </CCardHeader>}
                     <CCardBody>
                         
