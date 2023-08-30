@@ -204,6 +204,7 @@ const getLiveClasses = useCallback(async function () {
             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                 <CTableRow>
                     <CTableHeaderCell scope="col">Sr.No</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Year</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Month Name</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Employee</CTableHeaderCell>
                     <CTableHeaderCell scope="col">No. of Renewed Target</CTableHeaderCell>
@@ -240,6 +241,7 @@ const getLiveClasses = useCallback(async function () {
             num++
             return  <CTableRow key={num}>
              <CTableDataCell>{num}</CTableDataCell>
+             <CTableDataCell>{el.Year}</CTableDataCell>
              <CTableDataCell>{el2.monthName }</CTableDataCell>
                 <CTableDataCell>{el.Employee}</CTableDataCell>
                         <CTableDataCell>{+el2.Target}</CTableDataCell>
@@ -256,7 +258,7 @@ const getLiveClasses = useCallback(async function () {
     })
 }
 <CTableRow className='text-center' >
-                    <CTableDataCell colSpan={3} style={{ backgroundColor: "#0B5345"}} className='text-white  border-2'>Total</CTableDataCell>
+                    <CTableDataCell colSpan={4} style={{ backgroundColor: "#0B5345"}} className='text-white  border-2'>Total</CTableDataCell>
                     <CTableDataCell className=' border border-2 border-dark text-dark' scope="col">{totalTarget}</CTableDataCell>  
                     <CTableDataCell  className=' border border-2  border-dark text-dark' scope="col">{noOfRenewedLead}</CTableDataCell>  
                     <CTableDataCell className=' border border-2 border-dark text-dark'>{convertMemeber}</CTableDataCell>  

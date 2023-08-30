@@ -155,6 +155,8 @@ const headers = {
             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                 <CTableRow>
                     <CTableHeaderCell scope="col">Sr.No</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Year</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Month</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Employee</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Google Reviewst</CTableHeaderCell>
                     <CTableHeaderCell scope="col">
@@ -187,6 +189,8 @@ const headers = {
             num++
             return  <CTableRow key={num}>
             <CTableDataCell>{num}</CTableDataCell>
+            <CTableDataCell>{el.Year}</CTableDataCell>
+            <CTableDataCell>{el2.monthName}</CTableDataCell>
             <CTableDataCell>{el.Employee}</CTableDataCell>
                             <CTableDataCell>{el.Google_Reviews}</CTableDataCell>
                             <CTableDataCell>{el.Facebook}</CTableDataCell>
@@ -205,7 +209,7 @@ const headers = {
 }
 
 <CTableRow className='text-center' >
-                    <CTableDataCell colSpan={2} style={{ backgroundColor: "#0B5345"}} className='text-white  border-2'>Total</CTableDataCell>
+                    <CTableDataCell colSpan={4} style={{ backgroundColor: "#0B5345"}} className='text-white  border-2'>Total</CTableDataCell>
                     <CTableDataCell className=' border border-2 border-dark text-dark' scope="col">{totalTarget}</CTableDataCell>  
                     <CTableDataCell  className=' border border-2  border-dark text-dark' scope="col">0</CTableDataCell>  
                     <CTableDataCell className=' border border-2 border-dark text-dark'>0</CTableDataCell>  

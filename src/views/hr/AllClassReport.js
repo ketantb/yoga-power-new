@@ -39,7 +39,7 @@ const AllClassReport = () => {
     }, [])
 
     function getAttendance() {
-        axios.get(`${url}/staffAttendance/${pathValMaster}`, {
+        axios.get(`${url}/staffAttendanceWorkReport/${pathValMaster}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -52,16 +52,61 @@ const AllClassReport = () => {
             })
     }
 
-    function formatTime(timeString) {
-        const [hourString, minute] = timeString?.split(":");
-        const hour = +hourString % 24;
-        return (hour % 12 || 12) + ":" + (minute||'00') + (hour < 12 ? "AM" : "PM");
-    }
+//  function time_convert_Minutes(hoursNum)
+//     { 
+//       let num =  (+hoursNum.toFixed(2).split('.')[1]||0)
+//       let hours1 = (+hoursNum.toFixed(2).split('.')[0]||0)
+
+//         let hours = Math.floor(num / 60);  
+//         let minutes = num % 60;
+//         return (hours1+hours) + ":" + minutes;  
+
+//    }
+
+// function toGetHours(date1 ,date2) {
+
+// // get total seconds between the times
+// var hours = Math.abs(((new Date(date1) - new Date(date2))%86400000) / 3600000) ;
+// return hours
+// }
+
+//     const map = new Map()
+
+//     classReportData.forEach((el)=>{
+
+//         if(el.isTrainer &&el.checkOutDate){
+//             const obj ={
+//                 Year:new Date(el.checkDate).getFullYear(),
+//                 Month:new Date(el.checkDate).getMonth(),
+//                 Trainer:el.trainer_name,
+//                 TrainerId:el.trainerId,    
+//                 totalWorkingHours:toGetHours(el.checkDate,el.checkOutDate)            
+//             }
+//             console.log(el.checkDate,el.checkOutDate)   
+//             console.log(el.trainer_name)
+//             console.log(toGetHours(el.checkDate,el.checkOutDate))
+
+//             const tyepOFClassName = el.MemberId+" "+el.batch_timing+
+//              " "+el.category+" Year "+(obj.Year)+" Month "+
+//              (obj.Month)
+
+//             if(!map.has(tyepOFClassName)){
+//                 map.set(tyepOFClassName,obj)                    
+//             }else{
+//               const prevObj =  map.get(tyepOFClassName)
+//               prevObj.totalWorkingHours+=toGetHours(el.checkDate,el.checkOutDate)            
+//               map.set(tyepOFClassName,{...prevObj})                    
+//             }
+//         }
+//     })
 
 
-
-    
-
+//    const uniqObjArr = [] 
+//     map.forEach((el)=>{
+//     const hours = el.totalWorkingHours
+//     el.totalWorkingHours=time_convert_Minutes(hours)
+//     uniqObjArr.push(el)
+//     })
 
 
     return (
@@ -146,21 +191,17 @@ const AllClassReport = () => {
                                         />
                                     </CTableDataCell> 
                                 </CTableRow>
-                                {/* {classReportData.map((el,i)=>
+                                {classReportData.map((el,i)=>
                                 <CTableRow>
                                        <CTableDataCell>{i+1} </CTableDataCell>
-                                       <CTableDataCell>{el.year} {month[el.month]} </CTableDataCell>
-                                        <CTableDataCell >{el.details?.trainer_name}</CTableDataCell>
-
-                                        <CTableDataCell>{el.details?.shiftTimeing}</CTableDataCell>
-
-                                        <CTableDataCell>{el.noOfClasses}</CTableDataCell>
-
-                                        <CTableDataCell>{formatTime(el.details?.batch_timing)}</CTableDataCell>
-                                        <CTableDataCell>Hours {el.time.hours} Minutes {el.time.mins}</CTableDataCell>
-
+                                       <CTableDataCell>{el.Year+" "+el.Month} </CTableDataCell>
+                                       <CTableDataCell>{el.Trainer}</CTableDataCell>
+                                       <CTableDataCell>{el.category}</CTableDataCell>
+                                       <CTableDataCell>{el.numberOfAttended}</CTableDataCell>
+                                       <CTableDataCell>{el.BatchTime}</CTableDataCell>
+                                       <CTableDataCell>{el.totalWorkingHours}</CTableDataCell>
                                 </CTableRow>                                                              
-                               )} */}
+                               )}
                                 
                             </CTableBody>
                         </CTable>

@@ -97,7 +97,6 @@ const BatchMaster = () => {
             }
         })
             .then((res) => {
-                console.log(res.data)
                 setResult(res.data.reverse())
             })
             .catch((error) => {

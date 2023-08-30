@@ -9,8 +9,6 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import moment from 'moment/moment'
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
 import { useSelector } from 'react-redux'
 import { BsFillPersonCheckFill, BsFillPersonFill } from 'react-icons/bs'
 import { GiTeacher } from 'react-icons/gi'
@@ -59,13 +57,13 @@ const StaffCheckin = () => {
 
     const getDataToStaffCheckIn = async () => {
         try {
-            const response1 = axios.get(`${url1}/shiftTimeSchedule/all`, { headers })
+            const response1 = axios.get(`${url1}/shiftTimeSchedule/${pathValMaster}`, { headers })
             const response2 = axios.get(`${url1}/employeeform/${pathValMaster}`, { headers })
-            const response3 = axios.get(`${url1}/Batch/all`, { headers })
+            const response3 = axios.get(`${url1}/Batch/${pathValMaster}`, { headers })
 
             const data = await Promise.all([response1, response2, response3])
 
-            console.log()
+            console.log(data[2].data)
 
             setShitTimeingData(data[0].data)
             setAllStaff(data[1].data)
@@ -136,6 +134,7 @@ const StaffCheckin = () => {
             shiftTimeing: selectedtimeing.shiftName,
             shiftStartTime: selectedtimeing.startTime,
             shiftEndTime: selectedtimeing.endTime,
+            isTrainer,
             currentTimeInfo: {
                 hours: new Date().getHours(),
                 minutes: new Date().getMinutes(),
@@ -239,6 +238,8 @@ const StaffCheckin = () => {
         let time2 = new Date().toLocaleTimeString();
         let item = {
             checkOut: time2, status: 'Done',
+
+            checkOutDate:new Date(),
             status2: 'no',
             checkOutTimeInfo,
             ...handelTimeingStatus({ ...item1, checkOutTimeInfo }),
@@ -265,12 +266,6 @@ const StaffCheckin = () => {
 
     const submitBtn = () => {
         allStaff.filter((list) => list.AttendanceID.includes(attendanceID)).length;
-
-        console.log(allStaff.filter((list) => list.AttendanceID.includes(attendanceID)).length)
-      
-
-
-
 
         if (allStaff.filter((list) => list.AttendanceID.includes(attendanceID)).length) {
             allStaff.filter((list) =>
@@ -325,9 +320,6 @@ const StaffCheckin = () => {
         console.log({ shiftName: el.category, selectedId: el._id, startTime: el.batch_timing, endTime: endTime })
         setSelectedTimeing({ shiftName: el.category, selectedId: el._id, startTime: el.batch_timing, endTime: endTime })
     }
-
-
-    console.log(attendanceID)
 
     return (
         <CCard className="mb-3 border-success">
@@ -484,7 +476,7 @@ const StaffCheckin = () => {
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {result1.filter((list) => list.username === username).map((item, index) => (
+                        {result1.map((item, index) => (
                             <CTableRow key={index}>
                                 <CTableDataCell>{index + 1}</CTableDataCell>
                                 <CTableDataCell>{item.StaffName}</CTableDataCell>
@@ -493,7 +485,7 @@ const StaffCheckin = () => {
                                 <CTableDataCell>{moment(item.createdAt).format("LL")}</CTableDataCell>
                                 <CTableDataCell>{item.checkIn}</CTableDataCell>
                                 <CTableDataCell>{item.checkOut}</CTableDataCell>
-                                <CTableDataCell>{item.checkOut === undefined ? <CButton color='danger' onClick={() => CheckOut(item)}>Check Out</CButton> : <CButton disabled color='danger' onClick={() => CheckOut(item)}>Check Out</CButton>}</CTableDataCell>
+                                <CTableDataCell>{item.checkOut === undefined ? <CButton color='danger' onClick={() => CheckOut(item)}>Check Out</CButton> : <CButton disabled color='danger' >Check Out</CButton>}</CTableDataCell>
                                 <CTableDataCell>
                                     <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }}
                                         onClick={() => deleteStaff(item._id)} size='20px' /> </CTableDataCell>

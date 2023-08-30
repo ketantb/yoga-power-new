@@ -695,7 +695,7 @@ setServiceDays(el.Days)
                                     </CTableDataCell>
                                 </CTableRow>
                                 <CTableRow>
-                                    <h6>Optional</h6>
+                                    <h6>Bank Details</h6>
                                 </CTableRow>
                                 <CTableRow>
                                      <CTableDataCell>Bank Name</CTableDataCell>
