@@ -37,7 +37,7 @@ const useStockReport = () => {
             ProductId:productData.productDetails.ProductId,
             StatOfStock:'InStock',
             ClientId:productData.ClientId,
-            ...uniqObjVal
+            ...{...uniqObjVal,employeeMongoId:(productData?.EmpId||uniqObjVal.employeeMongoId)},
         }
 
     

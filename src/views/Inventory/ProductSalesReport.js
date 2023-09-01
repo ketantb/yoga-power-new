@@ -9,7 +9,9 @@ import {
     CTableHeaderCell,
     CTableRow,
     CCardHeader,
-    CCardTitle
+    CCardTitle,
+    CPagination,
+    CPaginationItem
 } from "@coreui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -20,6 +22,8 @@ const AllSuppilerList = ({onlyOneClient,id}) => {
     const url = useSelector((el)=>el.domainOfApi) 
     const [soldProductData,setSoldProductData] = useState([])
     const pathVal = useAdminValidation()
+    const [paging, setPaging] = useState(0);
+
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -80,9 +84,9 @@ const AllSuppilerList = ({onlyOneClient,id}) => {
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                    {soldProductData.map((item, index) => (
+                    {soldProductData.slice(paging * 10, paging * 10 + 10).map((item, index) => (
                         <CTableRow key={index}>
-                            <CTableDataCell>{index + 1 }</CTableDataCell>
+                            <CTableDataCell>{(index+1+ (paging * 10))}</CTableDataCell>
                             <CTableDataCell>{ new Date(item.Order_Date).toLocaleString()}</CTableDataCell>
                             <CTableDataCell>{item.Client_Name}</CTableDataCell>
                             <CTableDataCell>{item.Mobile_No}</CTableDataCell>
@@ -100,7 +104,21 @@ const AllSuppilerList = ({onlyOneClient,id}) => {
                     ))}
                 </CTableBody>
             </CTable>
-
+            <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+     <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+         <span aria-hidden="true">&laquo;</span>
+     </CPaginationItem>
+     <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+     {soldProductData?.length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+     {soldProductData?.length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+     {soldProductData?.length > (paging + 1) * 10 ?
+         <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+             <span aria-hidden="true">&raquo;</span>
+         </CPaginationItem>
+         : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+             <span aria-hidden="true">&raquo;</span>
+         </CPaginationItem>}
+    </CPagination>
 
         </CRow>
         </CCard>

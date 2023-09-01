@@ -26,6 +26,8 @@ import {
     CTableHeaderCell,
     CTableRow,
     CTabPane,
+    CPagination,
+    CPaginationItem
 } from '@coreui/react'
 import React, { useState,useCallback,useEffect } from 'react'
 import axios from 'axios'
@@ -50,6 +52,10 @@ const ServiceCall = ({id}) => {
 
 
     const [staff, setStaff] = useState([])
+    const [paging, setPaging] = useState(0);
+    const [pageLength,setPageLength] = useState(0)
+
+
     const monthName =     ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
@@ -106,6 +112,11 @@ const ServiceCall = ({id}) => {
     setFilterObj(initialFilterObj)
     }
 
+    useEffect(()=>{
+        setFilterObj(initialFilterObj)
+        setPageLength(0)
+        setPaging(0)
+    },[activeKey])
 
     return (
         <CRow>
@@ -236,7 +247,7 @@ const ServiceCall = ({id}) => {
                                             </CFormSelect>
                                         </CInputGroup>
                                     </CCol>
-                                    <CCol lg={3}>
+                                  {activeKey!==4 && <CCol lg={3}>
                                         <CInputGroup className="left">
                                         <CInputGroup>
                                             <CInputGroupText
@@ -257,7 +268,7 @@ const ServiceCall = ({id}) => {
                                             </CFormSelect>
                                         </CInputGroup>
                                         </CInputGroup>
-                                    </CCol>
+                                    </CCol>}
                                   
                     </CRow>
                       <CCol  className='my-2'>
@@ -268,14 +279,31 @@ const ServiceCall = ({id}) => {
                 
                                 <div style={{overflowY:'scroll'}} >
                         <CTabContent>
-                            {activeKey === 1 &&<WelcomeCalls id={id} visible={activeKey === 1} filterObj={filterObj} />}
-                            {activeKey === 2&&<FeedBackCall id={id} visible={activeKey === 2} filterObj={filterObj} />}                       
-                            {activeKey === 3&&<PaymentCallsTable id={id} visible={activeKey === 3} filterObj={filterObj} />} 
-                            {activeKey === 4 &&<IrregularMemberCall id={id} visible={activeKey === 4} filterObj={filterObj} />}
-                            {activeKey === 5 && <GreetingCall id={id} visible={activeKey === 5} filterObj={filterObj} />}
-                            {activeKey === 6 && <CallHistory id={id} visible={activeKey === 6} filterObj={filterObj} />}
+                            {activeKey === 1 &&<WelcomeCalls id={id}  paging={paging}  setPageLength={setPageLength} visible={activeKey === 1} filterObj={filterObj} />}
+                            {activeKey === 2&&<FeedBackCall id={id} paging={paging}  setPageLength={setPageLength}  visible={activeKey === 2} filterObj={filterObj} />}                       
+                            {activeKey === 3&&<PaymentCallsTable id={id} paging={paging}  setPageLength={setPageLength} visible={activeKey === 3} filterObj={filterObj} />} 
+                            {activeKey === 4 &&<IrregularMemberCall id={id}  paging={paging}  setPageLength={setPageLength} visible={activeKey === 4} filterObj={filterObj} />}
+                            {activeKey === 5 && <GreetingCall id={id} paging={paging}  setPageLength={setPageLength}  visible={activeKey === 5} filterObj={filterObj} />}
+                            {activeKey === 6 && <CallHistory id={id} paging={paging}  setPageLength={setPageLength}   visible={activeKey === 6} filterObj={filterObj} />}
                         </CTabContent>
                         </div>
+
+                        <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {pageLength > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {pageLength > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {pageLength > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                       </CPagination> 
                     </CCardBody>
                 </CCard>
             </CCol>

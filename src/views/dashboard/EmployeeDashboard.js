@@ -251,9 +251,9 @@ useEffect(()=>{
     </CCard>
                 </CCol>}
 
-                <CCol sm={12} className='mt-4'>
+                {(access?.includes(empLoyeeeRights.profit)||isAdmin)&&<CCol sm={12} className='mt-4'>
                     <BalancePayment/>
-                </CCol>
+                </CCol>}
                 </CRow> 
 
                </div>

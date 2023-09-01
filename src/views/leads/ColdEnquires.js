@@ -106,9 +106,12 @@ const ColdEnquires = () => {
 
 
     const isAdmin = useSelector((el)=>el.isAdmin) 
+
+    const coldExport  =  (rightsData?.edit?.includes(leadsSuperRight.coldEnquiresExport) || isAdmin)
     const coldAdd =  (rightsData?.addOn?.includes(leadsSuperRight.coldEnquires) || isAdmin)
     const coldDelete =  (rightsData?.delete?.includes(leadsSuperRight.coldEnquires) || isAdmin)
     const coldEdit  =  (rightsData?.edit?.includes(leadsSuperRight.coldEnquires) || isAdmin)
+
 
 
 
@@ -537,7 +540,7 @@ const ColdEnquires = () => {
                                 </CInputGroup>
                             </CCol>
                             <CCol lg={6} sm={6} md={6}>
-                                <CButtonGroup className=' mb-2 float-end'>
+                                <CButtonGroup className={coldExport?' mb-2 float-end':'d-none'}>
                                     <CButton color="primary" onClick={()=>exportColdEnquires(result)}>
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export

@@ -1,5 +1,6 @@
 import {CCard,CTable,CCol,CTableHead,CTableRow,CTableHeaderCell,
-    CTableBody,CTableDataCell,CFormInput,CCardHeader,CCardTitle,CButton,CCardBody
+    CTableBody,CTableDataCell,CFormInput,CCardHeader,CCardTitle,CButton,CCardBody,
+    CPagination,CPaginationItem
  } from '@coreui/react'
 
  import { useSelector } from 'react-redux'
@@ -12,7 +13,17 @@ import { useAdminValidation } from '../Custom-hook/adminValidation'
 function StockAlert(){
  const url = useSelector((el)=>el.domainOfApi) 
     const [result1, setResult1] = useState([])
+    const [paging, setPaging] = useState(0);
     const pathVal =  useAdminValidation()
+
+    const [filterObj,setFilterObj] = useState({
+        search1:'',
+        search2:'',
+        search3:'',
+        search4:'',
+        search5:'',
+        search6:'',
+    })
     
     const headers =   {
         "Authorization": `Bearer ${token}`,
@@ -26,13 +37,27 @@ function StockAlert(){
         axios.get(`${url}/stockorderlist-status-received-stock/${pathVal}`,{headers})
             .then((res) => {
                 setResult1(res.data.reverse().filter((el)=>+el.Available_Stock<=10))
-                console.log(res.data)
+                // setLength(res?.data?.length||0)
             })
             .catch((error) => {
                 console.error(error)
             })
     }
 
+
+   function filterDataFunction (data){
+     const FilterData =    data.filter((el,i)=>{
+            return (el.productDetails?.Product_Category?.toLowerCase()||'')
+            ?.includes(filterObj.search1.toLowerCase()) &&
+            (el.productName?.toLowerCase()||'')?.includes(filterObj.search2.toLowerCase())&&
+            (el.productDetails.Brand_Name?.toLowerCase()||'')?.includes(filterObj.search3.toLowerCase())
+            &&(el.Total_Stock+""||'').includes(filterObj.search4.toLowerCase())&&
+            ((Math.abs(el.soldQuantity))+""||'').includes(filterObj.search5.toLowerCase())
+            &&(el.Available_Stock+"").includes(filterObj.search6.toLowerCase())
+          })
+          console.log(FilterData.length)
+          return FilterData
+    }
     
 
 return (
@@ -73,8 +98,9 @@ return (
                                 className="mb-1"
                                 type="text"
                                 style={{ minWidth: "120px" }}
-                                disabled
                                 aria-describedby="exampleFormControlInputHelpInline"
+                                value={filterObj.search1}
+                                onChange={(e)=>setFilterObj((prev)=>({...prev,search1:e.target.value}))}
                             />
                         </CTableDataCell>
                         <CTableDataCell>
@@ -83,6 +109,8 @@ return (
                                 style={{ minWidth: "120px" }}
                                 type="text"
                                 aria-describedby="exampleFormControlInputHelpInline"
+                                value={filterObj.search2}
+                                onChange={(e)=>setFilterObj((prev)=>({...prev,search2:e.target.value}))}
                             />
                         </CTableDataCell>
                         <CTableDataCell>
@@ -91,6 +119,8 @@ return (
                                 style={{ minWidth: "100px" }}
                                 type="text"
                                 aria-describedby="exampleFormControlInputHelpInline"
+                                value={filterObj.search3}
+                                onChange={(e)=>setFilterObj((prev)=>({...prev,search3:e.target.value}))}
                             />
                         </CTableDataCell>
                         <CTableDataCell>
@@ -99,6 +129,8 @@ return (
                                 type="text"
                                 style={{ minWidth: "200px" }}
                                 aria-describedby="exampleFormControlInputHelpInline"
+                                value={filterObj.search4}
+                                onChange={(e)=>setFilterObj((prev)=>({...prev,search4:e.target.value}))}
                             />
                         </CTableDataCell>
                         <CTableDataCell>
@@ -107,6 +139,8 @@ return (
                                 style={{ minWidth: "120px" }}
                                 type="text"
                                 aria-describedby="exampleFormControlInputHelpInline"
+                                value={filterObj.search5}
+                                onChange={(e)=>setFilterObj((prev)=>({...prev,search5:e.target.value}))}
                             />
                         </CTableDataCell>
                         <CTableDataCell>
@@ -115,6 +149,8 @@ return (
                                 style={{ minWidth: "120px" }}
                                 type="number"
                                 aria-describedby="exampleFormControlInputHelpInline"
+                                value={filterObj.search6}
+                                onChange={(e)=>setFilterObj((prev)=>({...prev,search6:e.target.value}))}
                             />
                         </CTableDataCell>
                         
@@ -122,9 +158,9 @@ return (
                     
                         
                     </CTableRow>
-                    {result1.map((item, index) => (
-                        <CTableRow key={index} className='text-center'>
-                            <CTableDataCell>{index + 1 }</CTableDataCell>
+                    {filterDataFunction(result1).slice(paging * 10, paging * 10 + 10).map((item, i) => (
+                        <CTableRow key={i} className='text-center'>
+                            <CTableDataCell>{(i+1+ (paging * 10))}</CTableDataCell>
                             <CTableDataCell>{item.productDetails.Product_Category}</CTableDataCell>
                             <CTableDataCell>{item.productName}</CTableDataCell>
                             <CTableDataCell>{item.productDetails.Brand_Name}</CTableDataCell>
@@ -137,9 +173,23 @@ return (
                 </CTableBody>
             </CTable>
 
+
+    <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+     <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+         <span aria-hidden="true">&laquo;</span>
+     </CPaginationItem>
+     <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+     {filterDataFunction(result1)?.length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+     {filterDataFunction(result1)?.length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+     {filterDataFunction(result1)?.length > (paging + 1) * 10 ?
+         <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+             <span aria-hidden="true">&raquo;</span>
+         </CPaginationItem>
+         : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+             <span aria-hidden="true">&raquo;</span>
+         </CPaginationItem>}
+    </CPagination>
 </CCardBody>
-
-
 
 </CCard>
 

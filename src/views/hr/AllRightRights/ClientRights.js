@@ -39,10 +39,12 @@ const ClientRights = ({crmCientManagment,setRightObject}) => {
            onChange={(e)=>clientRigthFun(true,'crmAllClients1',e.target.checked)}
            /></span>
           </h5>
+            <CFormSwitch size="xl" label="Export" checked={checkDashRights(clientManagementRights.allClients+"Exp",'status')} onChange={()=>totoggaleRights(clientManagementRights.allClients+"Exp",'status')} />
             <CFormSwitch size="xl" label="Client Profile" checked={checkDashRights(clientManagementRights.allClients,'profile')} onChange={()=>totoggaleRights(clientManagementRights.allClients,'profile')} />
             <CFormSwitch size="xl" label="Status" checked={checkDashRights(clientManagementRights.allClients,'status')} onChange={()=>totoggaleRights(clientManagementRights.allClients,'status')} />
             <CFormSwitch size="xl" label="Edit Client" checked={checkDashRights(clientManagementRights.allClients,'edit')} onChange={()=>totoggaleRights(clientManagementRights.allClients,'edit')} />
             <CFormSwitch size="xl" label="Delete  Client"  checked={checkDashRights(clientManagementRights.allClients,'delete')} onChange={()=>totoggaleRights(clientManagementRights.allClients,'delete')} />
+            <CFormSwitch size="xl" label="Action" checked={checkDashRights(clientManagementRights.allClientAction,'profile')} onChange={()=>totoggaleRights(clientManagementRights.allClientAction,'profile')} />
         </CCol>
         <CCol>
 
@@ -53,11 +55,12 @@ const ClientRights = ({crmCientManagment,setRightObject}) => {
            onChange={(e)=>clientRigthFun(true,'crmActiveClients1',e.target.checked)}
            /></span>
           </h5>
-
+            <CFormSwitch size="xl" label="Export" checked={checkDashRights(clientManagementRights.activeClients+"Exp",'status')} onChange={()=>totoggaleRights(clientManagementRights.activeClients+"Exp",'status')} />
             <CFormSwitch size="xl" label="Client Profile" checked={checkDashRights(clientManagementRights.activeClients,'profile')} onChange={()=>totoggaleRights(clientManagementRights.activeClients,'profile')} />
             <CFormSwitch size="xl" label="Status" checked={checkDashRights(clientManagementRights.activeClients,'status')} onChange={()=>totoggaleRights(clientManagementRights.activeClients,'status')} />
             <CFormSwitch size="xl" label="Edit Client" checked={checkDashRights(clientManagementRights.activeClients,'edit')} onChange={()=>totoggaleRights(clientManagementRights.activeClients,'edit')} />
             <CFormSwitch size="xl" label="Delete  Client"  checked={checkDashRights(clientManagementRights.activeClients,'delete')} onChange={()=>totoggaleRights(clientManagementRights.activeClients,'delete')} />
+            <CFormSwitch size="xl" label="Action" checked={checkDashRights(clientManagementRights.activeClientsAction,'profile')} onChange={()=>totoggaleRights(clientManagementRights.activeClientsAction,'profile')} />
         </CCol>
         <CCol>
             <h5 className='mb-4 d-flex ' >
@@ -67,10 +70,13 @@ const ClientRights = ({crmCientManagment,setRightObject}) => {
            onChange={(e)=>clientRigthFun(true,'crmRenewalsClient1',e.target.checked)}
            /></span>
           </h5>
+            <CFormSwitch size="xl" label="Export" checked={checkDashRights(clientManagementRights.renewalsClients+"Exp",'status')} onChange={()=>totoggaleRights(clientManagementRights.renewalsClients+"Exp",'status')} />
             <CFormSwitch size="xl" label="Client Profile" checked={checkDashRights(clientManagementRights.renewalsClients,'profile')} onChange={()=>totoggaleRights(clientManagementRights.renewalsClients,'profile')} />
             <CFormSwitch size="xl" label="Status" checked={checkDashRights(clientManagementRights.renewalsClients,'status')} onChange={()=>totoggaleRights(clientManagementRights.renewalsClients,'status')} />
             <CFormSwitch size="xl" label="Edit Client" checked={checkDashRights(clientManagementRights.renewalsClients,'edit')} onChange={()=>totoggaleRights(clientManagementRights.renewalsClients,'edit')} />
             <CFormSwitch size="xl" label="Delete  Client"  checked={checkDashRights(clientManagementRights.renewalsClients,'delete')} onChange={()=>totoggaleRights(clientManagementRights.renewalsClients,'delete')} />
+            <CFormSwitch size="xl" label="Action" checked={checkDashRights(clientManagementRights.renewalsClientsAction,'profile')} onChange={()=>totoggaleRights(clientManagementRights.renewalsClientsAction,'profile')} />
+            <CFormSwitch size="xl" label="Renewals Invoice" checked={checkDashRights(clientManagementRights.renewalsInvoice,'profile')} onChange={()=>totoggaleRights(clientManagementRights.renewalsInvoice,'profile')} />
         </CCol>
     </CRow>
     <CRow className='mt-4'>
@@ -82,10 +88,12 @@ const ClientRights = ({crmCientManagment,setRightObject}) => {
            onChange={(e)=>clientRigthFun(true,'crmRenewedClients1',e.target.checked)}
            /></span>
           </h5>
+            <CFormSwitch size="xl" label="Export" checked={checkDashRights(clientManagementRights.renewedClients+"Exp",'status')} onChange={()=>totoggaleRights(clientManagementRights.renewedClients+"Exp",'status')} />
             <CFormSwitch size="xl" label="Client Profile" checked={checkDashRights(clientManagementRights.renewedClients,'profile')} onChange={()=>totoggaleRights(clientManagementRights.renewedClients,'profile')} />
             <CFormSwitch size="xl" label="Status" checked={checkDashRights(clientManagementRights.renewedClients,'status')} onChange={()=>totoggaleRights(clientManagementRights.renewedClients,'status')} />
             <CFormSwitch size="xl" label="Edit Client" checked={checkDashRights(clientManagementRights.renewedClients,'edit')} onChange={()=>totoggaleRights(clientManagementRights.renewedClients,'edit')} />
             <CFormSwitch size="xl" label="Delete  Client"  checked={checkDashRights(clientManagementRights.renewedClients,'delete')} onChange={()=>totoggaleRights(clientManagementRights.renewedClients,'delete')} />
+            <CFormSwitch size="xl" label="Client Profile" checked={checkDashRights(clientManagementRights.renewedClientsAction,'profile')} onChange={()=>totoggaleRights(clientManagementRights.renewedClientsAction,'profile')} />
         </CCol>
         <CCol>
             <h5 className='mb-4 d-flex ' >
@@ -95,10 +103,12 @@ const ClientRights = ({crmCientManagment,setRightObject}) => {
            onChange={(e)=>clientRigthFun(true,'crmLeftClients1',e.target.checked)}
            /></span>
           </h5>
+            <CFormSwitch size="xl" label="Export" checked={checkDashRights(clientManagementRights.leftClients+"Exp",'status')} onChange={()=>totoggaleRights(clientManagementRights.leftClients+"Exp",'status')} />
             <CFormSwitch size="xl" label="Client Profile" checked={checkDashRights(clientManagementRights.leftClients,'profile')} onChange={()=>totoggaleRights(clientManagementRights.leftClients,'profile')} />
             <CFormSwitch size="xl" label="Status" checked={checkDashRights(clientManagementRights.leftClients,'status')} onChange={()=>totoggaleRights(clientManagementRights.leftClients,'status')} />
             <CFormSwitch size="xl" label="Edit Client" checked={checkDashRights(clientManagementRights.leftClients,'edit')} onChange={()=>totoggaleRights(clientManagementRights.leftClients,'edit')} />
             <CFormSwitch size="xl" label="Delete  Client"  checked={checkDashRights(clientManagementRights.leftClients,'delete')} onChange={()=>totoggaleRights(clientManagementRights.leftClients,'delete')} />
+            <CFormSwitch size="xl" label="Action" checked={checkDashRights(clientManagementRights.leftClientsAction,'profile')} onChange={()=>totoggaleRights(clientManagementRights.leftClientsAction,'profile')} />
         </CCol>
         <CCol>
             <h5 className='mb-4 d-flex ' >

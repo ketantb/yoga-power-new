@@ -68,6 +68,7 @@ const TrialEnquires = () => {
     const trailAdd = rightsData?.addOn?.includes(leadsSuperRight.trailUpdate)
     const trailDelete = rightsData?.delete?.includes(leadsSuperRight.trailUpdate)
     const trailEdit = rightsData?.edit?.includes(leadsSuperRight.trailUpdate)
+    const trailExport=  rightsData?.edit?.includes(leadsSuperRight.trailUpdateExport)
 
 
     const [select, setSelect] = useState('')
@@ -595,7 +596,7 @@ const TrialEnquires = () => {
 
                                 </CInputGroup>
                             </CCol>
-                            <CCol lg={6} sm={6} md={6}>
+                            <CCol lg={6} sm={6} md={6} className={trailExport?' mb-2 float-end':'d-none'}>
                                 <CButtonGroup className=' mb-2 float-end'>
                                     <CButton color="primary" onClick={() => exportTrailFun(result1)}>
                                         <CIcon icon={cilArrowCircleTop} />

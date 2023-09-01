@@ -57,8 +57,9 @@ const AttendenceDashBord = React.lazy(()=>import('./AttendenceDashBord'))
 const Income = React.lazy(()=>import('./Income'))
 const Profite = React.lazy(()=>import('./Profite'))
 
-
 const Dashboard = () => {
+
+  
 
   const navigate = useNavigate()
   const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights?.crmDashboard?.rights) 
@@ -66,11 +67,15 @@ const Dashboard = () => {
   const isAdmin = useSelector((el)=>el.isAdmin) 
   const url = useSelector((el) => el.domainOfApi)
   const pathVal =   useAdminValidation('Master')
+  
+  const allEnquiresActive = (access?.includes(dashboardRights.allEnquiry)||isAdmin)
+  const totalSalesAllActive = (access?.includes(dashboardRights.totalSales)||isAdmin)
+  const totalClientsActive = (access?.includes(dashboardRights.totalClients)||isAdmin)
+
   const [dashborddata,setDashbordData] = useState({
     allEnquiry:{},
     invoice:{},
     client:{},
-    service:{}
   })
   
   const [dateFilterObj,setDteFilterObj] = useState({
@@ -79,7 +84,6 @@ const Dashboard = () => {
   })
 
   const [selectedYear,setSelectedYear] = useState(new Date().getFullYear())
-  const functionToDirectLogin = useLoginHook()
   const inputRef = useRef()
 
   const user = JSON.parse(localStorage.getItem('user-info'))
@@ -103,6 +107,9 @@ const Dashboard = () => {
 
 
    const getDasBoardData = ()=>{
+    if(!(allEnquiresActive||totalSalesAllActive||totalClientsActive)){
+     return
+    }
  
    axios.get(`${url}/leadDashBoard/${dateFilterObj.startDate}/${dateFilterObj.endDate}/${pathVal}`,{headers})
    .then((el)=>{
@@ -116,7 +123,7 @@ const Dashboard = () => {
    
    useEffect(()=>{
     getDasBoardData()
-   },[])
+   },[allEnquiresActive,totalSalesAllActive,totalClientsActive])
 
 
 
@@ -130,7 +137,6 @@ const Dashboard = () => {
     { title: 'Male',  value: 53 },
     { title: 'Female',  value: 43 },
   ]
-
 
 
   return (
@@ -173,25 +179,31 @@ const Dashboard = () => {
 
           <CRow>
 
-            {(access?.includes(dashboardRights.allEnquiry)||isAdmin)  &&<CCol lg={4} sm={8}>
+            {  <CCol lg={4} sm={8}>
               <CCard className="mb-4 text-white">
                 <CCardHeader style={{ backgroundColor: '#0B5345' }} >All Enquiries</CCardHeader>
                 <CCardBody className='p-1'>
                   <CChartPie
                     data={{
-                      labels: [...Object.keys(dashborddata.allEnquiry)],
+                      labels: allEnquiresActive ?
+                        [...Object.keys(dashborddata.allEnquiry)]:['Not availabel'],
                       datasets: [
                         {
-                          data: [...Object.values(dashborddata.allEnquiry)],
-                          backgroundColor: ['red', 'yellow', 'green', 'orange','#00d4ff', '#3535ff',],
-                          hoverBackgroundColor: [
+                          data: allEnquiresActive ?
+                          [...Object.values(dashborddata.allEnquiry)]:[1] ,
+                          backgroundColor: 
+                          allEnquiresActive ?
+                          ['red', 'yellow', 'green', 'orange','#00d4ff', '#3535ff']:['#C0C0C0'],
+                          hoverBackgroundColor:
+                          allEnquiresActive ?
+                          [
                             '#ef6052',
                             '#F4D03F',
                             '#2ECC71',
                             '#F8C471',
                             '#0ff9fc',
                             '#1d7bff',
-                          ],
+                          ]:['#C0C0C0'],
                         },
                       ],
                     }}
@@ -200,22 +212,30 @@ const Dashboard = () => {
               </CCard>
             </CCol>}
 
-            {(access?.includes(dashboardRights.totalSales)||isAdmin)  && <CCol lg={4} sm={8}>
+            { <CCol lg={4} sm={8}>
               <CCard className="mb-4 text-white " >
                 <CCardHeader style={{ backgroundColor: '#0B5345' }} >Total Sales</CCardHeader>
                 <CCardBody  >
                   <CChartPie
                     data={{                   
-                      labels: [...Object.keys(dashborddata.invoice)],
+                      labels:
+                      totalSalesAllActive ?
+                      [...Object.keys(dashborddata.invoice)]:['Not availabel'],
                       datasets: [
                         {
-                          data: [...Object.values(dashborddata.invoice)],
-                          backgroundColor: ['darkblue', 'green', 'red'],
-                          hoverBackgroundColor: [
+                          data: 
+                            totalSalesAllActive ?
+                      [...Object.values(dashborddata.invoice)]:[1],
+                          backgroundColor:   totalSalesAllActive ?
+                          ['darkblue', 'green', 'red']:['#C0C0C0'],
+                          hoverBackgroundColor: 
+                          totalSalesAllActive ?
+                          [
                             'blue',
                             'lightgreen',
                             '#F1948A',
-                          ],
+                          ]:['#C0C0C0']
+                          ,
                         },
                       ],
                     }}
@@ -223,25 +243,29 @@ const Dashboard = () => {
                 </CCardBody>
               </CCard>
             </CCol>}
-            {(access?.includes(dashboardRights.totalClients)||isAdmin)&&<CCol lg={4} sm={8}>
+            {<CCol lg={4} sm={8}>
               <CCard className="mb-4 text-white">
                 <CCardHeader style={{ backgroundColor: '#0B5345' }} >Total Clients</CCardHeader>
                 <CCardBody className='p-2'>
                   <CChartPie
                     data={{
-                      labels: [...Object.keys(dashborddata.client)],
+                      labels: totalClientsActive ?
+                      [...Object.keys(dashborddata.client)]:['Not availabel'],
                       datasets: [
                         {
-                          data: [...Object.values(dashborddata.client)],
-                          backgroundColor: ['red', 'pink', 'green', 'yellow', 'orange', 'blue',],
-                          hoverBackgroundColor: [
-                            '#FF6384',
-                            'darkpick',
-                            '#52BE80',
-                            '#F7DC6F',
-                            '#F8C471',
-                            '#5499C7',
-                          ],
+                          data:
+                          totalClientsActive ?
+                          [...Object.values(dashborddata.client)]:[1] ,
+                          backgroundColor:
+                          totalClientsActive ?
+                          ['red', 'pink', 'green', 'yellow', 'orange', 'blue']:['#C0C0C0'],
+                          hoverBackgroundColor:  totalClientsActive ?
+                          [ '#FF6384',
+                          'darkpick',
+                          '#52BE80',
+                          '#F7DC6F',
+                          '#F8C471',
+                          '#5499C7',]:['#C0C0C0'],
                         },
                       ],
                     }}

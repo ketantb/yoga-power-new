@@ -76,26 +76,21 @@ const DashboardRights = ({ crmDashboard,setRightObject }) => {
                             onChange={() => totoggaleRights(dashboardRights.expense)}
                         />
 
-                        <CFormSwitch size="xl" label="Profit" checked={checkDashRights(dashboardRights.profit)}
-                            onChange={() => totoggaleRights(dashboardRights.profit)}
+                      <CFormSwitch size="xl" label="Attendance" checked={checkDashRights(dashboardRights.attendance)}
+                            onChange={() => totoggaleRights(dashboardRights.attendance)}
                         />
-
                     </CCol>
                     <CCol>
 
+                       <CFormSwitch size="xl" label="Social Media" checked={checkDashRights(dashboardRights.socialMedia)}
+                            onChange={() => totoggaleRights(dashboardRights.socialMedia)}
+                        />
 
                         <CFormSwitch size="xl" label="Income" checked={checkDashRights(dashboardRights.income)}
                             onChange={() => totoggaleRights(dashboardRights.income)}
                         />
-
-                        <CFormSwitch size="xl" label="Attendance" checked={checkDashRights(dashboardRights.attendance)}
-                            onChange={() => totoggaleRights(dashboardRights.attendance)}
-                        />
-                        <CFormSwitch size="xl" label="Social Media" checked={checkDashRights(dashboardRights.socialMedia)}
-                            onChange={() => totoggaleRights(dashboardRights.socialMedia)}
-                        />
-                        <CFormSwitch size="xl" label="Admin panel" checked={checkDashRights(dashboardRights.adminpanel)}
-                            onChange={() => totoggaleRights(dashboardRights.adminpanel)}
+                         <CFormSwitch size="xl" label="Profit" checked={checkDashRights(dashboardRights.profit)}
+                            onChange={() => totoggaleRights(dashboardRights.profit)}
                         />
                     </CCol>
 

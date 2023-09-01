@@ -28,7 +28,7 @@ const headers = {
 
 const AllRight = () => {
 
-    const [activeKey, setActiveKey] = useState(1,Number(user.user.isAdmin))
+    const [activeKey, setActiveKey] = useState(user.user.isAdmin?1:2)
 
 
     return (

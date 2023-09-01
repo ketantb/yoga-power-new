@@ -46,6 +46,7 @@ import useClientExport from './Custom-Hook/useClientExport'
 import moment from 'moment/moment'
 import CallUpdate from 'src/components/CallUpdate'
 import { useNavigate } from 'react-router-dom'
+import { clientManagementRights } from '../hr/Rights/rightsValue/crmRightsValue'
 
 
 const Renewals = () => {
@@ -94,10 +95,8 @@ const Renewals = () => {
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
-    const username = user.user.username;
-    const centerCode = user.user.centerCode;
+
     const [result1, setResult1] = useState([]);
     const [ogList, setOgList] = useState([])
     const [prevData,setPrevData] = useState([])
@@ -115,6 +114,17 @@ const Renewals = () => {
     const [callsTime,setCallsTime] = useState('')
     const uniqObjectVal = useUniqAdminObjeact()
 
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmCientManagment?.items?.superRight) 
+
+    const isAdmin = useSelector((el)=>el.isAdmin)
+
+    const renewalsClientStatus =  (rightsData?.status?.includes(clientManagementRights.renewalsClients)||isAdmin)
+    const renewalsClientDelete = (rightsData?.delete?.includes(clientManagementRights.renewalsClients)||isAdmin)
+    const renewalsClientEdit  =  (rightsData?.edit?.includes(clientManagementRights.renewalsClients)||isAdmin)
+    const renewalsClientProfile = (rightsData?.profile?.includes(clientManagementRights.renewalsClients)||isAdmin)
+    const renewalsClientsAction = (rightsData?.profile?.includes(clientManagementRights.renewalsClientsAction)||isAdmin)
+    const renewalsInvoice = (rightsData?.profile?.includes(clientManagementRights.renewalsInvoice)||isAdmin)
 
     useEffect(() => {
         getEnquiry()
@@ -335,6 +345,7 @@ const saveCalls = () => {
   function NavigateFitnnesofClient(id){
     navigateFitnees(`/clients/member-details/${id}/9`)   
    }
+
     
     return (
         <CRow>
@@ -586,12 +597,13 @@ const saveCalls = () => {
                                     <CTableHeaderCell>Duration</CTableHeaderCell>
                                     <CTableHeaderCell>Start Date</CTableHeaderCell>
                                     <CTableHeaderCell>End Date</CTableHeaderCell>
-                                    <CTableHeaderCell>Fitness Goal</CTableHeaderCell>
-                                    <CTableHeaderCell>Appointments</CTableHeaderCell>
-                                    <CTableHeaderCell>Type of Call</CTableHeaderCell>
-                                    <CTableHeaderCell>Action</CTableHeaderCell>
-                                    <CTableHeaderCell>Invoice</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit</CTableHeaderCell>
+                                    <CTableHeaderCell  className={renewalsClientProfile?'':'d-none'} >Fitness Goal</CTableHeaderCell>
+                                    <CTableHeaderCell  className={renewalsClientProfile?'':'d-none'} >Appointments</CTableHeaderCell>
+                                    <CTableHeaderCell >Type of Call</CTableHeaderCell>
+                                    <CTableHeaderCell  className={renewalsClientStatus?'':'d-none'} >Status</CTableHeaderCell>
+                                    <CTableHeaderCell className={renewalsClientsAction?'':'d-none'}>Action</CTableHeaderCell>
+                                    <CTableHeaderCell className={renewalsInvoice?'':'d-none'}>Invoice</CTableHeaderCell>
+                                    <CTableHeaderCell  className={(renewalsClientEdit||renewalsClientDelete)?'text-center':'d-none'}>Edit/Delete</CTableHeaderCell>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>
@@ -693,7 +705,7 @@ const saveCalls = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell  className={renewalsClientProfile?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -702,7 +714,7 @@ const saveCalls = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={renewalsClientProfile?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -722,7 +734,16 @@ const saveCalls = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={renewalsClientStatus?'':'d-none'}>
+                                        <CFormInput
+                                            className="mb-1"
+                                            type="text"
+                                            style={{ minWidth: "100px" }}
+                                            disabled
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell className={renewalsClientsAction?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
@@ -733,7 +754,7 @@ const saveCalls = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={renewalsInvoice?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -742,7 +763,7 @@ const saveCalls = () => {
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell  className={(renewalsClientEdit||renewalsClientDelete)?'text-center':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -768,8 +789,9 @@ const saveCalls = () => {
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{item.ClientId}</CTableDataCell>
-                                            <CTableDataCell><Link  style={{ textDecoration: 'none' }} 
-                                            to={`/clients/member-details/${item._id}/1`}>{item.Fullname}</Link></CTableDataCell>
+                                            <CTableDataCell>{renewalsClientProfile?
+                                                <Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/1`} 
+                                           >{item.Fullname}</Link>:item.Fullname}</CTableDataCell>
                                             <CTableDataCell>{item.ContactNumber}</CTableDataCell>
                                             <CTableDataCell>{item.invoiceNum}</CTableDataCell>
                                             <CTableDataCell>{item.AttendanceID}</CTableDataCell>
@@ -777,14 +799,20 @@ const saveCalls = () => {
                                             <CTableDataCell>{item?.duration}</CTableDataCell>
                                             <CTableDataCell>{ getDate(item.startDate,true)}</CTableDataCell>
                                             <CTableDataCell>{ getEndDate(item.endDate)}</CTableDataCell>
-                                            <CTableDataCell> <CButton size='sm' onClick={()=>NavigateFitnnesofClient(item._id)} >View Fitness</CButton></CTableDataCell>
-                                            <CTableDataCell><Link  style={{ textDecoration: 'none' }}
+                                            <CTableDataCell className={renewalsClientProfile?'':'d-none'}> <CButton size='sm' onClick={()=>NavigateFitnnesofClient(item._id)} >View Fitness</CButton></CTableDataCell>
+                                            <CTableDataCell className={renewalsClientProfile?'':'d-none'}><Link  style={{ textDecoration: 'none' }}
                                              to={`/clients/member-details/${item._id}/5`} >
                                                 <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} /></Link></CTableDataCell>
                                             <CTableDataCell><CButton onClick={() => { setCalls(true), setUniqClientId(item._id) }}>View</CButton></CTableDataCell>
                                             
+                                         <CTableDataCell className='text-center'>
+                                            {
+                                        (item.status === 'active' &&<CButton  disabled={!renewalsClientStatus} className='mt-1' color='success' onClick={() => updateRec(item._id, 'inactive')} >Active</CButton>||
+                                        item.status !== 'active' &&  <CButton  disabled={!renewalsClientStatus} className='mt-1' color='danger' onClick={() => updateRec(item._id, 'active')}>Inactive</CButton>)
+                                        }
+                                        </CTableDataCell>    
 
-                                    <CTableDataCell className='text-center'><a href={`tel:${item.CountryCode}${item.ContactNumber}`} target='_black'>
+                                    <CTableDataCell className={renewalsClientsAction?'text-center':'d-none'} ><a href={`tel:${item.CountryCode}${item.ContactNumber}`} target='_black'>
                                                 <MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a>
                                                 <a target='_black' href={`https://wa.me/${item.ContactNumber}`}>
                                                     <BsWhatsapp style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a>
@@ -793,17 +821,17 @@ const saveCalls = () => {
                                      <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() =>{setVisible(true),handleFollowup(item._id,item.ClientId,item)}} />
                                      </CTableDataCell>
 
-                                    <CTableDataCell  >
-                                    <CButtonGroup className='d-flex px-3' >
+                                    <CTableDataCell className={renewalsInvoice?'text-center':'d-none'}  >
+                                    <CButtonGroup   >
                                         <CButton  size='sm'
                                          onClick={()=>ShowUserInvoceHandler(item._id,item)} ><BsEye style={{ cursor: 'pointer', markerStart: '10px' }}/></CButton>
                                    </CButtonGroup>  
-                                   </CTableDataCell>    
+                                   </CTableDataCell >    
 
-                                            <CTableDataCell className='text-center'>
-                                            <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer',
+                                            <CTableDataCell className={(renewalsClientEdit||renewalsClientDelete)?'text-center':'d-none'} >
+                                            <MdEdit className={(renewalsClientEdit)?'text-center':'d-none'} id={item._id} style={{ fontSize: '35px', cursor: 'pointer',
                                             markerStart: '10px' }} size='20px' onClick={()=>Edit(item)} /> 
-                                            <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} 
+                                            <MdDelete  className={(renewalsClientDelete)?'text-center':'d-none'} style={{ cursor: 'pointer', markerStart: '10px' }} 
                                                 onClick={() => deleteEnquiry(item._id)} size='20px' /></CTableDataCell>
                                         </CTableRow>
 

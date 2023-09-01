@@ -467,7 +467,7 @@ function getStockAssigningR() {
                        </CTableHead>
                        <CTableBody>
                            
-                       {   orderList.filter((el)=>el?.Status!=='Recevied').map((item,i)=>{        
+                       {   orderList?.filter((el)=>el?.Status!=='Recevied').map((item,i)=>{        
                   
                          return <CTableRow >
                                <CTableDataCell style={{display:
@@ -517,6 +517,7 @@ function getStockAssigningR() {
 
 
 }
+
 
 
 export default StockOrderList

@@ -182,12 +182,6 @@ const AppHeaderDropdownForm = () => {
           </Link>
         </CDropdownItem>
         <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/member-form">
-            <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
-            Member
-          </Link>
-        </CDropdownItem>
-        <CDropdownItem >
 
           <Link style={{ textDecoration: 'none' }} to="/forms/staff-form">
             <CIcon icon={cilTask} className="me-2" />
@@ -203,12 +197,7 @@ const AppHeaderDropdownForm = () => {
           </Link>
 
         </CDropdownItem>
-        <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/invoice">
-            <CIcon icon={cilCreditCard} className="me-2" />
-            Invoice
-          </Link>
-        </CDropdownItem>
+
         <CDropdownItem >
         <Link style={{ textDecoration: 'none' }} to="/forms/support">
           <CIcon icon={cilFile} className="me-2" />

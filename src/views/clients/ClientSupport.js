@@ -29,8 +29,19 @@ import { useAdminValidation} from '../Custom-hook/adminValidation'
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 
+import { clientManagementRights } from '../hr/Rights/rightsValue/crmRightsValue'
+
 
 const ClientSupport = () => {
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmCientManagment?.items?.superRight) 
+
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+    const clientSupportStatus =  (rightsData?.status?.includes(clientManagementRights.clientSupport)||isAdmin)
+    const clientSupportDelte = (rightsData?.delete?.includes(clientManagementRights.clientSupport)||isAdmin)
+    const clientSupportProfile  =  (rightsData?.profile?.includes(clientManagementRights.clientSupport)||isAdmin)
+
 
     const url1 = useSelector((el)=>el.domainOfApi)
     const [clientData,setClientData] = useState([]) 
@@ -96,7 +107,7 @@ getClientSupport()
                                     <CTableHeaderCell>Request details</CTableHeaderCell>
                                     <CTableHeaderCell>Status</CTableHeaderCell>
                                     <CTableHeaderCell>Medium</CTableHeaderCell>
-                                    <CTableHeaderCell>Delete</CTableHeaderCell>
+                                    <CTableHeaderCell className={clientSupportDelte?'text-center':'d-none'} >Delete</CTableHeaderCell>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>
@@ -176,7 +187,7 @@ getClientSupport()
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={clientSupportDelte?'':'d-none'} >
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
@@ -199,18 +210,21 @@ getClientSupport()
                                 }).map((el,i)=>
                                 <CTableRow >
                                     <CTableDataCell>{i+1}</CTableDataCell>
-                                    <CTableDataCell><Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${el.memBerId}/1`} 
-                                            target="_black">{el.Client_Name}</Link></CTableDataCell>
+                                    <CTableDataCell>
+                                    {clientSupportProfile?
+                                                <Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${el.memBerId}/1`} 
+                                           >{el.Client_Name}</Link>:el.Client_Name}        
+                                    </CTableDataCell>
                                     <CTableDataCell>{el.Regular_Mobile_No}</CTableDataCell>
                                     <CTableDataCell>{el.Type_Of_Request}</CTableDataCell>
                                     <CTableDataCell>{el.Request_Date}</CTableDataCell>
                                     <CTableDataCell>{el.Request_Details}</CTableDataCell>
                                     <CTableDataCell className='text-center'>
-                                        {el.Status?<CButton size='sm' className='bg-success border-success' onClick={()=>updateStatus(el)} >Active</CButton>:
-                                        <CButton className='bg-danger' size='sm' onClick={()=>updateStatus(el)} >InActive</CButton>}
+                                        {el.Status?<CButton disabled={!clientSupportStatus} size='sm' className='bg-success border-success' onClick={()=>updateStatus(el)} >Active</CButton>:
+                                        <CButton  disabled={!clientSupportStatus} className='bg-danger' size='sm' onClick={()=>updateStatus(el)} >InActive</CButton>}
                                     </CTableDataCell>
                                     <CTableDataCell>{el.Medium}</CTableDataCell>
-                                    <CTableDataCell className='text-center' style={{cursor:'pointer'}}>{<MdDelete
+                                    <CTableDataCell className={clientSupportDelte?'text-center':'d-none'} style={{cursor:'pointer'}}>{<MdDelete
                                     onClick={()=>deleteFun(el)}
                                     />}</CTableDataCell>                                                                          
                                 </CTableRow>

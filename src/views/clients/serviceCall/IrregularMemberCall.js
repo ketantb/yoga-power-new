@@ -44,7 +44,7 @@ const token = user.token;
 const username = user.user.username;
 
 
-const IrregularMemberCall = ({visible,filterObj,id}) => {
+const IrregularMemberCall = ({visible,filterObj,id,setPageLength,paging}) => {
 
     const pathValMaster = useAdminValidation('Master')
 
@@ -175,10 +175,21 @@ const IrregularMemberCall = ({visible,filterObj,id}) => {
                    
     } 
 
-    const callUpdateFun=(id)=>{
+const callUpdateFun=(id)=>{
         setFollowUpid(id)
         setVisibalCallUpdateForm(true)
 }
+
+function filterData(AllInvoiceData){
+    const data = AllInvoiceData.filter((el)=>  
+    `${new Date(el.createdAt).getFullYear()}`.includes(filterObj.year)&&
+    `${new Date(el.createdAt).getMonth()}`.includes(filterObj.monthName)    
+    )
+     setPageLength(data?.length)
+     return data
+     
+  }
+  
 
 
   return (
@@ -220,8 +231,8 @@ const IrregularMemberCall = ({visible,filterObj,id}) => {
                value={updateFormData.followupby}
                onChange={(e)=>setUpdateForm(prev=>({...prev,followupby:e.target.value}))}
                >
-                          <option>Select Assign Staff</option>
-                          {staff.filter((list) => list.username === username &&
+                          <option>Select  Staff</option>
+                          {staff.filter((list) => 
                               list.selected === 'Select').map((item, index) => (
                                   <option key={index} value={item._id} >{item.FullName}</option>
                               ))}
@@ -263,16 +274,12 @@ const IrregularMemberCall = ({visible,filterObj,id}) => {
             </CTableRow>
         </CTableHead>
         <CTableBody>
-        {reggularMemberData.filter((el)=>  
-        `${new Date(el.createdAt).getFullYear()}`.includes(filterObj.year)&&
-        `${new Date(el.createdAt).getMonth()}`.includes(filterObj.monthName)    
-        ).map((el,i)=>
+        {filterData(reggularMemberData).map((el,i)=>
          <CTableRow key={i}>
              <CTableDataCell>{i+1}</CTableDataCell>
              <CTableDataCell>{ moment(el.createdAt).format('YYYY-MM-DD')}</CTableDataCell>
              <CTableDataCell>{el.attentanceCallingInfo?.callTimeing}</CTableDataCell>
              <CTableDataCell>{el.attentanceCallingInfo?.followUpDate}</CTableDataCell>
-
              <CTableDataCell>{el.attentanceId}</CTableDataCell>
              <CTableDataCell>{el.ClientName}</CTableDataCell>
              <CTableDataCell>{el.contact}</CTableDataCell>
@@ -280,7 +287,7 @@ const IrregularMemberCall = ({visible,filterObj,id}) => {
              <CTableDataCell>{el.admissionDuration}</CTableDataCell>
              <CTableDataCell>{moment(el.endDate).format('YYYY-MM-DD')}</CTableDataCell>
              <CTableDataCell style={{minWidth:'250px'}}>{(new Date(el.LastAttended).toDateString() +"   "+  new Date(el.LastAttended).toLocaleTimeString())}</CTableDataCell>
-             <CTableDataCell style={{minWidth:'250px'}}>{el.attentanceCallingInfo?. discussion}</CTableDataCell>
+             <CTableDataCell style={{minWidth:'250px'}}>{el.attentanceCallingInfo?.discussion}</CTableDataCell>
              <CTableDataCell>{moment(el.followUpDate).format('YYYY-MM-DD')}</CTableDataCell>
              <CTableDataCell className='text-center'>
                     <a href={`tel:${ el?.CountryCode ? el?.CountryCode: '+91'}${el.contact}`} target="_black">

@@ -45,7 +45,7 @@ const username = user.user.username;
 import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 
 
-const PaymentCallsTable = ({visible,filterObj,id}) => {
+const PaymentCallsTable = ({visible,filterObj,id,setPageLength,paging}) => {
 
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
@@ -156,6 +156,17 @@ const getAllInvoiceData = async ()=>{
     setVisibalCallUpdateForm(true)
  }
 
+ function filterData(AllInvoiceData){
+  const data = AllInvoiceData.filter((el)=>  
+  `${new Date(el.createdAt).getFullYear()}`.includes(filterObj.year)&&
+  `${new Date(el.createdAt).getMonth()}`.includes(filterObj.monthName) &&
+       el?.counseller?.includes(filterObj.staffName)    
+   )
+   setPageLength(data?.length)
+   return data
+   
+}
+
   return (
     <>
   <CModal size='lg' alignment="start" visible={(visible && visibalCallUpdateForm)} onClose={() => setVisibalCallUpdateForm(false)}>
@@ -193,7 +204,7 @@ const getAllInvoiceData = async ()=>{
                value={updateForm.followupby}
                onChange={(e)=>setUpdateForm(prev=>({...prev,followupby:e.target.value}))}
                >
-                          <option>Select Assign Staff</option>
+                          <option>Select  Staff</option>
                           {staff.filter((list) => 
                               list.selected === 'Select').map((item, index) => (
                                   <option key={index} value={item._id} >{item.FullName}</option>
@@ -241,13 +252,9 @@ const getAllInvoiceData = async ()=>{
                                         </CTableRow>
                                     </CTableHead>
                                     <CTableBody>
-                                    {AllInvoiceData.filter((el)=>  
-                                    `${new Date(el.createdAt).getFullYear()}`.includes(filterObj.year)&&
-                                    `${new Date(el.createdAt).getMonth()}`.includes(filterObj.monthName) &&
-                                         el?.counseller?.includes(filterObj.staffName)    
-                                     ).map((el,i)=>
+                                    {filterData(AllInvoiceData).slice(paging * 10, paging * 10 + 10).map((el,i)=>
                                      <CTableRow key={i}>
-                                         <CTableDataCell>{i+1}</CTableDataCell>
+                                         <CTableDataCell>{(i+1+ (paging * 10))}</CTableDataCell>
                                          <CTableDataCell>{moment(el.createdAt).format('YYYY-MM-DD')}</CTableDataCell>
                                          <CTableDataCell>{moment(el?.followUpDate).format('YYYY-MM-DD')}</CTableDataCell>
                                          <CTableDataCell>{el?.callTimeing? el.callTimeing:'No call timeing yet'}</CTableDataCell>

@@ -159,9 +159,7 @@ const UserProfile = React.lazy(()=>import('./components/UserProfile'))
 
 //Forms
 const EnquiryForm = React.lazy(() => import('./views/forms/EnquiryForm'))
-const MemberForm = React.lazy(() => import('./views/forms/MemberForm'))
 const StaffForm = React.lazy(() => import('./views/forms/Recruitment'))
-const InvoiceForm = React.lazy(() => import('./components/MakeInvoice'))
 const LiveClass = React.lazy(() => import('./views/forms/LiveClass'))
 const OfflineClass = React.lazy(() => import('./views/forms/OfflineClass'))
 const TTC = React.lazy(() => import('./views/forms/TTC'))
@@ -340,6 +338,7 @@ const routes = [
   { path:'/hr/emp-target-sheet',name:'Employee Target Sheet',element:EmployeeTargetSheet},
   { path:'/hr/employee-detail/:id',name:'Employee Details',element:EmpDetails},
 
+
   // Courses
   {path:'/course' ,name:'TTC' ,element:TtcClientDetails,exact:true},
   {path:'/course/ttc-client-details' ,name:'TTC Client Details' ,element:TtcClientDetails},
@@ -393,18 +392,9 @@ const routes = [
   { path:'/master/center-setup/invoice-master',name:'Invoice Master',element: InvoiceMasterLT},
 
 
-
-
-
-
-
-  
-
   //Form
   { path: '/forms/enquiry-form', name: 'Enquiry Form', element: EnquiryForm },
   { path: '/forms/staff-form', name: 'Employee Form', element: StaffForm },
-  { path: '/forms/member-form', name: 'Member Form', element: MemberForm },
-  { path: '/forms/invoice', name: 'Invoice', element: InvoiceForm },
   { path: '/forms/live-class', name: 'Live Class', element: LiveClass },
   { path: '/forms/offline-class', name: 'Offline Class', element: OfflineClass },
   { path: '/forms/pt-class', name: 'PT Class', element: PTClass },

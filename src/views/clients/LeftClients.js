@@ -43,6 +43,7 @@ import { Link } from 'react-router-dom'
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 import useExportHook from '../leads/leaadCutomHook/useExportHook'
 import { useNavigate } from 'react-router-dom'
+import { clientManagementRights } from '../hr/Rights/rightsValue/crmRightsValue'
 
 
 const LeftClients = () => {
@@ -92,7 +93,6 @@ const LeftClients = () => {
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
 
     
@@ -103,6 +103,18 @@ const LeftClients = () => {
 
     const exportData = useExportHook('ActiveClients.xlsx')
     let pageNumber = 0
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmCientManagment?.items?.superRight) 
+
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
+    const leftClientStatus =  (rightsData?.status?.includes(clientManagementRights.leftClients)||isAdmin)
+    const leftClientDelte = (rightsData?.delete?.includes(clientManagementRights.leftClients)||isAdmin)
+    const leftClientEdit  =  (rightsData?.edit?.includes(clientManagementRights.leftClients)||isAdmin)
+    const leftClientProfile = (rightsData?.profile?.includes(clientManagementRights.leftClients)||isAdmin)
+    const leftClientProfileAction = (rightsData?.profile?.includes(clientManagementRights.leftClientsAction)||isAdmin)
+    const leftClientExport = (rightsData?.status?.includes(clientManagementRights.leftClients+"Exp")||isAdmin)
 
     useEffect(() => {
         getEnquiry()
@@ -357,8 +369,8 @@ function NavigateFitnnesofClient(id){
                                     </CFormSelect>                                    
                                 </CInputGroup>
                             </CCol>
-                            <CCol lg={6} sm={6} md={6}>
-                                <CButtonGroup className=' mb-2 float-end'>
+                            <CCol lg={6} sm={6} md={6} >
+                                <CButtonGroup  className={leftClientExport?' mb-2 float-end':'d-none'}>
                                     <CButton color="primary" onClick={()=>exportData(result1)} >
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
@@ -576,12 +588,12 @@ function NavigateFitnnesofClient(id){
                                     <CTableHeaderCell>Duration</CTableHeaderCell>
                                     <CTableHeaderCell>Start Date</CTableHeaderCell>
                                     <CTableHeaderCell>End Date</CTableHeaderCell>
-                                    <CTableHeaderCell>Fitness Goal</CTableHeaderCell>
-                                    <CTableHeaderCell>Appointments</CTableHeaderCell>
+                                    <CTableHeaderCell className={leftClientProfile?'':'d-none'}>Fitness Goal</CTableHeaderCell>
+                                    <CTableHeaderCell className={leftClientProfile?'':'d-none'}>Appointments</CTableHeaderCell>
                                     <CTableHeaderCell>Types of Call</CTableHeaderCell>
                                     <CTableHeaderCell>Status</CTableHeaderCell>
-                                    <CTableHeaderCell>Action</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit</CTableHeaderCell>
+                                    <CTableHeaderCell className={leftClientProfileAction?'':'d-none'}>Action</CTableHeaderCell>
+                                    <CTableHeaderCell className={(leftClientDelte||leftClientEdit)?'text-center':'d-none'} >Edit/delete</CTableHeaderCell>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>
@@ -685,16 +697,17 @@ function NavigateFitnnesofClient(id){
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={leftClientProfile?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
                                             type="text"
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={leftClientProfile?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -723,7 +736,7 @@ function NavigateFitnnesofClient(id){
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={leftClientProfileAction?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -732,7 +745,7 @@ function NavigateFitnnesofClient(id){
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={(leftClientDelte||leftClientEdit)?'':'d-none'}  >
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -759,7 +772,9 @@ function NavigateFitnnesofClient(id){
                                         <CTableRow key={index}>
                                             <CTableDataCell>{ (index + 1 + (paging * 10))}</CTableDataCell>
                                             <CTableDataCell>{item.ClientId}</CTableDataCell>
-                                            <CTableDataCell> <Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/1`} >{item.Fullname}</Link></CTableDataCell>
+                                            <CTableDataCell> {leftClientProfile?
+                                                <Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/1`} 
+                                           >{item.Fullname}</Link>:item.Fullname}</CTableDataCell>
                                             <CTableDataCell>{item.ContactNumber}</CTableDataCell>
                                             <CTableDataCell><label style={{ cursor: 'pointer' }} >{item.invoiceNum}</label> </CTableDataCell>
                                             <CTableDataCell>{item.AttendanceID}</CTableDataCell>
@@ -767,11 +782,11 @@ function NavigateFitnnesofClient(id){
                                             <CTableDataCell>{item?.duration}</CTableDataCell>
                                             <CTableDataCell>{moment(item.startDate).format("DD-MM-YYYY")}</CTableDataCell>
                                             <CTableDataCell>{moment(item.endDate).format("DD-MM-YYYY")}</CTableDataCell>
-                                            <CTableDataCell>  <CButton size='sm' onClick={()=>NavigateFitnnesofClient(item._id)} >View Fitness</CButton></CTableDataCell>
-                                            <CTableDataCell><Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/5`}><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} /></Link></CTableDataCell>
+                                            <CTableDataCell className={leftClientProfile?'':'d-none'} >  <CButton size='sm' onClick={()=>NavigateFitnnesofClient(item._id)} >View Fitness</CButton></CTableDataCell>
+                                            <CTableDataCell className={leftClientProfile?'':'d-none'} ><Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/5`}><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} /></Link></CTableDataCell>
                                             <CTableDataCell><CButton onClick={() => { setCalls(true), setCallUpdateID(item._id) }}>View</CButton></CTableDataCell>
-                                            <CTableDataCell className='text-center'>{ <CButton className='mt-1' color='danger'>Left</CButton>}</CTableDataCell>
-                                            <CTableDataCell className='text-center'>
+                                            <CTableDataCell className='text-center'>{ <CButton disabled={!leftClientStatus} className='mt-1' color='danger'>Left</CButton>}</CTableDataCell>
+                                            <CTableDataCell className={leftClientProfileAction?'text-center':'d-none'} >
                                                 <a href={`tel:${item.CountryCode}${item.ContactNumber}`} target='_black'>
                                                     <MdCall style={{ cursor: 'pointer', markerStart: '10px' }} 
                                                     onClick={() => { setCallReport(true), handleCallReport(item._id) }} 
@@ -781,10 +796,10 @@ function NavigateFitnnesofClient(id){
                                                  { setVisible(true), handleCallReport(item._id) }} size='20px' /></a>
                                             <a href={`mailto: ${item.Emailaddress}`} target='_black'> <MdMail style={{ cursor: 'pointer', markerStart: '10px' }}
                                              size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => {setVisible(true),handleFollowup(item._id,item.ClientId,item) }}  /></CTableDataCell>
-                                            <CTableDataCell className='text-center'>
-                                                <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer',
+                                            <CTableDataCell className={(leftClientDelte||leftClientEdit)?'text-center':'d-none'} >
+                                                <MdEdit className={(leftClientEdit)?'text-center':'d-none'} id={item._id} style={{ fontSize: '35px', cursor: 'pointer',
                                                      markerStart: '10px' }} size='20px' onClick={()=>Edit(item)} /> 
-                                                 <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} 
+                                                 <MdDelete className={(leftClientDelte)?'text-center':'d-none'} style={{ cursor: 'pointer', markerStart: '10px' }} 
                                                  onClick={() => deleteEnquiry(item._id)} size='20px' /></CTableDataCell>
                                         </CTableRow>
                                     )

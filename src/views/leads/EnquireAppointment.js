@@ -50,11 +50,13 @@ const EnquireAppointment = () => {
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
     ?.crmLeads?.items?.superRight) 
-
+    
     const isAdmin = useSelector((el)=>el.isAdmin) 
     const appointmentAdd =  rightsData?.addOn?.includes(leadsSuperRight.appointment)
     const appointmentDelete =  rightsData?.delete?.includes(leadsSuperRight.appointment)
     const appointmentEdit  =  rightsData?.edit?.includes(leadsSuperRight.appointment)
+    const appointmentExport  =  rightsData?.edit?.includes(leadsSuperRight.appointmentExport)
+
     
     const exportDataFun =  useExportHook("YogPowerAppointment.xlsx") 
 
@@ -549,7 +551,7 @@ const EnquireAppointment = () => {
                                 </CInputGroup>
                             </CCol>
                             <CCol lg={6} sm={6} md={6}>
-                                <CButtonGroup className=' mb-2 float-end'>
+                                <CButtonGroup className={appointmentExport||isAdmin?' mb-2 float-end':'d-none'}>
                                     <CButton color="primary" onClick={()=>exportDataFun(result1.filter((list) =>list.enquirestatus!=='notshow'&&list.appointmentfor === 'Appointment' ))}>
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export

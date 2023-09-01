@@ -18,7 +18,7 @@ import { useAdminValidation} from 'src/views/Custom-hook/adminValidation';
 let user = JSON.parse(localStorage.getItem('user-info'))
 
 
-const CallHistory = ({visible,filterObj,id}) => {
+const CallHistory = ({visible,filterObj,id,setPageLength,paging}) => {
     const url = useSelector((el)=>el.domainOfApi) 
 
     const [callHistoryData,setCallHistoryData] = useState([])
@@ -38,9 +38,8 @@ const CallHistory = ({visible,filterObj,id}) => {
                 setCallHistoryData(res.data.filter((el)=>el.memberId ===id).reverse())
                 return 
               }
-
               setCallHistoryData(res.data)
-
+              setPageLength(res.data?.length)
             })
             .catch((error) => {
                 console.error(error)
@@ -74,12 +73,12 @@ const CallHistory = ({visible,filterObj,id}) => {
             </CTableRow>
         </CTableHead>
         <CTableBody>
-            {callHistoryData.filter((el)=>  
+            {callHistoryData.slice(paging * 10, paging * 10 + 10).filter((el)=>  
         `${new Date(el.createdAt).getFullYear()}`.includes(filterObj.year)&&
         `${new Date(el.createdAt).getMonth()}`.includes(filterObj.monthName)    
         ).map((el,i)=>
              <CTableRow>
-                <CTableDataCell>{i+1}</CTableDataCell>
+                <CTableDataCell>{(i+1+ (paging * 10))}</CTableDataCell>
                 <CTableDataCell>{moment(el.createdAt).format('YYYY-MM-DD')}</CTableDataCell>
                 <CTableDataCell>{moment(el.callFollowUpDate).format('YYYY-MM-DD')}</CTableDataCell>
                 <CTableDataCell>{el.callTimeing}</CTableDataCell>

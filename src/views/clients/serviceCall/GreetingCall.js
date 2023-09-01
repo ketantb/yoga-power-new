@@ -9,7 +9,7 @@ import {
     CCard,
     CCardBody,
     CCardHeader,
-    CCol,
+    CCol,    
     CFormInput,
     CFormSelect,
     CInputGroup,
@@ -46,7 +46,7 @@ const token = user.token;
 const username = user.user.username;
 
 
-const GreetingCall = ({visible,filterObj,id}) => {
+const GreetingCall = ({visible,filterObj,id,setPageLength,paging}) => {
     
     const pathVal = useAdminValidation()
     const pathValMaster = useAdminValidation('Master')
@@ -233,6 +233,16 @@ if(0<= val && val<=7){
 } 
 
 
+function filterData(feedBackCallData){
+    const data = feedBackCallData.filter((el)=> 
+    `${new Date(el.createdAt).getFullYear()}`.includes(filterObj.year)&&
+    `${new Date(el.createdAt).getMonth()}`.includes(filterObj.monthName)&&
+      el?.AssignStaff?.includes(filterObj.staffName)    
+   ) 
+     setPageLength(data?.length)
+     return data
+ }
+
 
 
   return (
@@ -342,18 +352,14 @@ if(0<= val && val<=7){
             </CTableRow>
         </CTableHead>
         <CTableBody>
-        {greatingCallsData.filter((el)=> 
-        `${new Date(el.createdAt).getFullYear()}`.includes(filterObj.year)&&
-        `${new Date(el.createdAt).getMonth()}`.includes(filterObj.monthName)&&
-          el?.AssignStaff?.includes(filterObj.staffName)    
-       )    
+        {filterData(greatingCallsData).slice(paging * 10, paging * 10 + 10)   
         .map((el,i)=>
          <CTableRow 
          style={{color:birtDayStatus(el)===`Happy Birth Day 🎊`?'blueviolet':'black'}} 
          color={compare1WeekFunction(el)?'success':'white'}  
          key={i}
           className='text-center'>
-             <CTableDataCell>{i+1}</CTableDataCell>
+             <CTableDataCell>{(i+1+ (paging * 10))}</CTableDataCell>
              <CTableDataCell>{moment(el.createdAt).format('YYYY-MM-DD')}</CTableDataCell>
              <CTableDataCell>{el?.greetingCallInfo?.greetingFollowUpDate}</CTableDataCell>
              <CTableDataCell>{el?.greetingCallInfo?.greetingCallTiming}</CTableDataCell>
@@ -367,8 +373,6 @@ if(0<= val && val<=7){
              <CTableDataCell>{el?.greetingCallInfo?.greetingDiscussion}</CTableDataCell>
              <CTableDataCell>{el?.AssignStaff}</CTableDataCell>
              <CTableDataCell>{el?.greetingCallInfo?.greetingFollowupby}</CTableDataCell>
-
-            
              <CTableDataCell className='text-center'>
                     <a href={`tel:${ el?.CountryCode ? el?.CountryCode: '+91' }${ el.ContactNumber }`} target="_black">
                         <MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a>

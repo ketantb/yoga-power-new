@@ -188,10 +188,10 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
         setContactNumber1("+"+data.ContactNumber2)
         setserviceName((data.ServiceName||' '))
         setserviceVariation((data.ServiceVariation||' '))
-        setAssignStaff((data.StaffName||' '))
+        setAssignStaff((data.FullName||' '))
         setCustomertype((data.Customertype||' '))
         setEnquiryType((data.enquirytype||' '))
-        setMemberManager((data.Counseller||' '))
+        setMemberManager((data.FullName||' '))
         setDateofBirth(data?.DateofBirth?moment(data?.DateofBirth).utc().format('YYYY-MM-DD'):'')     
         setImageUrl((data?.image||' '))   
         setClientReferance({
@@ -373,47 +373,14 @@ if (deleteId != undefined && deleteId != null) {
         }
 }
 
-    const [visi1, setVisi1] = useState('')
-    const [MemberId, setMemberId] = useState('')
-    const [startDate, setStartDate] = useState('')
-    const [endDate, setEndDate] = useState('')
-    const [amount, setAmount] = useState('')
-    const [tax, settax] = useState(0)
-    const [total, setTotal] = useState(0)
-    const [paidAmount, setpaidAmount] = useState('')
-    const [discount, setDiscount] = useState()
-    const [dis1, setDis1] = useState()
-    const [pendingAmount, setPendingAmount] = useState('')
-    const [paymode, setPayMode] = useState('')
-    const [finalTotal, setFinalTotal] = useState('')
-    const [ser1, setSer1] = useState('')
-    const [ser2, setSer2] = useState('')
-    const [ser3, setSer3] = useState('')
-    const [ser4, setSer4] = useState('')
-    const [ser5, setSer5] = useState('')
-    const [ser6, setSer6] = useState('')
-    const [invId, setInvId] = useState('')
-    const [invoiceNum,setInvoice] = useState([])
-    const [errorMessage,setErrorMessage] = useState('')
-    const [serviceDays,setServiceDays] = useState('')
 
- 
+useEffect(()=>{
+    const selectedStaff = staff.find((el)=>el._id===unikqValidateObj.employeeMongoId)
 
 
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
+ setMemberManager((selectedStaff?.FullName||''))
+ setAssignStaff((selectedStaff?.FullName||''))
+},[unikqValidateObj.employeeMongoId,staff?.length])
     return (
         <div>
         <div className={(add && !visi )?'d-none':''}> 
@@ -821,7 +788,7 @@ if (deleteId != undefined && deleteId != null) {
                                                         <option>Select Assign Staff</option>
                                                         {staff.filter((list) => 
                                                          list.selected === 'Select').map((item, index) => (
-                                                            <option key={index}>{item.FullName}</option>
+                                                            <option key={index} value={item.FullName} >{[item.FullName,item.EmployeeID].join('\n')}</option>
                                                         ))}
                                                     </CFormSelect>
                                                 </CCol>
@@ -837,7 +804,7 @@ if (deleteId != undefined && deleteId != null) {
                                                          <option>Select Counselor</option>
                                                         {staff.filter((list) => 
                                                          list.selected === 'Select').map((item, index) => (
-                                                            <option key={index}>{item.FullName}</option>
+                                                            <option key={index}  value={item.FullName}>{[item.FullName,item.EmployeeID].join('\n')}</option>
                                                         ))}
                                                     </CFormSelect>
                                                 </CCol>

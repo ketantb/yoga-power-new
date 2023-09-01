@@ -51,6 +51,8 @@ function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,e
      
     
 
+    const selectedMember = allMemberData.find((el)=>el._id===id?.trim())
+    const selectedStaff = employeeData.find((el)=>el._id===uniqObjVal.employeeMongoId?.trim())
      
  
 
@@ -70,7 +72,9 @@ if(editData?._id){
         console.log(error)
         })
 }else{
-   axios.post(`${url}/fitnessDetail/create`,{... uniqObjVal,...mesurmentData},{headers}).then((res)=>{
+   axios.post(`${url}/fitnessDetail/create`,{
+    ...{...uniqObjVal,employeeMongoId:(selectedMember?._id||uniqObjVal.employeeMongoId)}
+    ,...mesurmentData},{headers}).then((res)=>{
 alert('Successfully save')
 getAllmembersData()
 }).catch((error)=>{
@@ -98,8 +102,6 @@ console.log(error)
 }
 
 
- const selectedMember = allMemberData.find((el)=>el._id===id?.trim())
- const selectedStaff = employeeData.find((el)=>el._id===uniqObjVal.employeeMongoId?.trim())
 
  
  useEffect(()=>{
@@ -136,7 +138,7 @@ console.log(error)
         createdAt:'',
         updatedAt:new Date(),
         NextFollowup_Date:editData.NextFollowup_Date,
-        ...uniqObjVal
+        ...{...uniqObjVal,employeeMongoId:(selectedMember?._id||uniqObjVal.employeeMongoId)}
     })
     },[editData?._id,selectedMember?._id,selectedStaff?._id])
 

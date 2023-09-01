@@ -44,7 +44,7 @@ const token = user.token;
 const username = user.user.username;
 
 
-const FeedBackCall = ({visible,filterObj,id}) => {
+const FeedBackCall = ({visible,filterObj,id,setPageLength,paging}) => {
 
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
@@ -164,6 +164,15 @@ const obj2 = {
  }
 
 
+ function filterData(feedBackCallData){
+    const data = feedBackCallData.filter((el)=>  
+    `${new Date(el.createdAt).getFullYear()}`.includes(filterObj.year)&&
+    `${new Date(el.createdAt).getMonth()}`.includes(filterObj.monthName) &&
+       el?.AssignStaff?.includes(filterObj.staffName)    
+     )
+     setPageLength(data?.length)
+     return data
+ }
 
   return (
     <>
@@ -203,7 +212,7 @@ const obj2 = {
                value={updateFormData.feedBackCallFollowupby}
                onChange={(e)=>setUpdateForm(prev=>({...prev,feedBackCallFollowupby:e.target.value}))}
                >
-                          <option>Select Assign Staff</option>
+                          <option>Select  Staff</option>
                           {staff.filter((list) => 
                               list.selected === 'Select').map((item, index) => (
                                   <option key={index} value={item._id} >{item.FullName}</option>
@@ -245,13 +254,9 @@ const obj2 = {
                                     </CTableHead>
                                     <CTableBody>
                                        
-                  {feedBackCallsData.filter((el)=>  
-                                    `${new Date(el.createdAt).getFullYear()}`.includes(filterObj.year)&&
-                                    `${new Date(el.createdAt).getMonth()}`.includes(filterObj.monthName) &&
-                                       el?.AssignStaff?.includes(filterObj.staffName)    
-                                     ).map((el, i) =>
+                  {filterData(feedBackCallsData).slice(paging * 10, paging * 10 + 10).map((el, i) =>
                       <CTableRow key={i}>
-                          <CTableDataCell>{i + 1}</CTableDataCell>
+                          <CTableDataCell>{(i+1+ (paging * 10))}</CTableDataCell>
                           <CTableDataCell>{moment(el.createdAt).format('YYYY-MM-DD')}</CTableDataCell>
                           <CTableDataCell>{el?.feedBackCallInfo?.feedBackCallFollowUpDate}</CTableDataCell>
                           <CTableDataCell>{el?.feedBackCallInfo?.feedBackCallTimeing}</CTableDataCell>

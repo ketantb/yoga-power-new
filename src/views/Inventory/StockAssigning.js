@@ -9,6 +9,8 @@ import {
     CTabContent,
     CFormSelect,
     CFormCheck,
+    CPagination,
+    CPaginationItem
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import { useState, useEffect } from "react"
@@ -32,6 +34,7 @@ function StockAssigning() {
     const pathValMaster = useAdminValidation('Master')
     const pathVal = useAdminValidation('')
     const uniAdminObjVal = useUniqAdminObjeact()
+    const [paging, setPaging] = useState(0);
 
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpInventory.items.erpOfficeInventory.rights) 
@@ -376,11 +379,25 @@ function StockAssigning() {
                                     <CTableDataCell>{item.Assigned_To}</CTableDataCell>
                                 </CTableRow>
                             )}
-
                         </CTableBody>
                     </CTable>
                 </CTabPane>
             </CTabContent>
+            <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+     <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+         <span aria-hidden="true">&laquo;</span>
+     </CPaginationItem>
+     <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+     {stockAssigningData?.length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+     {stockAssigningData?.length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+     {stockAssigningData?.length > (paging + 1) * 10 ?
+         <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+             <span aria-hidden="true">&raquo;</span>
+         </CPaginationItem>
+         : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+             <span aria-hidden="true">&raquo;</span>
+         </CPaginationItem>}
+    </CPagination>
         </CCardBody>
     </CCard>
 

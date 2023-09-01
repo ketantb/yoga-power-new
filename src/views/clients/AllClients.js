@@ -59,13 +59,16 @@ const AllClients = () => {
     const exportClientData = useClientExport('All-Clients.xlsx')
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
-    ?.crmLeads?.items?.superRight) 
+    ?.crmCientManagment?.items?.superRight) 
 
     const isAdmin = useSelector((el)=>el.isAdmin) 
 
-    // const enquiryAdd =  (rightsData?.addOn?.includes(clientManagementRights)||isAdmin)
-    // const enquiryDelete = (rightsData?.delete?.includes(clientManagementRights)||isAdmin)
-    // const enquiryEdit  =  (rightsData?.edit?.includes(clientManagementRights)||isAdmin)
+    const allClientStatus =  (rightsData?.status?.includes(clientManagementRights.allClients)||isAdmin)
+    const allClientDelte = (rightsData?.delete?.includes(clientManagementRights.allClients)||isAdmin)
+    const allClientEdit  =  (rightsData?.edit?.includes(clientManagementRights.allClients)||isAdmin)
+    const allClientProfile = (rightsData?.profile?.includes(clientManagementRights.allClients)||isAdmin)
+    const allClientProfileAction = (rightsData?.profile?.includes(clientManagementRights.allClientAction)||isAdmin)
+    const allClientExport = (rightsData?.status?.includes(clientManagementRights.activeClients+"Exp")||isAdmin)
 
     var currentdate = new Date();
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
@@ -210,6 +213,7 @@ const AllClients = () => {
     }
 
 function updateRec(id, status) {
+  
     const data1 = { status: status }
     fetch(`${url1}/memberForm/update/${id}`, {
         method: "POST",
@@ -316,6 +320,7 @@ const clearFilter = ()=>{
     dateFilter(value)
     setFilterBy('')
     setSubFilter('')
+    setSelect('')
 }
 
 
@@ -336,6 +341,11 @@ function findLeftClient(list){
    useEffect(()=>{
         setPaging(0)
    },[pageNumber])
+   const counseller =  staff.find((el)=>el._id===uniQObjVal.employeeMongoId)
+
+   useEffect(()=>{
+     setCounseller((counseller?.FullName||''))
+   },[uniQObjVal.employeeMongoId,counseller?.FullName])
 
     return (
         <CRow>
@@ -364,8 +374,8 @@ function findLeftClient(list){
                                   
                                 </CInputGroup>
                             </CCol>
-                            <CCol lg={6} sm={6} md={6}>
-                                <CButtonGroup className=' mb-2 float-end'>
+                            <CCol lg={6} sm={6} md={6} >
+                                <CButtonGroup className={allClientExport?' mb-2 float-end':'d-none'}>
                                     <CButton color="primary" onClick={()=>exportClientData(result1)}>
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
@@ -488,12 +498,12 @@ function findLeftClient(list){
                                                 aria-label="Select Assign Staff"
                                                 value={Counseller}
                                                 onChange={(e) => setCounseller(e.target.value)}
-                                                label='Counseller'
+                                                label='Staff name'
                                             >
-                                                <option>Select Counseller</option>
+                                                <option>Select Staff name</option>
                                                 {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                                    (
-                                                        <option key={index}>{item.FullName} {item.FullName}</option>
+                                                        <option key={index} value={item.FullName} >{item.FullName} {item.EmployeeID}</option>
                                                     )
                                                 ))}</CFormSelect>
                                         </CCol>
@@ -580,12 +590,12 @@ function findLeftClient(list){
                                     <CTableHeaderCell>Duration</CTableHeaderCell>
                                     <CTableHeaderCell>Start Date</CTableHeaderCell>
                                     <CTableHeaderCell>End Date</CTableHeaderCell>
-                                    <CTableHeaderCell>Fitness Goal</CTableHeaderCell>
-                                    <CTableHeaderCell>Appointments</CTableHeaderCell>
+                                    <CTableHeaderCell className={allClientProfile?'':'d-none'} >Fitness Goal</CTableHeaderCell>
+                                    <CTableHeaderCell className={allClientProfile?'':'d-none'} >Appointments</CTableHeaderCell>
                                     <CTableHeaderCell>Type of Call</CTableHeaderCell>
-                                    <CTableHeaderCell>Status</CTableHeaderCell>
-                                    <CTableHeaderCell>Action</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit</CTableHeaderCell>
+                                    <CTableHeaderCell  >Status</CTableHeaderCell>
+                                    <CTableHeaderCell className={allClientProfileAction?'':'d-none'} >Action</CTableHeaderCell>
+                                    <CTableHeaderCell className={(allClientDelte||allClientEdit)?'':'d-none'}>Edit/Delete</CTableHeaderCell>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>
@@ -705,18 +715,16 @@ function findLeftClient(list){
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell   className={allClientProfile?'':'d-none'}>
                                         <CFormInput
-                                            className="mb-1"
                                             type="text"
                                             style={{ minWidth: "100px" }}
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={allClientProfile?'':'d-none'}>
                                         <CFormInput
-                                            className="mb-1"
                                             type="text"
                                             value={Search10}
                                             disabled
@@ -743,16 +751,17 @@ function findLeftClient(list){
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={allClientProfileAction?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
                                             type="text"
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
+
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={(allClientDelte||allClientEdit)?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -782,8 +791,11 @@ function findLeftClient(list){
                                         <CTableRow key={index}>
                                             <CTableDataCell>{ (index+1+ (paging * 10))}</CTableDataCell>
                                             <CTableDataCell>{item.ClientId}</CTableDataCell>
-                                            <CTableDataCell><Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/1`} 
-                                           >{item.Fullname}</Link></CTableDataCell>
+                                            <CTableDataCell>
+                                            {allClientProfile?
+                                                <Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/1`} 
+                                           >{item.Fullname}</Link>:item.Fullname}
+                                           </CTableDataCell>
                                             <CTableDataCell>{item.ContactNumber}</CTableDataCell>
                                             <CTableDataCell><label style={{ cursor: 'pointer' }}>{item.invoiceNum}</label> </CTableDataCell>
                                             <CTableDataCell>{item.AttendanceID}</CTableDataCell>
@@ -793,10 +805,10 @@ function findLeftClient(list){
                                             <CTableDataCell>{item?.duration}</CTableDataCell>
                                             <CTableDataCell>{moment(item.startDate).format("DD-MM-YYYY")}</CTableDataCell>
                                             <CTableDataCell>{moment(item.endDate).format("DD-MM-YYYY")}</CTableDataCell>
-                                            <CTableDataCell>
+                                            <CTableDataCell className={allClientProfile?'':'d-none'}>
                                                <CButton size='sm' onClick={()=>NavigateFitnnesofClient(item._id)} >View Fitness</CButton>
                                             </CTableDataCell>
-                                            <CTableDataCell>
+                                            <CTableDataCell className={allClientProfile?'':'d-none'}>
                                                 <Link style={{textDecoration: 'none'}}
                                                  to={`/clients/member-details/${item._id}/5`}
                                                   ><BsPlusCircle id={item._id}
@@ -806,12 +818,12 @@ function findLeftClient(list){
                                             <CTableDataCell><CButton onClick={() => {getUniqCllientCallData(item._id) }}>View</CButton></CTableDataCell>
                                         <CTableDataCell className='text-center'>
                                             {
-                                        (findLeftClient(item)&&<CButton className='mt-1' color='danger' >Left</CButton>||
-                                        item.status === 'active'&& !findLeftClient(item) &&<CButton className='mt-1' color='success' onClick={() => updateRec(item._id, 'inactive')} >Active</CButton>||
-                                        item.status !== 'active' && !findLeftClient(item)&&  <CButton className='mt-1' color='danger' onClick={() => updateRec(item._id, 'active')}>Inactive</CButton>)
+                                        (findLeftClient(item)&&<CButton className='mt-1' color='danger' disabled={!allClientStatus} >Left</CButton>||
+                                        item.status === 'active'&& !findLeftClient(item) &&<CButton  disabled={!allClientStatus} className='mt-1' color='success' onClick={() => updateRec(item._id, 'inactive')} >Active</CButton>||
+                                        item.status !== 'active' && !findLeftClient(item)&&  <CButton  disabled={!allClientStatus} className='mt-1' color='danger' onClick={() => updateRec(item._id, 'active')}>Inactive</CButton>)
                                         }
                                         </CTableDataCell>
-                                            <CTableDataCell className='text-center'>
+                                            <CTableDataCell className={allClientProfileAction?'text-center':'d-none'} >
                                                 <a href={`tel:${item.CountryCode}${item.ContactNumber}`} target='_black'>
                                                     <MdCall style={{ cursor: 'pointer', markerStart: '10px' }} 
                                                     onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' />
@@ -827,11 +839,11 @@ function findLeftClient(list){
                                                                  , markerStart: '10px' }} onClick={() => {setVisible(true),handleFollowup(item._id,item.ClientId,item)
                                                                  }} />
                                                                  </CTableDataCell>
-                                            <CTableDataCell className='text-center'>
+                                            <CTableDataCell  className={(allClientDelte||allClientEdit)?'text-center':'d-none'} >
                                               
-                                                    <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer',
+                                                    <MdEdit className={(allClientEdit)?'text-center':'d-none'} id={item._id} style={{ fontSize: '35px', cursor: 'pointer',
                                                      markerStart: '10px' }} size='20px' onClick={()=>Edit(item)} />
-                                                     <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }}
+                                                     <MdDelete className={(allClientDelte)?'text-center':'d-none'} style={{ cursor: 'pointer', markerStart: '10px' }}
                                                       onClick={() => deleteEnquiry(item._id)} size='20px' /></CTableDataCell>
                                         </CTableRow>
                                     )

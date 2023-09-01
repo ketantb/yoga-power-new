@@ -34,7 +34,6 @@ import moment from 'moment';
 import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop } from '@coreui/icons'
 
-
 import { useSelector } from 'react-redux'
 import AdmissionForm1 from 'src/components/AdmissionForm1';
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
@@ -55,7 +54,8 @@ const FollowupScheduling = () => {
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
     var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
     var year = currentdate.getFullYear();
-    
+
+
 
     const [select, setSelect] = useState('') 
     const [visible, setVisible] = useState(false)
@@ -107,6 +107,7 @@ const FollowupScheduling = () => {
     const prospectAdd =  (rightsData?.addOn?.includes(leadsSuperRight.prospect)||isAdmin)
     const prospectDelete =  (rightsData?.delete?.includes(leadsSuperRight.prospect)||isAdmin)
     const prospectEdit  =  (rightsData?.edit?.includes(leadsSuperRight.prospect)||isAdmin)
+    const prospectExport = (rightsData?.edit?.includes(leadsSuperRight.prospectExport)||isAdmin)
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -637,7 +638,7 @@ const FollowupScheduling = () => {
                                 </CInputGroup>
                             </CCol>
 
-                            <CCol lg={6} sm={6} md={6}>
+                            <CCol lg={6} sm={6} md={6} className={prospectExport?'':'d-none'}>
                                 <CButtonGroup className=' mb-2 float-end'>
                                     <CButton color="primary" onClick={()=>exportFolloupSchedulind(result1) }>
                                         <CIcon icon={cilArrowCircleTop} />

@@ -52,6 +52,8 @@ const LeadsRight = ({crmLeads,setRightObject }) => {
            onChange={(e)=>leadsRigthFun(true,'crmAllEnquiry1',e.target.checked)}
            /></span>
           </h5>
+            <CFormSwitch size="xl" label="Import"  checked={checkDashRights(leadsSuperRight.allEnquiresExportImp,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.allEnquiresExportImp,'edit')}  />
+            <CFormSwitch size="xl" label="Export"  checked={checkDashRights(leadsSuperRight.allEnquiresExportImp,'addOn')} onChange={()=>totoggaleRights(leadsSuperRight.allEnquiresExportImp,'addOn')}  />
             <CFormSwitch size="xl" label="Add "  checked={checkDashRights(leadsSuperRight.allEnquires,'addOn')} onChange={()=>totoggaleRights(leadsSuperRight.allEnquires,'addOn')}  />
             <CFormSwitch size="xl" label="Edit enquiries" checked={checkDashRights(leadsSuperRight.allEnquires,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.allEnquires,'edit')} />
             <CFormSwitch size="xl" label="Delete enquiries" checked={checkDashRights(leadsSuperRight.allEnquires,'delete')} onChange={()=>totoggaleRights(leadsSuperRight.allEnquires,'delete')} />
@@ -66,6 +68,7 @@ const LeadsRight = ({crmLeads,setRightObject }) => {
            onChange={(e)=>leadsRigthFun(true,'crmAppointment1',e.target.checked)}
            /></span>
           </h5>
+            <CFormSwitch size="xl" label="Export" checked={checkDashRights(leadsSuperRight.appointmentExport,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.appointmentExport,'edit')} />
             <CFormSwitch size="xl" label="Add "  checked={checkDashRights(leadsSuperRight.appointment,'addOn')} onChange={()=>totoggaleRights(leadsSuperRight.appointment,'addOn')}  />
             <CFormSwitch size="xl" label="Edit enquiries" checked={checkDashRights(leadsSuperRight.appointment,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.appointment,'edit')} />
             <CFormSwitch size="xl" label="Delete enquiries" checked={checkDashRights(leadsSuperRight.appointment,'delete')} onChange={()=>totoggaleRights(leadsSuperRight.appointment,'delete')} />
@@ -79,7 +82,8 @@ const LeadsRight = ({crmLeads,setRightObject }) => {
            onChange={(e)=>leadsRigthFun(true,'crmTrialUpdate1',e.target.checked)}
            /></span>
           </h5>
-          <CFormSwitch size="xl" label="Add "  checked={checkDashRights(leadsSuperRight.trailUpdate,'addOn')} onChange={()=>totoggaleRights(leadsSuperRight.trailUpdate,'addOn')}  />
+            <CFormSwitch size="xl" label="Export" checked={checkDashRights(leadsSuperRight.trailUpdateExport,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.trailUpdateExport,'edit')} />
+            <CFormSwitch size="xl" label="Add "  checked={checkDashRights(leadsSuperRight.trailUpdate,'addOn')} onChange={()=>totoggaleRights(leadsSuperRight.trailUpdate,'addOn')}  />
             <CFormSwitch size="xl" label="Edit enquiries" checked={checkDashRights(leadsSuperRight.trailUpdate,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.trailUpdate,'edit')} />
             <CFormSwitch size="xl" label="Delete enquiries" checked={checkDashRights(leadsSuperRight.trailUpdate,'delete')} onChange={()=>totoggaleRights(leadsSuperRight.trailUpdate,'delete')} />
         </CCol>
@@ -94,23 +98,12 @@ const LeadsRight = ({crmLeads,setRightObject }) => {
            onChange={(e)=>leadsRigthFun(true,'crmProspects1',e.target.checked)}
            /></span>
           </h5>
+              <CFormSwitch size="xl" label="Export" checked={checkDashRights(leadsSuperRight.prospectExport,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.prospectExport,'edit')} />
              <CFormSwitch size="xl" label="Add "  checked={checkDashRights(leadsSuperRight.prospect,'addOn')} onChange={()=>totoggaleRights(leadsSuperRight.prospect,'addOn')}  />
             <CFormSwitch size="xl" label="Edit enquiries" checked={checkDashRights(leadsSuperRight.prospect,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.prospect,'edit')} />
             <CFormSwitch size="xl" label="Delete enquiries" checked={checkDashRights(leadsSuperRight.prospect,'delete')} onChange={()=>totoggaleRights(leadsSuperRight.prospect,'delete')} />
         </CCol>
-        <CCol>
-            <h5 className='mb-4 d-flex ' >
-            Call Report<span className='mx-1'>
-           <CFormSwitch size="lg" 
-           checked={crmCallsReports1.value}
-           onChange={(e)=>leadsRigthFun(true,'crmCallsReports1',e.target.checked)}
-           /></span>
-          </h5>
-
-          <CFormSwitch size="xl" label="Add "  checked={checkDashRights(leadsSuperRight.callReport,'addOn')} onChange={()=>totoggaleRights(leadsSuperRight.callReport,'addOn')}  />
-            <CFormSwitch size="xl" label="Edit enquiries" checked={checkDashRights(leadsSuperRight.callReport,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.callReport,'edit')} />
-            <CFormSwitch size="xl" label="Delete enquiries" checked={checkDashRights(leadsSuperRight.callReport,'delete')} onChange={()=>totoggaleRights(leadsSuperRight.callReport,'delete')} />
-        </CCol>
+  
         <CCol>
             <h5 className='mb-4 d-flex ' >
             Cold Enquires<span className='mx-1'>
@@ -119,9 +112,20 @@ const LeadsRight = ({crmLeads,setRightObject }) => {
            onChange={(e)=>leadsRigthFun(true,'crmColdEnquires1',e.target.checked)}
            /></span>
           </h5>
+          <CFormSwitch size="xl" label="Export" checked={checkDashRights(leadsSuperRight.coldEnquiresExport,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.coldEnquiresExport,'edit')} />
           <CFormSwitch size="xl" label="Add "  checked={checkDashRights(leadsSuperRight.coldEnquires,'addOn')} onChange={()=>totoggaleRights(leadsSuperRight.coldEnquires,'addOn')}  />
-            <CFormSwitch size="xl" label="Edit enquiries" checked={checkDashRights(leadsSuperRight.coldEnquires,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.coldEnquires,'edit')} />
-            <CFormSwitch size="xl" label="Delete enquiries" checked={checkDashRights(leadsSuperRight.coldEnquires,'delete')} onChange={()=>totoggaleRights(leadsSuperRight.coldEnquires,'delete')} />
+          <CFormSwitch size="xl" label="Edit enquiries" checked={checkDashRights(leadsSuperRight.coldEnquires,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.coldEnquires,'edit')} />
+          <CFormSwitch size="xl" label="Delete enquiries" checked={checkDashRights(leadsSuperRight.coldEnquires,'delete')} onChange={()=>totoggaleRights(leadsSuperRight.coldEnquires,'delete')} />
+        </CCol>
+
+        <CCol>
+            <h5 className='mb-4 d-flex ' >
+            Call Report<span className='mx-1'>
+           <CFormSwitch size="lg" 
+           checked={crmCallsReports1.value}
+           onChange={(e)=>leadsRigthFun(true,'crmCallsReports1',e.target.checked)}
+           /></span>
+          </h5>
         </CCol>
 
     </CRow>

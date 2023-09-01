@@ -177,6 +177,20 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                 console.error(error)
             })
     }
+
+
+    function totfilterData(data){
+  const filterData = data.filter((el)=>{
+    return (el.name?.toLowerCase()||"").includes(search1.toLowerCase()) &&
+    (el.mobile+""||"").includes(search2.toLowerCase())&&
+    (el.email?.toLowerCase()||"").includes(search3.toLowerCase())&&
+    (el.address?.toLowerCase()||"").includes(search4.toLowerCase())&&
+    (el.category?.toLowerCase()||"").includes(search5.toLowerCase())&&
+    (el.company?.toLowerCase()||"").includes(search6.toLowerCase())
+ })
+
+ return filterData
+}
     return (
         <CRow className='d-flex mb-2'>
             <CCol lg={9} sm={6} className='mb-2'>
@@ -307,7 +321,7 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                             <CFormInput
                                 className="mb-1"
                                 type="text"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search1}
                                 onChange={(e) => setSearch1(e.target.value)}
                                 aria-describedby="exampleFormControlInputHelpInline"
@@ -316,7 +330,7 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search2}
                                 onChange={(e) => setSearch2(e.target.value)}
                                 type="number"
@@ -326,7 +340,7 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "100px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search3}
                                 onChange={(e) => setSearch3(e.target.value)}
                                 type="text"
@@ -337,7 +351,7 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                             <CFormInput
                                 className="mb-1"
                                 type="text"
-                                style={{ minWidth: "200px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search4}
                                 onChange={(e) => setSearch4(e.target.value)}
                                 aria-describedby="exampleFormControlInputHelpInline"
@@ -346,7 +360,7 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search5}
                                 onChange={(e) => setSearch5(e.target.value)}
                                 type="text"
@@ -356,7 +370,7 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search6}
                                 onChange={(e) => setSearch6(e.target.value)}
                                 type="text"
@@ -366,7 +380,7 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                         <CTableDataCell style={{display:(action1?'':'none' )}}>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px"}}
+                                style={{ minWidth: "80px"}}
                                 type="text"
                                 disabled
                                 aria-describedby="exampleFormControlInputHelpInline"
@@ -376,7 +390,7 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                             <CFormInput
                                 className="mb-1"
                                 type="text"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 disabled
                                 aria-describedby="exampleFormControlInputHelpInline"
 
@@ -384,7 +398,8 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                         </CTableDataCell>
                             
                     </CTableRow>
-                    {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
+                    {totfilterData(result1)
+                    .slice(paging * 10, paging * 10 + 10).map((item, index) => (
                         <CTableRow key={index}>
                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                             <CTableDataCell>{item.name}</CTableDataCell>
@@ -412,19 +427,10 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                     <span aria-hidden="true">&laquo;</span>
                 </CPaginationItem>
                 <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                {result1.filter((list) =>
-                    list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
-                    && list.address.includes(search4) && list.category.includes(search5) && list.company.includes(search6)
-                ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                {totfilterData(result1).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                {result1.filter((list) =>
-                    list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
-                    && list.address.includes(search4) && list.category.includes(search5) && list.company.includes(search6)
-                ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                {result1.filter((list) =>
-                    list.name.includes(search1) && list.mobile.toString().includes(search2.toString()) && list.email.includes(search3)
-                    && list.address.includes(search4) && list.category.includes(search5) && list.company.includes(search6)
-                ).length > (paging + 1) * 10 ?
+                {totfilterData(result1).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                {totfilterData(result1).length > (paging + 1) * 10 ?
                     <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                         <span aria-hidden="true">&raquo;</span>
                     </CPaginationItem>

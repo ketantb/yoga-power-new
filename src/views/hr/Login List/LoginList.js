@@ -100,7 +100,7 @@ const LoginList = ({admin}) => {
 
 
   function getAllEmailIdList(){
-    axios.get(`${url}/signup/${pathName}`, {headers})
+    axios.get(`${url}/signup/${masterPtahVal}`, {headers})
         .then((res) => {
           if(res.status===200){
             console.log(res.data)
@@ -366,7 +366,7 @@ setEmailValidationError('')
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {allEmailData.filter((el)=>el.isAdmin===admin&&!el?.isAdminPatner).map((el,i)=>
+                        {allEmailData?.filter((el)=>el.isAdmin===admin&&!el?.isAdminPatner).map((el,i)=>
                             <CTableRow className='text-center'key={i} >
                                 <CTableDataCell>{i+1}</CTableDataCell>
                                 <CTableDataCell>{el.center}</CTableDataCell>

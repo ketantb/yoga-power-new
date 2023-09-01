@@ -207,6 +207,9 @@ function toPrintInvoice(data){
   setPrinInvoice(true)  
   setActiveKey(7)
 }
+useEffect(()=>{
+setSelectedStaffId(uniqObjVal.employeeMongoId)
+},[uniqObjVal.employeeMongoId])
 
 return   <>
 <Invoice 
@@ -376,6 +379,7 @@ return   <>
                      <div className="ps-4">
                          <CFormSelect
                          label="Counselor"
+                         value={selectedStaffId}
                          onChange={(e)=>setSelectedStaffId( e.target.value)}                                                                                                                                  
                                     >
                                 <option >Select Staff</option>
@@ -406,11 +410,11 @@ return   <>
 
 
                             
-                            <ClothProductTotalTable clothStore={clothStore} validate={allowToConfirm} toRenderErrorOnFrontend={toRenderErrorOnFrontend} clientReferance={clientReferance} />
-                            <AuravedaTotalTable auravedaStore={auravedaStore} validate={allowToConfirm} toRenderErrorOnFrontend={toRenderErrorOnFrontend} clientReferance={clientReferance} />
-                            <FitnessProductTotalTable fitnessProduct={fitnessProduct} validate={allowToConfirm} toRenderErrorOnFrontend={toRenderErrorOnFrontend} clientReferance={clientReferance} />
-                            <FoodProductTable foodProduct={foodProduct} validate={allowToConfirm} toRenderErrorOnFrontend={toRenderErrorOnFrontend} clientReferance={clientReferance} />
-                            <GeneralProductTable genralProduct={genralProduct} validate={allowToConfirm} toRenderErrorOnFrontend={toRenderErrorOnFrontend} clientReferance={clientReferance} />
+                            <ClothProductTotalTable clothStore={clothStore} validate={allowToConfirm} toRenderErrorOnFrontend={toRenderErrorOnFrontend} clientReferance={{...clientReferance,StatffName:emp?.FullName,EmpId:emp?._id}} />
+                            <AuravedaTotalTable auravedaStore={auravedaStore} validate={allowToConfirm} toRenderErrorOnFrontend={toRenderErrorOnFrontend} clientReferance={{...clientReferance,StatffName:emp?.FullName,EmpId:emp?._id}} />
+                            <FitnessProductTotalTable fitnessProduct={fitnessProduct} validate={allowToConfirm} toRenderErrorOnFrontend={toRenderErrorOnFrontend} clientReferance={{...clientReferance,StatffName:emp?.FullName,EmpId:emp?._id}} />
+                            <FoodProductTable foodProduct={foodProduct} validate={allowToConfirm} toRenderErrorOnFrontend={toRenderErrorOnFrontend} clientReferance={{...clientReferance,StatffName:emp?.FullName,EmpId:emp?._id}} />
+                            <GeneralProductTable genralProduct={genralProduct} validate={allowToConfirm} toRenderErrorOnFrontend={toRenderErrorOnFrontend} clientReferance={{...clientReferance,StatffName:emp?.FullName,EmpId:emp?._id}} />
                             {num ?<CCol className="d-flex justify-content-end">
                                 <h4>TOTAL AMOUNT :-
                                      Rs {total.reduce((crr,el)=>crr+(el.item*el.productDetails.Product_Price),0)}</h4>

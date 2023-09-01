@@ -59,21 +59,11 @@ const empSubRigthFun = useRight(setRightObject,'crmEmployee')
           </h5>
     
         <CCol>
-            <CFormSwitch size="xl" label="Achived"  checked={checkDashRights(empLoyeeeRights.achived,'crmDashboard1')} onChange={()=>totoggaleRights(empLoyeeeRights.achived,'crmDashboard1')}/>
-            <CFormSwitch size="xl" label="Target" checked={checkDashRights(empLoyeeeRights.target,'crmDashboard1')} onChange={()=>totoggaleRights(empLoyeeeRights.target,'crmDashboard1')} />
-            <CFormSwitch size="xl" label="Incentive" checked={checkDashRights(empLoyeeeRights.incentive,'crmDashboard1')} onChange={()=>totoggaleRights(empLoyeeeRights.incentive,'crmDashboard1')} />
-            <CFormSwitch size="xl" label="Profit" checked={checkDashRights(empLoyeeeRights.profit,'crmDashboard1')} onChange={()=>totoggaleRights(empLoyeeeRights.profit,'crmDashboard1')}/>
-        </CCol>
-        <CCol>
-            <CFormSwitch size="xl" label="Income" checked={checkDashRights(empLoyeeeRights.income,'crmDashboard1')} onChange={()=>totoggaleRights(empLoyeeeRights.income,'crmDashboard1')}  />
+            <CFormSwitch size="xl" label="Month Traget" checked={checkDashRights(empLoyeeeRights.income,'crmDashboard1')} onChange={()=>totoggaleRights(empLoyeeeRights.income,'crmDashboard1')}  />
             <CFormSwitch size="xl" label="Attendance" checked={checkDashRights(empLoyeeeRights.attendance,'crmDashboard1')} onChange={()=>totoggaleRights(empLoyeeeRights.attendance,'crmDashboard1')} />
-            <CFormSwitch size="xl" label="Social Media"checked={checkDashRights(empLoyeeeRights.socialMedia,'crmDashboard1')} onChange={()=>totoggaleRights(empLoyeeeRights.socialMedia,'crmDashboard1')} />
-            <CFormSwitch size="xl" label="Yog Power Branch" checked={checkDashRights(empLoyeeeRights.yogPowerBranch,'crmDashboard1')} onChange={()=>totoggaleRights(empLoyeeeRights.yogPowerBranch,'crmDashboard1')}  />
-
+            <CFormSwitch size="xl" label="Balance Payment" checked={checkDashRights(empLoyeeeRights.profit,'crmDashboard1')} onChange={()=>totoggaleRights(empLoyeeeRights.profit,'crmDashboard1')}/>
         </CCol>
-        <CCol>
-        </CCol>
-      
+        
     </CRow>
     
     <CRow className='mt-5' >
@@ -85,7 +75,7 @@ const empSubRigthFun = useRight(setRightObject,'crmEmployee')
               onChange={(e)=>empSubRigthFun(true,'crmEmployeeTarget1',e.target.checked)}
            />
            </span>
-          </h5>
+         </h5>
         
         <CCol>
             <CFormSwitch size="xl" label="Sales Target"  checked={checkDashRights(empLoyeeeRights.salesTarget,'crmEmployeeTarget1')} onChange={()=>totoggaleRights(empLoyeeeRights.salesTarget,'crmEmployeeTarget1')}/>

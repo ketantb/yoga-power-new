@@ -31,11 +31,18 @@ const trainerSuperRight = {
 
 const leadsSuperRight = {
     allEnquires:'allEnquiresj9uo',appointment :'appointmenth9h9h78',trailUpdate:'trailUpdateiuhy87',
-    prospect:'prospecttgt76',callReport:'allMembersrkg34998',coldEnquires:'coldEnquireshd38'
+    prospect:'prospecttgt76',callReport:'allMembersrkg34998',coldEnquires:'coldEnquireshd38',
+
+    allEnquiresExportImp:'allEnquiresj9uoexport',appointmentExport :'appointmenth9h9h78Export',
+    trailUpdateExport:'trailUpdateExport56456e',prospectExport:'prospectExport7t67t',coldEnquiresExport
+    :'coldEnquiresExportu3yr387tr'
 }
 
 const clientManagementRights = {
     allClients:'allClients3r3ur',activeClients:'activeClientsfj328',renewalsClients:'renewalsClientsdlkg3409',
+    allClientAction:"allClientActiony97y",activeClientsAction:'activeClientsiu78y7',renewalsClientsAction:'renewalsClients7t8ggy',
+    renewalsInvoice:'renewalsInvoice6rf6r',
+    renewedClientsAction:'renewedClientswjhr3r8',leftClientsAction:'leftClientsiur32',clientSupportAction:'clientSupportAction38u3r8',
     renewedClients:'renewedClientsgio489',leftClients:'leftClientsjt438',clientSupport:'clientSupportgj34u'
 }
 

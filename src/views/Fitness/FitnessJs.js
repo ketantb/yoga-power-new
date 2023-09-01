@@ -51,6 +51,8 @@ import { useAdminValidation } from '../Custom-hook/adminValidation';
 const Fitness = () => {
     const url1 = useSelector((el) => el.domainOfApi)
     const pathVal = useAdminValidation()
+    const pathValMaster = useAdminValidation('Master')
+
 
     const [active, setActiveButton] = useState(1)
     const [allMemberData,setAllmemBerData] = useState([]) 
@@ -79,7 +81,7 @@ const Fitness = () => {
  }
 
  const getCounslerData = async ()=>{
-    axios.get(`${url1}/employeeform/${pathVal}`, {headers: {'Authorization': `Bearer ${token}`}})
+    axios.get(`${url1}/employeeform/${pathValMaster}`, {headers: {'Authorization': `Bearer ${token}`}})
     .then((res) => {setEmployeeData(res.data.filter((list)=>list.selected === 'Select' ))})
     .catch((error) => {console.error(error)})
 }

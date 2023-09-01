@@ -51,10 +51,11 @@ const AllEnquires = () => {
     const exportDataFun = useExportHook("YogPowerAllEnquires.xlsx")
     const importDataFun = useImportHook('enquiryForm/xlsx/add')
 
-     
 
     const isAdmin = useSelector((el)=>el.isAdmin) 
     const enquiryAdd =  rightsData?.addOn?.includes(leadsSuperRight.allEnquires)
+    const enquiryExport =  rightsData?.addOn?.includes(leadsSuperRight.allEnquiresExportImp)
+    const enquiryImport =  rightsData?.edit?.includes(leadsSuperRight.allEnquiresExportImp)
     const enquiryDelete =  rightsData?.delete?.includes(leadsSuperRight.allEnquires)
     const enquiryEdit  =  rightsData?.edit?.includes(leadsSuperRight.allEnquires)
 
@@ -187,6 +188,9 @@ const AllEnquires = () => {
         empNameC:(staff.find((el)=>el._id===Counseller)?.FullName||unikqObj.empNameC)
     }
 
+    useEffect(()=>{
+    setCounseller(unikqObj.employeeMongoId)
+    },[unikqObj.employeeMongoId])
 
     function getStaff() {
         axios.get(`${ url }/employeeform/${pathRouteMasterVal}`, {
@@ -564,7 +568,7 @@ const AllEnquires = () => {
                         
                                 </CInputGroup>
                             </CCol>
-                            <CCol lg={4} md={6} sm={12}>
+                            <CCol lg={4} md={6} sm={12} className={(enquiryImport)?' mb-2 float-end':'d-none'}>
                                 <CFormSelect
                                     className="mb-1 ms-auto"
                                     aria-label="Select Assign Staff"
@@ -585,9 +589,9 @@ const AllEnquires = () => {
 
                                  {errorMessage&&<label className='text-danger' >Please select the employee before import</label>}  
                             </CCol>
-                            <CCol lg={4} sm={6} md={6}>
-                                <CButtonGroup className=' mb-2 float-end'>
-                                    <CButton onClick={HandaleImportClick} color="primary">
+                            <CCol lg={4} sm={6} md={6} >
+                                <CButtonGroup className={(enquiryExport||enquiryImport)?' mb-2 float-end':'d-none'}>
+                                    <CButton onClick={HandaleImportClick} color="primary" className={(enquiryImport)?' mb-2 float-end':'d-none'}>
                                         <CIcon icon={cilArrowCircleBottom} />
                                         {' '}Import
                                     </CButton>
@@ -596,7 +600,7 @@ const AllEnquires = () => {
                                         ref={hiddenXLimportFileInput}
                                         onChange={HandaleImportChange} hidden />
 
-                                    <CButton onClick={()=>exportDataFun(result1.filter((list)=>list.enquirestatus!=='notshow'))} color="primary">
+                                    <CButton className={(enquiryExport)?' mb-2 float-end':'d-none'} onClick={()=>exportDataFun(result1.filter((list)=>list.enquirestatus!=='notshow'))} color="primary">
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>
@@ -725,7 +729,7 @@ const AllEnquires = () => {
                                     <option value='Gander'>Gender</option>
                                 </CFormSelect>
                             </CCol>
-                            <CCol xs={3}>
+                            <CCol xs={3} >
                                 <CFormSelect
                                     className="mb-1"
                                     aria-label="Select Service Name"

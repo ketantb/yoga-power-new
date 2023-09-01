@@ -43,6 +43,7 @@ import { Link } from 'react-router-dom'
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 import useExportHook from '../leads/leaadCutomHook/useExportHook'
 import { useNavigate } from 'react-router-dom'
+import { clientManagementRights } from '../hr/Rights/rightsValue/crmRightsValue'
 
 
 const ActiveClients = () => {
@@ -55,6 +56,8 @@ const ActiveClients = () => {
     const uniqObjectVal = useUniqAdminObjeact()
     const navigateFitnees = useNavigate()
 
+    
+
 
     const [Search1, setSearch1] = useState('')
     const [Search2, setSearch2] = useState('')
@@ -65,7 +68,6 @@ const ActiveClients = () => {
     const [Search7, setSearch7] = useState('')
     const [Search8, setSearch8] = useState('')
     const [Search9, setSearch9] = useState('')
-    const [Search10, setSearch10] = useState('')
     const [viewInvoice, setViewInvoice] = useState(false);
     const [CallUpdateID, setCallUpdateID] = useState("");
     const [Calls, setCalls] = useState(false);
@@ -95,8 +97,6 @@ const ActiveClients = () => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     console.log(user);
     const token = user.token;
-    const username = user.user.username;
-    const centerCode = user.user.centerCode;
     const [result1, setResult1] = useState([]);
     const [result, setResult] = useState([]);
     const [updateItem, setUpdateItem] = useState([]);
@@ -104,6 +104,18 @@ const ActiveClients = () => {
 
     const exportData = useExportHook('ActiveClients.xlsx')
     let pageNumber = 0
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmCientManagment?.items?.superRight) 
+
+    const isAdmin = useSelector((el)=>el.isAdmin) 
+
+    const activeClientExport = (rightsData?.status?.includes(clientManagementRights.activeClients+"Exp")||isAdmin)
+    const activeClientStatus =  (rightsData?.status?.includes(clientManagementRights.activeClients)||isAdmin)
+    const activeClientDelte = (rightsData?.delete?.includes(clientManagementRights.activeClients)||isAdmin)
+    const activeClientEdit  =  (rightsData?.edit?.includes(clientManagementRights.activeClients)||isAdmin)
+    const activeClientProfile = (rightsData?.profile?.includes(clientManagementRights.activeClients)||isAdmin)
+    const activeClientProfileAction = (rightsData?.profile?.includes(clientManagementRights.activeClientsAction)||isAdmin)
 
     useEffect(() => {
         getEnquiry()
@@ -353,6 +365,13 @@ function NavigateFitnnesofClient(id){
     navigateFitnees(`/clients/member-details/${id}/9`)   
    }
 
+   const counseller =  staff.find((el)=>el._id===uniqObjectVal.employeeMongoId)
+
+   useEffect(()=>{
+     setCounseller((counseller?.FullName||''))
+   },[uniqObjectVal.employeeMongoId,counseller?.FullName])
+
+
     return (
         <CRow>
             <CCol lg={12} sm={12}>
@@ -378,8 +397,8 @@ function NavigateFitnnesofClient(id){
                                     </CFormSelect>                                    
                                 </CInputGroup>
                             </CCol>
-                            <CCol lg={6} sm={6} md={6}>
-                                <CButtonGroup className=' mb-2 float-end'>
+                            <CCol lg={6} sm={6} md={6}  >
+                                <CButtonGroup className={activeClientExport?' mb-2 float-end':'d-none'}>
                                     <CButton color="primary" onClick={()=>exportData(result1.filter((list) =>  list.plan === true && list.status === 'active'))} >
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
@@ -511,12 +530,12 @@ function NavigateFitnnesofClient(id){
                                                 aria-label="Select Assign Staff"
                                                 value={Counseller}
                                                 onChange={(e) => setCounseller(e.target.value)}
-                                                label='Counseller'
+                                                label='Staff Name'
                                             >
-                                                <option>Select Counseller</option>
+                                                <option>Staff name</option>
                                                 {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                                    (
-                                                        <option key={index}>{item.FullName}</option>
+                                                        <option key={index} value={item.FullName}>{item.FullName} {item.EmployeeID}</option>
                                                     )
                                                 ))}</CFormSelect>
                                         </CCol>
@@ -597,12 +616,12 @@ function NavigateFitnnesofClient(id){
                                     <CTableHeaderCell>Duration</CTableHeaderCell>
                                     <CTableHeaderCell>Start Date</CTableHeaderCell>
                                     <CTableHeaderCell>End Date</CTableHeaderCell>
-                                    <CTableHeaderCell>Fitness Goal</CTableHeaderCell>
-                                    <CTableHeaderCell>Appointments</CTableHeaderCell>
+                                    <CTableHeaderCell className={activeClientProfile?'':'d-none'}>Fitness Goal</CTableHeaderCell>
+                                    <CTableHeaderCell className={activeClientProfile?'':'d-none'}>Appointments</CTableHeaderCell>
                                     <CTableHeaderCell>Types of Call</CTableHeaderCell>
                                     <CTableHeaderCell>Status</CTableHeaderCell>
-                                    <CTableHeaderCell>Action</CTableHeaderCell>
-                                    <CTableHeaderCell>Edit</CTableHeaderCell>
+                                    <CTableHeaderCell className={activeClientProfileAction?'':'d-none'}>Action</CTableHeaderCell>
+                                    <CTableHeaderCell className={(activeClientEdit||activeClientDelte)?'text-center':'d-none'} >Edit/delete</CTableHeaderCell>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>
@@ -706,7 +725,7 @@ function NavigateFitnnesofClient(id){
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={activeClientProfile?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -715,7 +734,7 @@ function NavigateFitnnesofClient(id){
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={activeClientProfile?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -744,7 +763,7 @@ function NavigateFitnnesofClient(id){
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={activeClientProfileAction?'':'d-none'}>
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -753,7 +772,7 @@ function NavigateFitnnesofClient(id){
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
-                                    <CTableDataCell>
+                                    <CTableDataCell className={(activeClientEdit||activeClientDelte)?'text-center':'d-none'} >
                                         <CFormInput
                                             className="mb-1"
                                             style={{ minWidth: "100px" }}
@@ -781,20 +800,25 @@ function NavigateFitnnesofClient(id){
                                         <CTableRow key={index}>
                                             <CTableDataCell>{ (index + 1 + (paging * 10))}</CTableDataCell>
                                             <CTableDataCell>{item.ClientId}</CTableDataCell>
-                                            <CTableDataCell> <Link style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/1`} >{item.Fullname}</Link></CTableDataCell>
-                                            <CTableDataCell>{item.ContactNumber}</CTableDataCell>
+                                            <CTableDataCell>
+                                            {activeClientProfile?
+                                                <Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/1`} 
+                                           >{item.Fullname}</Link>:item.Fullname}
+                                           </CTableDataCell>                                            <CTableDataCell>{item.ContactNumber}</CTableDataCell>
                                             <CTableDataCell><label style={{ cursor: 'pointer' }} >{item.invoiceNum}</label> </CTableDataCell>
                                             <CTableDataCell>{item.AttendanceID}</CTableDataCell>
                                             <CTableDataCell>{item.serviceName}</CTableDataCell>
                                             <CTableDataCell>{item?.duration}</CTableDataCell>
                                             <CTableDataCell>{moment(item.startDate).format("DD-MM-YYYY")}</CTableDataCell>
                                             <CTableDataCell>{moment(item.endDate).format("DD-MM-YYYY")}</CTableDataCell>
-                                            <CTableDataCell>  <CButton size='sm' onClick={()=>NavigateFitnnesofClient(item._id)} >View Fitness</CButton></CTableDataCell>
-                                            <CTableDataCell><Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/5`} ><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} /></Link></CTableDataCell>
+                                            <CTableDataCell className={activeClientProfile?'':'d-none'}>  <CButton size='sm' onClick={()=>NavigateFitnnesofClient(item._id)} >View Fitness</CButton></CTableDataCell>
+                                            <CTableDataCell className={activeClientProfile?'':'d-none'}><Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${item._id}/5`} ><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} /></Link></CTableDataCell>
                                             <CTableDataCell><CButton onClick={() => { setCalls(true), setCallUpdateID(item._id) }}>View</CButton></CTableDataCell>
                                             <CTableDataCell className='text-center'>{item.status === 'active' ? <>
-                                            <CButton className='mt-1' color='success' onClick={() => updateRec(item._id, 'inactive')} >Active</CButton></> : <CButton className='mt-1' color='danger' onClick={() => updateRec(item._id, 'active')}>Inactive</CButton>}</CTableDataCell>
-                                            <CTableDataCell className='text-center'>
+                                            <CButton disabled={!activeClientStatus} className='mt-1' color='success' onClick={() => updateRec(item._id, 'inactive')} >Active</CButton></> :
+                                             <CButton disabled={!activeClientStatus}  className='mt-1' color='danger' onClick={() => updateRec(item._id, 'active')}>Inactive</CButton>}
+                                             </CTableDataCell>
+                                            <CTableDataCell className={activeClientProfileAction?'text-center':'d-none'} >
                                                 <a href={`tel:${item.CountryCode}${item.ContactNumber}`} target='_black'>
                                                     <MdCall style={{ cursor: 'pointer', markerStart: '10px' }} 
                                                     onClick={() => { setCallReport(true), handleCallReport(item._id) }} 
@@ -804,10 +828,10 @@ function NavigateFitnnesofClient(id){
                                                  { setVisible(true), handleCallReport(item._id) }} size='20px' /></a>
                                             <a href={`mailto: ${item.Emailaddress}`} target='_black'> <MdMail style={{ cursor: 'pointer', markerStart: '10px' }}
                                              size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => {setVisible(true),handleFollowup(item._id,item.ClientId,item) }}  /></CTableDataCell>
-                                            <CTableDataCell className='text-center'>
-                                                <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer',
+                                            <CTableDataCell className={(activeClientEdit||activeClientDelte)?'text-center':'d-none'} >
+                                                <MdEdit className={(activeClientEdit)?'':'d-none'} id={item._id} style={{ fontSize: '35px', cursor: 'pointer',
                                                      markerStart: '10px' }} size='20px' onClick={()=>Edit(item)} /> 
-                                                 <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} 
+                                                 <MdDelete className={(activeClientDelte)?'':'d-none'} style={{ cursor: 'pointer', markerStart: '10px' }} 
                                                  onClick={() => deleteEnquiry(item._id)} size='20px' /></CTableDataCell>
                                         </CTableRow>
                                     )
