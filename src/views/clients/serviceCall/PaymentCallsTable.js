@@ -45,7 +45,7 @@ const username = user.user.username;
 import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
 
 
-const PaymentCallsTable = ({visible,filterObj,id,setPageLength,paging}) => {
+const PaymentCallsTable = ({visible,filterObj,id,setPageLength,paging,isEmployee}) => {
 
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
@@ -129,7 +129,7 @@ const getAllInvoiceData = async ()=>{
       clientName:uniqClient.MemberName ,
       phone: uniqClient.contact ,
       empolyeeId:emp._id,
-      ...{...uniqObjectVal,employeeMongoId:(emp._id|| uniqObjectVal.employeeMongoId)}
+      ...uniqObjectVal
   }
   
 
@@ -166,6 +166,10 @@ const getAllInvoiceData = async ()=>{
    return data
    
 }
+
+useEffect(()=>{
+setUpdateForm(prev=>({...prev,followupby:uniqObjectVal.employeeMongoId}))
+},[uniqObjectVal.employeeMongoId])
 
   return (
     <>
@@ -204,10 +208,10 @@ const getAllInvoiceData = async ()=>{
                value={updateForm.followupby}
                onChange={(e)=>setUpdateForm(prev=>({...prev,followupby:e.target.value}))}
                >
-                          <option>Select  Staff</option>
+                          {<option className={isEmployee?'d-none':''} >Select staff name</option>}
                           {staff.filter((list) => 
-                              list.selected === 'Select').map((item, index) => (
-                                  <option key={index} value={item._id} >{item.FullName}</option>
+                              list.selected === 'Select' && (list._id===uniqObjectVal.employeeMongoId||!isEmployee)).map((item, index) => (
+                                  <option key={index} value={item._id} >{item.FullName} {item.EmployeeID}</option>
                               ))}
                </CFormSelect>
             </CCol>

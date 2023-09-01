@@ -39,14 +39,15 @@ import React, { useState,useCallback,useEffect } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment  from  'moment/moment';
-import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
+import { useAdminValidation,useUniqAdminObjeact,useEmployeeValidation } from 'src/views/Custom-hook/adminValidation';
 
 
 
-const WelcomeCalls = ({visible,filterObj,id,setPageLength,paging}) => {
+const WelcomeCalls = ({visible,filterObj,id,setPageLength,paging,isEmployee}) => {
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal  =  useAdminValidation()
     const pathValMaster = useAdminValidation('Master')
+    const isEmployeeRoute = useEmployeeValidation()
 
 
     const uniObjVal = useUniqAdminObjeact()
@@ -156,7 +157,7 @@ const WelcomeCalls = ({visible,filterObj,id,setPageLength,paging}) => {
             clientName:uniqClient.Fullname,
             phone: uniqClient.ContactNumber,
             empolyeeId:emp._id,
-            ...{...uniObjVal,employeeMongoId:(emp._id|| uniObjVal.employeeMongoId)}
+            ...uniObjVal
         }
 
 
@@ -192,6 +193,10 @@ const data = welcomeCallData.filter((el)=>
  setPageLength(data?.length)
  return data
 }
+
+useEffect(()=>{
+    setUpdateForm(prev=>({...prev,wellComeCallFollowupby:uniObjVal.employeeMongoId}))
+},[uniObjVal.employeeMongoId])
   return (
     <>
      <CModal size='lg' alignment="start" visible={(visible && visibalCallUpdateForm)} onClose={() => setVisibalCallUpdateForm(false)}>
@@ -230,10 +235,10 @@ const data = welcomeCallData.filter((el)=>
                value={updateFormData.wellComeCallFollowupby}
                onChange={(e)=>setUpdateForm(prev=>({...prev,wellComeCallFollowupby:e.target.value}))}
                >
-                          <option>Select  Staff</option>
+                          <option className={isEmployee?'d-none':''}>Select staff name</option>
                           {staff.filter((list) => 
-                              list.selected === 'Select').map((item, index) => (
-                                  <option key={index} value={item._id} >{item.FullName}</option>
+                              list.selected === 'Select' && (list._id===uniObjVal.employeeMongoId||!isEmployee) ).map((item, index) => (
+                                  <option key={index} value={item._id} >{item.FullName} {item.EmployeeID}</option>
                               ))}
                </CFormSelect>
             </CCol>

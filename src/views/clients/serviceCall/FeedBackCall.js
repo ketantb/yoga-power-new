@@ -44,7 +44,7 @@ const token = user.token;
 const username = user.user.username;
 
 
-const FeedBackCall = ({visible,filterObj,id,setPageLength,paging}) => {
+const FeedBackCall = ({visible,filterObj,id,setPageLength,paging,isEmployee}) => {
 
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
@@ -138,7 +138,7 @@ const obj2 = {
     clientName:uniqClient.Fullname,
     phone: uniqClient.ContactNumber,
     empolyeeId:emp._id,
-    ...{...uniValiObject,employeeMongoId:(emp._id|| uniValiObject.employeeMongoId)}
+    ...uniValiObject
 
 }
 
@@ -173,6 +173,9 @@ const obj2 = {
      setPageLength(data?.length)
      return data
  }
+ useEffect(()=>{
+    setUpdateForm(prev=>({...prev,feedBackCallFollowupby:uniValiObject.employeeMongoId}))
+ },[uniValiObject.employeeMongoId])
 
   return (
     <>
@@ -212,10 +215,10 @@ const obj2 = {
                value={updateFormData.feedBackCallFollowupby}
                onChange={(e)=>setUpdateForm(prev=>({...prev,feedBackCallFollowupby:e.target.value}))}
                >
-                          <option>Select  Staff</option>
+                          <option className={isEmployee?'d-none':''}>Select staff name</option>
                           {staff.filter((list) => 
-                              list.selected === 'Select').map((item, index) => (
-                                  <option key={index} value={item._id} >{item.FullName}</option>
+                              list.selected === 'Select'&&list._id=== uniValiObject.employeeMongoId).map((item, index) => (
+                                  <option key={index} value={item._id} >{item.FullName} {item.EmployeeID}</option>
                               ))}
                </CFormSelect>
             </CCol>

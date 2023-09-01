@@ -16,8 +16,19 @@ import {
   import { useSelector } from 'react-redux'
   import { MdDelete,MdEdit } from 'react-icons/md';
   import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
+  import { fitnessRigths } from 'src/views/hr/Rights/rightsValue/crmRightsValue';
 
 function MeasurementTable({closeFormFun,token,showForm,setForm,allMemberData,id,employeeData}){
+
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmFitness?.superRight) 
+
+    const isAdmin = useSelector((el)=>el.isAdmin)
+
+    const measurmentEdit =  (rightsData?.edit?.includes(fitnessRigths.measurment)||isAdmin)
+    const measurmentDelete =  (rightsData?.delete?.includes(fitnessRigths.measurment)||isAdmin)
+
+
     const [allMeasurmentMembers,setAllMeasurmentMembers] =useState([])
     const [edit,setEdit] = useState(true)
     const [editData,setEditData] = useState(true)
@@ -90,6 +101,7 @@ const editClientDataFun =(el)=>{
  allMemberData={allMemberData}
  employeeData={employeeData}
  id={id}
+ setForm={setForm}
 />}
 
      <CTable className='m-3 ' align="middle" bordered style={{ borderColor: "#0B5345"}} hover responsive>
@@ -367,9 +379,9 @@ const editClientDataFun =(el)=>{
                     <CTableDataCell>{el.CalfL}</CTableDataCell>  
                     <CTableDataCell>{el.Counseller}</CTableDataCell>
                     <CTableDataCell>{new Date(el.NextFollowup_Date).toLocaleDateString()}</CTableDataCell>
-                    <CTableDataCell className='text-center'>
-                               <CButton  className='mx-2' size='sm' onClick={()=>editClientDataFun(el)} ><MdEdit   /> </CButton>
-                               <CButton  className='mx-2' color='danger' size='sm' onClick={()=>deleteClientDitePlanFun(el._id)}><MdDelete    /></CButton>
+                    <CTableDataCell className={(measurmentEdit||measurmentDelete)?'text-center':'d-none'}>
+                               <CButton  className={(measurmentEdit)?'mx-2':'d-none'} size='sm' onClick={()=>editClientDataFun(el)} ><MdEdit   /> </CButton>
+                               <CButton  className={(measurmentDelete)?'mx-2':'d-none'}  color='danger' size='sm' onClick={()=>deleteClientDitePlanFun(el._id)}><MdDelete    /></CButton>
                     </CTableDataCell>
                     </CTableRow>)}
            

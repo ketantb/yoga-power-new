@@ -4,12 +4,10 @@ import { useState,useEffect } from "react"
 import CustomSelectInput from "../CustomSelectInput/CustomSelectInput"
 import axios from "axios"
 import { useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation"
-function AllDietClientForm({allMemberData, closeFormFun, getClientDietData,edit,editData,id }) {
+function AllDietClientForm({allMemberData, closeFormFun, getClientDietData,edit,editData,id,setForm }) {
 
     const uniqObjVal = useUniqAdminObjeact()
-
-
-    const [allDiietClientData,setAllDietClient] = useState({
+    const obj = {
         Member_Id:' ',
         Start_Date:' ',
         Name: ' ',
@@ -20,7 +18,9 @@ function AllDietClientForm({allMemberData, closeFormFun, getClientDietData,edit,
         Package: ' ',
         DietitianName:' ',
         Action:'',
-    })
+    } 
+
+    const [allDiietClientData,setAllDietClient] = useState({...obj})
 
     
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -43,13 +43,17 @@ const  sumbitFormInfoHandler = async (e)=>{
        if(edit){
           axios.post(`${url}/allDietClient/update/${editData._id}`,{...allDiietClientData,...uniqObjVal} ,{headers}).then((el)=>{
            alert('Successfully save')
-           getClientDietData()
+           getClientDietData()           
+           setForm(false)
+           setAllDietClient({...obj})
           })
         return 
        }
        axios.post(`${url}/allDietClient/create`,{...uniqObjVal,...allDiietClientData} ,{headers}).then((el)=>{
         alert('Successfully save')
         getClientDietData()
+        setForm(false)
+        setAllDietClient({...obj})
        })
 
         }catch(error){

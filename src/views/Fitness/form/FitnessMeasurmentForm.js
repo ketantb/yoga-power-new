@@ -7,13 +7,10 @@ import CustomSelectInput from "../CustomSelectInput/CustomSelectInput"
 import { useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation"
 import CustomSelectinput from "src/views/hr/CustomSelectinput"
 
-function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,edit,editData,employeeData,id}) {
+function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,edit,editData,employeeData,id,setForm}) {
     const url = useSelector((el)=>el.domainOfApi) 
     const uniqObjVal = useUniqAdminObjeact()
-
-
-
-    const [mesurmentData,setMesurmentData] = useState({
+    const obj = {
         username:'',
         Age:'',
         ArmsL:'',
@@ -41,7 +38,9 @@ function FitnessMeasurmentForm({allMemberData, closeFormFun, getAllmembersData,e
         NextFollowup_Date:'',
         ClientId:'',
        ...uniqObjVal
-    })
+    }
+
+    const [mesurmentData,setMesurmentData] = useState({...obj})
 
 
   
@@ -68,6 +67,8 @@ if(editData?._id){
     axios.post(`${url}/fitnessDetail/update/${editData?._id}`,mesurmentData ,{headers}).then((res)=>{
         alert('Successfully save')
         getAllmembersData()
+        setMesurmentData({...obj})
+        setForm(false)
         }).catch((error)=>{
         console.log(error)
         })
@@ -76,6 +77,8 @@ if(editData?._id){
     ...{...uniqObjVal,employeeMongoId:(selectedMember?._id||uniqObjVal.employeeMongoId)}
     ,...mesurmentData},{headers}).then((res)=>{
 alert('Successfully save')
+setMesurmentData({...obj})
+setForm(false)
 getAllmembersData()
 }).catch((error)=>{
 console.log(error)

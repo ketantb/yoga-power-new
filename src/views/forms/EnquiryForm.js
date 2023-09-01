@@ -35,6 +35,8 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
    const  uniqObj  = useUniqAdminObjeact()
    const  pathVal = useAdminValidation()
    const  pathValMaster = useAdminValidation('Master')
+   const  isEmployee  = useSelector((el)=>el.isEmployee)
+
 
    const imgRef = useRef(null)
    const imageInput = useRef('')
@@ -119,8 +121,9 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
       const response6 = axios.get(`${url}/signup/center`,headers)
 
       const allData = await Promise.all([response1,response2,response3,response4,response5,response6])
-      const centerData = allData[5].data.filter((el)=>el.status && el._id===uniqObj.partnerAdminMongoId)
+      const centerData = allData[5]?.data?.filter((el)=> el._id===uniqObj.partnerAdminMongoId)
 
+      console.log(allData[5].data,uniqObj.partnerAdminMongoId)
       setStaff(allData[0].data)
       setClientData(allData[1].data)
       setLeadArr(allData[2].data.filter((el)=>el.Status))
@@ -528,9 +531,12 @@ return
                                         onChange={(e) => setStaffName(e.target.value)}
                                     >
                                         <option value={''}>Select Staff Name</option>
-                                        {staff?.filter((list) =>  list.selected === 'Select')?.map((item, index) => (
+                                        {staff?.filter((list) =>  list.selected === 'Select'&&
+                                        (list._id===uniqObj.employeeMongoId||!isEmployee)
+                                        )?.map((item, index) => (
                                             (
-                                                <option key={index} value={item._id} >{[item.FullName,item.EmployeeID].join('\n')}</option>
+                                                <option key={index} value={item._id} >
+                                                    {[item.FullName,item.EmployeeID].join('\n')}</option>
                                             )
                                         ))}
                                     </CFormSelect>

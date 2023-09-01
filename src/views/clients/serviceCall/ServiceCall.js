@@ -62,6 +62,7 @@ const ServiceCall = ({id}) => {
     ?.crmEmployee?.items?.crmMemberCalls1?.rights) 
     const access = rightsData?rightsData:[]
     const isAdmin = useSelector((el)=>el.isAdmin) 
+    const isEmployee  = useSelector((el)=>el.isEmployee)
 
     const funValidate = (val)=>{
         return (access?.includes(empLoyeeeRights[val])||isAdmin)
@@ -279,12 +280,12 @@ const ServiceCall = ({id}) => {
                 
                                 <div style={{overflowY:'scroll'}} >
                         <CTabContent>
-                            {activeKey === 1 &&<WelcomeCalls id={id}  paging={paging}  setPageLength={setPageLength} visible={activeKey === 1} filterObj={filterObj} />}
-                            {activeKey === 2&&<FeedBackCall id={id} paging={paging}  setPageLength={setPageLength}  visible={activeKey === 2} filterObj={filterObj} />}                       
-                            {activeKey === 3&&<PaymentCallsTable id={id} paging={paging}  setPageLength={setPageLength} visible={activeKey === 3} filterObj={filterObj} />} 
-                            {activeKey === 4 &&<IrregularMemberCall id={id}  paging={paging}  setPageLength={setPageLength} visible={activeKey === 4} filterObj={filterObj} />}
-                            {activeKey === 5 && <GreetingCall id={id} paging={paging}  setPageLength={setPageLength}  visible={activeKey === 5} filterObj={filterObj} />}
-                            {activeKey === 6 && <CallHistory id={id} paging={paging}  setPageLength={setPageLength}   visible={activeKey === 6} filterObj={filterObj} />}
+                            {activeKey === 1 &&<WelcomeCalls id={id} isEmployee={isEmployee}  paging={paging}  setPageLength={setPageLength} visible={activeKey === 1} filterObj={filterObj} />}
+                            {activeKey === 2&&<FeedBackCall id={id} isEmployee={isEmployee} paging={paging}  setPageLength={setPageLength}  visible={activeKey === 2} filterObj={filterObj} />}                       
+                            {activeKey === 3&&<PaymentCallsTable id={id} isEmployee={isEmployee} paging={paging}  setPageLength={setPageLength} visible={activeKey === 3} filterObj={filterObj} />} 
+                            {activeKey === 4 &&<IrregularMemberCall id={id} isEmployee={isEmployee}  paging={paging}  setPageLength={setPageLength} visible={activeKey === 4} filterObj={filterObj} />}
+                            {activeKey === 5 && <GreetingCall id={id} isEmployee={isEmployee} paging={paging}  setPageLength={setPageLength}  visible={activeKey === 5} filterObj={filterObj} />}
+                            {activeKey === 6 && <CallHistory id={id} isEmployee={isEmployee} paging={paging}  setPageLength={setPageLength}   visible={activeKey === 6} filterObj={filterObj} />}
                         </CTabContent>
                         </div>
 

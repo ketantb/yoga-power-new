@@ -18,6 +18,7 @@ import {
   import { BsWhatsapp } from "react-icons/bs";
 import AllDietClientForm from '../form/AllDietClientForm';
 import { useAdminValidation } from 'src/views/Custom-hook/adminValidation';
+import { fitnessRigths } from 'src/views/hr/Rights/rightsValue/crmRightsValue';
 
 
 
@@ -34,16 +35,13 @@ function ClientDietTable ({closeFormFun,token,showForm,setForm,allMemberData,id}
     const [search7,setSearch7] = useState('')
     const [search8,setSearch8] = useState('')
 
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmFitness?.superRight) 
 
+    const isAdmin = useSelector((el)=>el.isAdmin)
 
-
-
-
-
-
-
-
-
+    const allClientDiteEdit =  (rightsData?.edit?.includes(fitnessRigths.allClientDite)||isAdmin)
+    const allClientDiteDelete =  (rightsData?.delete?.includes(fitnessRigths.allClientDite)||isAdmin)
 
 const [clientDite,setClientDite] =useState([])
 const [edit,setEdit] = useState(false)
@@ -113,6 +111,7 @@ return<>
  editData={editData}
  allMemberData={allMemberData}
  id={id}
+ setForm={setForm}
 />}
 
 <CTable className='m-3 p-2' align="middle" bordered style={{ borderColor: "#0B5345",width:'180%' }} hover responsive>
@@ -266,9 +265,9 @@ return<>
       <CTableDataCell>{el.EndDate} </CTableDataCell>
       <CTableDataCell>{el.Package}</CTableDataCell>
       <CTableDataCell>{el.DietitianName}</CTableDataCell>
-      <CTableDataCell className='text-center'>
-    <CButton  className='mx-2' size='sm' onClick={()=>editClientDataFun(el)} ><MdEdit   /> </CButton>
-    <CButton  className='mx-2' color='danger' size='sm' onClick={()=>deleteClientDitePlanFun(el._id)}><MdDelete    /></CButton>
+      <CTableDataCell className={(allClientDiteEdit||allClientDiteDelete)?'text-center':'d-none'}>
+    <CButton  className={(allClientDiteEdit)?'mx-2':'d-none'}  size='sm' onClick={()=>editClientDataFun(el)} ><MdEdit   /> </CButton>
+    <CButton  className={(allClientDiteDelete)?'mx-2':'d-none'}  color='danger' size='sm' onClick={()=>deleteClientDitePlanFun(el._id)}><MdDelete    /></CButton>
     </CTableDataCell>
 
                     

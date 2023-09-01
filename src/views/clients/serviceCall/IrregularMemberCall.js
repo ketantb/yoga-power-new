@@ -44,7 +44,7 @@ const token = user.token;
 const username = user.user.username;
 
 
-const IrregularMemberCall = ({visible,filterObj,id,setPageLength,paging}) => {
+const IrregularMemberCall = ({visible,filterObj,id,setPageLength,paging,isEmployee}) => {
 
     const pathValMaster = useAdminValidation('Master')
 
@@ -157,7 +157,7 @@ const IrregularMemberCall = ({visible,filterObj,id,setPageLength,paging}) => {
         clientName:uniqClient.ClientName,
         phone: uniqClient.contact,
         empolyeeId:emp._id,
-       ...{...uniValiObject,employeeMongoId:(emp._id|| uniValiObject.employeeMongoId)}
+       ...uniValiObject
 
     }
         axios.post(`${url}/clientAttendance/update/${followupId}`,obj, { headers },
@@ -191,6 +191,9 @@ function filterData(AllInvoiceData){
   }
   
 
+  useEffect(()=>{
+    setUpdateForm(prev=>({...prev,followupby:uniValiObject.employeeMongoId}))
+  },[uniValiObject.employeeMongoId])
 
   return (
     <>
@@ -231,10 +234,10 @@ function filterData(AllInvoiceData){
                value={updateFormData.followupby}
                onChange={(e)=>setUpdateForm(prev=>({...prev,followupby:e.target.value}))}
                >
-                          <option>Select  Staff</option>
+                          <option className={isEmployee?'d-none':''}>Select  Staff</option>
                           {staff.filter((list) => 
-                              list.selected === 'Select').map((item, index) => (
-                                  <option key={index} value={item._id} >{item.FullName}</option>
+                              list.selected === 'Select' && (list._id===uniValiObject.employeeMongoId||!isEmployee)).map((item, index) => (
+                                  <option key={index} value={item._id} >{item.FullName} {item.EmployeeID}</option>
                               ))}
                </CFormSelect>
             </CCol>

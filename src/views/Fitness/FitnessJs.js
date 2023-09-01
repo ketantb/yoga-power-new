@@ -45,6 +45,7 @@ const DailyWorkoutSchedulingTable =  React.lazy(() => import('./Tablels/DailyWor
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useAdminValidation } from '../Custom-hook/adminValidation';
+import { fitnessRigths } from '../hr/Rights/rightsValue/crmRightsValue';
 
 
 
@@ -53,8 +54,35 @@ const Fitness = () => {
     const pathVal = useAdminValidation()
     const pathValMaster = useAdminValidation('Master')
 
+    const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+    ?.crmFitness?.superRight) 
 
-    const [active, setActiveButton] = useState(1)
+    const isAdmin = useSelector((el)=>el.isAdmin)
+
+    console.log(rightsData)
+
+    const measurment =  (rightsData?.access?.includes(fitnessRigths.measurment)||isAdmin)
+    const allClientDite =  (rightsData?.access?.includes(fitnessRigths.allClientDite)||isAdmin)
+    const dietPlanTemplet =  (rightsData?.access?.includes(fitnessRigths.dietPlanTemplet)||isAdmin)
+    const workOutTemplet =  (rightsData?.access?.includes(fitnessRigths.workOutTemplet)||isAdmin)
+    const exerciseLibiry =  (rightsData?.access?.includes(fitnessRigths.exerciseLibiry)||isAdmin)
+    const dailyWorkoutScheduling =  (rightsData?.access?.includes(fitnessRigths.dailyWorkoutScheduling)||isAdmin)
+
+
+    const number =  ( (isAdmin&&1)||(measurment&&1)||
+    (allClientDite&&2)||
+    (dietPlanTemplet&&3)||
+    (workOutTemplet&&4)||
+    (exerciseLibiry&&5)||
+    (dailyWorkoutScheduling&&6)
+    )
+
+
+
+
+
+
+    const [active, setActiveButton] = useState(number)
     const [allMemberData,setAllmemBerData] = useState([]) 
     const [employeeData,setEmployeeData] = useState([])
     // Forms 
@@ -72,6 +100,7 @@ const Fitness = () => {
     }
     
 
+    console.log(active,number)
 
  const getClientMemData = ()=>{
 
@@ -97,26 +126,29 @@ getCounslerData()
         <CCard >
 
             <CNav variant="pills" role="tablist" style={{ background: '#0B5345' }}>
-                <CNavLink className='m-2 p-2' style={{ color: 'white', cursor: 'pointer' }} active={active === 1} onClick={() => { setActiveButton(1), closeFormFun() }}>
+                <CNavLink className={(!measurment)?'d-none':'m-2 p-2'}  style={{ color: 'white', cursor: 'pointer' }} active={active === 1} onClick={() => { setActiveButton(1), closeFormFun() }}>
                     Measurment
                 </CNavLink >
-                <CNavLink className='m-2 p-2' style={{ color: 'white', cursor: 'pointer' }} active={active === 2} onClick={() => { setActiveButton(2), closeFormFun() }}>
+                <CNavLink className={(!allClientDite)?'d-none':'m-2 p-2'}  style={{ color: 'white', cursor: 'pointer' }} active={active === 2} onClick={() => { setActiveButton(2), closeFormFun() }}>
                     ALL Diet Client
                 </CNavLink>
-                <CNavLink className={i?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 3} onClick={() => { setActiveButton(3), closeFormFun() }}>
+                <CNavLink className={(i||!dietPlanTemplet)?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 3} onClick={() => { setActiveButton(3), closeFormFun() }}>
                     Diet Plan Templet
                 </CNavLink>
-                <CNavLink className={i?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 4} onClick={() => { setActiveButton(4), closeFormFun() }}>
+                <CNavLink className={(i||!workOutTemplet)?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 4} onClick={() => { setActiveButton(4), closeFormFun() }}>
                     Work out Templet
                 </CNavLink>
-                <CNavLink className={i?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 5} onClick={() => { setActiveButton(5), closeFormFun() }}>
+                <CNavLink className={(i||!exerciseLibiry)?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 5} onClick={() => { setActiveButton(5), closeFormFun() }}>
                     Exercise Libiry
                 </CNavLink>
-                <CNavLink className={i?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 6} onClick={() => { setActiveButton(6), closeFormFun() }}>
+                <CNavLink className={(i||!dailyWorkoutScheduling)?'d-none':'m-2 p-2'} style={{ color: 'white', cursor: 'pointer' }} active={active === 6} onClick={() => { setActiveButton(6), closeFormFun() }}>
                     Daily Workout Scheduling
                 </CNavLink>
             </CNav >
-            {active <4 && <CCol className='m-4 mt-1 p-4' style={{ position: 'relative' }}>
+            {(active === (measurment &&1)||
+             active === (ClientDietTable &&2)||
+             active === (dietPlanTemplet &&3)
+            )&& <CCol className='m-4 mt-1 p-4' style={{ position: 'relative' }}>
                 <CButton style={{ position: 'absolute', right: '0' }} onClick={() => setForm((value) => !value)}>Add New</CButton>
             </CCol>}
 
@@ -126,7 +158,6 @@ getCounslerData()
             {active === 4 && <p className='text-center'>Coming Soon</p>}
             {active === 5 && <p className='text-center'>Coming Soon</p>}           
             {active === 6 && <p className='text-center'>Coming Soon</p>}
-
 
         </CCard>
     )

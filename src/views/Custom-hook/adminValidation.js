@@ -24,6 +24,19 @@ const useAdminValidation = (type) => {
   return getRoute
 }
 
+const useEmployeeValidation = ()=>{
+let  userInfo = JSON.parse(localStorage.getItem('user-info'))?.user
+
+return function (isEmployee){
+    if(!isEmployee){
+        return (userInfo.isAdminPatner||userInfo.isAdmin)?`creater/${userInfo.emailUniqId}`
+           :`creater/${userInfo.createrId}`
+    }else{
+       return (!userInfo.isAdminPatner||!userInfo.isAdmin)?`emp/${userInfo.emailUniqId}`
+       :`emp/${userInfo.emailUniqId}`
+    }
+}
+}
 
 const useUniqAdminObjeact = ()=>{
     let  userInfo = JSON.parse(localStorage.getItem('user-info'))?.user
@@ -50,4 +63,4 @@ const useUniqAdminObjeact = ()=>{
 
 
 
-export {useAdminValidation,useUniqAdminObjeact}
+export {useAdminValidation,useUniqAdminObjeact,useEmployeeValidation}
