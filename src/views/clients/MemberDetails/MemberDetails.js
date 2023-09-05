@@ -122,7 +122,7 @@ const MemberDetails = () => {
                                 { id: '1', heading: 'Profile', com: <ProfileDetails ids={id} deleteId={id} clinetData={clinetData} /> },
                                 { id: '2', heading: 'Services', com: <ServiceProfile id={id} clinetData={clinetData} /> },
                                 { id: '3', heading: 'Payments', com: <Payment id={id} clinetData={clinetData} /> },
-                                { id: '4', heading: 'Attendence', com: <ClientCheckin onlyOneClient={true} id={id} /> },   
+                                { id: '4', heading: 'Attendence', com: <ClientCheckin onlyOneClient={true} id={id} attendedId={clinetData.AttendanceID} /> },   
                                 { id: '5', heading: 'Appoinments', com: <Appointment id={id} clinetData={clinetData} /> },
                                 { id: '6', heading: 'Referd', com: <Referrals id={id} /> },
                                 { id: '7', heading: 'Shop',com:<ProductSalesReport /> },

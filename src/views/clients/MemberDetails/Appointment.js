@@ -25,7 +25,7 @@ import axios from 'axios'
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux'
-import  {useAdminValidation} from '../../Custom-hook/adminValidation'
+import  {useAdminValidation,useUniqAdminObjeact} from '../../Custom-hook/adminValidation'
 import CustomSelectInput from 'src/views/Fitness/CustomSelectInput/CustomSelectInput';
 const optionAppointmentTyep = [
     "Diet",
@@ -38,6 +38,7 @@ const optionAppointmentTyep = [
 const Appointment = ({ id }) => {
 const url1 = useSelector((el) => el.domainOfApi)
 const pathValMaster = useAdminValidation('Master')
+const uniqObjVal  =useUniqAdminObjeact()
 
 const [appointment, setAppointment] = useState(false)
 const [Enquiry, setEnquiry] = useState([])
@@ -115,26 +116,31 @@ function deleteAppointmentData(id) {
 }
 
 
-
-function updateAppointmentStatus(iid, data, Status, Cancel1) {
-    const Cancel = Cancel1 === 'Not' ? 'Not' : 'cancel'
-
-    
-    const data1 = { ...data, Status, Cancel }
-    fetch(`${ url1 }/appointment/update/${ iid }`, {
+const updateAppointMent = (data,id)=>{
+    fetch(`${ url1 }/appointment/update/${ id }`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${ token }`
         },
-        body: JSON.stringify(data1)
+        body: JSON.stringify(data)
     }).then((result) => {
         getAppointmentData()
         console.log(result)
     })
-}
+   }
 
+    function updateAppointmentStatus(id, data, Status, Cancel1) {
+        const Cancel = Cancel1 === 'Not' ? 'Not' : 'cancel'
+        const data1 = { ...data, Status, Cancel }
+        updateAppointMent(data1,id)
+    }
+
+    function updateAmountStatus(data,value,id){
+        const data1 = { ...data, amountStatus:value}
+        updateAppointMent(data1,id)
+    }
 
 function getStaff() {
     axios.get(`${ url1 }/employeeform/${pathValMaster}`, {
@@ -187,7 +193,8 @@ const AppointmentObj = {
     "Amount": fess,
     "Status": false,
     "Staff": staffValue,
-    "Cancel":'Not'
+    "Cancel":'Not',
+    ...uniqObjVal
 }
 
 const sendAppointmentData = async (e) => {
@@ -430,6 +437,7 @@ const sendAppointmentData = async (e) => {
                                         <CTableHeaderCell scope="col">Appointment Time</CTableHeaderCell>
                                         <CTableHeaderCell scope="col">Fees Status</CTableHeaderCell>
                                         <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
+                                        <CTableHeaderCell scope="col">Amount Status</CTableHeaderCell>
                                         <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                                         <CTableHeaderCell scope="col">Staff</CTableHeaderCell>
                                         <CTableHeaderCell scope="col">Delete</CTableHeaderCell>
@@ -461,6 +469,10 @@ const sendAppointmentData = async (e) => {
                                             <CTableDataCell>{Time}</CTableDataCell>
                                             <CTableDataCell>{el.Fees_Status}</CTableDataCell>
                                             <CTableDataCell>{el.Amount}</CTableDataCell>
+                                            <CTableDataCell className='text-center'>
+                                            {el.amountStatus?<CButton className='m-1' color='success'  onClick={()=>updateAmountStatus(el,!el.amountStatus,el._id)} size='sm' >Done</CButton>:
+                                            <CButton className='m-1' size='sm'  color='warning'  
+                                            onClick={()=>updateAmountStatus(el,!el.amountStatus,el._id)}>Pending...</CButton>}</CTableDataCell>
                                             <CTableDataCell>
                                                 { (el.Status ||el.Cancel==="cancel")  || <CButton onClick={() =>  updateAppointmentStatus(el._id, el, true ,'cancel')} color='warning' size='sm' className='m-1'>Pending...</CButton>}
                                                 {(el.Status &&el.Cancel!=="cancel") && <CButton onClick={() =>updateAppointmentStatus(el._id, el,false,'Not')} color='success' size='sm' className='m-1'>Done</CButton>}

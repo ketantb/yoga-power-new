@@ -89,7 +89,8 @@ getClientData()
 
 function clientObj(obj){
   setMemBerId(obj._id)
-  setClientReferance(obj.Fullname)    
+  setClientReferance(obj.Fullname) 
+  setNumber(""+(obj.ContactNumber||0))   
 }
 
 

@@ -532,7 +532,7 @@ return
                                     >
                                         <option value={''}>Select Staff Name</option>
                                         {staff?.filter((list) =>  list.selected === 'Select'&&
-                                        (list._id===uniqObj.employeeMongoId||!isEmployee)
+                                        (list._id===uniqObj.employeeMongoId||!isEmployee||!isAdmin)
                                         )?.map((item, index) => (
                                             (
                                                 <option key={index} value={item._id} >

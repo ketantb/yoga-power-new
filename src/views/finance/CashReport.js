@@ -38,11 +38,68 @@ const CashReport = () => {
         'My-Custom-Header': 'foobar'
     };
 
+
+    
+
+
+    function togetCashData(type,data){
+
+    const data2 = (data||[]).reverse().flatMap((el)=>{
+          if(type==='Recipts'){
+             return   el.Receipts.map((el2,i)=>{
+                    delete el2._id
+                   
+                 return ({
+                          cashHandOverto:'',
+                          totalCash:el2.PaidAmount,
+                          date:el2.counseller,
+                          type,
+                          clientName:el.MemberName,
+                          clientId:el,
+                          InvoiceNo:el.InvoiceNo +"RN"+(i+1),
+                          counseller:el.Counseller
+                    })})
+
+          }else{
+              return ({
+                cashHandOverto:'',
+                totalCash:el.paidAmount,
+                date:el.counseller,
+                counseller:el.counseller,
+                type,
+                clientName:el.MemberName,
+                clientId:'',
+                InvoiceNo:el.InvoiceNo
+          })   
+         }
+    })
+
+    return data2 
+}
+
+
+
+    
     const getAllInvoiceData = async  ()=>{
     
         try{
         const response1 = await axios.get(`${url1}/invoice/${pathVal}`,{headers})
+        const response2 = response1.data 
 
+        .reverse().map((el)=>{
+          const resiptsData =  el.Receipts.filter((el2,i)=>{
+            return el?.Pay_Mode ==='Cash'   
+          })
+         el.Receipts=resiptsData
+    })
+
+    console.log([...response2.filter((el)=>el?.Receipts)])
+         
+         const ReciptsData =   togetCashData('Recipts',response1.data.filter((el)=>el?.paymode ==='Cash'))
+         const InvoiceData =  togetCashData('Invoice',response2)    
+
+
+        
 
        const newCashData =   response1.data.map((el)=>{
             console.log(el)
@@ -122,7 +179,9 @@ const CashReport = () => {
                                     <CTableHeaderCell scope="col">Total Cash</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Cash Collected By</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">
-                                        Cash Deposite to Bank
+                                       Deposite to Bank
+                                    </CTableHeaderCell>
+                                    <CTableHeaderCell scope='col'>Type                                    
                                     </CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Cash Hand Over to</CTableHeaderCell>
                                 </CTableRow>
@@ -137,6 +196,7 @@ const CashReport = () => {
                                         <CTableDataCell>{el.totalCash}</CTableDataCell>
                                         <CTableDataCell>{el.counseller}</CTableDataCell>
                                         <CTableDataCell>{el.dipositeToBank}</CTableDataCell>
+                                        <CTableDataCell></CTableDataCell>
                                         <CTableDataCell></CTableDataCell>
                                     </CTableRow>
 

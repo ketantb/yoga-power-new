@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux'
 import { useUniqAdminObjeact,useAdminValidation } from '../Custom-hook/adminValidation'
 
 
-const ClientCheckin = ({onlyOneClient,id}) => {
+const ClientCheckin = ({onlyOneClient,id,attendedId}) => {
 
     const url1 = useSelector((el) => el.domainOfApi)
     const pathVal = useAdminValidation()
@@ -64,6 +64,9 @@ const ClientCheckin = ({onlyOneClient,id}) => {
         getEnquiry()
         getInnerDataToProcess()
     }, []);
+    useEffect(()=>{
+        setAttendanceID(attendedId)
+    },[attendedId])
 
     function getEnquiry() {
         axios.get(`${ url1 }/clientAttendance/${pathValmaster}`, {

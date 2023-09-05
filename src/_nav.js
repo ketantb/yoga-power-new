@@ -762,12 +762,6 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Lead Sources Master',
-        to: '/master/marketing/leadSourceMaster',
-        id:'masterLeadSourseMaster'
-      },
-      {
-        component: CNavItem,
         name: 'Sms, E-mail, Template Master',
         to: '/master/marketing/emailsmsTemplate',
         id:'masterSmsEmailTemp'

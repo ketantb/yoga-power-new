@@ -66,18 +66,22 @@ const [aadharNo, setAadharNo] = useState('')
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
-console.log(user);
 const token = user.token;
-const username = user.user.username;
 
-console.log(dateOfBirth)
+const headers = {
+    headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+}
+
 function getStaff() {
         if(!id){
 return
         }
-        axios.get(`${url}/employeeform/${id}`)
+        axios.get(`${url}/employeeform/${id}`,headers)
             .then((res) => {
-                console.log(res.data)
                 setEmployeeData(res.data)
                 setFullName(res.data.FullName)
                 setContactNumber(res.data.ContactNumber)
@@ -113,10 +117,7 @@ useEffect(()=>{
 
 
 function getDesignation() {
-    axios.get(`${`https://yog-seven.vercel.app`}/designation/all`, { headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
+    axios.get(`${url}/designation/all`, headers)
         .then((res) => {
         console.log(res.data)
         setResult(res.data.reverse())
@@ -159,10 +160,7 @@ function getDesignation() {
  }
   
 function updateEmpolyee(){
-    axios.put(`${url}/employeeform/${id}`,EmpObjToEdit,{ headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    }}).then(()=>{
+    axios.post(`${url}/employeeform/update/${id}`,EmpObjToEdit,headers).then(()=>{
         alert('Successfully save')
         getStaff2()
     })
@@ -353,10 +351,10 @@ function updateEmpolyee(){
                             onChange={(e)=>{setTypesOfTime(e.target.value)}}
                             options={[
                                 "Select Job Timeing",
-                                // { label: "Full Time", value: "Full Time" },
-                                // { label: "Part Time", value: "Part Time" },
-                                // { label: "Freelancer", value: "Freelancer" },
-                                // { label: "Consultant", value: "Consultant" },
+                                { label: "Full Time", value: "Full Time" },
+                                { label: "Part Time", value: "Part Time" },
+                                { label: "Freelancer", value: "Freelancer" },
+                                { label: "Consultant", value: "Consultant" },
                             ]}
 
 

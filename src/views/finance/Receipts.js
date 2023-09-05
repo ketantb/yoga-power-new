@@ -38,7 +38,6 @@ const ViewRecepits =React.lazy(()=>import('./ViewRecepits'))
 
 let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
-    const username = user.user.username;
 
 const Receipt = () => {
     let num  = 0;
@@ -94,6 +93,7 @@ const Receipt = () => {
           setEmployeeData(functionRemoveDuplicate(data.map((el)=>el.counseller)))
           setResiptData2(data.reverse().flatMap((el)=>el.Receipts.map((el2,i)=>{
             delete el2._id
+            console.log(el2)
             return{...el,...el2,length:i+1}}) 
             ))       
                   

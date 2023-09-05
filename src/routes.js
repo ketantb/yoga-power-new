@@ -356,6 +356,7 @@ const routes = [
   { path: '/master/center-setup/package-master', name: 'Package Master', element: PackageMaster, exact: true },
   { path: '/master/center-setup/batch-master', name: 'Batch Master', element: BatchMaster, exact: true },
   { path: '/master/center-setup/form-master', name: 'Form Master', element: FormMaster, exact: true },
+  { path: '/master/center-setup/leadSourceMaster', name: 'Lead Source Master', element: LeadSourceMaster, exact: true },
 
 
   { path: '/master/clients', name: 'Marketing Master', element: Designation, exact: true },
@@ -364,7 +365,6 @@ const routes = [
   { path: '/master/marketing', name: 'Marketing Master', element: Designation, exact: true },
   { path: '/master/marketing/emailsmsTemplate', name: 'Template', element: EmailSMSMaster, exact: true },
   { path: '/master/marketing/galleryMaster', name: 'Gallery Master', element: GalleryMaster, exact: true },
-  { path: '/master/marketing/leadSourceMaster', name: 'Lead Source Master', element: LeadSourceMaster, exact: true },
 
   { path: '/master/hr', name: 'HR Master', element: Designation, exact: true },
   { path: '/master/hr/designation', name: 'Employee Designation', element: Designation, exact: true },

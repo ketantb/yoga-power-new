@@ -41,10 +41,7 @@ const Login = () => {
   const getUserRight = useSelector((el)=>el.getUserRight)    
   const isEmployee = useSelector((el)=>el.isEmployee)    
   const activeToCall = useSelector((el)=>el.activeToCall)    
-   
 
-
-console.log(data)
 
 useEffect(()=>{
   if(userinfo?.token){
@@ -95,6 +92,12 @@ useEffect(()=>{
       console.log(user);
       if (user?.user?.isAdmin) {
         disPatch({type:'dispatchIsAdmin'})
+        navigate('/')
+      }else if(user?.user?.isAdminPatner){
+        disPatch({type:'dispatchIsAdminPatner'})
+        navigate('/')
+      }else if(user?.user?.isEmployee){
+        disPatch({type:'dispatchIsAdminPatner'})
         navigate('/')
       }
     } else {

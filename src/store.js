@@ -179,8 +179,15 @@ function changeState (state = initialState, { type, ...rest }){
     return  { ...state, ...rest }
     case 'dispatchIsAdmin':
     state.isAdmin = true
-    state.isEmployee =true
+    state.isEmployee = false
     return  { ...state, ...rest }
+    case 'dispatchIsEmployee':
+    state.isEmployee = true
+    state.isAdmin = false
+    return  { ...state, ...rest }
+    case 'dispatchIsAdminPatner':
+    state.isEmployee = false
+    return  { ...state, ...rest }   
     case 'showHomePage':
     state.showHomePage = rest.payload 
     return  { ...state, ...rest }

@@ -339,7 +339,7 @@ return  (access.includes(val)||isAdmin) ?'':'none'
                                     <CTableDataCell>{el.clientId}</CTableDataCell>
 <CTableDataCell>
     {toCheckValiDate(financeRight.viewTotalInvoiceProfile)===''?
-    <Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${el.MemberId}/1`} target="_black">
+    <Link index={-1} style={{ textDecoration: 'none' }} to={`/clients/member-details/${el.MemberId}/1`} >
         {el.MemberName}</Link>:el.MemberName}
         
 </CTableDataCell>

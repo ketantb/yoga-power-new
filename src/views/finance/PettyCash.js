@@ -432,8 +432,8 @@ const toCheckValiDate= (val)=>{
                                 onChange={(e) => setPayedBy(e.target.value)}
                             >
                                 <option>Select Staff</option>
-                                {staff.filter((list) => list.username === username).map((item, index) => (
-                                    item.username === username && (
+                                {staff.map((item, index) => (
+                                    item && (
                                         <option key={index}>{item.FullName}</option>
                                     )
                                 ))}

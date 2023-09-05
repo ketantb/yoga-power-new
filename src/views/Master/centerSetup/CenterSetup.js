@@ -30,8 +30,9 @@ const CenterSetup = () => {
                     { id:'masterServicesMaster', color: 'success', icon: <MdOutlineMiscellaneousServices style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Services Master', subtitle: 'Set Up Branch Profile', link: '/master/center-setup/service-master' },
                     { id:'masterPackageMaster', color: 'danger', icon: <HiCurrencyRupee style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Package Master', subtitle: 'Set Up Branch Profile', link: '/master/center-setup/package-master' },
                     { id:'masterBatchTimeMaster',color: 'warning', icon: <BsCalendar3 style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Batch time Master', subtitle: 'Brand logo', link: '/master/center-setup/batch-master' },
-                    { id:'masterFormMaster', color: 'info', icon: <AiOutlineForm style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Form Master', subtitle: 'Brand logo', link: '/master/center-setup/form-master' },
+                    { id:'masterFormMaster', color: 'info', icon: <AiOutlineForm style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Category Master', subtitle: 'Brand logo', link: '/master/center-setup/form-master' },
                     { id:'masterInvoiceMaster', color: 'dark', icon: <FaFileInvoiceDollar style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Invoice Master', subtitle: 'Brand logo',link: '/master/center-setup/invoice-master' },
+                    { id:'masterLeadSourceMaster', color: 'warning', icon: <FaFileInvoiceDollar style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Lead Master', subtitle: 'Brand logo',link: '/master/center-setup/leadSourceMaster' },
                 ].filter((el)=>{
                 return (rightsDataObj?.[el?.id]?.value || isAdmin)
                 }).map((item, index) => (

@@ -20,8 +20,7 @@ import {
 } from "@coreui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { MdDelete, MdEdit } from "react-icons/md";
-const url = 'https://yog-seven.vercel.app'
+import { MdDelete} from "react-icons/md";
 import { useSelector } from 'react-redux';
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 import { masterMarketingRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
