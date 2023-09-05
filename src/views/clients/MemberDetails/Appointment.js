@@ -26,7 +26,7 @@ import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux'
 import  {useAdminValidation} from '../../Custom-hook/adminValidation'
-
+import CustomSelectInput from 'src/views/Fitness/CustomSelectInput/CustomSelectInput';
 const optionAppointmentTyep = [
     "Diet",
     "Treatment",
@@ -56,9 +56,11 @@ const [fess, setFees] = useState('')
 const [memberId, setMemberId] = useState('')
 const [staffValue, setStaffValue] = useState('')
 const [appointmentTime, setAppointmentTime] = useState('')
-    const [Appontment_Date, setAppointmentDate] = useState('')
-    const [feesStatus, setFessStatus] = useState('')
-    const [pagination, setPagination] = useState(10)
+const [Appontment_Date, setAppointmentDate] = useState('')
+const [feesStatus, setFessStatus] = useState('')
+const [pagination, setPagination] = useState(10)
+const [clientReferance,setClientReferance] = useState('')
+
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -86,15 +88,19 @@ useEffect(() => {
 }, [])
    
 async function getEnquiry() {
-       
-       const  {data} = await axios.get(`${url1}/memberForm/${id}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
+    try{
+        const  {data} = await axios.get(`${url1}/memberForm/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        setClientName(data.Fullname)
+        setClientReferance(data.Fullname)
+        setMobileno(data.ContactNumber)
+        setEnquiry([data])
+    }catch{
 
-    setClientName(data.Fullname)
-    setMobileno(data.ContactNumber)
+    }
 }  
     
 
@@ -109,18 +115,23 @@ function deleteAppointmentData(id) {
 }
 
 
-function updateAppointmentStatus(id, data, Status,Cancel1) {
-const Cancel = Cancel1==='Not'?'Not':'cancel'
-    const data1 = { ...data, Status,Cancel}
-    fetch(`${ url1 }/appointment/update/${ id }`, {
+
+function updateAppointmentStatus(iid, data, Status, Cancel1) {
+    const Cancel = Cancel1 === 'Not' ? 'Not' : 'cancel'
+
+    
+    const data1 = { ...data, Status, Cancel }
+    fetch(`${ url1 }/appointment/update/${ iid }`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${ token }`
         },
         body: JSON.stringify(data1)
     }).then((result) => {
         getAppointmentData()
+        console.log(result)
     })
 }
 
@@ -157,6 +168,11 @@ useEffect(() => {
     
 }, [])
 
+function clientObj(obj){
+    setClientReferance(obj.Fullname)
+    
+ }
+
 
 const AppointmentObj = {
     "Sr_No": id,
@@ -174,7 +190,9 @@ const AppointmentObj = {
     "Cancel":'Not'
 }
 
-const sendAppointmentData = async () => {
+const sendAppointmentData = async (e) => {
+    console.log(e)
+    e.preventDefault()
     const data = AppointmentObj
 
     fetch(`${ url1 }/appointment/create`, {
@@ -221,48 +239,28 @@ const sendAppointmentData = async () => {
                {appointment &&
                             <CCard className='mt-1 mb-2'>
                                 <CCardBody>
-                                    <CRow>
+                                    <form onSubmit={sendAppointmentData}>
+                                        <CRow>
                                     <CCol xs={3}>
                                             <CFormInput
                                                 type='date'
                                                 label='Booking Date'
                                                 value={bookingDate}
                                                 onChange={(e) => setBookingDate(e.target.value)}
+                                                required
                                             />
 
 
                                         </CCol>
                                         <CCol xs={3} style={{ position: 'relative' }}>
-                                            <CFormInput
-                                                className="mb-1"
-                                                type="text"
-                                                id="exampleFormControlInput1"
-                                                label="Client Name"
-                                                placeholder="Enter Name"
-                                                list="exampleFormControlInput1Dta"
-                                                onFocus={ActiveDropDownHandler}
-                                                value={clientName}
-                                                onChange={(e) => setClientName(e.target.value)}
-
-
-                                            />
-
-
-                                            {active && [...Enquiry.filter((el) => el.Fullname).filter((el) => el.Fullname.includes(clientName))][0]
-                                                && <CCard style={{ overflowY: 'scroll', maxHeight: '200px', width: '95%', position: 'absolute', minHeight: 'auto' }} >
-
-                                                    {[...[...Enquiry.filter((el) => el.Fullname)].filter((el) => el.Fullname.includes(clientName)).map((el) => {
-
-                                                        return <div className='p-2 text-center' style={{ borderBottom: '1px solid #c0c0c0' }}
-                                                            onClick={selectedOption} id={el._id} >{el.Fullname}</div >
-                                                    })]}
-
-                                                </CCard>}
-
-
-
-
-
+                                            <label className='mb-2'>Client Name</label>
+                                        <CustomSelectInput 
+                                        data={Enquiry} 
+                                        title={clientReferance?.trim()?
+                                        clientReferance:"Select client name"}
+                                        getData={clientObj}
+                                        
+                                        />
                                         </CCol>
                                         <CCol xs={3}>
                                             <CFormInput
@@ -273,6 +271,7 @@ const sendAppointmentData = async () => {
                                                 placeholder="Enter Number"
                                                 value={mobileNo}
                                                 onChange={(e) => setMobileno(e.target.value)}
+                                                required
                                             />
                                         </CCol>
                                         <CCol xs={3} style={{ position: 'relative' }}>
@@ -283,6 +282,7 @@ const sendAppointmentData = async () => {
                                                 value={appointmentType}
                                                 onChange={(e) => setAppointmentType(e.target.value)}
                                                 onFocus={ActiveDropDownHandler2}
+                                                required
 
                                             >
 
@@ -309,6 +309,7 @@ const sendAppointmentData = async () => {
                                                 placeholder="Enter date"
                                                 value={Appontment_Date}
                                                 onChange={(e) => setAppointmentDate(e.target.value)}
+                                                required
                                             />
                                         </CCol>
                                         <CCol xs={3}>
@@ -317,6 +318,7 @@ const sendAppointmentData = async () => {
                                                 label='Appointment Time'
                                                 value={appointmentTime}
                                                 onChange={(e) => setAppointmentTime(e.target.value)}
+                                                required
                                             />
 
 
@@ -329,9 +331,9 @@ const sendAppointmentData = async () => {
                                                 label="Appointment With"
                                                 value={appointmentWith}
                                                 onChange={(e) => setAppointmentWith(e.target.value)}
-
+                                                required
                                             >
-                                                <option>Select Appointment With</option>
+                                                <option value={''} >Select Appointment With</option>
 
                                                 {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                                    (
@@ -349,10 +351,9 @@ const sendAppointmentData = async () => {
                                                 label="Staff"
                                                 value={staffValue}
                                                 onChange={(e) => setStaffValue(e.target.value)}
-
-
+                                                required
                                             >
-                                                <option>Select Staff</option>
+                                                <option value={''} >Select Staff</option>
 
                                                 {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                                      (
@@ -367,9 +368,9 @@ const sendAppointmentData = async () => {
                                                 label='Select Fees Status'
                                                 value={feesStatus}
                                                 onChange={(e) => setFessStatus(e.target.value)}
-
+                                                required
                                             >
-                                                <option>Select Fees Status</option>
+                                                <option value={''}>Select Fees Status</option>
                                                 <option>Free</option>
                                                 <option>Paid</option>
                                                 <option>Package</option>
@@ -387,16 +388,17 @@ const sendAppointmentData = async () => {
                                                 placeholder="Enter Fees"
                                                 value={fess}
                                                 onChange={(e) => setFees(e.target.value)}
+                                                required
                                             />
                                         </CCol>
 
 
                                         <CCol className='mb-2 mt-4 float-end'>
                                             <CButton className=' ms-2 float-end' onClick={() => setAppointment(!appointment)}>Cancel</CButton>
-                                            <CButton className=' float-end' onClick={() => sendAppointmentData()}>Book</CButton>
+                                            <CButton className=' float-end' type='submit'>Book</CButton>
                                         </CCol>
-
-                                    </CRow>
+                                        </CRow>
+                                    </form>
                                 </CCardBody>
                             </CCard>
                         }
@@ -406,7 +408,7 @@ const sendAppointmentData = async () => {
                     <div>
                         <CRow>
                             <CCol>
-                                <CButton className="ms-1 my-4" onClick={() =>{setAppointment(true)}}>Book Appointment</CButton>
+                                {appointment||<CButton className="ms-1 my-4" onClick={() =>{setAppointment(true)}}>Book Appointment</CButton>}
                             </CCol>
                         </CRow>
                     </div>

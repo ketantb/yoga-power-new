@@ -51,10 +51,8 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const [paging, setPaging] = useState(0);
-    console.log(user);
     const token = user.token;
     const username = user.user.username;
-    const centerCode = user.user.centerCode;
 
 
    
@@ -67,7 +65,6 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
         })
             .then((res) => {
                 setResult1(res.data.reverse())
-                console.log(res.data,'kugyiigyg');
             })
             .catch((error) => {
                 console.error(error)
@@ -98,6 +95,7 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
             resp.json().then(() => {
                 setToast(true)
                 setAction(false)
+                clear()
                 getImpCall()                
             })
         })
@@ -122,7 +120,6 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
             resp.json().then(() => {
                 getImpCall()
                 alert("successfully submitted")
-                setVisible(false)
 
             })
         })
@@ -144,11 +141,11 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
         }
     }
 
-    const handleUpdate = (id) => {
+    const handleUpdate = (id,item) => {
         setId(id)
-        getUpdate(id)
+        getUpdate(item)
     }
-    const clear = () => {
+  function clear()  {
         setId('')
         setName('')
         setPhone('')
@@ -158,24 +155,14 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
         setCompany('')
     }
 
-    function getUpdate(id) {
-        axios.get(`${url}/impCallList/${id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setName(res.data.name)
-                setPhone(res.data.phone)
-                setEmail(res.data.email)
-                setCategory(res.data.category)
-                setAddress(res.data.address)
-                setCompany(res.data.company)
+    function getUpdate(item) {
+                setName(item.name)
+                setPhone(item.mobile)
+                setEmail(item.email)
+                setCategory(item.category)
+                setAddress(item.address)
+                setCompany(item.company)
                 setAction(true)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
     }
 
 
@@ -202,7 +189,7 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                 </CToast>
             </CCol>
             <CCol lg={3} sm={6} className='mb-2' style={{display:((addedval)?'':'none')}} >
-                <CButton className="float-end" onClick={() => { setAction(!action), clear() }}>{action ? 'Close' : 'Add Importent Number'}</CButton>
+                <CButton className="float-end" onClick={() => { setAction(prev=>!prev), clear() }}>{action ? 'Close' : 'Add Importent Number'}</CButton>
             </CCol>
             {action &&
 
@@ -412,7 +399,7 @@ const impCallList = ({addedval,editCallval,deleteICall,action1}) => {
                             <CTableDataCell className='text-center' style={{display:((editCallval ||deleteICall)?'':'none')}}>
 
                               {editCallval&& <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} 
-                              onClick={() => handleUpdate(item._id)} size='20px' />} 
+                              onClick={() => handleUpdate(item._id,item)} size='20px' />} 
 
                               {deleteICall&&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteCall(item._id)} 
                               size='20px' />}

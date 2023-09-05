@@ -57,12 +57,14 @@ const WelcomeCalls = ({visible,filterObj,id,setPageLength,paging,isEmployee}) =>
     const [visibalCallUpdateForm,setVisibalCallUpdateForm] = useState(false)
     const [followupId,setFollowUpid] = useState('')
 
-    const [updateFormData,setUpdateForm] = useState({
+    const obj = {
         wellComeCallTimeing:'',
         wellComeCallDiscussion:'',
-        wellComeCallFollowupby:'',
+        wellComeCallFollowupby:uniObjVal.employeeMongoId,
         wellComeCallFollowUpDate:''
-    })
+    }
+
+    const [updateFormData,setUpdateForm] = useState({...obj})
 
     const [staff, setStaff] = useState([])
 
@@ -115,13 +117,15 @@ const WelcomeCalls = ({visible,filterObj,id,setPageLength,paging,isEmployee}) =>
 
 
     function getStaff() {
-        axios.get(`${url}/employeeform/${pathValMaster}`, {
+        axios.get(`${url}/employeeform/${isEmployeeRoute(isEmployee)}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => {
+                console.log(res.data,isEmployeeRoute(isEmployee))
                 setStaff(res.data)
+                setUpdateForm({...obj})
             })
             .catch((error) => {
                 console.error(error)
@@ -166,6 +170,7 @@ const WelcomeCalls = ({visible,filterObj,id,setPageLength,paging,isEmployee}) =>
             .then(() => {
                 axios.post(`${url}/memberCallReport/create`,obj2, { headers }).then((res)=>{
                     alert("successfully submitted")
+                    setUpdateForm({...obj})
                     getAllMemberData()
                 })
             })
@@ -235,7 +240,7 @@ useEffect(()=>{
                value={updateFormData.wellComeCallFollowupby}
                onChange={(e)=>setUpdateForm(prev=>({...prev,wellComeCallFollowupby:e.target.value}))}
                >
-                          <option className={isEmployee?'d-none':''}>Select staff name</option>
+                          {!isEmployee?<option>Select staff name</option>:''}
                           {staff.filter((list) => 
                               list.selected === 'Select' && (list._id===uniObjVal.employeeMongoId||!isEmployee) ).map((item, index) => (
                                   <option key={index} value={item._id} >{item.FullName} {item.EmployeeID}</option>

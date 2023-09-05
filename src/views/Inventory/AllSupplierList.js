@@ -159,9 +159,9 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
         }
     }
 
-    const handleUpdate = (id) => {
+    const handleUpdate = (id,item) => {
         setId(id)
-        getUpdate(id)
+        getUpdate(item)
     }
     const clear = () => {
         setId('')
@@ -173,26 +173,31 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
         setCompany('')
     }
 
-    function getUpdate(id) {
-        axios.get(`${url}/allSupplierList/${id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setName(res.data.name)
-                setPhone(res.data.mobile)
-                setEmail(res.data.email)
-                setCategory(res.data.category)
-                setAddress(res.data.address)
-                setCompany(res.data.company)
+    function getUpdate(item) {
+        
+                setName(item.name)
+                setPhone(item.mobile)
+                setEmail(item.email)
+                setCategory(item.category)
+                setAddress(item.address)
+                setCompany(item.company)
                 setAction(true)
                 
-            })
-            .catch((error) => {
-                console.error(error)
-            })
     }
+
+    function totfilterData(data){
+        const filterData = data.filter((el)=>{
+          return (el.name?.toLowerCase()||"").includes(search2.toLowerCase()) &&
+          (el.mobile+""||"").includes(search3.toLowerCase())&&
+          (el.email?.toLowerCase()||"").includes(search4.toLowerCase())&&
+          (el.address?.toLowerCase()||"").includes(search5.toLowerCase())&&
+          (el.category?.toLowerCase()||"").includes(search6.toLowerCase())&&
+          (el.company?.toLowerCase()||"").includes(search7.toLowerCase())
+       })
+      
+       return filterData
+      }
+
     return (
         <CRow className='d-flex mb-2'>
             <CCol lg={9} sm={6} className='mb-2'>
@@ -204,7 +209,7 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                 </CToast>
             </CCol>
             <CCol lg={3} sm={6} className='mb-2' style={{display:((addedval)?'':'none')}} >
-                <CButton className="float-end" onClick={() => { setAction(!action), clear() }}>{action ? 
+                <CButton className="float-end" onClick={() => { setAction(prev=>!prev), clear() }}>{action ? 
                 'Close' : 'Add Suppiler'}</CButton>
             </CCol>
             {action &&
@@ -313,7 +318,7 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                             <CFormInput
                                 className="mb-1"
                                 type="text"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search1}
                                 disabled
                                 onChange={(e) => setSearch1(e.target.value)}
@@ -323,7 +328,7 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search2}
                                 onChange={(e) => setSearch2(e.target.value)}
                                 type="text"
@@ -333,7 +338,7 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "100px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search3}
                                 onChange={(e) => setSearch3(e.target.value)}
                                 type="text"
@@ -344,7 +349,7 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                             <CFormInput
                                 className="mb-1"
                                 type="text"
-                                style={{ minWidth: "200px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search4}
                                 onChange={(e) => setSearch4(e.target.value)}
                                 aria-describedby="exampleFormControlInputHelpInline"
@@ -353,7 +358,7 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search5}
                                 onChange={(e) => setSearch5(e.target.value)}
                                 type="text"
@@ -363,19 +368,16 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search6}
                                 onChange={(e) => setSearch6(e.target.value)}
-                                type="number"
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
                         </CTableDataCell>
                          <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
-                                type="number"
-                                disabled
+                                style={{ minWidth: "80px" }}
                                 value={search7}
                                 onChange={(e) => setSearch7(e.target.value)}
                                 aria-describedby="exampleFormControlInputHelpInline"
@@ -385,7 +387,7 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                             <CFormInput
                                 className="mb-1"
                                 type="number"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 disabled
                                 value={search8}
                                 onChange={(e) => setSearch8(e.target.value)}
@@ -396,7 +398,7 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                             <CFormInput
                                 className="mb-1"
                                 type="number"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 disabled
                                 value={search9}
                                 onChange={(e) => setSearch9(e.target.value)}
@@ -405,7 +407,7 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                         </CTableDataCell>
                         
                     </CTableRow>
-                    {result1.map((item, index) => (
+                    {totfilterData(result1).slice(paging * 10, paging * 10 + 10).map((item, index) => (
                         <CTableRow key={index}>
                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                             <CTableDataCell>{item.name}</CTableDataCell>
@@ -419,7 +421,7 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                              className='text-center'>
 
                                {editCallval&&  <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} 
-                                onClick={() => handleUpdate(item._id)} size='20px' />} 
+                                onClick={() => handleUpdate(item._id,item)} size='20px' />} 
                                 {deleteICall&&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }}
                                  onClick={() => deleteCall(item._id)} size='20px' />}
 
@@ -428,6 +430,23 @@ const AllSuppilerList = ({addedval,editCallval,deleteICall,action1}) => {
                     ))}
                 </CTableBody>
             </CTable>
+            <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+            <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                <span aria-hidden="true">&laquo;</span>
+            </CPaginationItem>
+            <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+            {totfilterData(result1).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+
+            {totfilterData(result1).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+            {totfilterData(result1).length > (paging + 1) * 10 ?
+                <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                    <span aria-hidden="true">&raquo;</span>
+                </CPaginationItem>
+                : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                    <span aria-hidden="true">&raquo;</span>
+                </CPaginationItem>
+            }
+        </CPagination>
 
         </CRow>
 

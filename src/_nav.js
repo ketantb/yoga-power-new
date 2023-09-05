@@ -907,13 +907,13 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Center Expenses BudgetingMaster',
+        name: 'Center Category',
         to: '/master/finance/expness',
         id:'masterExpnessCategory'
       },
       {
         component: CNavItem,
-        name: 'Center Expness Budgeting',
+        name: 'Center Budgeting',
         to: '/master/finance/budgeting',
         id:'masterBudgeting'
       },

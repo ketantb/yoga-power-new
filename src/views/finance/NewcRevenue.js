@@ -45,6 +45,7 @@ const [serviceData,setserviceData] = useState([])
 const [pagination, setPagination] = useState(10)
 const url1 = useSelector((el)=>el.domainOfApi) 
 const pathVal =  useAdminValidation()
+const [paging, setPaging] = useState(0);
 
 
 var monthName= ["January","February","March","April","May","June","July",
@@ -189,6 +190,14 @@ useEffect(()=>{
     setPagination(10)
 },[years,selectedYear,month])
 
+function totfilterData(data){
+    const filterData = data.filter((el)=>{
+        return  el?.counseller?.includes(staffS)
+    })
+   return filterData
+}    
+
+
     return (
         <CRow>
             <CCol lg={12} sm={12}>
@@ -262,8 +271,7 @@ useEffect(()=>{
                                     }
                                 return    validation
                     
-                                }).map((el,i)=>{
-                                    num++                                    
+                                }).slice(paging * 10, paging * 10 + 10).map((el,i)=>{
                                return <CTableRow key={i}>
                                 <CTableDataCell>{i+1}</CTableDataCell>
                                     <CTableDataCell>{el.year}</CTableDataCell>
@@ -282,16 +290,23 @@ useEffect(()=>{
                                     <YogaSpinnar />
                          </CCol> : ''}
                         <div className='d-flex justify-content-center mt-3' >
-                        <CPagination aria-label="Page navigation example" style={{cursor:'pointer'}}>
-                            <CPaginationItem aria-label="Previous" onClick={() => setPagination((val) => val > 10 ? val - 10 : 10)}>
-                                <span aria-hidden="true" >&laquo;</span>
+
+                        <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                            <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                                <span aria-hidden="true">&laquo;</span>
                             </CPaginationItem>
-                            <CPaginationItem active >{pagination / 10}</CPaginationItem>
-                            {num > pagination / 10 * 10 && <CPaginationItem onClick={() => setPagination((val) => val < num ? val + 10 : val)}>{pagination / 10 + 1}</CPaginationItem>}
-                            {num > pagination / 10 * 20 && <CPaginationItem onClick={() => setPagination((val) => val < num ? val + 10 : val)}>{pagination / 10 + 2}</CPaginationItem>}
-                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < num ? val + 10 : val)}>
-                                <span aria-hidden="true">&raquo;</span>
-                            </CPaginationItem>
+                            <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                            {totfilterData(newcRevenue).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+
+                            {totfilterData(newcRevenue).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                            {totfilterData(newcRevenue).length > (paging + 1) * 10 ?
+                                <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </CPaginationItem>
+                                : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </CPaginationItem>
+                            }
                         </CPagination>
       </div>
                 

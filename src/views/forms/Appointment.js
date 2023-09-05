@@ -194,37 +194,38 @@ const Appointment = () => {
         })
     }
 
+   const updateAppointMent = (data,id)=>{
+    fetch(`${ url1 }/appointment/update/${ id }`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${ token }`
+        },
+        body: JSON.stringify(data)
+    }).then((result) => {
+        getAppointmentData()
+        console.log(result)
+    })
+   }
+
     function updateAppointmentStatus(id, data, Status, Cancel1) {
         const Cancel = Cancel1 === 'Not' ? 'Not' : 'cancel'
-        console.log(Cancel)
-
         const data1 = { ...data, Status, Cancel }
-        fetch(`${ url1 }/appointment/update/${ id }`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${ token }`
-            },
-            body: JSON.stringify(data1)
-        }).then((result) => {
-            getAppointmentData()
-            console.log(result)
-        })
+        updateAppointMent(data1,id)
+    }
+
+    function updateAmountStatus(data,value,id){
+        const data1 = { ...data, amountStatus:value}
+        updateAppointMent(data1,id)
     }
 
 
 
 
-    function saveApointmentData() {
-
-
-
-
-
+    function saveApointmentData(e) {
+        e.preventDefault() 
         sendAppointmentData()
-
-
     }
 
 
@@ -279,6 +280,7 @@ const Appointment = () => {
                         {appointment &&
                             <CCard className='mt-1 mb-2'>
                                 <CCardBody>
+                                    <form  onSubmit={saveApointmentData}>
                                     <CRow>
                                         <CCol xs={3}>
                                             <CFormInput
@@ -286,6 +288,7 @@ const Appointment = () => {
                                                 label='Booking Date'
                                                 value={bookingDate}
                                                 onChange={(e) => setBookingDate(e.target.value)}
+                                                required
                                             />
 
 
@@ -301,7 +304,7 @@ const Appointment = () => {
                                                 onFocus={ActiveDropDownHandler}
                                                 value={clientName}
                                                 onChange={(e) => setClientName(e.target.value)}
-
+                                                required
 
                                             />
 
@@ -331,6 +334,7 @@ const Appointment = () => {
                                                 placeholder="Enter Number"
                                                 value={mobileNo}
                                                 onChange={(e) => setMobileno(e.target.value)}
+                                                required
                                             />
                                         </CCol>
                                         <CCol xs={3} style={{ position: 'relative' }}>
@@ -341,6 +345,7 @@ const Appointment = () => {
                                                 value={appointmentType}
                                                 onChange={(e) => setAppointmentType(e.target.value)}
                                                 onFocus={ActiveDropDownHandler2}
+                                                required
 
                                             >
 
@@ -367,6 +372,7 @@ const Appointment = () => {
                                                 placeholder="Enter date"
                                                 value={Appontment_Date}
                                                 onChange={(e) => setAppointmentDate(e.target.value)}
+                                                required
                                             />
                                         </CCol>
                                         <CCol xs={3}>
@@ -375,6 +381,7 @@ const Appointment = () => {
                                                 label='Appointment Time'
                                                 value={appointmentTime}
                                                 onChange={(e) => setAppointmentTime(e.target.value)}
+                                                required
                                             />
 
 
@@ -387,9 +394,10 @@ const Appointment = () => {
                                                 label="Appointment With"
                                                 value={appointmentWith}
                                                 onChange={(e) => setAppointmentWith(e.target.value)}
+                                                required
 
                                             >
-                                                <option>Select Appointment With</option>
+                                                <option value={''}>Select Appointment With</option>
 
                                                 {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                                      (
@@ -407,8 +415,9 @@ const Appointment = () => {
                                                 label="Staff"
                                                 value={staffValue}
                                                 onChange={(e) => setStaffValue(e.target.value)}
+                                                required
                                             >
-                                                <option>Select Staff</option>
+                                                <option value={''}>Select Staff</option>
 
                                                 {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                                     (
@@ -423,9 +432,10 @@ const Appointment = () => {
                                                 label='Select Fees Status'
                                                 value={feesStatus}
                                                 onChange={(e) => setFessStatus(e.target.value)}
+                                                required
 
                                             >
-                                                <option>Select Fees Status</option>
+                                                <option value={''}>Select Fees Status</option>
                                                 <option>Free</option>
                                                 <option>Paid</option>
                                                 <option>Package</option>
@@ -443,16 +453,18 @@ const Appointment = () => {
                                                 placeholder="Enter Fees"
                                                 value={fess}
                                                 onChange={(e) => setFees(e.target.value)}
+                                                required
                                             />
                                         </CCol>
 
 
                                         <CCol className='mb-2 mt-4 float-end'>
                                             <CButton className=' ms-2 float-end' onClick={() => setAppointment(!appointment)}>Cancel</CButton>
-                                            <CButton className=' float-end' onClick={() => saveApointmentData()}>Book</CButton>
+                                            <CButton className=' float-end' type='submit'>Book</CButton>
                                         </CCol>
 
                                     </CRow>
+                                    </form>
                                 </CCardBody>
                             </CCard>
                         }
@@ -472,6 +484,7 @@ const Appointment = () => {
                                         <CTableHeaderCell scope="col">Appointment Time</CTableHeaderCell>
                                         <CTableHeaderCell scope="col">Fees Status</CTableHeaderCell>
                                         <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
+                                        <CTableHeaderCell scope="col">Amount Status</CTableHeaderCell>
                                         <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                                         <CTableHeaderCell scope="col">Staff</CTableHeaderCell>
                                         <CTableHeaderCell scope="col">Delete</CTableHeaderCell>
@@ -503,6 +516,8 @@ const Appointment = () => {
                                             <CTableDataCell>{Time}</CTableDataCell>
                                             <CTableDataCell>{el.Fees_Status}</CTableDataCell>
                                             <CTableDataCell>{el.Amount}</CTableDataCell>
+                                            <CTableDataCell className='text-center'>
+                                            {el.amountStatus?<CButton className='m-1' color='success'  onClick={()=>updateAmountStatus(el,!el.amountStatus,el._id)} size='sm' >Done</CButton>:<CButton className='m-1' size='sm'  color='warning'  onClick={()=>updateAmountStatus(el,!el.amountStatus,el._id)}>Pending...</CButton>}</CTableDataCell>
                                             <CTableDataCell>
                                                 {(el.Status || el.Cancel === "cancel") || <CButton onClick={() => updateAppointmentStatus(el._id, el, true, 'cancel')} color='warning' size='sm' className='m-1'>Pending...</CButton>}
                                                 {(el.Status && el.Cancel !== "cancel") && <CButton onClick={() => updateAppointmentStatus(el._id, el, false, 'Not')} color='success' size='sm' className='m-1'>Done</CButton>}
@@ -512,9 +527,6 @@ const Appointment = () => {
                                             <CTableDataCell>{el.Staff}</CTableDataCell>
                                             <CTableDataCell><MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() =>
                                                 deleteAppointmentData(el._id)} size='20px' /></CTableDataCell>
-
-
-
                                         </CTableRow>
                                     })}
 

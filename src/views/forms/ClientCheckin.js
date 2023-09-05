@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux'
 import { useUniqAdminObjeact,useAdminValidation } from '../Custom-hook/adminValidation'
 
 
-const ClientCheckin = () => {
+const ClientCheckin = ({onlyOneClient,id}) => {
 
     const url1 = useSelector((el) => el.domainOfApi)
     const pathVal = useAdminValidation()
@@ -72,7 +72,7 @@ const ClientCheckin = () => {
             }
         })
             .then((res) => {
-                setResult1(res.data.reverse())
+                setResult1(onlyOneClient?res.data.filter((el)=>el.clientId===id).reverse():res.data.reverse())
             })
             .catch((error) => {
                 console.error(error)
@@ -219,8 +219,8 @@ const ClientCheckin = () => {
 
 
     return (
-        <CCard className="mb-3 border-success">
-            <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
+        <CCard className={onlyOneClient?'border-':"mb-3 border-success"} >
+            <CCardHeader style={ onlyOneClient?{color: 'black',border:'0'}:{ backgroundColor: '#0B5345', color: 'white' }}>
                 Client CheckIn
             </CCardHeader>
             <CCardBody>
@@ -358,8 +358,7 @@ const ClientCheckin = () => {
 
 
                 <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                    <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                        <CTableRow >
+                    <CTableHead color={'darkGreen'} >
                             <CTableHeaderCell>Sr.No</CTableHeaderCell>
                             <CTableHeaderCell>Client Name</CTableHeaderCell>
                             <CTableHeaderCell>Attendance ID</CTableHeaderCell>
@@ -371,7 +370,6 @@ const ClientCheckin = () => {
                             <CTableHeaderCell>CheckOut Time</CTableHeaderCell>
                             <CTableHeaderCell>Action</CTableHeaderCell>
                             <CTableHeaderCell>Delete</CTableHeaderCell>
-                        </CTableRow>
                     </CTableHead>
                     <CTableBody>
                         {result1.filter((list) => list).map((item, index) => (

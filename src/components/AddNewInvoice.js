@@ -75,6 +75,7 @@ const handlePrint = useReactToPrint({
     const url1 = useSelector((el)=>el.domainOfApi) 
     const [GeneralTrainer, setGeneralTrainer] = useState('')
     const [subService,setService] = useState([])
+    const [texData,setTexData] = useState([{ label: 'Select Tax', value: 0}])
     
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
@@ -99,6 +100,7 @@ const handlePrint = useReactToPrint({
     const [bankDetails,setBankDetails] = useState({
         bankName:'',
         ifcCode:'',
+        checkNo:''
     })
     const [invoiceViewData,setViewInvoiceData]  =useState({
         TNC:'',
@@ -140,21 +142,28 @@ const handlePrint = useReactToPrint({
         const response2 =  axios.get(`${url1}/packageMaster/${pathVal}`,headers)
         const response3 =  axios.get(`${url1}/invoice/${pathVal}`,headers)
         const response4  = axios.get(`${url1}/center-invoice-setup/${pathVal}`,headers)
+        const response5  = axios.get(`${url1}/taxMaster/${pathVal}`,headers)
+
     
     
     
-        const allData = await Promise.all([response1,response2,response3,response4])
+        const allData = await Promise.all([response1,response2,response3,response4,response5])
     
         const staffData = allData[0]?.data
         const pacKgaeMasterData = allData[1]?.data
         const invoice = allData[2]?.data
         const invoiceViewData = allData[3]?.data
+        const textData = allData[4]?.data
     
     
         setStaff(staffData)
         setService(pacKgaeMasterData)
         setInvoice(invoice.length)
         setViewInvoiceData(invoiceViewData)
+        setTexData([ { label: 'Select Tax', value: 0}
+,          ...textData.map((item)=>(
+            { label: item.TaxName, value: item.Tax}
+        ))])
     }catch(error){
         console.log(error)
     }
@@ -164,11 +173,19 @@ const handlePrint = useReactToPrint({
         getRequireData()
     },[])
 
+const selectedStaff = staff.find((el)=>el._id===ser5)
+
+const bankDetailsVal = ((paymode==='Cash'||paymode==='GPay'||paymode==='Paytm')?
+true
+:!!(bankDetails.bankName.trim()&&bankDetails.checkNo.trim()&&bankDetails.ifcCode.trim()))  
 
 
-const validation = username && centerCode &&ser1 
+console.log(bankDetailsVal,paymode)
+
+const validation = username && centerCode &&ser1 && selectedStaff?._id
 && ser6 && ser2 && ser3
-&& ser5 && total && finalTotal && startDate && endDate && paymode
+&& ser5 && total && finalTotal && startDate && endDate && paymode&&
+bankDetailsVal
 
 useEffect(()=>{
 if(validation){
@@ -191,7 +208,6 @@ if(RenewedObj){
 
 
 
-const selectedStaff = staff.find((el)=>el._id===ser5)
 
 
 useEffect(()=>{
@@ -204,7 +220,8 @@ useEffect(()=>{
         employeeMongoId:(ser5||uniqObj.employeeMongoId)
       }
 
-const saveInvoice = () => {
+const saveInvoice = (e) => {
+    e.preventDefault() 
 if(!validation) {
     setErrorMessage("Please Fill All Detail") 
 return 
@@ -310,6 +327,7 @@ const handleTaxTotal = (e) => {
         setTotal(Number(total) + Number(ser3))
     } else {
         setTotal(ser3)
+
     }
 }
 
@@ -362,7 +380,9 @@ setServiceDays(el.Days)
 },[ser2])
 
 
-
+useEffect(()=>{
+setPendingAmount(total-paidAmount)
+},[total,tax])
 
     return  <>
     <div className={(viewInvoice && !printInvoiceActive )?'d-none':''}>
@@ -371,7 +391,10 @@ setServiceDays(el.Days)
     >
     <CModalHeader>
         <CModalTitle>Invoice</CModalTitle>
-    </CModalHeader>
+    </CModalHeader>    
+    <CModalBody>
+
+    <form onSubmit={saveInvoice} >
     <CModalBody>
         <CRow>
             <CCol lg={12} className='text-center'><CImage src={invoiceViewData.InvoiceLogo} width="100px" height='100px' /></CCol>
@@ -400,7 +423,8 @@ setServiceDays(el.Days)
                             </CInputGroupText>
                             <CFormSelect
                              value={ser5}
-                             onChange={(e) => setSer5(e.target.value)}                                 
+                             onChange={(e) => setSer5(e.target.value)}     
+                             required={!!selectedStaff?._id?.trim()}                            
                             >
                             <option>Select Assign Staff</option>
                                 {staff.filter((list) => 
@@ -438,7 +462,7 @@ setServiceDays(el.Days)
                                     onChange={(e) => setSer1(e.target.value)}
                                     label='Service Name'
                                     style={{ minWidth: "210px" }}
-
+                                    required                            
                                 >
                                     <option>Select Service</option>
                                     {subService.map((item) => (
@@ -454,6 +478,7 @@ setServiceDays(el.Days)
                                     label='Package Name'
                                     onChange={(e) => setSer6(e.target.value)}
                                     style={{ minWidth: "210px" }}
+                                    required                            
 
                                 >
                                     <option>Select Package</option>
@@ -486,6 +511,7 @@ setServiceDays(el.Days)
                                         onChange={(e) => setStartDate(e.target.value)}
                                         style={{ minWidth: "100px" }}
                                         aria-describedby="exampleFormControlInputHelpInline"
+                                        required                            
                                     />
                                 </CInputGroup>
                             </CCol>
@@ -503,6 +529,7 @@ setServiceDays(el.Days)
                                         onChange={(e) => setEndDate(e.target.value)}
                                         style={{ minWidth: "100px" }}
                                         aria-describedby="exampleFormControlInputHelpInline"
+                                        required                            
                                     />
                                 </CInputGroup>
                             </CCol>
@@ -518,6 +545,7 @@ setServiceDays(el.Days)
                             aria-label="Select Service Name"
                             value={ser2}
                             onChange={(e) => setSer2(e.target.value)}
+                            required                            
                         >
                  <option>Select Duration</option>
                    {[...subService.filter((el)=>{
@@ -540,6 +568,7 @@ setServiceDays(el.Days)
                                 setTotal(+e.target.value)
                             }
                         }
+                        required                            
                         >
                             <option>Select Fees</option>
                             {[...subService.filter((el)=>{
@@ -608,15 +637,15 @@ setServiceDays(el.Days)
                                                 <CFormSelect
                                                     className="mb-1"
                                                     value={tax}
-                                                    onChange={(e) => handleTaxTotal(e)}
+                                                    onChange={(e) => {
+                                                        
+                                                        handleTaxTotal(e)
+                                                    }
+                                                    }
                                                     aria-label="Select"
-                                                    options={[
-                                                        { label: "Select", value: "0" },
-                                                        { label: "GST", value: "18" },
-                                                        { label: "IGST", value: "18" },
-                                                        { label: "CGST", value: "18" },
-                                                        { label: "TDS", value: "18" },
-                                                    ]}
+                                                    options={
+                                                        texData
+                                                    }
                                                 /></CCol>
                                         </CRow>
                                     </CTableDataCell>
@@ -649,9 +678,11 @@ setServiceDays(el.Days)
                                             className="mb-1"
                                             type="number"
                                             value={paidAmount}
-                                            onChange={(e) => { setpaidAmount(e.target.value), setPendingAmount(total - e.target.value), setFinalTotal(e.target.value) }}
+                                            onChange={(e) => { setpaidAmount(e.target.value), setPendingAmount(total - e.target.value),
+                                                 setFinalTotal(e.target.value) }}
                                             style={{ minWidth: "100px" }}
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            required                            
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
@@ -691,6 +722,7 @@ setServiceDays(el.Days)
                                                 { label: "PhonePe", value: "PhonePe" },
                                                 { label: "Account Pay", value: "Account Pay" },
                                             ]}
+                                            required                            
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
@@ -706,7 +738,8 @@ setServiceDays(el.Days)
                                             value={bankDetails.bankName}
                                             onChange={(e) => { setBankDetails(prev=>({
                                                 ...prev,bankName:e.target.value})) }}
-                                            style={{ minWidth: "100px" }}                       
+                                            style={{ minWidth: "100px" }}          
+                                            required={!bankDetailsVal}             
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
@@ -719,7 +752,22 @@ setServiceDays(el.Days)
                                             value={bankDetails.ifcCode}
                                             onChange={(e) => { setBankDetails(prev=>({
                                                 ...prev,ifcCode:e.target.value})) }}
-                                            style={{ minWidth: "100px" }}                       
+                                            style={{ minWidth: "100px" }}   
+                                            required={!bankDetailsVal}                                 
+                                        />
+                                    </CTableDataCell>
+                                </CTableRow>
+                                <CTableRow className={paymode==='Cheque'?'':'d-none'} >
+                                     <CTableDataCell>Cheque No</CTableDataCell>
+
+                                    <CTableDataCell >
+                                        <CFormInput
+                                            className="mb-1"
+                                            value={bankDetails.checkNo}
+                                            onChange={(e) => { setBankDetails(prev=>({
+                                                ...prev,checkNo:e.target.value})) }}
+                                            style={{ minWidth: "100px" }}            
+                                            required={!bankDetailsVal}             
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
@@ -734,7 +782,6 @@ setServiceDays(el.Days)
                             className="mb-1"
                             type="number"
                             value={finalTotal}
-                            onChange={(e) => setFinalTotal(e.target.value)}
                             style={{ minWidth: "100px" }}
                             aria-describedby="exampleFormControlInputHelpInline"
                         />
@@ -763,12 +810,14 @@ setServiceDays(el.Days)
     </CModalBody>
     {errorMessage&& <CCol className="text-end px-5"><p style={{color:'red',fontSize:'15px'}}>{errorMessage}</p></CCol>}
 
-    <CModalFooter>
+    <CModalFooter >
         <CButton color="secondary" onClick={() => { setViewInvoice(false) }}>
             Close
         </CButton>
-        <CButton color="primary" onClick={() => saveInvoice()}>Submit</CButton>
+        <CButton color="primary" type='submit'>Submit</CButton>
     </CModalFooter>
+    </form>
+    </CModalBody>
 </CModal>
 </div>
 <CModal size="xl" alignment="center" scrollable visible={printInvoiceActive} onClose={() =>{

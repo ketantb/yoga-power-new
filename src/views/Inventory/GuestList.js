@@ -47,13 +47,14 @@ const guestList = ({addedval,editCallval,deleteICall,action1}) => {
     const [search4, setSearch4] = useState('')
     const [search5, setSearch5] = useState('')
     const [search6, setSearch6] = useState('')
+    const [search7, setSearch7] = useState('')
+
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const [paging, setPaging] = useState(0);
     console.log(user);
     const token = user.token;
     const username = user.user.username;
-    const centerCode = user.user.centerCode;
 
     const pathVal = useAdminValidation()
     const uniqObjVal = useUniqAdminObjeact()
@@ -93,7 +94,6 @@ const guestList = ({addedval,editCallval,deleteICall,action1}) => {
             ...uniqObjVal
         }
 
-console.log('Workd feklnfbef')
 
         fetch(`${url}/guestList/create`, {
             method: "POST",
@@ -106,7 +106,7 @@ console.log('Workd feklnfbef')
         }).then((resp) => {
             resp.json().then(() => {
                 setToast(true)
-                setAction(false)
+                setAction(prev=>!prev), clear()
                 getImpCall()
             })
         })
@@ -130,7 +130,7 @@ console.log('Workd feklnfbef')
             resp.json().then(() => {
                 alert("successfully submitted")
                 getImpCall()
-                setAction(false)
+                setAction(prev=>!prev), clear()
 
             })
         })
@@ -156,9 +156,9 @@ console.log('Workd feklnfbef')
         }
     }
 
-    const handleUpdate = (id) => {
+    const handleUpdate = (id,item) => {
         setId(id)
-        getUpdate(id)
+        getUpdate(item)
     }
     const clear = () => {
         setId('')
@@ -170,27 +170,30 @@ console.log('Workd feklnfbef')
         setCompany('')
     }
 
-    function getUpdate(id) {
-        axios.get(`${url}/guestList/${id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setName(res.data.name)
-                setPhone(res.data.mobile)
-                setEmail(res.data.email)
-                setCategory(res.data.category)
-                setAddress(res.data.address)
-                setCompany(res.data.event)
+    function getUpdate(item) {
+                setName(item.name)
+                setPhone(item.mobile)
+                setEmail(item.email)
+                setCategory(item.category)
+                setAddress(item.address)
+                setCompany(item.event)
                 setAction(true)
+        }
 
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-            getImpCall()
-    }
+        function totfilterData(data){
+            const filterData = data.filter((el)=>{
+              return (el.name?.toLowerCase()||"").includes(search2.toLowerCase()) &&
+              (el.mobile+""||"").includes(search3.toLowerCase())&&
+              (el.email?.toLowerCase()||"").includes(search4.toLowerCase())&&
+              (el.address?.toLowerCase()||"").includes(search5.toLowerCase())&&
+              (el.category?.toLowerCase()||"").includes(search6.toLowerCase())&&
+              (el.event?.toLowerCase()||"").includes(search7.toLowerCase())
+           })
+          
+           return filterData
+          }
+
+
     return (
         <CRow className='d-flex mb-2'>
             <CCol lg={9} sm={6} className='mb-2'>
@@ -202,7 +205,7 @@ console.log('Workd feklnfbef')
                 </CToast>
             </CCol>
             <CCol  style={{display:(addedval?'':'none' )}} lg={3} sm={6} className='mb-2'>
-                <CButton className="float-end" onClick={() => { setAction(!action), clear() }}>{action ? 'Close' : 'Add New Guest'}</CButton>
+                <CButton className="float-end" onClick={() => { setAction(prev=>!prev), clear() }}>{action ? 'Close' : 'Add New Guest'}</CButton>
             </CCol>
             {action &&
 
@@ -309,21 +312,28 @@ console.log('Workd feklnfbef')
                 </CTableHead>
                 <CTableBody>
                     <CTableRow>
-                    
+                    <CTableDataCell>
+                            <CFormInput
+                                className="mb-1"
+                                style={{ minWidth: "80px" }}
+                                type="number"
+                                aria-describedby="exampleFormControlInputHelpInline"
+                                disabled
+                            />
+                        </CTableDataCell>
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search2}
                                 onChange={(e) => setSearch2(e.target.value)}
-                                type="number"
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
                         </CTableDataCell>
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "100px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search3}
                                 onChange={(e) => setSearch3(e.target.value)}
                                 type="text"
@@ -334,7 +344,7 @@ console.log('Workd feklnfbef')
                             <CFormInput
                                 className="mb-1"
                                 type="text"
-                                style={{ minWidth: "200px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search4}
                                 onChange={(e) => setSearch4(e.target.value)}
                                 aria-describedby="exampleFormControlInputHelpInline"
@@ -343,7 +353,7 @@ console.log('Workd feklnfbef')
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search5}
                                 onChange={(e) => setSearch5(e.target.value)}
                                 type="text"
@@ -353,7 +363,7 @@ console.log('Workd feklnfbef')
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 value={search6}
                                 onChange={(e) => setSearch6(e.target.value)}
                                 type="text"
@@ -363,26 +373,19 @@ console.log('Workd feklnfbef')
                         <CTableDataCell>
                             <CFormInput
                                 className="mb-1"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 type="text"
-                                disabled
+                                value={search7}
+                                onChange={(e) => setSearch7(e.target.value)}
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
                         </CTableDataCell>
-                        <CTableDataCell>
-                            <CFormInput
-                                className="mb-1"
-                                type="text"
-                                style={{ minWidth: "120px" }}
-                                disabled
-                                aria-describedby="exampleFormControlInputHelpInline"
-                            />
-                        </CTableDataCell>
+                      
                         <CTableDataCell style={{display:(action1?'':'none' )}}>
                             <CFormInput
                                 className="mb-1"
                                 type="text"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 disabled
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
@@ -391,7 +394,7 @@ console.log('Workd feklnfbef')
                             <CFormInput
                                 className="mb-1"
                                 type="text"
-                                style={{ minWidth: "120px" }}
+                                style={{ minWidth: "80px" }}
                                 disabled
                                 aria-describedby="exampleFormControlInputHelpInline"
                             />
@@ -399,7 +402,7 @@ console.log('Workd feklnfbef')
                         
                     </CTableRow>
 
-                    {result1.slice(paging * 10, paging * 10 + 10).map((item, index) => (
+                    {totfilterData(result1).slice(paging * 10, paging * 10 + 10).map((item, index) => (
                         <CTableRow key={index}>
                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                             <CTableDataCell>{item.name}</CTableDataCell>
@@ -413,7 +416,7 @@ console.log('Workd feklnfbef')
                             <CTableDataCell style={{display:((editCallval ||deleteICall)?'':'none')}} className='text-center'>
 
                                 {editCallval&&<MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }} 
-                                onClick={() => handleUpdate(item._id)} size='20px' />}
+                                onClick={() => handleUpdate(item._id,item)} size='20px' />}
 
                                 {deleteICall &&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
                                 onClick={() => deleteCall(item._id)} size='20px' />}

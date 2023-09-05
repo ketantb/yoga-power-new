@@ -1,5 +1,6 @@
 import { cilArrowCircleBottom, cilArrowCircleTop } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
+import ClientCheckin from 'src/views/forms/ClientCheckin'
 import {
     CButton,
     CButtonGroup,
@@ -34,7 +35,6 @@ import ProfileDetails from './ProfileDetails'
 import Referrals from './Referrals'
 import ServiceProfile from './ServiceProfile'
 import Teams from './Teams'
-import Attendence from './Attendence'
 import FitnessProfile from './FitnessProfile'
 import ProductSalesReport from '../../Inventory/ProductSalesReport'
 import axios from 'axios'
@@ -122,10 +122,10 @@ const MemberDetails = () => {
                                 { id: '1', heading: 'Profile', com: <ProfileDetails ids={id} deleteId={id} clinetData={clinetData} /> },
                                 { id: '2', heading: 'Services', com: <ServiceProfile id={id} clinetData={clinetData} /> },
                                 { id: '3', heading: 'Payments', com: <Payment id={id} clinetData={clinetData} /> },
-                                { id: '4', heading: 'Attendence', com: <Attendence id={id} clinetData2={clinetData} /> },   
+                                { id: '4', heading: 'Attendence', com: <ClientCheckin onlyOneClient={true} id={id} /> },   
                                 { id: '5', heading: 'Appoinments', com: <Appointment id={id} clinetData={clinetData} /> },
                                 { id: '6', heading: 'Referd', com: <Referrals id={id} /> },
-                                { id: '7', heading: 'Shop',com:<ProductSalesReport onlyOneClient={true} id={id}/> },
+                                { id: '7', heading: 'Shop',com:<ProductSalesReport /> },
                                 { id: '8', heading: 'Calls', com: <CallUpdate id={id}  /> },
                                 { id: '9', heading: 'Fitness' , com: <FitnessProfile />} ,
                                 { id: '10', heading: 'Docs', com: <Documents id={id} clinetData={clinetData} /> },

@@ -17,6 +17,8 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
+    CPagination,
+    CPaginationItem,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
@@ -26,9 +28,9 @@ import moment from 'moment/moment'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const username = user.user.username;
-const centerCode = user.user.centerCode;
+
 const ChequeReport = () => {
+const [paging, setPaging] = useState(0);
 
 const [cheque,setChaqueData] = useState([])
 const url1 = useSelector((el)=>el.domainOfApi) 
@@ -48,7 +50,7 @@ const getAllInvoiceData = async  ()=>{
 
 
    const newCashData =   response1.data.map((el)=>{
-        if(el.paymode !=='Cheque')return
+        if(el.paymode ==='Cheque'){
         let dipositeToBank  = "Rs" + el.paidAmount
         if(el?.Receipts.length){
          el?.Receipts.forEach((el3)=>{
@@ -56,8 +58,16 @@ const getAllInvoiceData = async  ()=>{
          })
         }  
 
-        return {date:el.createdAt,totalCash:el.amount,dipositeToBank,counseller:el.counseller}
-       }).filter((el)=>el)
+        return {
+            date:el.createdAt,
+            totalCash:el.amount,
+            dipositeToBank,
+            counseller:el.counseller,
+            ifcCode:el.ifcCode,
+            bankName:el.bankName,
+            checkNo:el.checkNo
+        }
+       }}).filter((el)=>el)
    setChaqueData(newCashData)
     }catch(error){
     console.log(error)
@@ -83,6 +93,14 @@ const [staff, setStaff] = useState([])
         getStaff()
 
     },[])
+
+
+function totfilterData(data){
+        const filterData = data.filter((el)=>{
+            return  el?.counseller?.includes(staffS)
+        })
+       return filterData
+}    
 
     return (
         <CRow>
@@ -126,31 +144,26 @@ const [staff, setStaff] = useState([])
                                     <CTableHeaderCell scope="col">
                                         Cheque Amonut
                                     </CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Bank Details</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Bank Name</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">IFC code</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Deposite By</CTableHeaderCell>
-                                    {/* <CTableHeaderCell scope="col">Renewls Revenue</CTableHeaderCell> */}
-                                    {/* <CTableHeaderCell scope="col">
-                                        Balance Collection
-                                    </CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">View</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Achived %</CTableHeaderCell> */}
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                                {cheque.filter((el)=>el?.counseller?.includes(staffS)).map((el,i)=>{                                    
+                                {totfilterData(cheque).slice(paging * 10, paging * 10 + 10).map((el,i)=>{                                    
                                     const splitCheck =(el)=>{
                                         return el.split(' ').map((el)=>{
                                             return <><b>{el}</b><br/></>
                                         })
                                     }
 
-                                    console.log(el)
-                                    return  <CTableRow key={i}>
-                                    <CTableDataCell>{i+1}</CTableDataCell>
+                                   return <CTableRow>
+                                    <CTableDataCell>{i + 1 + (paging * 10)}</CTableDataCell>
                                         <CTableDataCell>{moment(el.date).format('MM-DD-YYYY')}</CTableDataCell>
-                                        <CTableDataCell>{`C${(i+1)}`}</CTableDataCell>
+                                        <CTableDataCell>{el.checkNo}</CTableDataCell>
                                         <CTableDataCell className='text-center'>{splitCheck(el.dipositeToBank)}</CTableDataCell>
-                                        <CTableDataCell></CTableDataCell>
+                                        <CTableDataCell>{el.bankName}</CTableDataCell>
+                                        <CTableDataCell>{el.ifcCode}</CTableDataCell>
                                         <CTableDataCell>{el.counseller}</CTableDataCell>
                                     </CTableRow>
 
@@ -158,6 +171,23 @@ const [staff, setStaff] = useState([])
                                
                             </CTableBody>
                         </CTable>
+                        <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                            <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                                <span aria-hidden="true">&laquo;</span>
+                            </CPaginationItem>
+                            <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                            {totfilterData(cheque).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+
+                            {totfilterData(cheque).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                            {totfilterData(cheque).length > (paging + 1) * 10 ?
+                                <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </CPaginationItem>
+                                : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </CPaginationItem>
+                            }
+                        </CPagination>
                     </CCardBody>
                 </CCard>
             </CCol>

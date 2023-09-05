@@ -47,6 +47,7 @@ const BatchMaster = () => {
     const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterCenterSetup?.items?.masterBatchTimeMaster?.rights) 
     const access = rightsData?rightsData:[]
     const isAdmin = useSelector((el)=>el.isAdmin)
+    const [cateGoryMasterData,setCateGoryMasterData] = useState([])
 
     const batchTimeMasterStatus = (access.includes(masterRightValue.batchTimeMasterStatus) || isAdmin )
     const addBatchTimeMaster =  (access.includes(masterRightValue.addBatchTimeMaster) || isAdmin )
@@ -69,25 +70,40 @@ const BatchMaster = () => {
     const token = user.token;
     const username = user.user.username;
     const [result, setResult] = useState([]);
-    const [result1, setResult1] = useState([]);
     const [result2, setResult2] = useState([]);
     useEffect(() => {
         getBatch()
-        getService()
-        getSubService()
-        getStaff()
+        getRequireData()
     }, []);
 
-
-   async function getStaff() {
-    try{
-     const {data} = await axios.get(`${url1}/employeeform/${pathVal}`,{ headers: {
-        'Authorization': `Bearer ${token}`
-    }})
-     setStaff(data)
-    }catch{
+    const headers = {
+        "Authorization": `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
     }
-    } 
+
+    const getRequireData = async ()=>{
+        try{
+            const response1 = axios.get(`${url1}/batchCategory/${pathVal}`,{headers})
+            const response2 = axios.get(`${url1}/employeeform/${pathVal}`,{headers})
+            const response3 = axios.get(`${url1}/subservice/${pathVal}`,{headers})
+
+
+            const allData = await Promise.all([response1,response2,response3])
+            setCateGoryMasterData([
+                ...allData[0].data?.map((el)=>el.cateGoryName),
+                'Live Classes',
+                'Studio Batches',
+                'PT Classes',
+                "TTC Classes",
+            ])   
+            setStaff(allData[1].data)
+            setResult2(allData[2].data)
+        }catch{
+
+        }
+    }
+
 
 
     function getBatch() {
@@ -104,33 +120,6 @@ const BatchMaster = () => {
             })
     }
 
-    function getService() {
-        axios.get(`${url}/service/${pathVal}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                console.log(res.data)
-                setResult1(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-    function getSubService() {
-        axios.get(`${url}/subservice/${pathVal}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                setResult2(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
     const updateStatus = (id, status) => {
         let item = { status: status }
         fetch(`${url1}/Batch/update/${id}`, {
@@ -170,11 +159,7 @@ const BatchMaster = () => {
 
 
     const selectedStaff =  staff?.find((el)=>el?._id===trainer)
-    const headers = {
-        "Authorization": `Bearer ${token}`,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    }
+ 
 
  const value =   service_variation.trim()&&Batch_Duration?.trim()&&
                   batch_timing.trim() && trainer.trim()&& classsesCategory.trim() &&
@@ -234,6 +219,8 @@ const clearIn = ()=>{
     setService_variation('')
     setBatch_Duration('')
     setBatch_timing('')
+    setClassesCategory('')
+    setTrainer('')
     setStatus(false)
     getBatch()
 }
@@ -323,10 +310,7 @@ console.error(error)
                                         onChange={(e) => setClassesCategory(e.target.value)}
                                         options={[
                                             'Select Classes category',
-                                            'Live Classes',
-                                            'Studio Batches',
-                                            'PT Classes',
-                                            "TTC Classes",
+                                            ...cateGoryMasterData
                                         ]}
                                     />
                                 </CCol>

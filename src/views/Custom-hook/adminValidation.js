@@ -32,8 +32,8 @@ return function (isEmployee){
         return (userInfo.isAdminPatner||userInfo.isAdmin)?`creater/${userInfo.emailUniqId}`
            :`creater/${userInfo.createrId}`
     }else{
-       return (!userInfo.isAdminPatner||!userInfo.isAdmin)?`emp/${userInfo.emailUniqId}`
-       :`emp/${userInfo.emailUniqId}`
+       return (!userInfo.isAdminPatner||!userInfo.isAdmin)?`emp/${userInfo.memBerId}`
+       :`emp/${userInfo.memBerId}`
     }
 }
 }

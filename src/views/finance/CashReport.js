@@ -86,7 +86,7 @@ const CashReport = () => {
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
-                        <strong className="mt-2">Cash Report</strong>
+                        <strong className="mt-2">Daily  Cash Reprt</strong>
                     </CCardHeader>
                     <CCardBody>
                     <CRow className='my-3'>

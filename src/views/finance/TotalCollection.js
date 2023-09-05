@@ -1,15 +1,11 @@
 import React,{useEffect, useState} from 'react'
 import {
     CButton,
-    CButtonGroup,
     CCard,
     CCardBody,
     CCardHeader,
     CCol,
-    CFormInput,
     CFormSelect,
-    CInputGroup,
-    CInputGroupText,
     CRow,
     CTable,
     CTableBody,
@@ -17,9 +13,10 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
+    CPagination,
+    CPaginationItem,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
+
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment from 'moment/moment'
@@ -27,7 +24,6 @@ import { useAdminValidation } from '../Custom-hook/adminValidation'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const centerCode = user.user.centerCode;
 
 const headers = {
     'Authorization': `Bearer ${token}`,
@@ -41,14 +37,14 @@ const Totalc= () => {
   const [staffS,setStaffS] = useState('')
   const url1 = useSelector((el)=>el.domainOfApi) 
   const pathVal =    useAdminValidation()
+  const [paging, setPaging] = useState(0);
 
 
   const getInvoiceDataToTotalCollection = async  ()=>{
 
   const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{headers})
   
-  setTotalCollection(data)
-  console.log(data,'kjnjhii')
+  setTotalCollection(data.reverse())
   }
 
 
@@ -76,6 +72,14 @@ function getStaff() {
 function clearFilter(){
    setStaffS('')
    setPaymentModal('')
+}
+
+function totfilterData(data){
+    const filterData = data.filter((el)=>{
+        return el?.paymode?.includes(paymentModal) &&
+        el?.counseller?.includes(staffS)
+    })
+   return filterData
 }
 
     return (
@@ -143,18 +147,16 @@ function clearFilter(){
                                     <CTableHeaderCell scope="col" style={{width:'200px'}}>Receipt No</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">client ID</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">client Name</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Payment Model</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Payment Mode</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Bank Name</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">IFC code</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Collected By</CTableHeaderCell>
                           
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                                {totalCollection.filter((el)=>{
-                                    return el?.paymode?.includes(paymentModal) &&
-                                    el?.counseller?.includes(staffS)
-
-                                })
+                                {totfilterData(totalCollection).slice(paging * 10, paging * 10 + 10)
                                 
                                 .map((el,i)=>{
 
@@ -173,7 +175,7 @@ function clearFilter(){
                             }
 
                            return    <CTableRow key={i}>
-                                   <CTableDataCell>{i+1}</CTableDataCell>
+                                   <CTableDataCell>{i + 1 + (paging * 10)}</CTableDataCell>
                                     <CTableDataCell>{moment(el.createdAt).format("MM-DD-YYYY")}</CTableDataCell>
                                     <CTableDataCell>{el.centerName}</CTableDataCell>
                                     <CTableDataCell>{el.InvoiceNo}</CTableDataCell>
@@ -188,6 +190,8 @@ function clearFilter(){
                                     <CTableDataCell>{el.clientId}</CTableDataCell>
                                     <CTableDataCell>{el.MemberName}</CTableDataCell>
                                     <CTableDataCell>{el.paymode}</CTableDataCell>
+                                    <CTableDataCell>{el.bankName}</CTableDataCell>
+                                    <CTableDataCell>{el.ifcCode}</CTableDataCell>
                                     <CTableDataCell>{el.amount}</CTableDataCell>
                                     <CTableDataCell>{el.counseller}</CTableDataCell>
                                 </CTableRow>
@@ -196,6 +200,23 @@ function clearFilter(){
                             </CTableBody>
                         </CTable>
                         </div>  
+                         <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                         <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                             <span aria-hidden="true">&laquo;</span>
+                         </CPaginationItem>
+                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                         {totfilterData(totalCollection).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+         
+                         {totfilterData(totalCollection).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                         {totfilterData(totalCollection).length > (paging + 1) * 10 ?
+                             <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                 <span aria-hidden="true">&raquo;</span>
+                             </CPaginationItem>
+                             : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                 <span aria-hidden="true">&raquo;</span>
+                             </CPaginationItem>
+                         }
+                     </CPagination>
                     </CCardBody>
                 </CCard>
             </CCol>
