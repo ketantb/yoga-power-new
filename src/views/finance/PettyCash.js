@@ -31,7 +31,7 @@ const token = user.token;
 const username = user.user.username;
 import axios from 'axios';
 import { MdDelete, MdEdit } from 'react-icons/md';
-import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
+import { useAdminValidation,useUniqAdminObjeact,useEmployeeValidation } from '../Custom-hook/adminValidation';
 import { financeRight } from '../hr/Rights/rightsValue/erpRightsValue';
 
 
@@ -63,9 +63,12 @@ const PettyCash = () => {
     .erpExpense.items.erpPettyCash.rights) 
     const access = rightsData?rightsData:[]
     const isAdmin = useSelector((el)=>el.isAdmin) 
+    const isEmployee = useSelector((el)=>el.isEmployee) 
+
 
     const pathVal = useAdminValidation()    
     const pathValMaster = useAdminValidation('Master')
+    const pathValEmp = useEmployeeValidation()
     const uniqObjVal = useUniqAdminObjeact()
     const [getExpenceMaster, setExpenceMaster] = useState([])
     const [creditAmount, setCreditAmount] = useState(' ')
@@ -100,7 +103,7 @@ const PettyCash = () => {
 
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${ url1 }/employeeform/${pathVal}`, {
+        axios.get(`${ url1 }/employeeform/${pathValEmp(isEmployee)}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }

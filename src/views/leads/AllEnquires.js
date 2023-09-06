@@ -51,6 +51,13 @@ const AllEnquires = () => {
     const exportDataFun = useExportHook("YogPowerAllEnquires.xlsx")
     const importDataFun = useImportHook('enquiryForm/xlsx/add')
 
+ 
+
+    const [dateFilterObj,setDteFilterObj] = useState({
+        startDate:moment(new Date(new Date().getFullYear(),0,1)).format('YYYY-MM-DD'),
+        endDate:moment(new Date()).format('YYYY-MM-DD')
+      })
+    
 
     const isAdmin = useSelector((el)=>el.isAdmin) 
     const enquiryAdd =  (rightsData?.addOn?.includes(leadsSuperRight.allEnquires)||isAdmin)
@@ -108,6 +115,7 @@ const AllEnquires = () => {
 
     const [ServiceVariation, setServiceVariation] = useState("");
     const [totalEnquire,setTotalEnquire] = useState(0)
+    const [yaerArr,setYearArr] = useState([])
 
     
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -505,22 +513,7 @@ const AllEnquires = () => {
     }
 
 
-    const [dateForm,setDateFormat]  = useState()
-
-    const dateFilter = (e) => {
-        const { value } = e.target
-        if (value === day) {
-            setDateFormat('DD-MM-YYYY')
-            setSelect(day)
-        } else if (value === month) {
-            setDateFormat('MM-DD-YYYY')
-            setSelect(month)
-        } else {
-            setDateFormat('YYYY')
-            setSelect(year)
-        }
-    }
-
+   
     useEffect(()=>{
         if(edit?._id ){
             setAdmissionForm(true)           
@@ -564,23 +557,40 @@ const AllEnquires = () => {
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>
-                            <CCol lg={4} sm={6} md={6}>
-                                <CInputGroup className='mb-2'>
-                                    <CFormSelect
-                                        id="inputGroupSelect04"
-                                        aria-label="Example select with button addon"
-                                        value={select}
-                                        onChange={(e) => dateFilter(e)}
-                                    >
-                                        <option value=''>All Year</option>
-                                        <option value={day}>Today</option>
-                                        <option value={month}>Last Month</option>
-                                        <option value={year}>This Year</option>
-                  
-                                    </CFormSelect>
-                        
-                                </CInputGroup>
-                            </CCol>
+                            <CCol lg={6} md={8}>
+                        <div className='d-flex justify-content-between mb-2'>
+                            <CInputGroup >
+
+                                <CInputGroupText
+                                    component="label"
+                                    htmlFor="inputGroupSelect01"
+                                >
+                                    Form
+                                </CInputGroupText>
+                                <CFormInput
+                                    type="date"
+                                    value={dateFilterObj.startDate}
+                                    onChange={(e)=>setDteFilterObj((prev)=>({...prev,startDate:e.target.value}))}
+
+                                  
+                                /><CInputGroupText
+                                    component="label"
+                                    htmlFor="inputGroupSelect01"
+
+                                >
+                                    To
+                                </CInputGroupText>
+                                <CFormInput
+                                    type="date"
+                                    value={dateFilterObj.endDate}
+                                    onChange={(e)=>setDteFilterObj((prev)=>({...prev,endDate:e.target.value}))}
+                                                                   />
+                                <CButton type="button" color="primary" onClick={()=>getDasBoardData()} >
+                                    Go
+                                </CButton>
+                            </CInputGroup>
+                        </div>
+                        </CCol>
                             <CCol lg={4} md={6} sm={12} className={(enquiryImport)?' mb-2 float-end':'d-none'}>
                                 <CFormSelect
                                     className="mb-1 ms-auto"

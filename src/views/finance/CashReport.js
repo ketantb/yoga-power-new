@@ -17,7 +17,8 @@ import {
     CModalHeader,
     CModalFooter,
     CModalBody,
-    CFormInput
+    CFormInput,
+    CFormTextarea
 } from '@coreui/react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
@@ -215,7 +216,7 @@ const CashReport = () => {
                               <CCol>
                                 <CFormInput
                                 type='text'
-                                label={'Ddepositor Name'}
+                                label={'Depositor Name'}
                                 value={depositorInfo.nameOfDepositor}
                                 onChange={(e)=>{
                                   setDepositorInfo(prev=>({...prev,nameOfDepositor:e.target.value}))
@@ -224,7 +225,16 @@ const CashReport = () => {
                                 />
                                  <CFormInput
                                 type='text'
-                                label={'Name of depositor'}
+                                label={'Depositor Contact'}
+                                value={depositorInfo.depositorContact}
+                                onChange={(e)=>{
+                                  setDepositorInfo(prev=>({...prev,depositorContact:e.target.value}))
+                                }}
+                                required
+                                />
+                                <CFormTextarea
+                                type='text'
+                                label={'Discription'}
                                 value={depositorInfo.depositorContact}
                                 onChange={(e)=>{
                                   setDepositorInfo(prev=>({...prev,depositorContact:e.target.value}))
