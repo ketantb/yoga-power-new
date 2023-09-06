@@ -480,12 +480,12 @@ const sendAppointmentData = async (e) => {
 
                                             </CTableDataCell>
                                             <CTableDataCell>{el.Staff}</CTableDataCell>
-                                            <CTableDataCell><MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() =>
-                                                deleteAppointmentData(el._id)} size='20px' /></CTableDataCell>
-
-
-
-                                        </CTableRow>
+                                            <CTableDataCell>
+                                                <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }}
+                                                 onClick={() => deleteAppointmentData(el._id)} 
+                                                 size='20px' 
+                                                /></CTableDataCell>
+                                    </CTableRow>
 })}
                                 </CTableBody>
                             </CTable>

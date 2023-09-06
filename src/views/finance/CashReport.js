@@ -13,24 +13,38 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
+    CModal,
+    CModalHeader,
+    CModalFooter,
+    CModalBody,
+    CFormInput
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment from 'moment/moment'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
+import { Link } from 'react-router-dom'
+import { BsPlusCircle} from 'react-icons/bs'
+
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const username = user.user.username;
-const centerCode = user.user.centerCode;
-
 
 const CashReport = () => {
     const  [cashData,setCashData] = useState([])
     const url1 = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
     const [staffS,setStaffS] = useState('')
+    const [visibleDataObj,setVisibleDataObj] = useState({
+        visibale:false,
+        selectedItem:{},
+        itemType:"",
+        id:'',
+        bothId:''
+    })
+    const [depositorInfo,setDepositorInfo] = useState({
+        nameOfDepositor:'',
+        depositorContact:0,
+    })
 
 
     const headers = {
@@ -39,81 +53,78 @@ const CashReport = () => {
     };
 
 
-    
-
-
     function togetCashData(type,data){
-
     const data2 = (data||[]).reverse().flatMap((el)=>{
           if(type==='Recipts'){
              return   el.Receipts.map((el2,i)=>{
                     delete el2._id
-                   
                  return ({
                           cashHandOverto:'',
-                          totalCash:el2.PaidAmount,
-                          date:el2.counseller,
+                          totalCash:+el2.PaidAmount,
+                          date:el2.NewSlipDate,
                           type,
                           clientName:el.MemberName,
-                          clientId:el,
+                          id:el.MemberId,
+                          clientId:el.clientId,
                           InvoiceNo:el.InvoiceNo +"RN"+(i+1),
-                          counseller:el.Counseller
+                          counseller:el2.Counseller,
+                          invoiceUniqId:el._id,
+                          bothId:el2._id,
+                          Receipts:el.Receipts
                     })})
 
           }else{
-              return ({
+              return [{
                 cashHandOverto:'',
                 totalCash:el.paidAmount,
-                date:el.counseller,
+                date:el.createdAt,
                 counseller:el.counseller,
                 type,
                 clientName:el.MemberName,
-                clientId:'',
-                InvoiceNo:el.InvoiceNo
-          })   
+                clientId:el.clientId,
+                InvoiceNo:el.InvoiceNo,
+                id:el.MemberId,
+                invoiceUniqId:el._id,
+                bothId:el._id
+          }] 
          }
     })
 
     return data2 
 }
+// const obj = {
+//     id:123,
+//     friends:[
+//         {name:'allien',emails:[{email:'1111',using:'true'}]}
+//     ]
+// }
 
-
+// // update
+// ({_id:'123'},{'$set':{'friends.0.name':'hello'}})
 
     
     const getAllInvoiceData = async  ()=>{
     
         try{
         const response1 = await axios.get(`${url1}/invoice/${pathVal}`,{headers})
-        const response2 = response1.data 
 
-        .reverse().map((el)=>{
-          const resiptsData =  el.Receipts.filter((el2,i)=>{
-            return el?.Pay_Mode ==='Cash'   
+        if(response1.status===200){
+
+            const response2 = response1.data.reverse().map((el)=>{
+                const resiptsData =  el.Receipts.map((el2,i)=>{
+                  if(el2?.Pay_Mode ==='Cash'){
+                    return {el,no:i}
+                  }   
+                }).filter((el)=>el)
+               return {...el,Receipts:resiptsData}
           })
-         el.Receipts=resiptsData
-    })
+               
+               const ReciptsData =   togetCashData('Recipt',[...response2.filter((el)=>el?.Receipts[0])])
+               const InvoiceData =  togetCashData('Invoice',response1.data.filter((el)=>el?.paymode ==='Cash'))  
 
-    console.log([...response2.filter((el)=>el?.Receipts)])
-         
-         const ReciptsData =   togetCashData('Recipts',response1.data.filter((el)=>el?.paymode ==='Cash'))
-         const InvoiceData =  togetCashData('Invoice',response2)    
+               setCashData(ReciptsData.concat(InvoiceData))
+        }
 
-
-        
-
-       const newCashData =   response1.data.map((el)=>{
-            console.log(el)
-            if(el.paymode !=='Cash')return
-            let dipositeToBank  = el.paidAmount
-            if(el?.Receipts.length){
-             el?.Receipts.forEach((el3)=>{
-                dipositeToBank += +el3?.PaidAmount
-             })
-            }  
-
-            return {date:el.createdAt,totalCash:el.amount,dipositeToBank,counseller:el.counseller}
-           }).filter((el)=>el)
-        setCashData(newCashData)
         }catch(error){
         console.log(error)
         }
@@ -136,16 +147,100 @@ const CashReport = () => {
         useEffect(()=>{
             getAllInvoiceData()
             getStaff()
-
         },[])
+
+
+        const saveCashReport = (e) =>{
+             e.preventDefault()
+
+
+            // const invoiceObj= visibleDataObj.selectedItem
+            // let invoiceOBJtoSave = {}
+            
+            // if(visibleDataObj.itemType==='Recipt'){
+            //     // const filterReipts = invoiceObj?.Receipts?.filter((el)=>el._id===el.visibleDataObj.bothId)
+
+            //     // invoiceOBJtoSave ={...invoiceObj,Receipts:}
+            // }
+            
+            
+               
+            // const headers = {
+            //     'Authorization': `Bearer ${token}`,
+            //     'My-Custom-Header': 'foobar'
+            // };
+            
+            // axios.post(`${url1}/invoice/update/${visibleDataObj.id}`,invoiceOBJtoSave, {headers},)
+            //     .then((resp) => {
+
+            //         alert('Successfully save')
+            //         getAllInvoiceData()
+
+            //     })
+            //     .catch((error) => {
+            //         console.error(error)
+            //     })
+            
+            
+            
+            }
+  
+            
+        
+
     return (
         <CRow>
+           
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
                         <strong className="mt-2">Daily  Cash Reprt</strong>
                     </CCardHeader>
                     <CCardBody>
+                     <CRow>
+                     <CModal visible={visibleDataObj.visibale} 
+                        onClose={() => setVisibleDataObj({
+                            visibale:true,
+                            selectedItem:{},
+                            itemType:'',
+                            id:'',
+                            bothId:''
+                         })}
+                           >
+                          <CModalHeader >
+                             <h2> Cash deposite info</h2>
+                          </CModalHeader>  
+                          <CModalBody>
+                              <form onSubmit={saveCashReport}>
+                              <CCol>
+                                <CFormInput
+                                type='text'
+                                label={'Ddepositor Name'}
+                                value={depositorInfo.nameOfDepositor}
+                                onChange={(e)=>{
+                                  setDepositorInfo(prev=>({...prev,nameOfDepositor:e.target.value}))
+                                }}
+                                required
+                                />
+                                 <CFormInput
+                                type='text'
+                                label={'Name of depositor'}
+                                value={depositorInfo.depositorContact}
+                                onChange={(e)=>{
+                                  setDepositorInfo(prev=>({...prev,depositorContact:e.target.value}))
+                                }}
+                                required
+                                />
+                                 </CCol>
+
+                                <CCol>
+                                 <CButton type='submit' onClick={saveCashReport}>Save</CButton>
+                               </CCol> 
+                              </form>
+                                       
+                          </CModalBody>
+                     </CModal>
+                    </CRow>   
                     <CRow className='my-3'>
                         
                             <CCol lg={4} className='mb-2'>
@@ -176,32 +271,51 @@ const CashReport = () => {
                                 <CTableRow>
                                     <CTableHeaderCell scope="col">Sr No</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Date</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Total Cash</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">MemberId</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Invoice No</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Deposite</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Cash Collected By</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">
-                                       Deposite to Bank
-                                    </CTableHeaderCell>
                                     <CTableHeaderCell scope='col'>Type                                    
                                     </CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Cash Hand Over to</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Hand Over to</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Add</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
                                 {cashData.filter((el)=>{
                                     return el?.counseller?.includes(staffS)
                                 }) .map((el,i)=>{
-                                    return  <CTableRow>
+                                    return  <CTableRow className='text-center'>
                                     <CTableDataCell>{i+1}</CTableDataCell>
                                         <CTableDataCell>{moment(el.date).format('MM-DD-YYYY')}</CTableDataCell>
+                                        <CTableDataCell>
+                                            {
+                                       <Link index={-1} style={{ textDecoration: 'none' }}
+                                        to={`/clients/member-details/${el.id}/1`} >
+                          {el.clientName}</Link>}</CTableDataCell>
+                                        <CTableDataCell>{el.clientId}</CTableDataCell>
+                                        <CTableDataCell>{el.InvoiceNo}</CTableDataCell>
                                         <CTableDataCell>{el.totalCash}</CTableDataCell>
                                         <CTableDataCell>{el.counseller}</CTableDataCell>
-                                        <CTableDataCell>{el.dipositeToBank}</CTableDataCell>
-                                        <CTableDataCell></CTableDataCell>
-                                        <CTableDataCell></CTableDataCell>
+                                        <CTableDataCell className='text-center'>
+                                            <CButton size='sm' color={el.type==='Recipt'?'success':'warning'}>
+                                                {el.type}
+                                            </CButton>                                           
+                                        </CTableDataCell>
+                                        <CTableDataCell>
+                                        </CTableDataCell>
+                                        <CTableDataCell>
+                                            <BsPlusCircle onClick={()=>setVisibleDataObj({
+                                               visibale:true,
+                                               selectedItem:el,
+                                               itemType:el.type,
+                                               id:el.invoiceUniqId,
+                                               bothId:el.bothId
+                                            })}/>
+                                        </CTableDataCell>
                                     </CTableRow>
-
-                                })}
-                                                                                         
+                                })}                                                          
                             </CTableBody>
                         </CTable>
                     </CCardBody>

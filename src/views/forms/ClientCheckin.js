@@ -65,7 +65,7 @@ const ClientCheckin = ({onlyOneClient,id,attendedId}) => {
         getInnerDataToProcess()
     }, []);
     useEffect(()=>{
-        setAttendanceID(attendedId)
+        setAttendanceID((attendedId ||''))
     },[attendedId])
 
     function getEnquiry() {

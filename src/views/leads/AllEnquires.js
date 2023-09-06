@@ -53,12 +53,11 @@ const AllEnquires = () => {
 
 
     const isAdmin = useSelector((el)=>el.isAdmin) 
-    const enquiryAdd =  rightsData?.addOn?.includes(leadsSuperRight.allEnquires)
-    const enquiryExport =  rightsData?.addOn?.includes(leadsSuperRight.allEnquiresExportImp)
-    const enquiryImport =  rightsData?.edit?.includes(leadsSuperRight.allEnquiresExportImp)
-    const enquiryDelete =  rightsData?.delete?.includes(leadsSuperRight.allEnquires)
-    const enquiryEdit  =  rightsData?.edit?.includes(leadsSuperRight.allEnquires)
-
+    const enquiryAdd =  (rightsData?.addOn?.includes(leadsSuperRight.allEnquires)||isAdmin)
+    const enquiryExport =  (rightsData?.addOn?.includes(leadsSuperRight.allEnquiresExportImp)||isAdmin)
+    const enquiryImport =  (rightsData?.edit?.includes(leadsSuperRight.allEnquiresExportImp)||isAdmin)
+    const enquiryDelete =  (rightsData?.delete?.includes(leadsSuperRight.allEnquires)||isAdmin)
+    const enquiryEdit  =  (rightsData?.edit?.includes(leadsSuperRight.allEnquires)||isAdmin)
     var currentdate = new Date();
     var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
     var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
@@ -537,6 +536,20 @@ const AllEnquires = () => {
 
     const validateFollowUparray = ['prospect','trial session','appointment']
 
+    const toFilterData=(data)=>{
+    return data.filter((list) => {
+        return (moment(list.createdAt).format("DD-MM-YYYY")?.toLowerCase()||'')?.includes(Search1.toLowerCase())
+        &&(list.Fullname?.toLowerCase()||'')?.includes(Search3.toLowerCase())
+        &&(list.EnquiryId?.toLowerCase()||'')?.includes(Search2.toLowerCase())&&
+        (list.ContactNumber+""||'')?.includes(Search4)
+
+            && (list.StaffName?.toLowerCase()||'')?.includes(Search9.toLowerCase()) &&
+               (list.ServiceName?.toLowerCase()||'')?.includes(Search5.toLowerCase()) &&
+               (list.enquirytype?.toLowerCase()||'')?.includes(Search6.toLowerCase()) &&
+               (list.CallStatus?.toLowerCase()||'')?.includes(Search8.toLowerCase())&&
+             list.enquirestatus!=='notshow'
+    })
+    }
     
     return (
         <CRow>
@@ -1178,21 +1191,10 @@ const AllEnquires = () => {
                                     </CTableDataCell>
                                 </CTableRow>
 
-                                {result1.filter((list)=>list.enquirestatus!=='notshow').slice(paging * 10, paging * 10 + 10)
-                                .filter((list) => {
-                                    return moment(list.createdAt).format("DD-MM-YYYY")?.toLowerCase()?.includes(Search1.toLowerCase())
-                                    &&list.Fullname?.toLowerCase()?.includes(Search3.toLowerCase())
-                                    &&list.EnquiryId?.toLowerCase()?.includes(Search2.toLowerCase())&&
-                                    list.ContactNumber+""?.includes(Search4)
-
-                                        && list.StaffName?.toLowerCase()?.includes(Search9.toLowerCase()) &&
-                                           list.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) &&
-                                           list.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) &&
-                                           list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
-
-                                }).map((item, index) => (
+                                {toFilterData(result1)
+                                .slice(paging * 10, paging * 10 + 10).map((item, index) => (
                                     <CTableRow key={index} className='border-1' color={!(validateFollowUparray.includes(item?.appointmentfor?.trim().toLowerCase()))?'success':''}>
-                                        <CTableDataCell>{((result1.filter((list)=>list.enquirestatus!=='notshow').length - index)) - (paging * 10)}</CTableDataCell>
+                                        <CTableDataCell>{(toFilterData(result1).length - index) - (paging * 10)}</CTableDataCell>
                                         <CTableDataCell>{item.EnquiryId}</CTableDataCell>
                                         <CTableDataCell className='text-center'>{moment(item.createdAt).format("DD-MM-YYYY")}</CTableDataCell>
                                         <CTableDataCell>{moment(item.createdAt, "HH:mm").format("hh:mm A")}</CTableDataCell>
@@ -1261,37 +1263,12 @@ const AllEnquires = () => {
                             <span aria-hidden="true">&laquo;</span>
                         </CPaginationItem>
                         <CPaginationItem style={{ cursor: 'pointer' }} active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
-                            moment(list.createdAt).format("MM-DD-YYYY").includes(select) && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) && list?.Fullname?.toLowerCase()?.includes(Search3.toLowerCase()) && list?.StaffName?.toLowerCase()?.includes(Search9.toLowerCase()) &&
-                            list?.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) && list?.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) && list?.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
-                        &&list.ContactNumber+""?.includes(Search4)
-                        ).length > (paging + 1) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
+                        {toFilterData(result1).length > (paging + 1) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
                             onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
 
-                        {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
-                        
-                            moment(list.createdAt).format("MM-DD-YYYY").includes(select)
-                            && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) &&
-                            list.Fullname?.toLowerCase()?.includes(Search3.toLowerCase()) &&
-                            list.StaffName?.toLowerCase()?.includes(Search9.toLowerCase()) &&
-                            list.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) &&
-                            list.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) &&
-                            list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
-                            &&list.EnquiryId?.toLowerCase()?.includes(Search2.toLowerCase())&&
-                            list.ContactNumber+""?.includes(Search4)
-                        ).length > (paging + 2) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
+                        {toFilterData(result1).length > (paging + 2) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
                             onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {result1.filter((list)=>list.enquirestatus!=='notshow').filter((list) =>
-                            moment(list.createdAt).format("MM-DD-YYYY").includes(select)
-                            && moment(list.createdAt).format("MM-DD-YYYY").includes(Search1) &&
-                            list.Fullname?.toLowerCase()?.includes(Search3.toLowerCase()) &&
-                            list.StaffName?.toLowerCase()?.includes(Search9.toLowerCase()) &&
-                            list.ServiceName?.toLowerCase()?.includes(Search5.toLowerCase()) &&
-                            list.enquirytype?.toLowerCase()?.includes(Search6.toLowerCase()) &&
-                            list.CallStatus?.toLowerCase()?.includes(Search8.toLowerCase())
-                            &&list.EnquiryId?.toLowerCase()?.includes(Search2.toLowerCase())&&
-                                    list.ContactNumber+""?.includes(Search4)
-                        ).length > (paging + 1) * 10 ?
+                        {toFilterData(result1).length > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" style={{ cursor: 'pointer' }} onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>
