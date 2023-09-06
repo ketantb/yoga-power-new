@@ -33,9 +33,16 @@ const DefaultLayout = () => {
 
   const validateVal = (!!data?.emailUniqId || user?.user?.isAdmin)  
 
-  if(user?.user?.isAdmin){
-    disPatch({type:'dispatchIsAdmin'})
-  }
+  useEffect(()=>{
+    if (user?.user?.isAdmin) {
+      disPatch({type:'dispatchIsAdmin'})
+    }if(user?.user?.isAdminPatner){
+      disPatch({type:'dispatchIsAdminPatner'})
+    }if(user?.user?.isEmployee ){
+      disPatch({type:'dispatchIsEmployee'})
+    }
+  },[validateVal,user?.user?.isAdminPatner,
+    user?.user?.isEmployee])
 
   useEffect(()=>{   
   if(!token){
@@ -64,7 +71,7 @@ useEffect(()=>{
     }
   },[validateVal])
 
-  console.log('hello')
+  
 
 
   return (

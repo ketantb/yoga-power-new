@@ -152,7 +152,7 @@ const AllEnquires = () => {
         } 
         hiddenXLimportFileInput.current.click()
     }
-    const HandaleImportChange = (event) => {
+    const HandaleImportChange = (event,totalEnquire) => {
         const importXlFile = event.target.files[0];
 
         const reader = new FileReader();
@@ -391,7 +391,7 @@ const AllEnquires = () => {
     const [ogList, setOgList] = useState([])
 
     function getEnquiry() {
-        axios.get(`${url}/enquiryForm/${pathRoute}`, {
+        axios.get(`${url}/enquiryForm/${dateFilterObj.startDate}/${dateFilterObj.endDate}/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
             }
@@ -585,7 +585,7 @@ const AllEnquires = () => {
                                     value={dateFilterObj.endDate}
                                     onChange={(e)=>setDteFilterObj((prev)=>({...prev,endDate:e.target.value}))}
                                                                    />
-                                <CButton type="button" color="primary" onClick={()=>getDasBoardData()} >
+                                <CButton type="button" color="primary" onClick={()=>getEnquiry()} >
                                     Go
                                 </CButton>
                             </CInputGroup>
@@ -614,16 +614,16 @@ const AllEnquires = () => {
                             </CCol>
                             <CCol lg={3} sm={6} md={6} >
                                 <CButtonGroup className={(enquiryExport||enquiryImport)?' mb-2 float-end':'d-none'}>
-                                    <CButton onClick={HandaleImportClick} color="primary" className={(enquiryImport)?' mb-2 float-end':'d-none'}>
+                                    <CButton onClick={(e)=>HandaleImportClick(e,(toFilterData(result1).length||0))} color="primary" className={(enquiryImport)?' mb-2 float-end':'d-none'}>
                                         <CIcon icon={cilArrowCircleBottom} />
                                         {' '}Import
                                     </CButton>
                                     <CFormInput type='file'
                                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                         ref={hiddenXLimportFileInput}
-                                        onChange={HandaleImportChange} hidden />
+                                        onChange={(e)=>HandaleImportChange(e,(toFilterData(result1).length||0))} hidden />
 
-                                    <CButton className={(enquiryExport)?' mb-2 float-end':'d-none'} onClick={()=>exportDataFun(result1.filter((list)=>list.enquirestatus!=='notshow'))} color="primary">
+                                    <CButton className={(enquiryExport)?' mb-2 float-end':'d-none'} onClick={()=>exportDataFun(toFilterData(result1))} color="primary">
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>

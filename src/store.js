@@ -75,6 +75,14 @@ function functionUser(token,emailUniqId){
         if(res.status===200){
           dispatch({type:'activeToCall',payload:true})
           dispatch({type:'getRigtsData',payload:res?.data?.data})
+
+          if (user?.user?.isAdmin) {
+            dispatch({type:'dispatchIsAdmin'})
+          } if(user?.user?.isAdminPatner){
+            dispatch({type:'dispatchIsAdminPatner'})
+          } if(user?.user?.isEmployee){
+            dispatch({type:'dispatchIsEmployee'})
+          }
         }
       })
       .catch((error) => {
@@ -181,13 +189,14 @@ function changeState (state = initialState, { type, ...rest }){
     state.isAdmin = true
     state.isEmployee = false
     return  { ...state, ...rest }
+    case 'dispatchIsAdminPatner':
+    state.isAdmin = false
+    state.isEmployee = false
+    return  { ...state, ...rest }   
     case 'dispatchIsEmployee':
     state.isEmployee = true
     state.isAdmin = false
     return  { ...state, ...rest }
-    case 'dispatchIsAdminPatner':
-    state.isEmployee = false
-    return  { ...state, ...rest }   
     case 'showHomePage':
     state.showHomePage = rest.payload 
     return  { ...state, ...rest }

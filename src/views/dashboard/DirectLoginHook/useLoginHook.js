@@ -75,10 +75,16 @@ const useLoginHook = () => {
         let user = JSON.parse(localStorage.getItem('user-info'))
         
         if (user?.user?.isAdmin) {
-
           disPatch({type:'dispatchIsAdmin'})
           navigate('/')
+        }if(user?.user?.isAdminPatner){
+          disPatch({type:'dispatchIsAdminPatner'})
+          navigate('/')
+        } if(user?.user?.isEmployee){
+          disPatch({type:'dispatchIsEmployee'})
+          navigate('/')
         }
+
       } else {
        return 'Please Enter Details'
       }

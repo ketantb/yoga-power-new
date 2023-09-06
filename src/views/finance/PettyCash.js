@@ -437,7 +437,7 @@ const toCheckValiDate= (val)=>{
                                 <option>Select Staff</option>
                                 {staff.map((item, index) => (
                                     item && (
-                                        <option key={index}>{item.FullName}</option>
+                                        <option key={index}>{item.FullName} {item.EmployeeID}</option>
                                     )
                                 ))}
 
@@ -656,7 +656,6 @@ const toCheckValiDate= (val)=>{
                                 (""+new Date(el.Date).getMonth()).includes(selectedMonth)&&
                                 el.Category.includes(categoryName2)
                                 ).map((el, i) => {
-                                        console.log(el)
                                         return <CTableRow>
                                             <CTableDataCell>{i + 1}</CTableDataCell>
                                             <CTableDataCell>{el.Date}</CTableDataCell>
@@ -672,11 +671,6 @@ const toCheckValiDate= (val)=>{
                                                 <b style={{ height: '20px' }} >{el.Debit}</b>
                                             }
                                             </CTableDataCell>
-                                            {/* <CTableDataCell className='text-center'>{
-                                    // !el.Debit.trim()?
-                                    // <CButton size='sm' className='mt-2' onClick={()=>{ShowModalofDabit(el)}} >Add</CButton>
-                                    // :" "
-                                    }</CTableDataCell> */}
 
                                             <CTableDataCell>{el.Balance}</CTableDataCell>
                                             <CTableDataCell className='text-center' style={{display:toCheckValiDate(financeRight.deletePettyCash)}} >{

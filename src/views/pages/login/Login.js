@@ -89,17 +89,18 @@ useEffect(()=>{
       setUserInfo(result)
       localStorage.setItem('user-info', JSON.stringify(result))
       let user = JSON.parse(localStorage.getItem('user-info'))
-      console.log(user);
+
       if (user?.user?.isAdmin) {
         disPatch({type:'dispatchIsAdmin'})
         navigate('/')
-      }else if(user?.user?.isAdminPatner){
+      } if(user?.user?.isAdminPatner){
         disPatch({type:'dispatchIsAdminPatner'})
         navigate('/')
-      }else if(user?.user?.isEmployee){
-        disPatch({type:'dispatchIsAdminPatner'})
+      } if(user?.user?.isEmployee){
+        disPatch({type:'dispatchIsEmployee'})
         navigate('/')
       }
+      
     } else {
       setClick(false)
       setError('Please Enter Details')

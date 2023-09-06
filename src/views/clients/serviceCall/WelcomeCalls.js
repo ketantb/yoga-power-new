@@ -115,7 +115,7 @@ const WelcomeCalls = ({visible,filterObj,id,setPageLength,paging,isEmployee}) =>
       getStaff()
     },[])
 
-
+console.log(isEmployee)
     function getStaff() {
         axios.get(`${url}/employeeform/${isEmployeeRoute(isEmployee)}`, {
             headers: {
