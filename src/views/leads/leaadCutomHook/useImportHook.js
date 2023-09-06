@@ -42,6 +42,8 @@ return function insertManyCollection(collection,getData=()=>{},number,importStaf
         ...{...unikqValidateObj,employeeMongoId:(importStaffId||unikqValidateObj.employeeMongoId)}
     } })  
 
+    console.log(data)
+
     axios.post(`${url1}/${route}`,data, {
         headers: {
             "Authorization": `Bearer ${token}`,
