@@ -557,7 +557,7 @@ const AllEnquires = () => {
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>
-                            <CCol lg={6} md={8}>
+                            <CCol lg={5} md={7}>
                         <div className='d-flex justify-content-between mb-2'>
                             <CInputGroup >
 
@@ -591,7 +591,7 @@ const AllEnquires = () => {
                             </CInputGroup>
                         </div>
                         </CCol>
-                            <CCol lg={4} md={6} sm={12} className={(enquiryImport)?' mb-2 float-end':'d-none'}>
+                            <CCol lg={3} md={6} sm={12} className={(enquiryImport)?' mb-2 float-end':'d-none'}>
                                 <CFormSelect
                                     className="mb-1 ms-auto"
                                     aria-label="Select Assign Staff"
@@ -612,7 +612,7 @@ const AllEnquires = () => {
 
                                  {errorMessage&&<label className='text-danger' >Please select the employee before import</label>}  
                             </CCol>
-                            <CCol lg={4} sm={6} md={6} >
+                            <CCol lg={3} sm={6} md={6} >
                                 <CButtonGroup className={(enquiryExport||enquiryImport)?' mb-2 float-end':'d-none'}>
                                     <CButton onClick={HandaleImportClick} color="primary" className={(enquiryImport)?' mb-2 float-end':'d-none'}>
                                         <CIcon icon={cilArrowCircleBottom} />
