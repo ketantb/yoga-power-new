@@ -50,7 +50,6 @@ const AllEnquires = () => {
 
     const exportDataFun = useExportHook("YogPowerAllEnquires.xlsx")
     const importDataFun = useImportHook('enquiryForm/xlsx/add')
-
  
 
     const [dateFilterObj,setDteFilterObj] = useState({
@@ -66,9 +65,7 @@ const AllEnquires = () => {
     const enquiryDelete =  (rightsData?.delete?.includes(leadsSuperRight.allEnquires)||isAdmin)
     const enquiryEdit  =  (rightsData?.edit?.includes(leadsSuperRight.allEnquires)||isAdmin)
     var currentdate = new Date();
-    var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
-    var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
-    var year = currentdate.getFullYear();
+   
 
     const url = useSelector((el) => el.domainOfApi)
     const pathRoute = useAdminValidation()

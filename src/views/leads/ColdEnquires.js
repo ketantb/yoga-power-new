@@ -50,11 +50,12 @@ const ColdEnquires = () => {
     const exportColdEnquires=    useExportHook()
 
     var currentdate = new Date();
-    var day = currentdate.getDate() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getFullYear();
-    var month = currentdate.getMonth() + '-' + currentdate.getFullYear();
-    var year = currentdate.getFullYear();
-
     let pageNumber = 0
+
+    const [dateFilterObj,setDteFilterObj] = useState({
+        startDate:moment(new Date(new Date().getFullYear(),0,1)).format('YYYY-MM-DD'),
+        endDate:moment(new Date()).format('YYYY-MM-DD')
+      })
 
     const [select, setSelect] = useState('')
     const [followForm, setFollowForm] = useState()
@@ -103,14 +104,14 @@ const ColdEnquires = () => {
     const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
     ?.crmLeads?.items?.superRight) 
 
-
-
+ 
     const isAdmin = useSelector((el)=>el.isAdmin) 
 
     const coldExport  =  (rightsData?.edit?.includes(leadsSuperRight.coldEnquiresExport) || isAdmin)
     const coldAdd =  (rightsData?.addOn?.includes(leadsSuperRight.coldEnquires) || isAdmin)
     const coldDelete =  (rightsData?.delete?.includes(leadsSuperRight.coldEnquires) || isAdmin)
     const coldEdit  =  (rightsData?.edit?.includes(leadsSuperRight.coldEnquires) || isAdmin)
+
 
 
 
@@ -198,15 +199,14 @@ const ColdEnquires = () => {
             const data1 = { appointmentDate, appointmentTime, appointmentfor: 'Appointment',  
             Counseller: (selctedCounseller?.FullName||''),identifyStage:'Appointment',...unikqValidateObj,
             EmployeeId:Counseller,CallStatus: CallStatus1 }
+
             let data2 = {
                 username: username,
                 EnquiryID: enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, ServiceName: ServiceName1, AppointmentDate: appointmentDate, 
                 AppointmentTime: appointmentTime, enquiryStage: enquiryStage, CallStatus: CallStatus1,
-                 FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Discussion: Discussion,
-                 Counseller: (selctedCounseller?.FullName||''),
-                 EmployeeId:Counseller,
-                status: 'CallReport',
+                FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, Discussion: Discussion,
+                Counseller: (selctedCounseller?.FullName||''),EmployeeId:Counseller,status: 'CallReport',
             }
 
             fetch(`${url1}/enquiryForm/update/${followForm}`, {
@@ -240,20 +240,22 @@ const ColdEnquires = () => {
             })
 
         } else if (enquiryStage === 'Trial Session') {
+
             const data1 = { appointmentDate, appointmentTime,CallStatus: CallStatus1,
-                 appointmentfor: 'Trial Session', Counseller: (selctedCounseller?.FullName||''),identifyStage:'Trial Session',...unikqValidateObj}
+                 appointmentfor: 'Trial Session', Counseller: (selctedCounseller?.FullName||''),
+                 identifyStage:'Trial Session',...unikqValidateObj}
+
             let data2 = {
                 username: username,
                 EnquiryID:  enquiryId, CallDate: date, Time: time,
                 Name: Name, Contact: Contact, Email: email, 
                 ServiceName: ServiceName1, AppointmentDate: appointmentDate,
-                 AppointmentTime: appointmentTime, enquiryStage: enquiryStage, 
-                 CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, 
-                 Counseller: (selctedCounseller?.FullName||''),
-                 EmployeeId:Counseller,
-                 Discussion: Discussion,
-                status: 'CallReport'
-            }
+                AppointmentTime: appointmentTime, enquiryStage: enquiryStage, 
+                CallStatus: CallStatus1, FollowupDate: FollowupDate, TimeFollowp: TimeFollowp, 
+                Counseller: (selctedCounseller?.FullName||''),
+                EmployeeId:Counseller,
+                Discussion: Discussion,
+                status: 'CallReport'}
 
             fetch(`${url1}/enquiryForm/update/${followForm}`, {
                 method: "POST",
@@ -300,6 +302,7 @@ const ColdEnquires = () => {
             }
            
             const data1 = { 
+
                 Counseller:(selctedCounseller?.FullName||''), CallStatus:CallStatus1,
                 appointmentfor:enquiryStage,
                 identifyStage:enquiryStage,
@@ -407,7 +410,7 @@ const ColdEnquires = () => {
         })
     }
     function getEnquiry() {
-        axios.get(`${url1}/enquiryForm/${pathRoute}`, {
+        axios.get(`${url1}/enquiryForm/${dateFilterObj.startDate}/${dateFilterObj.endDate}/${pathRoute}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -525,19 +528,39 @@ const ColdEnquires = () => {
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>
                             <CCol lg={4} sm={6} md={6}>
-                                <CInputGroup className='mb-2'>
-                                    <CFormSelect
-                                        id="inputGroupSelect04"
-                                        aria-label="Example select with button addon"
-                                        value={select}
-                                        onChange={(e) => setSelect(e.target.value)}
-                                    >
-                                        <option value={day}>Today</option>
-                                        <option value={month}>Last Month</option>
-                                        <option value={year}>This Year</option>
-                                     
-                                    </CFormSelect>
-                                </CInputGroup>
+                            <CCol lg={5} md={7}>
+
+                        <div className='d-flex justify-content-between mb-2'>
+                            <CInputGroup >
+                                <CInputGroupText
+                                    component="label"
+                                    htmlFor="inputGroupSelect01"
+                                >
+                                    Form
+                                </CInputGroupText>
+                                <CFormInput
+                                    type="date"
+                                    value={dateFilterObj.startDate}
+                                    onChange={(e)=>setDteFilterObj((prev)=>({...prev,startDate:e.target.value}))}
+                                  
+                                /><CInputGroupText
+                                    component="label"
+                                    htmlFor="inputGroupSelect01"
+                                >
+                                    To
+                                </CInputGroupText>
+                                <CFormInput
+                                    type="date"
+                                    value={dateFilterObj.endDate}
+                                    onChange={(e)=>setDteFilterObj((prev)=>({...prev,endDate:e.target.value}))}
+                                                                   />
+                                <CButton type="button" color="primary" onClick={()=>getEnquiry()} >
+                                    Go
+                                </CButton>
+                            </CInputGroup>
+                        </div>
+
+                        </CCol>
                             </CCol>
                             <CCol lg={6} sm={6} md={6}>
                                 <CButtonGroup className={coldExport?' mb-2 float-end':'d-none'}>

@@ -58,6 +58,11 @@ const EnquireAppointment = () => {
     const appointmentExport  =  rightsData?.edit?.includes(leadsSuperRight.appointmentExport)
 
     
+    const [dateFilterObj,setDteFilterObj] = useState({
+        startDate:moment(new Date(new Date().getFullYear(),0,1)).format('YYYY-MM-DD'),
+        endDate:moment(new Date()).format('YYYY-MM-DD')
+      })
+    
     const exportDataFun =  useExportHook("YogPowerAppointment.xlsx") 
 
 
@@ -121,6 +126,7 @@ const EnquireAppointment = () => {
 
 
     const uniqObjeact  = useUniqAdminObjeact()
+
 
 
 
@@ -399,7 +405,7 @@ const EnquireAppointment = () => {
         })
     }
     function getEnquiry() {
-        axios.get(`${url1}/enquiryForm/${pathName}`, {
+        axios.get(`${url1}/enquiryForm/${dateFilterObj.startDate}/${dateFilterObj.endDate}/${pathName}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

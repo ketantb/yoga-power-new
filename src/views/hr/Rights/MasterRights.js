@@ -114,7 +114,7 @@ const MasterRights = ({masterRights,setRightObject}) => {
                     </CCardHeader>
                     <CCardBody>
                         <CTabContent >
-                          {activeKey===1&&<CenterSetup masterCenterSetup={masterRights.masterCenterSetup} setRightObject={setRightObject}  />}
+                          {activeKey===1&&<CenterSetup masterRights={masterRights} setRightObject={setRightObject}  />}
                           {activeKey===2&&<SupportRequest masterClientFeedback={masterRights.masterClientFeedback} setRightObject={setRightObject}/>}
                           {activeKey===3&&<MarketingRigths masterMarketing={masterRights.masterMarketing} setRightObject={setRightObject} />}
                           {activeKey===4&&<ClientSetupRights masterClient={masterRights.masterClient} setRightObject={setRightObject} />}

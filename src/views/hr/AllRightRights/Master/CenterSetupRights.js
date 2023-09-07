@@ -6,17 +6,34 @@ import {
 
 
 import React from 'react'
-import { masterRightValue } from '../../Rights/rightsValue/masterRightsValue'
+import { masterRightValue,masterMarketingRightVal,herMasterRightVal } from '../../Rights/rightsValue/masterRightsValue'
 
-const CenterSetup = ({masterCenterSetup,setRightObject}) => {
+const CenterSetup = ({masterRights,setRightObject}) => {
+
+    const masterCenterSetup = masterRights.masterCenterSetup
+    const masterMarketing = masterRights.masterMarketing
+    const masterHr = masterRights.masterHr
 
 
 
-    const handleRight = (val,parrent)=>{
+    const handleRight = (val,parrent,type='masterCenterSetup')=>{
+        setRightObject(prev => {
+            const  arr = prev.masterRights[type].items[parrent].rights
+                 if(arr.includes(val)){
+                     arr?.splice(arr?.indexOf(val),1)
+                     return { ...prev }
+                 }
+              arr.push(val)
+              return { ...prev }
+             })       
+    }
+
+
+    const handleRightLead2 = (val,parrent,type='masterMarketing')=>{
 
         setRightObject(prev => {
      
-            const  arr = prev.masterRights.masterCenterSetup.items[parrent].rights
+            const  arr = prev.masterRights[type].items[parrent].rights
 
                  if(arr.includes(val)){
                      arr?.splice(arr?.indexOf(val),1)
@@ -29,6 +46,14 @@ const CenterSetup = ({masterCenterSetup,setRightObject}) => {
 
 const toCheckRightVal = (val,parrent)=>{
     return masterCenterSetup.items[parrent].rights.includes(val)
+}
+
+const toCheckRightValLead = (val,parrent)=>{
+    return masterMarketing.items[parrent].rights.includes(val)
+}
+
+const toCheckRightValHr = (val,parrent)=>{
+    return masterHr.items[parrent].rights.includes(val)
 }
 
 
@@ -176,8 +201,7 @@ const toCheckRightVal = (val,parrent)=>{
 </CRow>
 
 
-
-<CRow className='mt-4'>
+<CRow  className='mt-5'>
    <CCol>
        <h5 className='mb-4 p-0 d-flex ' > Invoice Master <span className='mx-2'>
         <CFormSwitch  size="xl"
@@ -188,14 +212,55 @@ const toCheckRightVal = (val,parrent)=>{
         })}
        /></span>
     </h5>
-    <CFormSwitch size="xl" label="Fitness Product"  />
-
-       
    </CCol>
+   <CCol>
+    <h5 className='mb-4 p-0 d-flex ' > Lead Source Master <span className='mx-2'>
+        <CFormSwitch  size="xl"
+        checked={masterMarketing.items.masterLeadSourseMaster.value}
+        onChange={(e)=>setRightObject(prev=>{
+         prev.masterRights.masterMarketing.items.masterLeadSourseMaster.value=e.target.checked
+         return {...prev}
+        })}
+       /></span>
+    </h5>
+
+       <CFormSwitch  size="xl" label="Lead Source Master" 
+          checked={toCheckRightValLead(masterMarketingRightVal.leadSourceMaster,'masterLeadSourseMaster')}
+          onChange={()=>handleRightLead2(masterMarketingRightVal.leadSourceMaster,'masterLeadSourseMaster')}
+       />
+       <CFormSwitch  size="xl" label="Add Source Master"
+          checked={toCheckRightValLead(masterMarketingRightVal.addSourceMaster,'masterLeadSourseMaster')}
+          onChange={()=>handleRightLead2(masterMarketingRightVal.addSourceMaster,'masterLeadSourseMaster')}
+       />
+       <CFormSwitch  size="xl" label="Delete Source Master"
+          checked={toCheckRightValLead(masterMarketingRightVal.deleteSourceMaster,'masterLeadSourseMaster')}
+          onChange={()=>handleRightLead2(masterMarketingRightVal.deleteSourceMaster,'masterLeadSourseMaster')}
+       />
+   </CCol>
+   <CCol>
+           <h5 className='mb-4 p-0 d-flex ' > Designation Master <span className='mx-2'>
+           <CFormSwitch  size="xl" 
+           checked={masterHr.items.masterEmployeeDesignation.value}
+           onChange={(e)=>setRightObject(prev=>{
+            prev.masterRights.masterHr.items.masterEmployeeDesignation.value=e.target.checked
+            return {...prev}
+           })}
+           /> </span>
+           </h5>
+           <CFormSwitch  size="xl" label="Designation Master Satus" 
+             checked={toCheckRightValHr(herMasterRightVal.designationMasterStatus,'masterEmployeeDesignation')}
+             onChange={()=>handleRightLead2(herMasterRightVal.designationMasterStatus,'masterEmployeeDesignation','masterHr')}
+           />
+           <CFormSwitch  size="xl" label="ADD Designation Master" 
+             checked={toCheckRightValHr(herMasterRightVal.addDesignationMaster,'masterEmployeeDesignation','masterHr')}
+             onChange={()=>handleRightLead2(herMasterRightVal.addDesignationMaster,'masterEmployeeDesignation','masterHr')}
+           />
+           <CFormSwitch  size="xl" label="Delete Designation Master" 
+             checked={toCheckRightValHr(herMasterRightVal.deleteDesignationMaster,'masterEmployeeDesignation','masterHr')}
+             onChange={()=>handleRightLead2(herMasterRightVal.deleteDesignationMaster,'masterEmployeeDesignation','masterHr')}
+           />
+       </CCol>
 </CRow>
-
-
-
 </div> 
 }
 

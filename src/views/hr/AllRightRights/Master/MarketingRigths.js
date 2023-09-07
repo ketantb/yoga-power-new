@@ -50,7 +50,7 @@ const toCheckRightVal = (val,parrent)=>{
 </CRow>
 
 <CRow  className='mt-5'>
-   <CCol>
+   {/* <CCol>
 
     <h5 className='mb-4 p-0 d-flex ' > Lead Source Master <span className='mx-2'>
         <CFormSwitch  size="xl"
@@ -74,7 +74,7 @@ const toCheckRightVal = (val,parrent)=>{
           checked={toCheckRightVal(masterMarketingRightVal.deleteSourceMaster,'masterLeadSourseMaster')}
           onChange={()=>handleRight(masterMarketingRightVal.deleteSourceMaster,'masterLeadSourseMaster')}
        />
-   </CCol>
+   </CCol> */}
    <CCol>
        <h5 className='mb-4 p-0 d-flex ' >Email Template <span className='mx-2'>
         <CFormSwitch  size="xl"

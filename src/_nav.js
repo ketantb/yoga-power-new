@@ -805,7 +805,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Employee Designation',
-        to: '/master/hr/designation',
+        to: '/master/center-setup/designation',
         id:'masterEmployeeDesignation'
       },
       {

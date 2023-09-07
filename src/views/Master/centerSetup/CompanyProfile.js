@@ -142,7 +142,7 @@ const CompanyProfile = () => {
                                         className="mb-1"
                                         type="text"
                                         id="exampleFormControlInput1"
-                                        label="Brand Name"
+                                        label="Contact No"
                                         value={brandName}
                                         onChange={(e) => setBrandName(e.target.value)}
                                         placeholder="Enter Brand Name"
@@ -283,7 +283,7 @@ const CompanyProfile = () => {
                                         className="mb-1"
                                         value={holidays}
                                         onChange={(e) => setHolidays(e.target.value)}
-                                        label="Holidays"
+                                        label="Week Off"
                                         type="number"                                                                           
                                     />
                                 </CCol>
