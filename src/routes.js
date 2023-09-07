@@ -337,6 +337,7 @@ const routes = [
   { path:'/hr/view-staff-target',name:'View Staff Target',element:Stafftarget},
   { path:'/hr/emp-target-sheet',name:'Employee Target Sheet',element:EmployeeTargetSheet},
   { path:'/hr/employee-detail/:id',name:'Employee Details',element:EmpDetails},
+  { path:'/hr/employee-right/:emailUniqId',name:'Rights',element:AllRightHr},
 
 
   // Courses

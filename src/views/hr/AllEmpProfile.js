@@ -35,12 +35,15 @@ import moment from 'moment';
 import { useSelector } from 'react-redux'
 import { useAdminValidation } from '../Custom-hook/adminValidation';
 import { hrManagement } from './Rights/rightsValue/erpRightsValue';
+import { useNavigate } from 'react-router-dom';
+
 
 const EmployeeProfile = React.lazy(()=>import('./Hr-Employee-Details/Tables/EmployeeProfile'))
 
 
 const AllEmpProfile = () => {
     const url = useSelector((el)=>el.domainOfApi) 
+    const navigate = useNavigate()
 
 
     const rightsData = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
@@ -104,10 +107,8 @@ const AllEmpProfile = () => {
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
-    const username = user.user.username;
-    const centerCode = user.user.centerCode;
+  
 
     const headers = {
         headers: {
@@ -117,9 +118,7 @@ const AllEmpProfile = () => {
         }
     }
 
-    const [result1, setResult1] = useState([]);
     const [paging, setPaging] = useState(0);
-    console.log(token);
     useEffect(() => {
         getStaff()
     }, [])
@@ -410,10 +409,14 @@ const AllEmpProfile = () => {
                                             <CTableDataCell>{item.AttendanceID}</CTableDataCell>
                                             <CTableDataCell>{item.Department}</CTableDataCell>
                                             <CTableDataCell>{item.JobDesignation}</CTableDataCell>
-                                            <CTableDataCell></CTableDataCell>
+                                            <CTableDataCell className='text-center'>
+                                                <CButton size='sm' onClick={()=>navigate(`/hr/employee-right/${item._id}`)}>
+                                                    View  
+                                                </CButton>
+                                            </CTableDataCell>
                                             <CTableDataCell style={{display:((isAdmin||allImpProfileStatus)?'':'none')}}  >{item.status ? <>
-                                            <CButton className='mt-1' color='success' onClick={() => updateRec(item, false)} >Active</CButton></>
-                                                 : <CButton className='mt-1' color='danger' onClick={() => updateRec(item, true)}>Inactive</CButton>}</CTableDataCell>
+                                            <CButton size='sm' className='mt-1' color='success' onClick={() => updateRec(item, false)} >Active</CButton></>
+                                                 : <CButton  size='sm' className='mt-1' color='danger' onClick={() => updateRec(item, true)}>Inactive</CButton>}</CTableDataCell>
                                             <CTableDataCell className='text-center'
                                             style={{display:((isAdmin||allImpProfileAction)?'':'none')}} 
                                             ><a href={`tel:${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`mailto: ${item.EmailAddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} size='20px' /></a></CTableDataCell>

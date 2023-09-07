@@ -29,6 +29,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { useSelector } from "react-redux";
 import { useAdminValidation } from '../Custom-hook/adminValidation';
+import useJobProfileHook from '../Master/HRMaster/useJobProfileHook';
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -47,6 +48,7 @@ const JobProfile = () => {
     const url = useSelector((el) => el.domainOfApi)
     const pathVal =  useAdminValidation()
     const [jobProfileData,setJobProfileData] = useState([])
+    const jobProfileFunction = useJobProfileHook()
 
 
     const getJobProfileData = async ()=>{
@@ -85,6 +87,7 @@ const JobProfile = () => {
         )
     }    
   
+    // Enter $brsplit
     
 
 
@@ -117,7 +120,7 @@ const JobProfile = () => {
                                     {el.Designations}
                                 </CTableDataCell>
                                 <CTableDataCell>
-                                    {toHandleTitleAndValue(el.jobProfile)}
+                                    {jobProfileFunction(el.jobProfile)}
                                 </CTableDataCell>
                                
                             </CTableRow>

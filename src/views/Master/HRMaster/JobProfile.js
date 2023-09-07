@@ -23,13 +23,13 @@ import {
 } from "@coreui/react";
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
-
 import React, { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { MdEdit,MdDelete } from "react-icons/md";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
+import useJobProfileHook from "./useJobProfileHook";
 let user = JSON.parse(localStorage.getItem('user-info'))
 const username = user.user.username;
 const token = user.token;
@@ -41,6 +41,8 @@ const JobProfile = () =>{
     
     const access = rightsData?rightsData:[]
     const isAdmin = useSelector((el)=>el.isAdmin)
+    const jobProfileFunction = useJobProfileHook()
+
     
     const addJobProfile = (access.includes(herMasterRightVal.addJobProfile) || isAdmin )
     const editJobProfile=  (access.includes(herMasterRightVal.editJobProfile) || isAdmin )
@@ -154,26 +156,9 @@ const JobProfile = () =>{
                 })
             })
         }
-    }
-function toHandleTitleAndValue(inputString=''){
-    var keyValuePairs = [];
-    
-    var regex = /\[([^\]]*)\]\s*:\s*\(([^)]*)\)/g;
-    var match;
-  
-    while ((match = regex.exec(inputString)) !== null) {
-      var key = match[1].trim(); // Remove extra spaces from key
-      var value = match[2].trim(); // Remove extra spaces from value
-      keyValuePairs[key] = value;
-    }
+    }   
 
-    return Object.entries(keyValuePairs).map((el)=>
-    <div className="d-flex ">
-    <h6>{(el[0])||''}</h6>:- 
-    <p>{(el[1]||'')}</p>
-    </div>
-    )
-}    
+
 
     return <div>
     <CModal visible={visible} onClose={() => setVisible(false)}>
@@ -246,10 +231,14 @@ function toHandleTitleAndValue(inputString=''){
       </CCard>}
 
 
-                     <h6>Write the title in bracket
+                     <h6 className="mt-2">Write the title in bracket
                      <span><b>[title]</b></span>    
                      </h6>
-                     <p>Write the Content in small Bracket <span><b>(Content)</b></span>  </p> 
+                     <p  className="p-0 m-1">Between <span><b>(Content)</b></span> and <span><b>[title]</b></span>   Should be Colon</p>
+                     <p className="p-0 m-1">Write the Content in small Bracket <span><b>(Content)</b></span>  </p> 
+                     <p  className="p-0 m-1">To Split the Line in <span><b>(content)</b> </span>  
+                    add this Syntext  <span><b>($brsplit)</b></span>  </p> 
+
                         
                     <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
@@ -273,7 +262,7 @@ function toHandleTitleAndValue(inputString=''){
                                     {el.Designations}
                                 </CTableDataCell>
                                 <CTableDataCell>
-                                    {toHandleTitleAndValue(el.jobProfile)}
+                                    {jobProfileFunction(el.jobProfile)}
                                 </CTableDataCell>
                                 <CTableDataCell style={{display:(editJobProfile||deleteJobProfile)?'':'none'}} >
                                       <MdEdit style={{display:editJobProfile?'':'none',cursor:'pointer'}}  onClick={()=>updateProduct(el)} />
