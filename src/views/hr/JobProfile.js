@@ -65,7 +65,25 @@ const JobProfile = () => {
 
 
   
-
+    function toHandleTitleAndValue(inputString=''){
+        var keyValuePairs = [];
+        
+        var regex = /\[([^\]]*)\]\s*:\s*\(([^)]*)\)/g;
+        var match;
+      
+        while ((match = regex.exec(inputString)) !== null) {
+          var key = match[1].trim(); // Remove extra spaces from key
+          var value = match[2].trim(); // Remove extra spaces from value
+          keyValuePairs[key] = value;
+        }
+    
+        return Object.entries(keyValuePairs).map((el)=>
+        <div className="d-flex ">
+        <h6>{(el[0])||''}</h6>:- 
+        <p>{(el[1]||'')}</p>
+        </div>
+        )
+    }    
   
     
 
@@ -79,65 +97,34 @@ const JobProfile = () => {
                     </CCardHeader>
                     <CCardBody>
                         
-                        <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
+                    <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                                 <CTableRow >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
 
-                                    <CTableHeaderCell>Designation</CTableHeaderCell>
+                                    <CTableHeaderCell style={{width:'fit-content'}}>Designation</CTableHeaderCell>
                                     <CTableHeaderCell>Job Profile</CTableHeaderCell>
                                  
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                                <CTableRow>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "60px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "90px" }}
-                                            value={Search1}
-                                            onChange={(e) => setSearch1(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "90px" }}
-                                            value={Search1}
-                                            onChange={(e) => setSearch1(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                  
-                                  
-                                </CTableRow>
-                                {jobProfileData.map((el,i) => (
+                        {jobProfileData.map((el,i) => (
                             <CTableRow className="text-center">
                                 <CTableDataCell>
                                     {i+1}
                                 </CTableDataCell>
-                                <CTableDataCell>
+                                <CTableDataCell style={{width:'fit-content'}}>
                                     {el.Designations}
                                 </CTableDataCell>
-                                <CTableDataCell style={{width:'400px'}}>
-                                    {el.jobProfile}
-                                </CTableDataCell>       
+                                <CTableDataCell>
+                                    {toHandleTitleAndValue(el.jobProfile)}
+                                </CTableDataCell>
                                
                             </CTableRow>
 
                                 ))}
+                              
+                          
                             </CTableBody>
                         </CTable>
                     </CCardBody>

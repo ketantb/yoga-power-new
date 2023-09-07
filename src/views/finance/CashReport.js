@@ -50,13 +50,15 @@ const CashReport = () => {
 
     const headers = {
         'Authorization': `Bearer ${token}`,
-        'My-Custom-Header': 'foobar'
+        'My-Custom-Header': 'foobar',
+        'Content-Type': 'application/json',
     };
 
 
     function togetCashData(type,data){
     const data2 = (data||[]).reverse().flatMap((el)=>{
-          if(type==='Recipts'){
+          if(type==='Recipts')
+          {
              return   el.Receipts.map((el2,i)=>{
                     delete el2._id
                  return ({
@@ -71,7 +73,8 @@ const CashReport = () => {
                           counseller:el2.Counseller,
                           invoiceUniqId:el._id,
                           bothId:el2._id,
-                          Receipts:el.Receipts
+                          Receipts:el.Receipts,
+                          no:el2.no
                     })})
 
           }else{
@@ -93,15 +96,7 @@ const CashReport = () => {
 
     return data2 
 }
-// const obj = {
-//     id:123,
-//     friends:[
-//         {name:'allien',emails:[{email:'1111',using:'true'}]}
-//     ]
-// }
 
-// // update
-// ({_id:'123'},{'$set':{'friends.0.name':'hello'}})
 
     
     const getAllInvoiceData = async  ()=>{
@@ -151,39 +146,7 @@ const CashReport = () => {
         },[])
 
 
-        const saveCashReport = (e) =>{
-             e.preventDefault()
-
-
-            // const invoiceObj= visibleDataObj.selectedItem
-            // let invoiceOBJtoSave = {}
-            
-            // if(visibleDataObj.itemType==='Recipt'){
-            //     // const filterReipts = invoiceObj?.Receipts?.filter((el)=>el._id===el.visibleDataObj.bothId)
-
-            //     // invoiceOBJtoSave ={...invoiceObj,Receipts:}
-            // }
-            
-            
-               
-            // const headers = {
-            //     'Authorization': `Bearer ${token}`,
-            //     'My-Custom-Header': 'foobar'
-            // };
-            
-            // axios.post(`${url1}/invoice/update/${visibleDataObj.id}`,invoiceOBJtoSave, {headers},)
-            //     .then((resp) => {
-
-            //         alert('Successfully save')
-            //         getAllInvoiceData()
-
-            //     })
-            //     .catch((error) => {
-            //         console.error(error)
-            //     })
-            
-            
-            
+        const saveCashReport = (e) =>{e.preventDefault()        
             }
   
             

@@ -155,6 +155,26 @@ const JobProfile = () =>{
             })
         }
     }
+function toHandleTitleAndValue(inputString=''){
+    var keyValuePairs = [];
+    
+    var regex = /\[([^\]]*)\]\s*:\s*\(([^)]*)\)/g;
+    var match;
+  
+    while ((match = regex.exec(inputString)) !== null) {
+      var key = match[1].trim(); // Remove extra spaces from key
+      var value = match[2].trim(); // Remove extra spaces from value
+      keyValuePairs[key] = value;
+    }
+
+    return Object.entries(keyValuePairs).map((el)=>
+    <div className="d-flex ">
+    <h6>{(el[0])||''}</h6>:- 
+    <p>{(el[1]||'')}</p>
+    </div>
+    )
+}    
+
     return <div>
     <CModal visible={visible} onClose={() => setVisible(false)}>
        <CModalHeader>
@@ -209,12 +229,6 @@ const JobProfile = () =>{
               />
                 </CCol>    
             </CCol>
-
-           
-        
-           
-            
-          
      
                <CCol className='mt-4'>
                     {updateActive?
@@ -232,14 +246,17 @@ const JobProfile = () =>{
       </CCard>}
 
 
-
+                     <h6>Write the title in bracket
+                     <span><b>[title]</b></span>    
+                     </h6>
+                     <p>Write the Content in small Bracket <span><b>(Content)</b></span>  </p> 
                         
                     <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                                 <CTableRow >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
 
-                                    <CTableHeaderCell>Designation</CTableHeaderCell>
+                                    <CTableHeaderCell style={{width:'fit-content'}}>Designation</CTableHeaderCell>
                                     <CTableHeaderCell>Job Profile</CTableHeaderCell>
 
                                     <CTableHeaderCell style={{display:(editJobProfile||deleteJobProfile)?'':'none'}}>Edit/Delete </CTableHeaderCell>
@@ -252,11 +269,11 @@ const JobProfile = () =>{
                                 <CTableDataCell>
                                     {i+1}
                                 </CTableDataCell>
-                                <CTableDataCell>
+                                <CTableDataCell style={{width:'fit-content'}}>
                                     {el.Designations}
                                 </CTableDataCell>
                                 <CTableDataCell>
-                                    {el.jobProfile}
+                                    {toHandleTitleAndValue(el.jobProfile)}
                                 </CTableDataCell>
                                 <CTableDataCell style={{display:(editJobProfile||deleteJobProfile)?'':'none'}} >
                                       <MdEdit style={{display:editJobProfile?'':'none',cursor:'pointer'}}  onClick={()=>updateProduct(el)} />

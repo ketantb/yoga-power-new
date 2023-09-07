@@ -138,30 +138,20 @@ const toCheckRightValHr = (val,parrent)=>{
 </CRow>
 
 <CRow className='mt-5' >
-   <CCol>
-       <h5 className='mb-4 p-0 d-flex ' > Package Master <span className='mx-2'>
+
+<CCol>
+       <h5 className='mb-4 p-0 d-flex ' > Invoice Master <span className='mx-2'>
         <CFormSwitch  size="xl"
-        checked={masterCenterSetup.items.masterPackageMaster.value}
+        checked={masterCenterSetup.items.masterInvoiceMaster.value}
         onChange={(e)=>setRightObject(prev=>{
-         prev.masterRights.masterCenterSetup.items.masterPackageMaster.value=e.target.checked
+         prev.masterRights.masterCenterSetup.items.masterInvoiceMaster.value=e.target.checked
          return {...prev}
         })}
        /></span>
     </h5>
-
-      <CFormSwitch size="xl" label="Package Master Status" 
-         checked={toCheckRightVal(masterRightValue.packageStatus,'masterPackageMaster')}
-         onChange={()=>handleRight(masterRightValue.packageStatus,'masterPackageMaster')}
-       />
-       <CFormSwitch size="xl" label="Add Package Master"
-         checked={toCheckRightVal(masterRightValue.addPackageMaste,'masterPackageMaster')}
-         onChange={()=>handleRight(masterRightValue.addPackageMaste,'masterPackageMaster')}
-       />
-       <CFormSwitch size="xl" label="Delete Package Master" 
-         checked={toCheckRightVal(masterRightValue.deletePackageMaster,'masterPackageMaster')}
-         onChange={()=>handleRight(masterRightValue.deletePackageMaster,'masterPackageMaster')}
-       />
    </CCol>
+
+ 
    <CCol>
        <h5 className='mb-4 p-0 d-flex ' > Batch time Master <span className='mx-2'>
         <CFormSwitch  size="xl"
@@ -187,7 +177,7 @@ const toCheckRightValHr = (val,parrent)=>{
        />
    </CCol>
    <CCol>
-       <h5 className='mb-4 p-0 d-flex ' > Form Master <span className='mx-2'>
+       <h5 className='mb-4 p-0 d-flex ' > Category Master <span className='mx-2'>
         <CFormSwitch  size="xl"
         checked={masterCenterSetup.items.masterFormMaster.value}
         onChange={(e)=>setRightObject(prev=>{
@@ -202,17 +192,32 @@ const toCheckRightValHr = (val,parrent)=>{
 
 
 <CRow  className='mt-5'>
-   <CCol>
-       <h5 className='mb-4 p-0 d-flex ' > Invoice Master <span className='mx-2'>
+   
+  <CCol>
+       <h5 className='mb-4 p-0 d-flex ' > Package Master <span className='mx-2'>
         <CFormSwitch  size="xl"
-        checked={masterCenterSetup.items.masterInvoiceMaster.value}
+        checked={masterCenterSetup.items.masterPackageMaster.value}
         onChange={(e)=>setRightObject(prev=>{
-         prev.masterRights.masterCenterSetup.items.masterInvoiceMaster.value=e.target.checked
+         prev.masterRights.masterCenterSetup.items.masterPackageMaster.value=e.target.checked
          return {...prev}
         })}
        /></span>
     </h5>
+
+      <CFormSwitch size="xl" label="Package Master Status" 
+         checked={toCheckRightVal(masterRightValue.packageStatus,'masterPackageMaster')}
+         onChange={()=>handleRight(masterRightValue.packageStatus,'masterPackageMaster')}
+       />
+       <CFormSwitch size="xl" label="Add Package Master"
+         checked={toCheckRightVal(masterRightValue.addPackageMaste,'masterPackageMaster')}
+         onChange={()=>handleRight(masterRightValue.addPackageMaste,'masterPackageMaster')}
+       />
+       <CFormSwitch size="xl" label="Delete Package Master" 
+         checked={toCheckRightVal(masterRightValue.deletePackageMaster,'masterPackageMaster')}
+         onChange={()=>handleRight(masterRightValue.deletePackageMaster,'masterPackageMaster')}
+       />
    </CCol>
+
    <CCol>
     <h5 className='mb-4 p-0 d-flex ' > Lead Source Master <span className='mx-2'>
         <CFormSwitch  size="xl"

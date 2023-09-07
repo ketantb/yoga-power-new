@@ -20,8 +20,6 @@ const CenterSetup = () => {
    rightsDataObj.masterEmployeeDesignation={value:masterEmployeeDesignation}
    rightsDataObj.masterLeadSourseMaster={value:masterLeadSourseMaster}
    
-
-   console.log(rightsDataObj)
     return (
         <CCard className="mb-3 border-success">
             <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>

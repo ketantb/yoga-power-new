@@ -61,10 +61,12 @@ const FormMaster = () => {
             if(!confirm('Do u really Want to delete this')){
               return 
             }
-            fetch(`${ url1 }/batchCategory/delete/${ id }`, {
-                method: 'DELETE',
-            }).then((result) => {
-                if(resp.status===200){
+            fetch(`${ url1 }/batchCategory/delete/${ id }`, { headers:{
+                "Authorization": `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+        } }).then((result) => {
+                if(result.status===200){
                     getBatchCategoryData()
                     alert('Successfully Save')
                 }
