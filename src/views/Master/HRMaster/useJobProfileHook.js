@@ -34,7 +34,7 @@ const useJobProfileHook = () => {
     <h6>{(el[0])||''}</h6> 
     <ol>
     {(el[1].split(/\$brsplit/)||'').map((el)=>
-    !el?.trim()?'':<li>{el}</li>
+    !el?.trim()?'':<p>{el}</p>
     )}
     </ol>
     </div>
