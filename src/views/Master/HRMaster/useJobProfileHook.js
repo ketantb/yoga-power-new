@@ -28,12 +28,13 @@ const useJobProfileHook = () => {
               keyValuePairs[''] = contentWithoutColons;
             }
           
+            
         return Object.entries(keyValuePairs).map((el)=>
     <div className="text-start">
     <h6>{(el[0])||''}</h6> 
     <ol>
     {(el[1].split(/\$brsplit/)||'').map((el)=>
-    <li>{el}</li>
+    !el?.trim()?'':<li>{el}</li>
     )}
     </ol>
     </div>
