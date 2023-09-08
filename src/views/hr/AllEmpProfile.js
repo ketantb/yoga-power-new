@@ -410,7 +410,7 @@ const AllEmpProfile = () => {
                                             <CTableDataCell>{item.Department}</CTableDataCell>
                                             <CTableDataCell>{item.JobDesignation}</CTableDataCell>
                                             <CTableDataCell className='text-center'>
-                                                <CButton size='sm' onClick={()=>navigate(`/hr/employee-right/${item._id}`)}>
+                                                <CButton size='sm' onClick={()=>navigate(`/hr/employee-right/${item._id}/search`)}>
                                                     View  
                                                 </CButton>
                                             </CTableDataCell>

@@ -5,11 +5,6 @@ import { Link } from 'react-router-dom'
 import {
     CButton,   
     CCol,
-    CModal,
-    CModalBody,
-    CModalFooter,
-    CModalHeader,
-    CModalTitle,
     CCard,
     CRow,
     CTable,
@@ -18,23 +13,17 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
-    CImage,
     CForm,
     CFormInput,
     CInputGroupText,
     CInputGroup,
-    CFormSelect,
-    CDropdown,
-    CDropdownToggle,
-    CDropdownMenu,
-    CDropdownItem,
     CFormSwitch
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
 import CustomSelectinput from '../CustomSelectinput'
-const LoginList = ({admin}) => {
+const LoginList = ({admin, onlyOneEmp,emailUniqIdEmp}) => {
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -113,7 +102,7 @@ const LoginList = ({admin}) => {
   }
 
   function getStaff() {
-      axios.get(`${url}/employeeform/${masterPtahVal}`, { headers})
+      axios.get(`${url}/employeeform/${`${onlyOneEmp?"emp/"+emailUniqIdEmp:masterPtahVal}`}`, { headers})
           .then((res) => {
             if(res.status===200){
                 setStaff(res.data.filter((list) => 
@@ -366,7 +355,7 @@ setEmailValidationError('')
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {allEmailData?.filter((el)=>el.isAdmin===admin&&!el?.isAdminPatner).map((el,i)=>
+                        {allEmailData?.filter((el)=>el.isAdmin===admin&&!el?.isAdminPatner&&(onlyOneEmp?el.memBerId===emailUniqIdEmp:true)).map((el,i)=>
                             <CTableRow className='text-center'key={i} >
                                 <CTableDataCell>{i+1}</CTableDataCell>
                                 <CTableDataCell>{el.center}</CTableDataCell>

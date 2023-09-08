@@ -11,6 +11,7 @@ import {
     CTabPane,
 } from '@coreui/react'
 import React, { useState} from 'react'
+import { useParams } from 'react-router-dom'
 
 
 const LoginList = React.lazy(()=>import('./Login List/LoginList'))
@@ -28,7 +29,9 @@ const headers = {
 
 const AllRight = () => {
 
-    const [activeKey, setActiveKey] = useState(user.user.isAdmin?1:2)
+    const {isRights,emailUniqId} = useParams()
+
+    const [activeKey, setActiveKey] = useState((user.user.isAdmin&&!Boolean(isRights.trim()))?1:2)
 
 
     return (
@@ -36,7 +39,7 @@ const AllRight = () => {
 
 <CCardHeader>
     <CNav variant="tabs" role="tablist">
-     {user.user.isAdmin&&<CNavItem>
+     {(user.user.isAdmin&&!Boolean(isRights.trim()))&&<CNavItem>
         <CNavLink
           active={activeKey === 1}
           onClick={() =>  setActiveKey(1)}
@@ -57,11 +60,11 @@ const AllRight = () => {
 
 <CCardBody>
   <CTabContent>
-      <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 1}>
+      {(user.user.isAdmin&&!Boolean(isRights.trim()))&&<CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 1}>
          <LoginList admin={true} />
-      </CTabPane>
-      <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 2}>
-         <LoginList admin={false} />
+      </CTabPane>}
+      <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 2} >
+         <LoginList admin={false} emailUniqIdEmp={emailUniqId}  onlyOneEmp={Boolean(isRights.trim())}  />
       </CTabPane>
   </CTabContent>
 </CCardBody>    

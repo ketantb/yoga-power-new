@@ -30,7 +30,7 @@ import moment from 'moment';
 
 import { useSelector } from "react-redux";
 import { useAdminValidation} from 'src/views/Custom-hook/adminValidation';
-
+import useJobProfileHook from 'src/views/Master/HRMaster/useJobProfileHook';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 console.log(user);
@@ -48,7 +48,7 @@ const JobProfile = ({id}) => {
     const url = useSelector((el) => el.domainOfApi)
     const pathVal =  useAdminValidation('Master')
     const [jobProfileData,setJobProfileData] = useState([])
-
+    const jobProfileFunction = useJobProfileHook()
 
 
     
@@ -96,50 +96,18 @@ const JobProfile = ({id}) => {
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                                <CTableRow>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "60px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "90px" }}
-                                            value={Search1}
-                                            onChange={(e) => setSearch1(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "90px" }}
-                                            value={Search1}
-                                            onChange={(e) => setSearch1(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                  
-                                  
-                                </CTableRow>
+                                
                                 {jobProfileData.map((el,i) => (
                             <CTableRow className="text-center">
                                 <CTableDataCell>
                                     {i+1}
                                 </CTableDataCell>
-                                <CTableDataCell>
+                                <CTableDataCell style={{width:'fit-content'}}>
                                     {el.Designations}
                                 </CTableDataCell>
-                                <CTableDataCell style={{width:'600px'}}>
-                                    {el.jobProfile}
-                                </CTableDataCell>         
+                                <CTableDataCell>
+                                    {jobProfileFunction(el.jobProfile)}
+                                </CTableDataCell>
                                
                             </CTableRow>
 

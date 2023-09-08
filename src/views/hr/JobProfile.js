@@ -42,9 +42,6 @@ const JobProfile = () => {
         "Authorization": `Bearer ${token}`,
        }
 
-    const [Search1, setSearch1] = useState('')
-    const [Search2, setSearch2] = useState('')
-    const [Search10, setSearch10] = useState('')
     const url = useSelector((el) => el.domainOfApi)
     const pathVal =  useAdminValidation()
     const [jobProfileData,setJobProfileData] = useState([])
@@ -56,7 +53,6 @@ const JobProfile = () => {
          if(el.status!==200){
           return 
          }
-         console.log(el.data)
          setJobProfileData(el.data)
        }).catch((error)=>{console.log(error)})
        }
@@ -67,28 +63,7 @@ const JobProfile = () => {
 
 
   
-    function toHandleTitleAndValue(inputString=''){
-        var keyValuePairs = [];
-        
-        var regex = /\[([^\]]*)\]\s*:\s*\(([^)]*)\)/g;
-        var match;
-      
-        while ((match = regex.exec(inputString)) !== null) {
-          var key = match[1].trim(); // Remove extra spaces from key
-          var value = match[2].trim(); // Remove extra spaces from value
-          keyValuePairs[key] = value;
-        }
-    
-        return Object.entries(keyValuePairs).map((el)=>
-        <div className="d-flex ">
-        <h6>{(el[0])||''}</h6>:- 
-        <p>{(el[1]||'')}</p>
-        </div>
-        )
-    }    
-  
-    // Enter $brsplit
-    
+
 
 
     return (

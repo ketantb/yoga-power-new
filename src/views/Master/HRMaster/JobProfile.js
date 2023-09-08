@@ -234,10 +234,10 @@ const JobProfile = () =>{
                      <h6 className="mt-2">Write the title in bracket
                      <span><b>[title]</b></span>    
                      </h6>
-                     <p  className="p-0 m-1">Between <span><b>(Content)</b></span> and <span><b>[title]</b></span>   Should be Colon</p>
+                     <p  className="p-0 m-1">Between <span><b>(Content)</b></span> and <span><b>[title]</b></span>   Should be Colon <span><b>[title]:(Content)</b></span> </p>
                      <p className="p-0 m-1">Write the Content in small Bracket <span><b>(Content)</b></span>  </p> 
                      <p  className="p-0 m-1">To Split the Line in <span><b>(content)</b> </span>  
-                    add this Syntext  <span><b>($brsplit)</b></span>  </p> 
+                    add this Syntext  <span><b>$brsplit</b></span>  </p> 
 
                         
                     <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
