@@ -316,7 +316,7 @@ useEffect(()=>{
                                         aria-label="Select Currency"
                                         value={Gender}
                                         onChange={(e) => setGender(e.target.value)}
-                                        label="Gander"
+                                        label="Gender"
                                         required
                                     >
                                         <option>Select Gender</option>

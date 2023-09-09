@@ -199,7 +199,7 @@ const handlePrint = useReactToPrint({
    
 
     return (
-        <CRow>
+        <>
             <div>
               <CModal  style={{ border: '2px solid #0B5345' }} 
               visible={showEditModal} size='xl'  onClose={()=>{setEditModal(false)}} scrollable>
@@ -207,11 +207,12 @@ const handlePrint = useReactToPrint({
                 <CModalTitle>Edit Form</CModalTitle>
             </CModalHeader>
             <CModalBody>
-                 {id&&!visi1&&<EmployeeProfile setVisi1={setVisi1} setResumeUrl2={setResumeUrl} 
+                 {id&&<EmployeeProfile setVisi1={setVisi1} setResumeUrl2={setResumeUrl} 
                  getStaff2={getStaff} Edit={showEditModal} id={id}/>}
             </CModalBody>
               </CModal>
               </div>
+              <div>
 
               <CModal  size="xl" alignment="center"  scrollable visible={visi1} onClose={() => setVisi1(false)}>
                             <CModalHeader>
@@ -229,9 +230,10 @@ const handlePrint = useReactToPrint({
                 </div>                  
                             </CModalBody>
                             <CModalFooter>
-                                <CButton color="primary" onClick={handlePrint}>Print</CButton>
+                                <CButton color="primary" onClick={()=>handlePrint()}>Print</CButton>
                             </CModalFooter>
                 </CModal> 
+               </div> 
              
             <CCol lg={12} sm={12}>
                 <CCard className="mb-3 border-success">
@@ -461,7 +463,7 @@ const handlePrint = useReactToPrint({
                                             
                                             <CTableDataCell className='text-center' style={{display:((isAdmin||allImpProfileDelete||allImpProfileEdit)?'':'none')}}>
                                                  {allImpProfileEdit&&<MdEdit style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
-                                                onClick={() =>{allowToEdit(item._id)}} size='20px' />}
+                                                onClick={() =>allowToEdit(item._id)} size='20px' />}
                                                 {allImpProfileDelete&&<MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
                                                 onClick={() => deleteEnquiry(item._id)} size='20px' />}
                                                 </CTableDataCell>
@@ -490,7 +492,7 @@ const handlePrint = useReactToPrint({
                    
                 </CCard>
             </CCol>
-        </CRow>
+        </>
     )
 }
 

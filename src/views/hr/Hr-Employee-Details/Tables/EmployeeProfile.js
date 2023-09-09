@@ -71,6 +71,7 @@ const [resuneProgress,setResumePrograss] = useState(0)
 const [resumeUrl,setResumeUrl]=  useState('')
 const resumeUplodFun = useUploadResumeHook(setResumePrograss,setResumeUrl,setResume)
 const pathVal = useAdminValidation('Master')
+const [vis2,seVis2]  = useState(false)
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -83,6 +84,14 @@ const headers = {
         'Content-Type': 'application/json',
       }
 }
+
+const componentRef = useRef()
+
+const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: 'yog-power',
+    onAfterPrint: () => alert('print success')
+})
 
 
 
@@ -132,7 +141,6 @@ useEffect(()=>{
 function getDesignation() {
     axios.get(`${url}/designation/${pathVal}`, headers)
         .then((res) => {
-        console.log(res.data)
         setResult(res.data.reverse())
         })
         .catch((error) => {
@@ -191,6 +199,27 @@ function updateEmpolyee(){
   return (
         
     <CCard>
+
+        
+            <CModal  size="xl" alignment="center"  scrollable visible={vis2} onClose={() => seVis2(false)}>
+                            <CModalHeader>
+                                <CModalTitle>Document Preview</CModalTitle>
+                            </CModalHeader>
+                            <CModalBody ref={componentRef} style={{ padding: '25px' }}>
+                <div style={{minHeight:'100vh'}}>
+                    <iframe
+                        src={resumeUrl}
+                        frameBorder="0"
+                        scrolling="auto"
+                        width="100%"
+                        height="600"
+                    ></iframe>
+                </div>                  
+                            </CModalBody>
+                            <CModalFooter>
+                                <CButton color="primary" onClick={()=>handlePrint()}>Print</CButton>
+                            </CModalFooter>
+                </CModal> 
           
         <CCardHeader style={{ backgroundColor: "#0B5345", color: "white" }}>
             <CCardTitle>Empolyee Profile Info</CCardTitle>
@@ -272,7 +301,7 @@ function updateEmpolyee(){
                             label="Age"
                             placeholder="Enter Your Age"
                             value={age}
-                            onChange={(e)=>setAge(e.target.value)}
+                            onChange={(e)=>setAge(e.target.value)}Employee Type
                         />
                     </CCol>
                    
@@ -409,7 +438,7 @@ function updateEmpolyee(){
       <p className='p-0 m-0'>{new Date(createdAt).toDateString()}</p>
     </div>
     <div className='dev-center'>
-    <CButton size='sm' onClick={()=>{setVisi1(true), setResumeUrl2(resumeUrl)}}>View</CButton>
+    <CButton size='sm' onClick={()=>{if(setVisi1){ setVisi1(true),setResumeUrl2(resumeUrl)}else{seVis2(true)}}}>View</CButton>
     </div>
 </div>
 

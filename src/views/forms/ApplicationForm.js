@@ -436,7 +436,7 @@ const handleImage = event => {
                             <CFormSelect
                                 className="mb-1"
                                 aria-label="Select Grade"
-                                label="Types of Time"
+                                label="Employee Type"
                                 value={typesOfTime}
                                 onChange={(e)=>{setTypesOfTime(e.target.value)}}
                                 options={[
