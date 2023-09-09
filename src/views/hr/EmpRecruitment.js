@@ -167,7 +167,9 @@ const EmpRecruitment = () => {
     
    function filterData (data){
   return  data.filter((list) =>
-    list.FullName.toLowerCase().includes(Search1.toLowerCase())&&list.EmailAddress
+    list.FullName.toLowerCase().includes(Search1.toLowerCase())
+    &&list.selected !== 'Select'&&
+list.EmailAddress
       .toLowerCase().includes(Search2.toLowerCase())
      && list?.Gender?.toLowerCase().includes(Search3.toLowerCase())
       && list.address.toLowerCase().includes(Search4.toLowerCase()) 
@@ -240,7 +242,7 @@ const EmpRecruitment = () => {
                         <CRow>
                         <CCol lg={6} sm={12} className='mb-2'>
                                 <CButtonGroup role="group" aria-label="Basic example">
-                                    <CButton color="dark" variant="outline"   style={{ fontSize: '13px' }}>Open: {staff.filter((list) => Boolean(!list?.selected)).length}</CButton>
+                                    <CButton color="dark" variant="outline"   style={{ fontSize: '13px' }}>Open: {staff.filter((list) => Boolean(!list?.selected) ||list.selected==='pending').length}</CButton>
                                     <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Accept: {staff.filter((list) => list.selected === 'Select').length}</CButton>
                                     <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Rejected : {staff.filter((list) => list.selected === 'Not Select').length}</CButton>
                                 </CButtonGroup>
@@ -470,9 +472,14 @@ const EmpRecruitment = () => {
                                             
                                             <CTableDataCell style={{display:(isAdmin||  recruitmentStatus)?'':'none'}}  >
                                         
-                                        {Boolean(item?.selected)||<CButton className='mt-1'  size='sm' color='warning' onClick={()=>showEmpRecrumentFormFun(item)} >Pending...</CButton>  }
-                                        {item.selected === 'Select'&& <CButton className='mt-1' size='sm' color='success' onClick={()=>updateRec(item._id, 'Not Select',item)} >Accept</CButton> }
-                                        {item.selected === 'Not Select'&& <CButton className='mt-1' size='sm' color='danger' onClick={()=>updateRec(item._id,'Select',item)} >Reject.</CButton> }
+                                        {Boolean(item?.selected)||<CButton className='mt-1'  size='sm' color='warning' onClick={()=>updateRec(item._id, 'pending',item)}  >Pending...</CButton>  }
+                                        {item.selected === 'pending' &&
+                                         <CButtonGroup role="group" aria-label="Basic example">
+                                         <CButton className='mt-1' size='sm' color='success' onClick={()=>showEmpRecrumentFormFun(item)}  >Accept</CButton>
+                                         <CButton className='mt-1' size='sm' color='danger' onClick={()=>updateRec(item._id,'Not Select',item)} >Reject.</CButton> 
+                                          </CButtonGroup>
+                                         }
+                                        {(item.selected === 'Not Select')&& <CButton className='mt-1' size='sm' color='danger' onClick={()=>updateRec(item._id,'pending',item)} >Reject.</CButton> }
 
                                             </CTableDataCell> 
                                             <CTableDataCell style={{display:(isAdmin||  recruitmentResume)?'':'none'}} > <CButton size='sm' onClick={()=>toViewDoc(item.resume)}>View</CButton></CTableDataCell>

@@ -199,14 +199,13 @@ function updateEmpolyee(){
   return (
         
     <CCard>
-
         
-            <CModal  size="xl" alignment="center"  scrollable visible={vis2} onClose={() => seVis2(false)}>
+        <CModal  size="xl" alignment="center"  scrollable visible={vis2} onClose={() => seVis2(false)}>
                             <CModalHeader>
                                 <CModalTitle>Document Preview</CModalTitle>
                             </CModalHeader>
                             <CModalBody ref={componentRef} style={{ padding: '25px' }}>
-                <div style={{minHeight:'100vh'}}>
+                <div style={{minHeight:'100vh'}} >
                     <iframe
                         src={resumeUrl}
                         frameBorder="0"
@@ -219,7 +218,7 @@ function updateEmpolyee(){
                             <CModalFooter>
                                 <CButton color="primary" onClick={()=>handlePrint()}>Print</CButton>
                             </CModalFooter>
-                </CModal> 
+        </CModal> 
           
         <CCardHeader style={{ backgroundColor: "#0B5345", color: "white" }}>
             <CCardTitle>Empolyee Profile Info</CCardTitle>
@@ -268,15 +267,19 @@ function updateEmpolyee(){
                         />
                     </CCol>
                     <CCol>
-                         <CFormInput
+                         <CFormSelect
                                     className="mb-1"
                                     aria-label="Select Currency"
                                     value={Gender}
                                     onChange={(e) => setGender(e.target.value)}
-                                    label="Gander"
+                                    label="Gender"
                                 >
-                                    
-                            </CFormInput>
+                                    <option>Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                            </CFormSelect>
+
+                            
                     </CCol>
                 </CRow>
                 <CCol>
@@ -301,7 +304,7 @@ function updateEmpolyee(){
                             label="Age"
                             placeholder="Enter Your Age"
                             value={age}
-                            onChange={(e)=>setAge(e.target.value)}Employee Type
+                            onChange={(e)=>setAge(e.target.value)}
                         />
                     </CCol>
                    
