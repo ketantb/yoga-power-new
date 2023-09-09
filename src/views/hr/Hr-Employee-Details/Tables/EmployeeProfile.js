@@ -23,13 +23,19 @@ import {
     CTableHeaderCell,
     CTableRow,
     CImage,
-    CFormTextarea
+    CFormTextarea,
+    CModal,
+    CModalHeader,
+    CModalTitle,
+    CModalBody,
+    CModalFooter
 } from '@coreui/react'
 import ProfileIcon from 'src/assets/images/avatars/profile_icon.png'
 import moment from 'moment/moment'
-
-
-const EmployeeProfile = ({id,Edit,getStaff2}) => {
+import { useUploadResumeHook } from 'src/views/forms/useUploadHook'
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
+import { useReactToPrint } from 'react-to-print'
+const EmployeeProfile = ({id,Edit,getStaff2,setResumeUrl2,setVisi1}) => {
 
 const [EmployeeData,setEmployeeData] = useState([])
 const url = useSelector((el)=>el.domainOfApi) 
@@ -60,9 +66,11 @@ const [accountNo, setAccountNo] = useState('')
 const [IFSCCode, setIFSCCode] = useState('')
 const [PANNo, setPANNo] = useState('')
 const [aadharNo, setAadharNo] = useState('')
-
-
-
+const [createdAt,setCreatedAt] = useState()
+const [resuneProgress,setResumePrograss] = useState(0)
+const [resumeUrl,setResumeUrl]=  useState('')
+const resumeUplodFun = useUploadResumeHook(setResumePrograss,setResumeUrl,setResume)
+const pathVal = useAdminValidation('Master')
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
@@ -75,6 +83,8 @@ const headers = {
         'Content-Type': 'application/json',
       }
 }
+
+
 
 function getStaff() {
         if(!id){
@@ -102,6 +112,9 @@ return
                 setIFSCCode(res.data.IFSC)
                 setPANNo(res.data.PANCard)
                 setAadharNo(res.data.AadharNumber)
+                setResume(res.data.resumeName)
+                setResumeUrl(res.data.resume)
+                setCreatedAt(res.data.createdAt)
                 imgRef.current.src= res.data.image                  
             })
             .catch((error) => {
@@ -117,7 +130,7 @@ useEffect(()=>{
 
 
 function getDesignation() {
-    axios.get(`${url}/designation/all`, headers)
+    axios.get(`${url}/designation/${pathVal}`, headers)
         .then((res) => {
         console.log(res.data)
         setResult(res.data.reverse())
@@ -156,7 +169,9 @@ function getDesignation() {
     "AadharNumber": aadharNo,
     "PANCard": PANNo,
     "selected": "Select",
-    "status":true
+    "status":true,
+     resume:  resumeUrl,
+     resumeName:resume
  }
   
 function updateEmpolyee(){
@@ -176,6 +191,7 @@ function updateEmpolyee(){
   return (
         
     <CCard>
+          
         <CCardHeader style={{ backgroundColor: "#0B5345", color: "white" }}>
             <CCardTitle>Empolyee Profile Info</CCardTitle>
         </CCardHeader>
@@ -223,17 +239,15 @@ function updateEmpolyee(){
                         />
                     </CCol>
                     <CCol>
-                         <CFormSelect
+                         <CFormInput
                                     className="mb-1"
                                     aria-label="Select Currency"
                                     value={Gender}
                                     onChange={(e) => setGender(e.target.value)}
                                     label="Gander"
                                 >
-                                    <option>Select Gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                            </CFormSelect>
+                                    
+                            </CFormInput>
                     </CCol>
                 </CRow>
                 <CCol>
@@ -279,25 +293,52 @@ function updateEmpolyee(){
 
                  
                     <CCol xs={4}>
-                        <CFormInput
-                            className="mb-1"
-                            aria-label="Select Job Designation"
-                            label="Department"
-                            value={department}
-                            onChange={(e)=>setDepartment(e.target.value)}
-                         
-                        />
+                        {
+                      <CFormSelect
+                      className="mb-1"
+                      aria-label="Select Job Department"
+                      value={department}
+                      onChange={(e) => setDepartment(e.target.value)}
+                      label="Department"
+                      required
+                  >                                               
+                   <option>Select Department</option>
+
+                      {result.map((el)=>{
+                          if(el.status === true){
+                            return el.department.trim().toLowerCase()
+                          }
+                         return false
+                      })
+                      .filter((el,i,arr)=>el?i===arr.indexOf(el):el) 
+                  
+                      .map((item, index) => (                                                   
+                      <option key={index} value={item}>{item}</option>                                                       
+                          )
+                      )}
+          </CFormSelect>
+                      }
+
                     </CCol>
 
                     <CCol xs={4}>
-                        <CFormInput
-                            className="mb-1"
-                            aria-label="Select Job Designation"
-                            label="Job Designation"
-                            value={jobDesignation}
-                            onChange={(e)=>setJobDesignation(e.target.value)}
-                          
-                        />
+                    {
+                        <CFormSelect
+                        className="mb-1"
+                        aria-label="Select Job Designation"
+                        value={jobDesignation}
+                        onChange={(e) => setJobDesignation(e.target.value)}
+                        label="Job Designation"
+                        required
+                    >
+                     <option>Select Designation</option>
+                        {result.map((item, index) => (
+                            item.status === true&&  department === item.department.trim().toLocaleLowerCase()&&
+                                 (
+                                    <option key={index} value={item.jobDesignation}>{item.jobDesignation}</option>
+                                )                             
+                        ))}
+                    </CFormSelect>}
                                     
                     </CCol>
                     <CCol xs={4}>
@@ -315,17 +356,12 @@ function updateEmpolyee(){
                   
                     <CCol>
 
-                        <CFormSelect
+                        <CFormInput
                             className="mb-1"
                             aria-label="Select Payout Type"
                             label="Source"
                             value={payoutType}
                             onChange={(e)=>setPayouttype(e.target.value)}
-                            options={[
-                                "Select Grade",
-                                // { label: "Employee", value: "1" },
-                                // { label: "Consultant", value: "2" },
-                            ]}
                         />                            
                     </CCol>
 
@@ -343,19 +379,13 @@ function updateEmpolyee(){
                 </CRow>
                 <CRow>
                     <CCol >
-                        <CFormSelect
+                        <CFormInput
                             className="mb-1"
                             aria-label="Select Grade"
                             label="Job Timeing"
                             value={typesOfTime}
                             onChange={(e)=>{setTypesOfTime(e.target.value)}}
-                            options={[
-                                "Select Job Timeing",
-                                { label: "Full Time", value: "Full Time" },
-                                { label: "Part Time", value: "Part Time" },
-                                { label: "Freelancer", value: "Freelancer" },
-                                { label: "Consultant", value: "Consultant" },
-                            ]}
+                           
 
 
                         />
@@ -367,11 +397,22 @@ function updateEmpolyee(){
                                     className="mb-1"
                                     type="file"
                                     accept='pdf/*'
-                                    onChange={(e) => setResume(e.target.files[0])}
+                                    onChange={resumeUplodFun}
                                     id="exampleFormControlInput1"
-                                    label="Upload Resume"
+                                    label={ `${resuneProgress}%  Upload Resume`}
                                     placeholder="Enter Upload Resume"
                         />
+            <div className={!!resume?.trim()?'resume-dev h-100px border text-white d-flex':'d-none'}>
+    <div className='w-30 bg-lightRed h-100 dev-center'>PDF</div>
+    <div className='w-70 h-100 dev-center text-dark'>
+      <p className='p-0 m-0'> {((resume?.slice(0,30)?resume?.slice(0,20)+"...":null)||"Resume is not uploaded...")}</p> 
+      <p className='p-0 m-0'>{new Date(createdAt).toDateString()}</p>
+    </div>
+    <div className='dev-center'>
+    <CButton size='sm' onClick={()=>{setVisi1(true), setResumeUrl2(resumeUrl)}}>View</CButton>
+    </div>
+</div>
+
                  </CCol>
                                           <CCol xs={6}>
                                              <CFormInput
@@ -388,19 +429,13 @@ function updateEmpolyee(){
                                           
 
                                         <CCol xs={6}>
-                                        <CFormSelect
+                                        <CFormInput
                                                  className="mb-1"
                                                  aria-label="Select Employee Category"
                                                  value={empCategory}
                                                  onChange={(e) => setEmpCategory(e.target.value)}
                                                  label="Employee Category"
-                                                 options={[
-                                                     "Select Employee Category",
-                                                     { label: "Full Time", value: "Full Time" },
-                                                     { label: "Part Time", value: "Part Time" },
-                                                     { label: "Freelancer", value: "Freelancer" },
-                                                     { label: "Consultant", value: "Consultant" },
-                                                 ]}
+                                                 
                                              />
                                          </CCol> 
 

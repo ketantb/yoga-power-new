@@ -1,4 +1,7 @@
-import { CButton, CCard, CCardBody, CCardHeader, CCardTitle, CCol, CForm, CFormInput, CFormSelect, CFormTextarea, CImage, CRow } from '@coreui/react'
+import { CButton, CCard, CCardBody, CCardHeader,
+         CCardTitle, CCol, CForm, CFormInput,
+         CFormSelect, CFormTextarea, CImage, CRow,    
+} from '@coreui/react'
 import axios from 'axios'
 import { getDownloadURL, ref,  uploadBytesResumable } from 'firebase/storage'
 import React, { useEffect, useRef, useState } from 'react'
@@ -10,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { cilArrowCircleBottom} from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { useUniqAdminObjeact,useAdminValidation } from '../Custom-hook/adminValidation'
-
+import { CountryList } from 'src/components/CountryList'
 
 const Recruitment = () => {
 
@@ -43,11 +46,13 @@ const Recruitment = () => {
 
     const [imgPrograss,setImgPrograss] = useState(0)
     const [resumePrograss,setResumePrograss] = useState(0)
+    const [CountryCode2,setCountryCode2]= useState()
 
 
     const resumeInput = useRef('')
     const imageInput = useRef('')
   
+
 
 
     const navigate = useNavigate()
@@ -98,6 +103,8 @@ useEffect(()=>{
 
 
     const saveRecruitment = (e) => {
+        e.preventDefault()
+        console.log(e)
         if (imageUrl !== null && resumeUrl !== null  &&  Fullname !== '' && Salary !== '' &&
             Email !== ''  && pincode !== '' && state !== ''  && Gender !== '' && Address !== '') {
 
@@ -109,13 +116,13 @@ useEffect(()=>{
                 resume:  resumeUrl, PinCode: pincode, State: state,
                 PayoutType: Source, Grade: grade, Comment: comment, 
                 JobDesignation: Designation, Department: Department, Salary: Salary,
-                status: false,CountryCode: 0,whatsappNumber: 0,
+                status: false,whatsappNumber: 0,
                 DateofBirth:new Date(),Age:age,EmployeeCategory: "",loginAccess: false,
                 Anniversary: new Date(),AdminRights: "",joiningDate:"",EmployeeID: "",AttendanceID: "",
                 AccountNo: "",IFSC: "",PANCardNumber:"",AadharNumber: 0,PANCard:"",AadharCard: "",
-                selected: "",status:false,OfferLetter: "",AppoinmentLetter:"",Indexion: ""
+                selected: "",OfferLetter: "",AppoinmentLetter:"",Indexion: "",
+                resumeName:resume,CountryCode:CountryCode2
             }
-            console.log(data)
 
             fetch(`${url1}/employeeForm/create`, {
                 method: "POST",
@@ -200,6 +207,7 @@ useEffect(()=>{
 
     const HandaleResumeInputChange = event => {
         const file = event.target.files[0] 
+             setResume(file.name)
             const uploadResume = (file)=>{
               if(!file)return
              const storageRef =   ref(storage,`resume/${file.name}`)
@@ -243,7 +251,7 @@ useEffect(()=>{
                         <CCardTitle>Recruitment Application</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
-                        <CForm>
+                        <form onSubmit={saveRecruitment}>
                             
                             <CRow>
                                 <CCol lg={3} sm={6} className='mt-2 mb-1' >
@@ -258,7 +266,7 @@ useEffect(()=>{
                                         ref={imageInput}
                                         hidden
                                     />
-                                    <CButton onClick={HandaleImageClick} > <CIcon icon={cilArrowCircleBottom} /> {imgPrograss}% Upload Image</CButton>
+                                    <CButton  onClick={HandaleImageClick} > <CIcon icon={cilArrowCircleBottom} /> {imgPrograss}% Upload Image</CButton>
 
                                 </CCol>
                                 <CCol lg={6} md={6} sm={12}>
@@ -270,6 +278,7 @@ useEffect(()=>{
                                         value={Fullname}
                                         onChange={(e) => setFullname(e.target.value)}
                                         placeholder="Enter Name"
+                                        required
                                     />
                                 </CCol>
                                 <CCol lg={6} md={6} sm={12}>
@@ -282,6 +291,7 @@ useEffect(()=>{
                                         value={ContactNumber}
                                         onChange={(e) => setContactNumber(e.target.value)}
                                         placeholder="Enter Contact Number"
+                                        required
                                     />
                                 </CCol>
                             </CRow>
@@ -297,6 +307,7 @@ useEffect(()=>{
                                         placeholder="name@example.com"
                                         text="Must be 8-20 characters long."
                                         aria-describedby="exampleFormControlInputHelpInline"
+                                        required
                                     />
                                 </CCol>
                                 <CCol lg={4} md={6} sm={8}>
@@ -306,6 +317,7 @@ useEffect(()=>{
                                         value={Gender}
                                         onChange={(e) => setGender(e.target.value)}
                                         label="Gander"
+                                        required
                                     >
                                         <option>Select Gender</option>
                                         <option value="Male">Male</option>
@@ -322,11 +334,25 @@ useEffect(()=>{
                                         onChange={(e) => setAge(e.target.value)}
                                         label="Age"
                                         placeholder="Enter Your Age"
+                                        required
                                     />
                                 </CCol>
                             </CRow>
-
-                            <CCol>
+                             <CRow>
+                               <CCol lg={6} md={6} sm={12}>
+                                    <CFormSelect
+                                        className="mb-1"
+                                        aria-label="Select Working Days"
+                                        value={CountryCode2}
+                                        onChange={(e) => setCountryCode2(e.target.value)}
+                                        label="Country Code"
+                                        required
+                                    >{CountryList.map((item, index) => (
+                                        <option key={index} value={item.dial_code}>{item.name} {item.dial_code}</option>
+                                    ))}
+                                    </CFormSelect>
+                                </CCol>
+                                <CCol lg={6} md={6} sm={12}>
                                 <CFormTextarea
                                     id="exampleFormControlTextarea1"
                                     label="Address"
@@ -334,8 +360,11 @@ useEffect(()=>{
                                     onChange={(e) => setAddress(e.target.value)}
                                     rows="3"
                                     text="Must be 8-20 words long."
+                                    required
                                 ></CFormTextarea>
                             </CCol>
+                             </CRow>
+                            
                             <CRow>
                                 <CCol lg={6} md={6} sm={12}>
                                     <CFormInput
@@ -346,6 +375,7 @@ useEffect(()=>{
                                         onChange={(e) => setArea(e.target.value)}
                                         label="Area"
                                         placeholder="Enter Area"
+                                        required
                                     />
                                 </CCol>
                                 <CCol lg={6} md={6} sm={12}>
@@ -357,6 +387,7 @@ useEffect(()=>{
                                         onChange={(e) => setCity(e.target.value)}
                                         label="City"
                                         placeholder="Enter City"
+                                        required
                                     />
                                 </CCol>
                                 
@@ -372,6 +403,7 @@ useEffect(()=>{
                                         onChange={(e) => setPincode(e.target.value)}
                                         label="Pin Code"
                                         placeholder="Enter Pin Code"
+                                        required
                                     />
                                 </CCol>
                                 <CCol lg={6} md={6} sm={12}>
@@ -383,6 +415,7 @@ useEffect(()=>{
                                         id="exampleFormControlInput1"
                                         label="State"
                                         placeholder="Enter State"
+                                        required
                                     />
                                 </CCol>
                             </CRow>
@@ -395,6 +428,8 @@ useEffect(()=>{
                                                 value={Source}
                                                 onChange={(e) => setSource(e.target.value)}
                                                 label="Source"
+                                                required
+
                                             >
                                                 <option>Select Source</option>
                                                 {leadArr.map((item, index) => (
@@ -412,12 +447,13 @@ useEffect(()=>{
                                                 value={Department}
                                                 onChange={(e) => setDepartment(e.target.value)}
                                                 label="Department"
+                                                required
                                             >                                               
                                              <option>Select Department</option>
 
                                                 {result.map((el)=>{
                                                     if(el.status === true){
-                                                      return el.department.trim().toLocaleLowerCase()
+                                                      return el.department.trim().toLowerCase()
                                                     }
                                                    return false
                                                 })
@@ -441,10 +477,11 @@ useEffect(()=>{
                                                 value={Designation}
                                                 onChange={(e) => setDesignation(e.target.value)}
                                                 label="Job Designation"
+                                                required
                                             >
                                              <option>Select Designation</option>
                                                 {result.map((item, index) => (
-                                                      Department === item.department.trim().toLocaleLowerCase()&&
+                                                    item.status === true&&  Department === item.department.trim().toLocaleLowerCase()&&
                                                          (
                                                             <option key={index} value={item.jobDesignation}>{item.jobDesignation}</option>
                                                         )                             
@@ -462,6 +499,7 @@ useEffect(()=>{
                                                 id="exampleFormControlInput1"
                                                 label="CTC"
                                                 placeholder="Enter Salary"
+                                                required
                                             />
                                 </CCol>
                     
@@ -483,6 +521,7 @@ useEffect(()=>{
                                                     { label: "Consultant", value: "Consultant" },
 
                                                 ]}
+                                                required
                                             />
                                 </CCol>
 
@@ -495,6 +534,7 @@ useEffect(()=>{
                                                 id="exampleFormControlInput1"
                                                 label="Comments"
                                                 placeholder="Add Comments"
+                                                required
                                             />
                                 </CCol>
                                 
@@ -513,7 +553,13 @@ useEffect(()=>{
                                         hidden
                                     />
 
-
+                                    <div className={resumePrograss===100?'resume-dev h-100px border text-white d-flex':'d-none'}>
+                                        <div className='w-30 bg-lightRed h-100 dev-center'>PDF</div>
+                                        <div className='w-70 h-100 dev-center text-dark'>
+                                          <p className='p-0 m-0'> {((resume?.slice(0,30)?resume?.slice(0,20)+"...":null)||"Resume is not uploaded...")}</p> 
+                                          <p className='p-0 m-0'>{new Date().toDateString()}</p>
+                                        </div>
+                                    </div>
                                     <CButton className='mt-2' onClick={HandaleResumeInputClick}>  <CIcon icon={cilArrowCircleBottom} />  {resumePrograss}%  Upload Resume</CButton>
                                     <label style={{ color: 'red' }} className='ms-5'>{error}</label>
                                   
@@ -521,11 +567,9 @@ useEffect(()=>{
                                 
                             </CRow>
                            
-                            <CButton className="mt-4" onClick={() => {
-                                saveRecruitment()
-                            }}>Save</CButton>
+                            <CButton className="mt-4" type='submit'>Save</CButton>
                            
-                        </CForm>
+                        </form>
                     </CCardBody>
                 </CCard>
             

@@ -34,6 +34,8 @@ import moment from 'moment';
 import { useReactToPrint } from 'react-to-print';
 import { useAdminValidation} from '../Custom-hook/adminValidation';
 import { hrManagement } from './Rights/rightsValue/erpRightsValue';
+import {useExportEmpData} from './useExportEmpData';
+
 
 const EmpRecruitment = () => {
     const url = useSelector((el)=>el.domainOfApi) 
@@ -55,10 +57,7 @@ const EmpRecruitment = () => {
     const recruitmentStatus  =  (access.includes(hrManagement.recruitmentStatus)||isAdmin)
     const recruitmentAction  =  (access.includes(hrManagement.recruitmentAction)||isAdmin)
 
-
-
-    console.log(access)
-
+    const toExportData = useExportEmpData('Recruitment.xlsx')
 
     const pathName = useAdminValidation()
 
@@ -146,16 +145,16 @@ const EmpRecruitment = () => {
 
 
     function updateRec(id, selected,item) {
-
+        setUserData({})
+        setEmpRecrumentForm([])
         const data1 = { selected}
 
-        fetch(`${url}/employeeform/${id}`, {
-            method: "PUT",
+        fetch(`${url}/employeeform/update/${id}`, {
+            method: "POST",
             ...headers,
             body: JSON.stringify({...item,...data1})
         }).then((resp) => {
             resp.json().then(() => {
-                alert("successfully submitted")
                 getStaff()
             })
         })
@@ -166,7 +165,21 @@ const EmpRecruitment = () => {
         setDocUrl(url)
        }
     
-       
+   function filterData (data){
+  return  data.filter((list) =>
+    list.FullName.toLowerCase().includes(Search1.toLowerCase())&&list.EmailAddress
+      .toLowerCase().includes(Search2.toLowerCase())
+     && list?.Gender?.toLowerCase().includes(Search3.toLowerCase())
+      && list.address.toLowerCase().includes(Search4.toLowerCase()) 
+      && list.PayoutType.toLowerCase().includes(Search5.toLowerCase())
+     && list.Department.toLowerCase().includes(Search6.toLowerCase()) 
+     && list.JobDesignation.toLowerCase().includes(Search7.toLowerCase())
+      && list.Grade.toLowerCase().includes(Search9.toLowerCase())
+     && list.ContactNumber.toString().includes(Search10.toString())&&
+     list.Comment.toLowerCase().includes(Search8.toString())
+
+   )
+   }
 
 
     return (
@@ -175,6 +188,7 @@ const EmpRecruitment = () => {
                 {showEditFrom[0]&&<ApplicationForm getStaff={getStaff}  shouldEdit ={true}
                  data={showEditFrom[1]} editEnquiry={editEnquiry}
                  AttendenceLength={staff.length} 
+                 toViewDoc={toViewDoc}
                   />}
                 { showEmpRecrument[0]&& 
 
@@ -182,12 +196,14 @@ const EmpRecruitment = () => {
                  AttendenceLength={staff.length} 
                  getStaff={getStaff}
                  token={token} userdata={userdata} data={staff}
-                 showEmpRecrumentFormFun={showEmpRecrumentFormFun}/>}
+                 showEmpRecrumentFormFun={showEmpRecrumentFormFun}/>
+                 
+                 }
 
 
             <CModal  size="xl" alignment="center" scrollable visible={visi1} onClose={() => setVisi1(false)}>
                             <CModalHeader>
-                                <CModalTitle>Invoice Preview</CModalTitle>
+                                <CModalTitle>Document Preview</CModalTitle>
                             </CModalHeader>
                             <CModalBody ref={componentRef} style={{ padding: '25px' }}>
                 <div style={{minHeight:'100vh'}}>
@@ -207,26 +223,32 @@ const EmpRecruitment = () => {
 
 
                 <CCard className="mb-3 border-success">
-                    <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
+                    <CCardHeader >
                         <CCardTitle className="mt-2">All Recruitment</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
-                        <CRow className='d-flex mb-2'>
-                            <CCol lg={8} sm={6} className='mb-2'>
-
-                            </CCol>
+                        <CRow className='d-flex mb-2 justify-content-end'>
                             <CCol lg={4} sm={6} className='mb-2' style={{display:(isAdmin||  recruitmentImportExport)?'':'none'}} >
-                                <CButtonGroup className='float-end'>
-                                    <CButton color="primary">
-                                         <CIcon icon={cilArrowCircleBottom} />
-                                        {' '}Import
-                                    </CButton>
-                                    <CButton color="primary">
+                                <CButtonGroup className='float-end'>                                    
+                                    <CButton color="primary" onClick={()=>toExportData(filterData(staff))}>
                                         <CIcon icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>
                                 </CButtonGroup>
                             </CCol>
+                        </CRow>
+                        <CRow>
+                        <CCol lg={6} sm={12} className='mb-2'>
+                                <CButtonGroup role="group" aria-label="Basic example">
+                                    <CButton color="dark" variant="outline"   style={{ fontSize: '13px' }}>Open: {staff.filter((list) => Boolean(!list?.selected)).length}</CButton>
+                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Accept: {staff.filter((list) => list.selected === 'Select').length}</CButton>
+                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Rejected : {staff.filter((list) => list.selected === 'Not Select').length}</CButton>
+                                </CButtonGroup>
+                        </CCol>
+       
+                          <CCol className='text-end'>
+                               <h5>Total  Recruitment :{filterData(staff).length}</h5> 
+                          </CCol>
                         </CRow>
 
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
@@ -364,8 +386,8 @@ const EmpRecruitment = () => {
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
-                                            style={{ minWidth: "80px" }}
-                                            type="number"
+                                            style={{ minWidth: "120px" }}
+                                            type="text"
                                             value={Search9}
                                             onChange={(e) => setSearch9(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -375,7 +397,7 @@ const EmpRecruitment = () => {
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            style={{ minWidth: "50px" }}
+                                            style={{ minWidth: "120px" }}
                                             value={Search8}
                                             onChange={(e) => setSearch8(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -385,10 +407,8 @@ const EmpRecruitment = () => {
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            value={Search9}
                                             style={{ minWidth: "120px" }}
                                             disabled
-                                            onChange={(e) => setSearch9(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
@@ -430,22 +450,9 @@ const EmpRecruitment = () => {
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
-                                {staff.slice(paging * 10, paging * 10 + 10).filter((list) =>
-
-                                   list.FullName.toLowerCase().includes(Search1.toLowerCase())&&list.EmailAddress
-                                     .toLowerCase().includes(Search2.toLowerCase())
-                                    && list?.Gender?.toLowerCase().includes(Search3.toLowerCase())
-                                     && list.address.toLowerCase().includes(Search4.toLowerCase()) 
-                                     && list.PayoutType.toLowerCase().includes(Search5.toLowerCase())
-                                    && list.Department.toLowerCase().includes(Search6.toLowerCase()) 
-                                    && list.JobDesignation.toLowerCase().includes(Search7.toLowerCase())
-                                     && list.Grade.toLowerCase().includes(Search8.toLowerCase())
-                                    && list.Salary.toString().includes(Search9.toString()) 
-                                    && list.ContactNumber.toString().includes(Search10.toString())
-                         
-                                  ).map((item, index) => (
+                                {filterData(staff).slice(paging * 10, paging * 10 + 10).map((item, index) => (
                                    (
-                                        <CTableRow key={index}>
+                                        <CTableRow key={index} className='text-center'>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>JobRec{index + 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell className='text-center'>{moment(item.createdAt).format("LL")}</CTableDataCell>
@@ -462,14 +469,19 @@ const EmpRecruitment = () => {
                                             <CTableDataCell>{item.Salary}</CTableDataCell>
                                             
                                             <CTableDataCell style={{display:(isAdmin||  recruitmentStatus)?'':'none'}}  >
-                                             {item.selected !== 'Select'?   
-                                            <CButton className='mt-1' color='success' onClick={()=>showEmpRecrumentFormFun(item)} >Accept</CButton>                                            
-                                            :<CButton className='mt-1' color='danger' onClick={() => updateRec(item._id, 'Not Select',item)}>Reject</CButton>
-                                             }   
+                                        
+                                        {Boolean(item?.selected)||<CButton className='mt-1'  size='sm' color='warning' onClick={()=>showEmpRecrumentFormFun(item)} >Pending...</CButton>  }
+                                        {item.selected === 'Select'&& <CButton className='mt-1' size='sm' color='success' onClick={()=>updateRec(item._id, 'Not Select',item)} >Accept</CButton> }
+                                        {item.selected === 'Not Select'&& <CButton className='mt-1' size='sm' color='danger' onClick={()=>updateRec(item._id,'Select',item)} >Reject.</CButton> }
 
                                             </CTableDataCell> 
-                                            <CTableDataCell style={{display:(isAdmin||  recruitmentResume)?'':'none'}} > <CButton onClick={()=>toViewDoc(item.resume)}>View</CButton></CTableDataCell>
-                                            <CTableDataCell className='text-center' style={{display:(isAdmin||  recruitmentAction)?'':'none'}}><a href={`tel:${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`mailto: ${item.EmailAddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} size='20px' /></a></CTableDataCell>
+                                            <CTableDataCell style={{display:(isAdmin||  recruitmentResume)?'':'none'}} > <CButton size='sm' onClick={()=>toViewDoc(item.resume)}>View</CButton></CTableDataCell>
+                                            <CTableDataCell className='text-center' style={{display:(isAdmin||  recruitmentAction)?'':'none'}}>
+                                                <a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black">
+                                                <MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a>
+                                                <a href={`https://wa.me/${ item.ContactNumber }`}  target="_black">
+                                            <BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} size='20px' /></a>
+                                            <a href={`mailto: ${item.Emailaddress }`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} size='20px' /></a></CTableDataCell>
                                             <CTableDataCell className='text-center'  style={{display:(isAdmin||  recruitmentDelete||recruitmentEdit)?'':'none'}}>
                                              {recruitmentEdit&& <MdEdit style={{ 
                                                     cursor: 'pointer', markerStart: 
@@ -492,25 +504,9 @@ const EmpRecruitment = () => {
                             <span aria-hidden="true">&laquo;</span>
                         </CPaginationItem>
                         <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {staff.filter((list) =>
-                             list?.FullName?.toLowerCase().includes(Search1.toLowerCase()) && list.EmailAddress.toLowerCase().includes(Search2.toLowerCase())
-                            && list?.Gender?.toLowerCase().includes(Search3.toLowerCase()) && list.address.toLowerCase().includes(Search4.toLowerCase()) && list.PayoutType.toLowerCase().includes(Search5.toLowerCase())
-                            && list.Department.toLowerCase().includes(Search6.toLowerCase()) && list.JobDesignation.toLowerCase().includes(Search7.toLowerCase()) && list.Grade.toLowerCase().includes(Search8.toLowerCase())
-                            && list.Salary.toString().includes(Search9.toString()) && list.ContactNumber.toString().includes(Search10.toString())
-                        ).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
-
-                        {staff.filter((list) =>
-                             list.FullName.toLowerCase().includes(Search1.toLowerCase()) && list.EmailAddress.toLowerCase().includes(Search2.toLowerCase())
-                            && list?.Gender?.toLowerCase().includes(Search3.toLowerCase()) && list.address.toLowerCase().includes(Search4.toLowerCase()) && list.PayoutType.toLowerCase().includes(Search5.toLowerCase())
-                            && list.Department.toLowerCase().includes(Search6.toLowerCase()) && list.JobDesignation.toLowerCase().includes(Search7.toLowerCase()) && list.Grade.toLowerCase().includes(Search8.toLowerCase())
-                            && list.Salary.toString().includes(Search9.toString()) && list.ContactNumber.toString().includes(Search10.toString())
-                        ).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {staff.filter((list) =>
-                             list.FullName.toLowerCase().includes(Search1.toLowerCase()) && list.EmailAddress.toLowerCase().includes(Search2.toLowerCase())
-                            && list?.Gender?.toLowerCase().includes(Search3.toLowerCase()) && list.address.toLowerCase().includes(Search4.toLowerCase()) && list.PayoutType.toLowerCase().includes(Search5.toLowerCase())
-                            && list.Department.toLowerCase().includes(Search6.toLowerCase()) && list.JobDesignation.toLowerCase().includes(Search7.toLowerCase()) && list.Grade.toLowerCase().includes(Search8.toLowerCase())
-                            && list.Salary.toString().includes(Search9.toString()) && list.ContactNumber.toString().includes(Search10.toString())
-                        ).length > (paging + 1) * 10 ?
+                        {filterData(staff).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {filterData(staff).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {filterData(staff).length > (paging + 1) * 10 ?
                             <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>

@@ -1,5 +1,8 @@
 import { CButton, CCard, CCardBody, CCardHeader, CCardTitle, CCol, 
-    CForm, CFormInput, CFormSelect, CFormSwitch, CFormTextarea, CImage, CRow} from '@coreui/react'
+    CForm, CFormInput, CFormSelect, CFormSwitch, CFormTextarea, CImage, CRow,
+    CModalHeader,CModalContent,CModalBody,CModal ,
+    CModalFooter   
+} from '@coreui/react'
 import React from 'react'
 import ProfileIcon from 'src/assets/images/avatars/profile_icon.png'
 import { storage } from 'src/firebase'
@@ -7,9 +10,10 @@ import { useSelector } from 'react-redux';
 import { useAdminValidation } from '../Custom-hook/adminValidation';
 import { useState,useEffect,useRef } from 'react'
 import axios from 'axios';
-
 import { getDownloadURL, ref,  uploadBytesResumable } from 'firebase/storage'
-const ApplicationForm = ({shouldEdit,data,editEnquiry,getStaff}) => {
+import { useUploadResumeHook } from './useUploadHook';
+
+const ApplicationForm = ({shouldEdit,data,editEnquiry,getStaff,toViewDoc}) => {
 
 const imgRef = useRef(null)
 const [fullName,setFullName] = useState('')
@@ -32,6 +36,8 @@ const [leadArr, setLeadArr] = useState([]);
 const [typesOfTime,setTypesOfTime] = useState('')
 const [imgPrograss,setImgPrograss] = useState(0)
 const imageInput = useRef('')
+
+
 
 const pathVal = useAdminValidation('Master')
 
@@ -74,12 +80,13 @@ const AllowEditHandler = ()=>{
     setEmpCategory(data.EmployeeCategory)
     setPayouttype(data.PayoutType)
     setGrade(data.Grade)
-    setResume(data.resume)
+    setResume(data.resumeName)
     setImageUrl(data.image)
     setComment(data.Comment)
     setAge(data?.Age)
     setTypesOfTime(data.Grade)
-    imgRef.current.src = data.image
+
+    imgRef.current.src = (data.image||'')
 
 }
 
@@ -103,7 +110,7 @@ PayoutType:payoutType,
 Grade:Grade,
 image:imageUrl,
 Comment:comment,
-resume:resume
+resumeName:resume
 }
 const url = useSelector((el)=>el.domainOfApi) 
 
@@ -205,13 +212,13 @@ const handleImage = event => {
     
 
     return (
-    <CCard style={renderOverTheCurrentPage} className='Parent' onClick={toggaleModel}>
-        
-        <CCard style={ {width:'70%',margin:'2% auto',overflowY:'scroll',height:'100%'}}>
-            <div style={ {width:'100%'}}>
-            <CCardHeader>
+    <CModal visible={shouldEdit}  scrollable size='xl' className='Parent' onClick={toggaleModel}>
+        <CModalHeader>
                 <CCardTitle>Recruitment Application</CCardTitle>
-            </CCardHeader>
+        </CModalHeader>
+        <CModalBody>
+        <CCard >
+            <div style={ {width:'100%'}}>
             <CCardBody>
                 <CForm>
                     <CRow>
@@ -277,7 +284,7 @@ const handleImage = event => {
                                         aria-label="Select Currency"
                                         value={Gender}
                                         onChange={(e) => setGender(e.target.value)}
-                                        label="Gander"
+                                        label="Gender"
                                     >
                                         <option>Select Gender</option>
                                         <option value="Male">Male</option>
@@ -308,6 +315,7 @@ const handleImage = event => {
                             />
                         </CCol>
                         <CCol lg={6} md={6} sm={12}>
+                            
                          <CFormInput
                                         className="mb-1"
                                         type="file"
@@ -317,6 +325,17 @@ const handleImage = event => {
                                         label="Upload Resume"
                                         placeholder="Enter Upload Resume"
                             />
+
+                      <div className={!!resume?.trim()?'resume-dev h-100px border text-white d-flex':'d-none'}>
+                                        <div className='w-30 bg-lightRed h-100 dev-center'>PDF</div>
+                                        <div className='w-70 h-100 dev-center text-dark'>
+                                          <p className='p-0 m-0'> {((resume?.slice(0,30)?resume?.slice(0,20)+"...":null)||"Resume is not uploaded...")}</p> 
+                                          <p className='p-0 m-0'>{new Date(data.createdAt).toDateString()}</p>
+                                        </div>
+                                        <div className='dev-center'>
+                                        <CButton size='sm' onClick={()=>toViewDoc(data.resume)}>View</CButton>
+                                        </div>
+                        </div>
                      </CCol>
                     </CRow>
 
@@ -325,40 +344,47 @@ const handleImage = event => {
                      
                         <CCol xs={4}>
                             <CFormSelect
-                                className="mb-1"
-                                aria-label="Select Job Designation"
-                                label="Department"
-                                value={department}
-                                onChange={(e)=>setDepartment(e.target.value)}
-                             
-                            >
-                              <option>Select Department</option>
+                                                className="mb-1"
+                                                aria-label="Select Job Department"
+                                                value={department}
+                                                onChange={(e) => setDepartment(e.target.value)}
+                                                label="Department"
+                                                required
+                                            >                                               
+                                             <option>Select Department</option>
 
-                           {result.map((item, index) => (
-                                   (
-                            item.status === true && (
-                           <option key={index} value={item.department}>{item.department}</option>
-                           ))))}
-                            </CFormSelect>
+                                                {result.map((el)=>{
+                                                    if(el.status === true){
+                                                      return el.department.trim().toLowerCase()
+                                                    }
+                                                   return false
+                                                })
+                                                .filter((el,i,arr)=>el?i===arr.indexOf(el):el) 
+                                            
+                                                .map((item, index) => (                                                   
+                                                <option key={index} value={item}>{item}</option>                                                       
+                                                    )
+                                                )}
+                                    </CFormSelect>
                         </CCol>
 
                         <CCol xs={4}>
-                            <CFormSelect
-                                className="mb-1"
-                                aria-label="Select Job Designation"
-                                label="Job Designation"
-                                value={jobDesignation}
-                                onChange={(e)=>setJobDesignation(e.target.value)}
-                              
-                            >
-                                        {result.map((item, index) => (
-                                            department === item.department &&
-                                            item.status === true && (
-                                                <option key={index} value={item.jobDesignation}>{item.jobDesignation}</option>
-                                            )
-
-                                        ))}
-                            </CFormSelect>
+                        <CFormSelect
+                                                className="mb-1"
+                                                aria-label="Select Job Designation"
+                                                value={jobDesignation}
+                                                onChange={(e) => setJobDesignation(e.target.value)}
+                                                label="Job Designation"
+                                                required
+                                            >
+                                             <option>Select Designation</option>
+                                                {result.map((item, index) => (
+                                                    item.status === true&&  department === item.department.trim().toLocaleLowerCase()&&
+                                                         (
+                                                            <option key={index} value={item.jobDesignation}>{item.jobDesignation}</option>
+                                                        )                             
+                                                ))}
+                                            </CFormSelect>
                         </CCol>
                         <CCol xs={4}>
                             <CFormInput
@@ -377,7 +403,7 @@ const handleImage = event => {
                             <CFormSelect
                                 className="mb-1"
                                 aria-label="Select Employee Category"
-                                label="Employee Category"
+                                label="Employee Type"
                                 value={empCategory}
                                 onChange={(e)=> setEmpCategory(e.target.value)}
                                 options={[
@@ -436,13 +462,15 @@ const handleImage = event => {
                             />
                         </CCol>
                     </CRow>
-
-                    <CButton className="mt-2" onClick={Edit}>Save</CButton>
                 </CForm>
             </CCardBody>
             </div>
         </CCard>
-    </CCard>
+        </CModalBody>
+        <CModalFooter>
+           <CButton className="mt-2" onClick={Edit}>Save</CButton>
+        </CModalFooter>
+    </CModal>
     )
 }
 

@@ -23,7 +23,8 @@ import {
     CModal,
     CModalHeader,
     CModalTitle,
-    CModalBody
+    CModalBody,
+    CModalFooter
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop, cilInfo } from '@coreui/icons'
@@ -36,7 +37,8 @@ import { useSelector } from 'react-redux'
 import { useAdminValidation } from '../Custom-hook/adminValidation';
 import { hrManagement } from './Rights/rightsValue/erpRightsValue';
 import { useNavigate } from 'react-router-dom';
-
+import { useExportSelctedEmpData } from './useExportEmpData';
+import { useReactToPrint } from 'react-to-print'
 
 const EmployeeProfile = React.lazy(()=>import('./Hr-Employee-Details/Tables/EmployeeProfile'))
 
@@ -44,7 +46,17 @@ const EmployeeProfile = React.lazy(()=>import('./Hr-Employee-Details/Tables/Empl
 const AllEmpProfile = () => {
     const url = useSelector((el)=>el.domainOfApi) 
     const navigate = useNavigate()
+    const exportEmpData = useExportSelctedEmpData('allEmpProfile.xlsx')
+    const [resumeUrl,setResumeUrl]=  useState('')
+    const [visi1,setVisi1] = useState(false)
 
+    const componentRef = useRef()
+
+const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: 'yog-power',
+    onAfterPrint: () => alert('print success')
+})
 
     const rightsData = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
     ?.items?.empLoyeeHrProfile?.items?.erpEmployeeProfile?.rights) 
@@ -62,7 +74,7 @@ const AllEmpProfile = () => {
 
 
 
-    const pathName = useAdminValidation()
+    const pathName = useAdminValidation('Master')
     const [Search1, setSearch1] = useState('')
     const [Search2, setSearch2] = useState('')
     const [Search3, setSearch3] = useState('')
@@ -152,8 +164,8 @@ const AllEmpProfile = () => {
 
     function updateRec(data, status) {
         const data1 =  {...data,...{ status: status }}
-        fetch(`${url}/employeeform/${data._id}`, {
-            method: "PUT",
+        fetch(`${url}/employeeform/update/${data._id}`, {
+            method: "POST",
             ...headers,
             body: JSON.stringify(data1)
         }).then((resp) => {
@@ -170,56 +182,82 @@ const AllEmpProfile = () => {
         setEditModal(true)
     }
 
+    function tofilterData(data){
 
-
+       return data.filter((list) =>
+                list.selected === 'Select' &&
+                (list.FullName||'').toLowerCase().includes(Search1.toLowerCase())&&
+                (list.ContactNumber+""||'').includes(Search2.toLowerCase())&&
+                (moment(list.DateofBirth).format("MM-DD-YYYY").includes(Search4)) &&
+                (list.EmailAddress||'').toLowerCase().includes(Search3.toLowerCase())  &&
+                (list.Gender||'').toLowerCase().includes(Search5.toLowerCase()) &&
+                (list.EmployeeID||'').toLowerCase().includes(Search6.toLowerCase()) &&
+                (list.AttendanceID||'').toLowerCase().includes(Search7.toLowerCase())&&
+                (list.Department||'').toLowerCase().includes(Search8.toLowerCase())&&
+                (list.JobDesignation||'').toLowerCase().includes(Search9.toLowerCase()))
+    }
+   
 
     return (
         <CRow>
-              {showEditModal &&<CModal  style={{ border: '2px solid #0B5345' }} 
-              visible={showEditModal} size='xl' onClose={()=>setEditModal(false)} scrollable>
-            <CModalHeader  >
+            <div>
+              <CModal  style={{ border: '2px solid #0B5345' }} 
+              visible={showEditModal} size='xl'  onClose={()=>{setEditModal(false)}} scrollable>
+            <CModalHeader   >
                 <CModalTitle>Edit Form</CModalTitle>
             </CModalHeader>
             <CModalBody>
-                {id&&  <EmployeeProfile getStaff2={getStaff} Edit={true} id={id}/>}
+                 {id&&!visi1&&<EmployeeProfile setVisi1={setVisi1} setResumeUrl2={setResumeUrl} 
+                 getStaff2={getStaff} Edit={showEditModal} id={id}/>}
             </CModalBody>
-              </CModal>}
+              </CModal>
+              </div>
+
+              <CModal  size="xl" alignment="center"  scrollable visible={visi1} onClose={() => setVisi1(false)}>
+                            <CModalHeader>
+                                <CModalTitle>Document Preview</CModalTitle>
+                            </CModalHeader>
+                            <CModalBody ref={componentRef} style={{ padding: '25px' }}>
+                <div style={{minHeight:'100vh'}}>
+                    <iframe
+                        src={resumeUrl}
+                        frameBorder="0"
+                        scrolling="auto"
+                        width="100%"
+                        height="600"
+                    ></iframe>
+                </div>                  
+                            </CModalBody>
+                            <CModalFooter>
+                                <CButton color="primary" onClick={handlePrint}>Print</CButton>
+                            </CModalFooter>
+                </CModal> 
              
             <CCol lg={12} sm={12}>
                 <CCard className="mb-3 border-success">
-                    <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
+                    <CCardHeader>
                         <CCardTitle className="mt-2">All Employee Profile</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex mb-2'>
                             <CCol lg={6} sm={12} className='mb-2'>
                                 <CButtonGroup role="group" aria-label="Basic example">
-                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Total Employee: {staff.filter((list) => list).length}</CButton>
-                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Active Employee: {staff.filter((list) => list && list.status === true).length}</CButton>
-                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Left Employee: {staff.filter((list) => list && list.status === false).length}</CButton>
+                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Total Employee: {staff.filter((list) => list.selected === 'Select' ).length}</CButton>
+                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Active Employee: {staff.filter((list) => list.selected === 'Select' && list.status === true).length}</CButton>
+                                    <CButton color="dark" variant="outline" style={{ fontSize: '13px' }}>Left Employee: {staff.filter((list) => list.selected === 'Select' && list.status === false).length}</CButton>
                                 </CButtonGroup>
                             </CCol>
                             <CCol lg={3}></CCol>
                             <CCol lg={3} sm={12}>
 
                              <CButtonGroup className=' mb-2 float-end' style={{display:((isAdmin||allImpProfileImportExport)?'':'none')}}>
-                                    <CButton onClick={HandaleImportClick}  color="primary">
-                                        <CIcon icon={cilArrowCircleBottom} />
-                                        {' '}Import
-                                    </CButton>
-                                    <CFormInput type='file'
-                                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                        ref={hiddenXLimportFileInput}
-                                        onChange={HandaleImportChange} hidden />
+                                  
                                     
-                                    <CButton   onClick={HandaleExportClick}color="primary">
+                                    <CButton   onClick={()=>exportEmpData(tofilterData(staff))}color="primary">
                                         <CIcon  icon={cilArrowCircleTop} />
                                         {' '}Export
                                     </CButton>
-                                    <CFormInput type='file'
-                                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                        ref={hiddenXLExportFileInput}
-                                        onChange={HandaleExportChange} hidden />
+                                    
                             </CButtonGroup>
 
 
@@ -249,7 +287,7 @@ const AllEmpProfile = () => {
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
-                                            style={{ minWidth: "60px" }}
+                                            style={{ minWidth: "90px" }}
                                             type="text"
                                             disabled
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -268,77 +306,47 @@ const AllEmpProfile = () => {
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
-                                            style={{ minWidth: "120px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
+                                            style={{ minWidth: "90px" }}
                                             type="number"
-                                            style={{ minWidth: "100px" }}
-                                            value={Search10}
-
-                                            onChange={(e) => setSearch10(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
                                             value={Search2}
                                             onChange={(e) => setSearch2(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
+                                            style={{ minWidth: "90px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
                                             value={Search3}
-                                            disabled
                                             onChange={(e) => setSearch3(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            style={{ minWidth: "180px" }}
+                                            style={{ minWidth: "90px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
                                             value={Search4}
                                             onChange={(e) => setSearch4(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            style={{ minWidth: "100px" }}
+                                            style={{ minWidth: "90px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
                                             value={Search5}
                                             onChange={(e) => setSearch5(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            style={{ minWidth: "100px" }}
                                             value={Search6}
                                             onChange={(e) => setSearch6(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
@@ -347,11 +355,40 @@ const AllEmpProfile = () => {
                                     <CTableDataCell>
                                         <CFormInput
                                             className="mb-1"
-                                            style={{ minWidth: "100px" }}
                                             type="text"
+                                            style={{ minWidth: "90px" }}
                                             value={Search7}
                                             onChange={(e) => setSearch7(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            type="text"
+                                            style={{ minWidth: "90px" }}
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                            value={Search8}
+                                            onChange={(e) => setSearch8(e.target.value)}
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            type="text"
+                                            style={{minWidth: "90px" }}                                          
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                            value={Search9}
+                                            onChange={(e) => setSearch9(e.target.value)}
+                                        />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <CFormInput
+                                            className="mb-1"
+                                            style={{minWidth: "90px" }}
+                                            type="text"                                          
+                                            aria-describedby="exampleFormControlInputHelpInline"
+                                            disabled
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell style={{display:((isAdmin||allImpProfileStatus)?'':'none')}} >
@@ -359,40 +396,34 @@ const AllEmpProfile = () => {
                                             className="mb-1"
                                             style={{ minWidth: "80px" }}
                                             type="number"
-                                            value={Search9}
-                                            onChange={(e) => setSearch9(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            disabled
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell       style={{display:((isAdmin||allImpProfileAction)?'':'none')}} >
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            style={{ minWidth: "50px" }}
-                                            value={Search8}
-                                            onChange={(e) => setSearch8(e.target.value)}
+                                            style={{ minWidth: "90px" }}                                   
                                             aria-describedby="exampleFormControlInputHelpInline"
+                                            disabled
                                         />
                                     </CTableDataCell>
                                     <CTableDataCell style={{display:((isAdmin||allImpProfileDelete||allImpProfileEdit)?'':'none')}}>
                                         <CFormInput
                                             className="mb-1"
                                             type="text"
-                                            value={Search9}
-                                            style={{ minWidth: "120px" }}
+                                            style={{ minWidth: "90px" }}
                                             disabled
-                                            onChange={(e) => setSearch9(e.target.value)}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                         />
                                     </CTableDataCell>
                                    
                                   
                                 </CTableRow>
-                                {staff.filter((list) =>
-                                    list && list.selected === 'Select' 
-                                ).map((item, index) => (
-                                    item && (
-                                        <CTableRow key={index}>
+                                {tofilterData(staff).slice(paging * 10, paging * 10 + 10).map((item, index) => (
+                                   
+                                        <CTableRow key={index}  className='text-center'>
                                             <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
 
                                             <CTableDataCell>
@@ -419,7 +450,15 @@ const AllEmpProfile = () => {
                                                  : <CButton  size='sm' className='mt-1' color='danger' onClick={() => updateRec(item, true)}>Inactive</CButton>}</CTableDataCell>
                                             <CTableDataCell className='text-center'
                                             style={{display:((isAdmin||allImpProfileAction)?'':'none')}} 
-                                            ><a href={`tel:${item.ContactNumber}`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`https://wa.me/${item.ContactNumber}`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} size='20px' /></a><a href={`mailto: ${item.EmailAddress}`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} size='20px' /></a></CTableDataCell>
+
+                                            > <a href={`tel:+${item.CountryCode}${item.ContactNumber}`} target="_black">
+                                            <MdCall style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' /></a>
+                                            <a href={`https://wa.me/${ item.ContactNumber }`}  target="_black">
+                                        <BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} size='20px' /></a>
+                                        <a href={`mailto: ${item.Emailaddress }`} target="_black">
+                                             <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} size='20px' /></a>
+                                        </CTableDataCell>
+                                            
                                             <CTableDataCell className='text-center' style={{display:((isAdmin||allImpProfileDelete||allImpProfileEdit)?'':'none')}}>
                                                  {allImpProfileEdit&&<MdEdit style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} 
                                                 onClick={() =>{allowToEdit(item._id)}} size='20px' />}
@@ -427,10 +466,26 @@ const AllEmpProfile = () => {
                                                 onClick={() => deleteEnquiry(item._id)} size='20px' />}
                                                 </CTableDataCell>
                                         </CTableRow>
-                                    )
+                                    
                                 ))}
                             </CTableBody>
                         </CTable>
+                        <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {tofilterData(staff).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {tofilterData(staff).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {tofilterData(staff).length > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                    </CPagination>
                     </CCardBody>
                    
                 </CCard>

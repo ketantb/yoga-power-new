@@ -15,7 +15,7 @@ const initialState = {
   activeToCall:'',
   empLoyeeRights:obj,
   sidebarShow: true,
-  domainOfApi:'https://yog-power-api-j7c6.vercel.app',
+  domainOfApi:'https://yogpower-api-0np7.onrender.com',
   stockDataClothData:[],
   clothStockDataClearFun:()=>{},
   stockDataAuravedaData:[],
@@ -63,7 +63,7 @@ function functionUser(token,emailUniqId){
 
 
   return function(dispatch){
-    axios.get(`${'https://yog-power-api-j7c6.vercel.app'}/allRight/rights/${emailUniqId}`, {
+    axios.get(`${'https://yogpower-api-0np7.onrender.com'}/allRight/rights/${emailUniqId}`, {
       headers: {
           'Authorization': `Bearer ${token}`
       }

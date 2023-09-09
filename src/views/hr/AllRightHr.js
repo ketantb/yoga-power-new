@@ -31,7 +31,7 @@ const AllRight = () => {
 
     const {isRights,emailUniqId} = useParams()
 
-    const [activeKey, setActiveKey] = useState((user.user.isAdmin&&!Boolean(isRights.trim()))?1:2)
+    const [activeKey, setActiveKey] = useState((user.user.isAdmin&&!Boolean(isRights?.trim()))?1:2)
 
 
     return (
@@ -39,7 +39,7 @@ const AllRight = () => {
 
 <CCardHeader>
     <CNav variant="tabs" role="tablist">
-     {(user.user.isAdmin&&!Boolean(isRights.trim()))&&<CNavItem>
+     {(user.user.isAdmin&&!Boolean(isRights?.trim()))&&<CNavItem>
         <CNavLink
           active={activeKey === 1}
           onClick={() =>  setActiveKey(1)}
@@ -60,11 +60,11 @@ const AllRight = () => {
 
 <CCardBody>
   <CTabContent>
-      {(user.user.isAdmin&&!Boolean(isRights.trim()))&&<CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 1}>
+      {(user.user.isAdmin&&!Boolean(isRights?.trim()))&&<CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 1}>
          <LoginList admin={true} />
       </CTabPane>}
       <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 2} >
-         <LoginList admin={false} emailUniqIdEmp={emailUniqId}  onlyOneEmp={Boolean(isRights.trim())}  />
+         <LoginList admin={false} emailUniqIdEmp={emailUniqId}  onlyOneEmp={Boolean(isRights?.trim())}  />
       </CTabPane>
   </CTabContent>
 </CCardBody>    

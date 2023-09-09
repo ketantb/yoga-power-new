@@ -229,3 +229,27 @@ width: 60px;
 .lead{
     background-color:Navy;
 }
+.w-30{
+    width:30%
+}
+.w-70{
+    width:40%
+}
+.bg-lightRed{
+    background-color:rgb(235, 71, 71);
+}
+.h-100px{
+    height: 60px;
+}
+.dev-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.text-dark{
+    color: black;
+}
+.bg-darkgreen{
+    background-color:#0B5345;
+}
