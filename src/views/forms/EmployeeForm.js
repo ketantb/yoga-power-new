@@ -40,15 +40,15 @@ let attendanceId = "AID" + id.slice(id.length-5, id.length).toUpperCase();
 let employeeId = "EID" + id.slice(id.length-5, id.length).toUpperCase();
 
 if(userdata){
-    setAttendanceID(((userdata?.AttendanceID?.trim()||'')||attendanceId))
-    setEmployeeID(((userdata?.EmployeeID?.trim()||'')||employeeId))
-    setJoiningDate((userdata?.joiningDate?.trim()||'')||joiningDate)
-    setAnniversary((userdata?.Anniversary?.trim()||'')||Anniversary)
-    setAccountNo((userdata?.AccountNo?.trim()||'')||accountNo)
-    setPANNo(((userdata?.PANCard?.trim()||'')||PANNo))
-    setIFSCCode(((userdata?.IFSC?.trim()||'')||IFSCCode))
-    setDateOfBirth(((userdata?.DateofBirth?.trim()||'')||dateOfBirth))
-    setEmpCategory(((userdata?.EmployeeCategory?.trim()||'')||empCategory))
+    setAttendanceID(((userdata?.AttendanceID||'')||attendanceId))
+    setEmployeeID(((userdata?.EmployeeID||'')||employeeId))
+    setJoiningDate((userdata?.joiningDate||'')||joiningDate)
+    setAnniversary((userdata?.Anniversary||'')||Anniversary)
+    setAccountNo((userdata?.AccountNo||'')||accountNo)
+    setPANNo(((userdata?.PANCard||'')||PANNo))
+    setIFSCCode(((userdata?.IFSC||'')||IFSCCode))
+    setDateOfBirth(((userdata?.DateofBirth||'')||dateOfBirth))
+    setEmpCategory(((userdata?.EmployeeCategory||'')||empCategory))
 }
 },[userdata._id])
 

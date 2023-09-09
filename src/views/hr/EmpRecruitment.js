@@ -192,7 +192,7 @@ list.EmailAddress
                  AttendenceLength={staff.length} 
                  toViewDoc={toViewDoc}
                   />}
-                { showEmpRecrument[0]&& 
+                { showEmpRecrument[0]&&userdata?._id&& 
 
                 <EmployeeForm
                  AttendenceLength={staff.length} 
