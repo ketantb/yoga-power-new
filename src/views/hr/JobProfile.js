@@ -47,6 +47,10 @@ const JobProfile = () => {
     const [jobProfileData,setJobProfileData] = useState([])
     const jobProfileFunction = useJobProfileHook()
 
+    const [designationData,setDesignationData] = useState([])
+    const [selectedDesignation,setSelectedDesignation] = useState('')
+    const [paging, setPaging] = useState(0);
+
 
     const getJobProfileData = async ()=>{
         axios.get(`${url}/jobProfile/${pathVal}`,{headers}).then((el)=>{
@@ -54,6 +58,7 @@ const JobProfile = () => {
           return 
          }
          setJobProfileData(el.data)
+         setDesignationData(el.data.map((el)=>el.Designations).filter((el,i,arr)=>arr.indexOf(el)===i))
        }).catch((error)=>{console.log(error)})
        }
 
@@ -62,8 +67,13 @@ const JobProfile = () => {
     }, []);
 
 
-  
 
+    function tofilterData(data){
+
+        return data.filter((el)=>`${el.Designations}`.trim().toLowerCase().includes(selectedDesignation.trim().toLowerCase()))
+     }
+
+     
 
 
     return (
@@ -74,6 +84,24 @@ const JobProfile = () => {
                         <CCardTitle className="mt-2">Job Profile</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
+
+                    <CRow>
+                                <CCol md={6} lg={4} sm={8}>
+                                <CFormSelect
+                                    label='Filter by staff'
+                                    className="mb-2"
+                                    value={selectedDesignation}
+                                    onChange={(e)=>setSelectedDesignation(e.target.value)}
+                                >
+                                    <option value={''}> Select Designation</option>
+                                    {designationData.map((el)=>{
+                                     return <option>{el}</option>
+                                    })}
+
+                                </CFormSelect>
+                                <CButton onClick={()=>setSelectedDesignation('')}>Clear Filter</CButton>
+                                </CCol>
+                            </CRow>
                         
                     <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
@@ -86,10 +114,10 @@ const JobProfile = () => {
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                        {jobProfileData.map((el,i) => (
+                        {tofilterData(jobProfileData).slice(paging * 5, paging * 5 + 5).map((el,i) => (
                             <CTableRow className="text-center">
                                 <CTableDataCell>
-                                    {i+1}
+                                {i + 1 + (paging * 5)}
                                 </CTableDataCell>
                                 <CTableDataCell style={{width:'fit-content'}}>
                                     {el.Designations}
@@ -103,10 +131,26 @@ const JobProfile = () => {
                                 ))}
                               
                           
+
                             </CTableBody>
                         </CTable>
+                        <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {tofilterData(jobProfileData).length > (paging + 1) * 5 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {tofilterData(jobProfileData).length > (paging + 2) * 5 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {tofilterData(jobProfileData).length > (paging + 1) * 5 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                    </CPagination>
                     </CCardBody>
-                  
                 </CCard>
             </CCol>
         </CRow>

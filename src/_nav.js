@@ -554,7 +554,7 @@ const _nav = [
       },
       {
         component: CNavGroup,
-        name: 'Employee Profile',
+        name: 'All Employee',
         to: '/hr/EP',
         id:'empLoyeeHrProfile',
         items:[
@@ -580,7 +580,7 @@ const _nav = [
       },    
         {
           component: CNavGroup,
-          name: 'Emp Target Sheet',
+          name: 'Target Sheet',
           to: '/hr/empt',
           id:'erpHrTargetSheet',
           items: [

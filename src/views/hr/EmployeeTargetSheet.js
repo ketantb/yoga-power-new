@@ -1,6 +1,6 @@
 import {CCard,CCardTitle,CCardHeader,CTable,CTableHead,
     CTableHeaderCell,CTableBody,CTableRow,CTableDataCell, 
-    CButton,CCol,CPagination,CPaginationItem,}from '@coreui/react'
+    CButton,CCol,CPagination,CPaginationItem, CFormSelect,CRow}from '@coreui/react'
 import React,{useState,useEffect} from 'react'   
 import YogaSpinnar from '../theme/YogaSpinnar';
 import {MdDelete} from 'react-icons/md';
@@ -15,7 +15,17 @@ function EmployeeTargetSheet(){
   const pathVal = useAdminValidation('Master')
   const [activeForm,setActiveForm] = useState(false)
   const [employeeTargetSheeTdata,setEmployeeTargetSeetData] = useState([])
-  const [pagination, setPagination] = useState(10)
+  const [paging, setPaging] = useState(0);
+  const [searchFilter,setSearchFilter] = useState({
+    search1:'',
+    search2:'',
+    search3:''
+  })
+  const [filterData,setFilterData] = useState({
+    staffData:[],
+    typeTargetDtata:[],
+    yearData:[]
+  })
 
 
   const rightsData = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
@@ -50,7 +60,28 @@ useEffect(()=>{
 
 async function getEmployeeTargetSheetData(){  
 try{  
-const {data} = await  axios.get(`${url1}/employeeTargetSheet/${pathVal}`,headers)
+const {data} = await  axios.get(`${url1}/employeeTargetSheet/${pathVal}`,headers);
+
+const filterData = data.reduce((crr,el)=>{
+  if(!crr.staffData.includes(el.Employee.toLowerCase())){
+    crr.staffData.push(el.Employee.toLowerCase())
+  }
+  if(!crr.typeTargetDtata.includes(el.Type_Of_Target.toLowerCase())){
+    crr.typeTargetDtata.push(el.Type_Of_Target.toLowerCase())
+  }
+  if(!crr.yearData.includes((""+el.Year).toLowerCase())){
+    crr.yearData.push((""+el.Year).toLowerCase())
+  }
+  return crr
+}
+,{
+  staffData:[],
+  typeTargetDtata:[],
+  yearData:[]
+})
+
+
+setFilterData(filterData)
 setEmployeeTargetSeetData(data.reverse())
 }catch(error){
   console.error(error)
@@ -114,6 +145,15 @@ if(TypeOfTarget==='Media Target'){TargetDataDelete(EmployeeId,`${url1}/mediaTarg
 }
 
 
+function tofilterData(data){
+
+  return data.filter((el)=>{
+    return ((el.Employee.toLowerCase()||'').includes(searchFilter.search1))&&
+    ((el.Type_Of_Target.toLowerCase()||'').includes(searchFilter.search2))&&
+    ((el.Year.toLowerCase()||'').includes(searchFilter.search3))
+   })
+}
+
 return <CCard>
      <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
          <CCardTitle className='p-2'>
@@ -130,6 +170,53 @@ return <CCard>
 
 
    <div style={{overflowX:'scroll',boxSizing:'border-box'}} className='mx-4'>
+    <CRow>
+      <CCol lg={3} md={4} >
+        <CFormSelect
+        label='Filter by staff'
+        value={searchFilter.search1}
+        onChange={(e)=>setSearchFilter((prev)=>({...prev,search1:e.target.value}))}
+        >
+          <option value={""}>Select by staff</option>
+          {filterData.staffData.map((el)=>
+                    <option value={el}>{el}</option>
+          )}
+        </CFormSelect>
+      </CCol>
+      <CCol lg={3} md={4} >
+        <CFormSelect
+        label='Filter by target type'
+        value={searchFilter.search2}
+        onChange={(e)=>setSearchFilter((prev)=>({...prev,search2:e.target.value}))}
+        >
+          <option value={""}>Select by target type</option>
+          {filterData.typeTargetDtata.map((el)=>
+                    <option value={el}>{el}</option>
+          )}
+        </CFormSelect>
+      </CCol>
+      <CCol lg={3} md={4} >
+        <CFormSelect
+        label='Filter by year'
+        value={searchFilter.search3}
+        onChange={(e)=>setSearchFilter((prev)=>({...prev,search3:e.target.value}))}
+        >
+          <option value={""}>Select by year</option>
+          {filterData.yearData.map((el)=>
+                    <option value={el}>{el}</option>
+          )}
+        </CFormSelect>
+      </CCol>
+      <CCol xs={12} className='mt-2'>
+        <CButton onClick={()=>{
+          setSearchFilter({
+            search1:'',
+            search2:'',
+            search3:''
+          })
+        }}>Clear Filter</CButton>
+      </CCol>
+    </CRow>
 
      <CTable style={{width:'180%'}} className='mt-3'>
           <CTableHead >
@@ -151,15 +238,14 @@ return <CCard>
              <CTableHeaderCell className='p-3'>Dec</CTableHeaderCell>
              <CTableHeaderCell className='p-3' style={{display:((deleteEmpTargetSheet)?'':'none')}}>Delete</CTableHeaderCell>
           </CTableHead>
+          <CTableRow>
+            
+          </CTableRow>
+          
           <CTableBody>
-            {employeeTargetSheeTdata.
-            filter((el, i) => {
-                  if (pagination - 10 < i + 1 && pagination >= i + 1) {
-                        return el
-                      }
-              }).map((el,i)=>
+            {tofilterData(employeeTargetSheeTdata).slice(paging * 10, paging * 10 + 10).map((el,i)=>
              <CTableRow key={i}>
-             <CTableDataCell>{i + 1 + pagination - 10}</CTableDataCell>
+             <CTableDataCell>{i + 1 + (paging * 10)}</CTableDataCell>
              <CTableDataCell>{el.Employee}</CTableDataCell>
              <CTableDataCell>{el.Type_Of_Target}</CTableDataCell>
              <CTableDataCell>{el.Year}</CTableDataCell>
@@ -190,19 +276,22 @@ return <CCard>
                                     <YogaSpinnar />
                          </CCol> : ''}
      </div>
-     <div className='d-flex justify-content-center mt-3' >
-                        <CPagination aria-label="Page navigation example" style={{cursor:'pointer'}}>
-                            <CPaginationItem aria-label="Previous" onClick={() => setPagination((val) => val > 10 ? val - 10 : 10)}>
-                                <span aria-hidden="true" >&laquo;</span>
-                            </CPaginationItem>
-                            <CPaginationItem active >{pagination / 10}</CPaginationItem>
-                            {employeeTargetSheeTdata.length > pagination / 10 * 10 && <CPaginationItem onClick={() => setPagination((val) => val < employeeTargetSheeTdata.length ? val + 10 : val)}>{pagination / 10 + 1}</CPaginationItem>}
-                            {employeeTargetSheeTdata.length > pagination / 10 * 20 && <CPaginationItem onClick={() => setPagination((val) => val < employeeTargetSheeTdata.length ? val + 10 : val)}>{pagination / 10 + 2}</CPaginationItem>}
-                            <CPaginationItem aria-label="Next" onClick={() => setPagination((val) => val < employeeTargetSheeTdata.length ? val + 10 : val)}>
+     <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {tofilterData(employeeTargetSheeTdata).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {tofilterData(employeeTargetSheeTdata).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {tofilterData(employeeTargetSheeTdata).length > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
                                 <span aria-hidden="true">&raquo;</span>
                             </CPaginationItem>
-                        </CPagination>
-      </div>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                    </CPagination>
 
 </CCard>
 
