@@ -77,7 +77,6 @@ const TargetvsAchievment = () => {
 
   const bothData  =  await Promise.all([response1,response2])
 
-  console.log(bothData)
 
    const targetData = bothData[0].data
    const invoiceData = bothData[1].data

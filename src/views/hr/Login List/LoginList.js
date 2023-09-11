@@ -24,7 +24,7 @@ import axios from 'axios'
 import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
 import CustomSelectinput from '../CustomSelectinput'
 const LoginList = ({admin, onlyOneEmp,emailUniqIdEmp}) => {
-
+console.log(emailUniqIdEmp)
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const {username,centerCode,center,emailUniqId,startDate,expDate,brandLogo} = user.user;
@@ -102,11 +102,15 @@ const LoginList = ({admin, onlyOneEmp,emailUniqIdEmp}) => {
   }
 
   function getStaff() {
-      axios.get(`${url}/employeeform/${`${onlyOneEmp?"emp/"+emailUniqIdEmp:masterPtahVal}`}`, { headers})
+      axios.get(`${url}/employeeform/${onlyOneEmp?(emailUniqIdEmp):masterPtahVal}`, { headers})
           .then((res) => {
             if(res.status===200){
+              if(res?.data?.length){
                 setStaff(res.data.filter((list) => 
                 list.selected === 'Select'))
+              }else{
+                setStaff([res.data].filter((list) => 
+                list.selected === 'Select'))              }
             }
           })
           .catch((error) => {

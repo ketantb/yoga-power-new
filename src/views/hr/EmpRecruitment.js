@@ -110,7 +110,7 @@ const EmpRecruitment = () => {
 
 
     function getStaff() {
-        axios.get(`${url}/employeeform/${pathName}`,headers)
+        axios.get(`${url}/employeeform/all/${pathName}`,headers)
             .then((res) => {
                 setStaff(res.data.reverse())
                
@@ -178,9 +178,7 @@ list.EmailAddress
      && list.JobDesignation.toLowerCase().includes(Search7.toLowerCase())
       && list.Grade.toLowerCase().includes(Search9.toLowerCase())
      && list.ContactNumber.toString().includes(Search10.toString())&&
-     list.Comment.toLowerCase().includes(Search8.toString())
-
-   )
+     list.Comment.toLowerCase().includes(Search8.toString()))
    }
 
 

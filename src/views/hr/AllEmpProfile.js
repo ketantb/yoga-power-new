@@ -137,7 +137,7 @@ const handlePrint = useReactToPrint({
 
     const [staff, setStaff] = useState([])
     function getStaff() {
-        axios.get(`${url}/employeeform/${pathName}`,headers)
+        axios.get(`${url}/employeeform/all/${pathName}`,headers)
             .then((res) => {
                 setStaff(res.data.reverse())
             })
