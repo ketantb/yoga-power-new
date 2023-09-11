@@ -87,7 +87,7 @@ const SalarySheet = ({id}) => {
                                     <CTableHeaderCell>Emp Id</CTableHeaderCell>
                                     <CTableHeaderCell>Emp Name</CTableHeaderCell>
                                     <CTableHeaderCell>Designations</CTableHeaderCell>
-                                    <CTableHeaderCell>Basic Slarry</CTableHeaderCell>
+                                    <CTableHeaderCell>Basic Salary</CTableHeaderCell>
                                     <CTableHeaderCell>Late Mark</CTableHeaderCell>
                                     <CTableHeaderCell>Half day</CTableHeaderCell>
                                     <CTableHeaderCell>Leave day</CTableHeaderCell>

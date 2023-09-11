@@ -96,7 +96,6 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
     const username = user.user.username;
-    const eamailUniqId = user.user.emailUniqId;
 
     const centerCode = user.user.centerCode;
     
