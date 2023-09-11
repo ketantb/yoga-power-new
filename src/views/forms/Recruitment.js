@@ -101,12 +101,27 @@ useEffect(()=>{
     getDesignation()
 },[])
 
+const validation = Fullname !== '' && Salary !== '' &&
+Email !== ''  && pincode !== '' && state !== ''  && Gender !== '' && Address !== ''
+
+useEffect(()=>{
+if(imgPrograss===100&&resumePrograss===100&&validation){
+        setError('')
+}
+},[validation,imgPrograss,resumePrograss])
+
 
     const saveRecruitment = (e) => {
         e.preventDefault()
-        console.log(e)
-        if (imageUrl !== null && resumeUrl !== null  &&  Fullname !== '' && Salary !== '' &&
+        if ( Fullname !== '' && Salary !== '' &&
             Email !== ''  && pincode !== '' && state !== ''  && Gender !== '' && Address !== '') {
+                if(imgPrograss!==100){
+                    setError('Image is not uploaded  yet')
+                    return
+                }else if(resumePrograss!==100){
+                    setError('Resume is not uploaded  yet')
+                    return 
+                }
 
             let data = {
                 username: username ,
@@ -153,6 +168,7 @@ useEffect(()=>{
                     setComment('')
                     setImgPrograss(0)
                     setResumePrograss(0)
+                    setError('')
                     alert("successfully submitted")
                 })
             })
@@ -265,11 +281,12 @@ useEffect(()=>{
                                         accept="image/*"
                                         ref={imageInput}
                                         hidden
+                                        autoComplete='off'
                                     />
                                     <CButton  onClick={HandaleImageClick} > <CIcon icon={cilArrowCircleBottom} /> {imgPrograss}% Upload Image</CButton>
 
                                 </CCol>
-                                <CCol lg={6} md={6} sm={12}>
+                                <CCol lg={4} md={6} sm={12}>
                                     <CFormInput
                                         className="mb-1"
                                         type="text"
@@ -279,9 +296,11 @@ useEffect(()=>{
                                         onChange={(e) => setFullname(e.target.value)}
                                         placeholder="Enter Name"
                                         required
+                                        autoComplete='off'
+
                                     />
                                 </CCol>
-                                <CCol lg={6} md={6} sm={12}>
+                                <CCol lg={4} md={6} sm={12}>
                                     <CFormInput
                                         className="mb-1"
                                         type="number"
@@ -292,11 +311,27 @@ useEffect(()=>{
                                         onChange={(e) => setContactNumber(e.target.value)}
                                         placeholder="Enter Contact Number"
                                         required
+                                        autoComplete='off'
+
                                     />
+                                </CCol>
+                                <CCol lg={4} md={6} sm={12}>
+                                    <CFormSelect
+                                        className="mb-1"
+                                        aria-label="Select Working Days"
+                                        value={CountryCode2}
+                                        onChange={(e) => setCountryCode2(e.target.value)}
+                                        label="Country Code"
+                                        required
+                                        autoComplete='off'
+                                    >{CountryList.map((item, index) => (
+                                        <option key={index} value={item.dial_code}>{item.name} {item.dial_code}</option>
+                                    ))}
+                                    </CFormSelect>
                                 </CCol>
                             </CRow>
                             <CRow>
-                                <CCol lg={5} md={6} sm={12}>
+                                <CCol lg={4} md={6} sm={12}>
                                     <CFormInput
                                         className="mb-1"
                                         type="email"
@@ -308,6 +343,8 @@ useEffect(()=>{
                                         text="Must be 8-20 characters long."
                                         aria-describedby="exampleFormControlInputHelpInline"
                                         required
+                                        autoComplete='off'
+
                                     />
                                 </CCol>
                                 <CCol lg={4} md={6} sm={8}>
@@ -318,6 +355,7 @@ useEffect(()=>{
                                         onChange={(e) => setGender(e.target.value)}
                                         label="Gender"
                                         required
+                                        autoComplete='off'
                                     >
                                         <option>Select Gender</option>
                                         <option value="Male">Male</option>
@@ -325,7 +363,7 @@ useEffect(()=>{
                                     </CFormSelect>
                                 </CCol>
 
-                                <CCol lg={3} md={6} sm={4}>
+                                <CCol lg={4} md={6} sm={4}>
                                     <CFormInput
                                         className="mb-1"
                                         type="number"
@@ -335,24 +373,13 @@ useEffect(()=>{
                                         label="Age"
                                         placeholder="Enter Your Age"
                                         required
+                                        autoComplete='off'
                                     />
                                 </CCol>
                             </CRow>
                              <CRow>
-                               <CCol lg={6} md={6} sm={12}>
-                                    <CFormSelect
-                                        className="mb-1"
-                                        aria-label="Select Working Days"
-                                        value={CountryCode2}
-                                        onChange={(e) => setCountryCode2(e.target.value)}
-                                        label="Country Code"
-                                        required
-                                    >{CountryList.map((item, index) => (
-                                        <option key={index} value={item.dial_code}>{item.name} {item.dial_code}</option>
-                                    ))}
-                                    </CFormSelect>
-                                </CCol>
-                                <CCol lg={6} md={6} sm={12}>
+                               
+                                <CCol lg={4} md={6} sm={12}>
                                 <CFormTextarea
                                     id="exampleFormControlTextarea1"
                                     label="Address"
@@ -361,12 +388,10 @@ useEffect(()=>{
                                     rows="3"
                                     text="Must be 8-20 words long."
                                     required
+                                    autoComplete='off'
                                 ></CFormTextarea>
                             </CCol>
-                             </CRow>
-                            
-                            <CRow>
-                                <CCol lg={6} md={6} sm={12}>
+                            <CCol lg={4} md={6} sm={12}>
                                     <CFormInput
                                         className="mb-1"
                                         type="text"
@@ -376,9 +401,10 @@ useEffect(()=>{
                                         label="Area"
                                         placeholder="Enter Area"
                                         required
+                                        autoComplete='off'
                                     />
                                 </CCol>
-                                <CCol lg={6} md={6} sm={12}>
+                                <CCol lg={4} md={6} sm={12}>
                                     <CFormInput
                                         className="mb-1"
                                         type="text"
@@ -388,12 +414,15 @@ useEffect(()=>{
                                         label="City"
                                         placeholder="Enter City"
                                         required
+                                        autoComplete='off'
                                     />
                                 </CCol>
                                 
-                            </CRow>
+                             </CRow>
+                            
+
                             <CRow>
-                                <CCol lg={6} md={6} sm={12}>
+                                <CCol lg={4} md={6} sm={12}>
                                     <CFormInput
                                         className="mb-1"
                                         type="text"
@@ -404,9 +433,10 @@ useEffect(()=>{
                                         label="Pin Code"
                                         placeholder="Enter Pin Code"
                                         required
+                                        autoComplete='off'
                                     />
                                 </CCol>
-                                <CCol lg={6} md={6} sm={12}>
+                                <CCol lg={4} md={6} sm={12}>
                                     <CFormInput
                                         className="mb-1"
                                         type="text"
@@ -416,12 +446,10 @@ useEffect(()=>{
                                         label="State"
                                         placeholder="Enter State"
                                         required
+                                        autoComplete='off'
                                     />
                                 </CCol>
-                            </CRow>
-
-                            <CRow>
-                                <CCol lg={6} md={6} sm={12}>
+                                <CCol lg={4} md={6} sm={12}>
                                     <CFormSelect
                                                 className="mb-1"
                                                 aria-label="Select Assign Staff"
@@ -429,6 +457,7 @@ useEffect(()=>{
                                                 onChange={(e) => setSource(e.target.value)}
                                                 label="Source"
                                                 required
+                                                autoComplete='off'
 
                                             >
                                                 <option>Select Source</option>
@@ -439,7 +468,11 @@ useEffect(()=>{
                                                     )
                                     ))}</CFormSelect>
                                 </CCol>
-                                <CCol lg={6} md={6} sm={12}>
+                            </CRow>
+
+                            <CRow>
+                               
+                                <CCol lg={4} md={6} sm={12}>
 
                                    <CFormSelect
                                                 className="mb-1"
@@ -448,6 +481,7 @@ useEffect(()=>{
                                                 onChange={(e) => setDepartment(e.target.value)}
                                                 label="Department"
                                                 required
+                                                autoComplete='off'
                                             >                                               
                                              <option>Select Department</option>
 
@@ -466,10 +500,9 @@ useEffect(()=>{
                                     </CFormSelect>
                                </CCol>
    
-                            </CRow>
-                            <CRow>
+                           
 
-                            <CCol lg={6} md={6} sm={12}>
+                            <CCol lg={4} md={6} sm={12}>
 
                                     <CFormSelect
                                                 className="mb-1"
@@ -478,6 +511,7 @@ useEffect(()=>{
                                                 onChange={(e) => setDesignation(e.target.value)}
                                                 label="Job Designation"
                                                 required
+                                                autoComplete='off'
                                             >
                                              <option>Select Designation</option>
                                                 {result.map((item, index) => (
@@ -490,7 +524,7 @@ useEffect(()=>{
                             </CCol>
            
                         
-                                <CCol lg={6} md={6} sm={12}>                                   
+                                <CCol lg={4} md={6} sm={12}>                                   
                                     <CFormInput
                                                 className="mb-1"
                                                 type="number"
@@ -500,6 +534,7 @@ useEffect(()=>{
                                                 label="CTC"
                                                 placeholder="Enter Salary"
                                                 required
+                                                autoComplete='off'
                                             />
                                 </CCol>
                     
@@ -522,6 +557,7 @@ useEffect(()=>{
 
                                                 ]}
                                                 required
+                                                autoComplete='off'
                                             />
                                 </CCol>
 
@@ -535,6 +571,7 @@ useEffect(()=>{
                                                 label="Comments"
                                                 placeholder="Add Comments"
                                                 required
+                                                autoComplete='off'
                                             />
                                 </CCol>
                                 
@@ -551,6 +588,7 @@ useEffect(()=>{
                                         id="exampleFormControlInput1"
                                         onChange={HandaleResumeInputChange}
                                         hidden
+                                        autoComplete='off'
                                     />
 
                                     <div className={resumePrograss===100?'resume-dev h-100px border text-white d-flex':'d-none'}>

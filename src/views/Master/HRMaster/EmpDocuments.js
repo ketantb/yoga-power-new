@@ -213,7 +213,7 @@ const handlePrint = useReactToPrint({
         <>
          <CModal  size="xl" alignment="center" scrollable visible={visi1} onClose={() => setVisi1(false)}>
                             <CModalHeader>
-                                <CModalTitle>Invoice Preview</CModalTitle>
+                                <CModalTitle>Document Preview</CModalTitle>
                             </CModalHeader>
                             <CModalBody ref={componentRef} style={{ padding: '25px' }}>
                 <div style={{minHeight:'100vh'}}>
