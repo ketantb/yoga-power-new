@@ -92,7 +92,7 @@ const EmpPerformance = () => {
           onClick={() => setActiveKey(1)}
           style={{display:empPrformanse?'':'none'}}
         >
-          Employee Prformance
+          Employee Performance
         </CNavLink>
       </CNavItem>
       <CNavItem  >

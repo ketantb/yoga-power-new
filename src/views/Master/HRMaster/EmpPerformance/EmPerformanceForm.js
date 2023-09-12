@@ -152,7 +152,7 @@ setForm(false)
               onChange={(e)=>setEmpObj(prev=>({...prev, employeeId:e.target.value}))}
               >
                 <option value=''>Select Employee</option>
-                        {staff.filter((list) => list.username === username &&
+                        {staff.filter((list) => 
                           list.selected === 'Select').map((item, index) => (
                             <option key={index} value={item._id}> {item.FullName}</option>
                           ))}
@@ -198,14 +198,19 @@ setForm(false)
         </CRow>
         <CRow>
             <CCol>
-              <CFormInput
+              <CFormSelect
               label='Punctuality'
               value={empObj.punctuality}
               type='text'
               onChange={(e)=>{
                 setEmpObj(prev=>({...prev,punctuality:e.target.value}))
               }}
-              />
+              >
+
+                <option>On Time</option>
+                <option>Very Panctuly</option>
+                <option>Always Let</option>
+              </CFormSelect>
             </CCol>
             <CCol>
               <CFormInput
@@ -222,7 +227,7 @@ setForm(false)
         <CRow>
             <CCol>
               <CFormInput
-              label='Response'
+              label='Responsiblity'
               value={empObj.response}
               type='text'
               onChange={(e)=>{
@@ -232,7 +237,7 @@ setForm(false)
             </CCol>
             <CCol>
               <CFormInput
-              label='Additional Comments'
+              label='All over feedback'
               value={empObj.additionalComments}
               onChange={(e)=>{
                 setEmpObj(prev=>({...prev,additionalComments:e.target.value}))

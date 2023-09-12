@@ -6,6 +6,9 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
+    CFormInput,
+    CPaginationItem,
+    CPagination
 } from '@coreui/react'
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -22,7 +25,19 @@ const EmpPerformanceTable = () => {
     const [employeePerformance,setEmployeePerformance] = useState([])
     const url = useSelector((el) => el.domainOfApi)
     const pathVal = useAdminValidation('Master')
+    const [searchFilter,setSearchFilter] = useState({
+      search1:'',
+      search2:'',
+      search3:'',
+      search4:'',
+      search5:'',
+      search6:'',
+      search7:'',
+      search8:'',
+      search9:'',
+  })
 
+  const [paging, setPaging] = useState(0);
 
     useEffect(()=>{
         getEmpPerformance()
@@ -36,6 +51,18 @@ const EmpPerformanceTable = () => {
         }).catch((error) => {console.error(error)})
       }
       
+      function toFilterData(data){
+        return data.filter((el)=>{
+                  return (el.name.toLowerCase()||'').includes(searchFilter.search2.toLowerCase().trim())&&
+                  (el.empId.toLowerCase()||'').includes(searchFilter.search3.toLowerCase().trim())&&
+                  (el.department.toLowerCase()||'').includes(searchFilter.search4.toLowerCase().trim())&&
+                  (el.designation.toLowerCase()||'').includes(searchFilter.search5.toLowerCase().trim())&&
+                  (el.punctuality.toLowerCase()||'').includes(searchFilter.search6.toLowerCase().trim())&&
+                  (el.productivity.toLowerCase()||'').includes(searchFilter.search7.toLowerCase().trim())&&
+                  (el.response.toLowerCase()||'').includes(searchFilter.search8.toLowerCase().trim())&&
+                  (el.additionalComments.toLowerCase()||'').includes(searchFilter.search9.toLowerCase().trim())    
+         })
+        }
 
       
   return (
@@ -52,12 +79,32 @@ const EmpPerformanceTable = () => {
                                     <CTableHeaderCell>Designation</CTableHeaderCell>
                                     <CTableHeaderCell>Punctuality</CTableHeaderCell>
                                     <CTableHeaderCell>Productivity</CTableHeaderCell>
-                                    <CTableHeaderCell>Response</CTableHeaderCell>
-                                    <CTableHeaderCell>Additional Comments</CTableHeaderCell>
+                                    <CTableHeaderCell>Responsiblity</CTableHeaderCell>
+                                    <CTableHeaderCell>All over feedback</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                            {employeePerformance.map((el,i)=> 
+                            <CTableRow>
+                                    <CTableDataCell  style={{minWidth:'80px'}}><CFormInput disabled value={searchFilter.search1} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search1:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search2} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search2:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search3} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search3:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search4} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search4:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search5} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search5:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search6} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search6:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search7} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search7:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search8} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search8:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search9} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search9:e.target.value}))} /> </CTableDataCell>                                   
+                                </CTableRow>
+                            {toFilterData(employeePerformance).map((el,i)=> 
                                <CTableRow className='text-center'>
                                     <CTableDataCell>{i+1}</CTableDataCell>
                                     <CTableDataCell>{el.name}</CTableDataCell>
@@ -71,6 +118,22 @@ const EmpPerformanceTable = () => {
                                 </CTableRow>)}                                                               
                             </CTableBody>
                         </CTable>
+                        <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {toFilterData(employeePerformance).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {toFilterData(employeePerformance).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {toFilterData(employeePerformance).length > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                    </CPagination>  
    </>                     
   )
 }

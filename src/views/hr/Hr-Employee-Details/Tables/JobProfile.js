@@ -90,7 +90,7 @@ const JobProfile = ({id}) => {
                                 <CTableRow >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
 
-                                    <CTableHeaderCell>Designation</CTableHeaderCell>
+                                    <CTableHeaderCell style={{width:'fit-content'}}>Designation</CTableHeaderCell>
                                     <CTableHeaderCell>Job Profile</CTableHeaderCell>
                                  
                                 </CTableRow>
