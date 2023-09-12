@@ -114,10 +114,10 @@ const TrainerPerformance = () => {
                                     onChange={(e)=>setSearchFilter((prev)=>({...prev,search11:e.target.value}))} />
                                     </CTableDataCell>
             </CTableRow>
-            {toFilterData(trainerloyeePerformance).map((el,i)=>
+            {toFilterData(trainerloyeePerformance).slice(paging * 10, paging * 10 + 10).map((el,i)=>
 
             <CTableRow >
-                        <CTableDataCell>{i+1}</CTableDataCell>
+                        <CTableDataCell>{i+ 1 + (paging * 10)}</CTableDataCell>
                         <CTableDataCell>{el.name}</CTableDataCell>
                         <CTableDataCell>{el.empId}</CTableDataCell>
                         <CTableDataCell>{el.department}</CTableDataCell>

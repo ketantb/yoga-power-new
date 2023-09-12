@@ -55,7 +55,7 @@ function useAttendanceEmp(){
     const empData =  memBerData.find((el2)=>el2._id===el.staffId)   
     if(staffID.find((el2)=>el2===el.staffId)){
             
-            el.status=empData.status
+            el.status=(empData?.status||false)
         
         
         }})       

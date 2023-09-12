@@ -145,10 +145,10 @@ const TrainerPerformance = ({trainer,addTrainerPrformanse,deleteTrainerPrformans
                                     onChange={(e)=>setSearchFilter((prev)=>({...prev,search11:e.target.value}))} /> </CTableDataCell>     
                                      <CTableDataCell style={{minWidth:'80px'}}><CFormInput disabled  /> </CTableDataCell>                        
                                 </CTableRow>
-                                {toFilterData(trainerloyeePerformance).map((el,i)=>
+                                {toFilterData(trainerloyeePerformance).slice(paging * 10, paging * 10 + 10).map((el,i)=>
 
                                 <CTableRow className='text-center' >
-                                            <CTableDataCell>{i+1}</CTableDataCell>
+                                            <CTableDataCell>{i+ 1 + (paging * 10)}</CTableDataCell>
                                             <CTableDataCell>{el.name}</CTableDataCell>
                                             <CTableDataCell>{el.empId}</CTableDataCell>
                                             <CTableDataCell>{el.department}</CTableDataCell>

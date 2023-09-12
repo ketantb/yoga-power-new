@@ -104,9 +104,9 @@ const EmpPerformanceTable = () => {
                                     <CTableDataCell style={{minWidth:'80px'}}><CFormInput  value={searchFilter.search9} 
                                     onChange={(e)=>setSearchFilter((prev)=>({...prev,search9:e.target.value}))} /> </CTableDataCell>                                   
                                 </CTableRow>
-                            {toFilterData(employeePerformance).map((el,i)=> 
+                            {toFilterData(employeePerformance).slice(paging * 10, paging * 10 + 10).map((el,i)=> 
                                <CTableRow className='text-center'>
-                                    <CTableDataCell>{i+1}</CTableDataCell>
+                                    <CTableDataCell>{i+ 1 + (paging * 10)}</CTableDataCell>
                                     <CTableDataCell>{el.name}</CTableDataCell>
                                     <CTableDataCell>{el.empId}</CTableDataCell>
                                     <CTableDataCell>{el.department}</CTableDataCell>

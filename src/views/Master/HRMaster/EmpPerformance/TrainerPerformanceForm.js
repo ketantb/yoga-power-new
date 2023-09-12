@@ -176,7 +176,7 @@ setForm(true)
               onChange={(e)=>setTrainerObj(prev=>({...prev, trainerId:e.target.value}))}
               >
                 <option value=''>Select trainerloyee</option>
-                        {trainer.filter((list) => list.username === username &&
+                        {trainer.filter((list) => list &&
                           list.selected === 'Select').map((item, index) => (
                             <option key={index} value={item._id}> {item.FullName}</option>
                           ))}
@@ -222,14 +222,18 @@ setForm(true)
         </CRow>
         <CRow>
             <CCol>
-              <CFormInput
+              <CFormSelect
               label='Punctuality'
               value={trainerObj.punctuality}
               type='text'
               onChange={(e)=>{
                 setTrainerObj(prev=>({...prev,punctuality:e.target.value}))
               }}
-              />
+              >
+                <option>On Time</option>
+                <option>Very Panctuly</option>
+                <option>Always Let</option>  
+              </CFormSelect>
             </CCol>
             <CCol>
               <CFormInput
@@ -275,6 +279,7 @@ setForm(true)
                 setTrainerObj(prev=>({...prev,Behaviour:e.target.value}))
             }}
               />
+              
             </CCol>
             <CCol>
               <CFormInput
