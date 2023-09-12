@@ -101,7 +101,7 @@ const EmpPerformanceTable = () => {
                                     onChange={(e)=>setSearchFilter((prev)=>({...prev,search7:e.target.value}))} /> </CTableDataCell>
                                     <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search8} 
                                     onChange={(e)=>setSearchFilter((prev)=>({...prev,search8:e.target.value}))} /> </CTableDataCell>
-                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search9} 
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput  value={searchFilter.search9} 
                                     onChange={(e)=>setSearchFilter((prev)=>({...prev,search9:e.target.value}))} /> </CTableDataCell>                                   
                                 </CTableRow>
                             {toFilterData(employeePerformance).map((el,i)=> 

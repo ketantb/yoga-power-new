@@ -76,14 +76,6 @@ const EmpPerformanceTable = ({staff,addEmpPrformanse,deleteEmpPrformanse,editEmp
             })
         }
       }
-    //   <CTableDataCell>{el.name}</CTableDataCell>
-    //   <CTableDataCell>{el.empId}</CTableDataCell>
-    //   <CTableDataCell>{el.department}</CTableDataCell>
-    //   <CTableDataCell>{el.designation}</CTableDataCell>
-    //   <CTableDataCell>{el.punctuality}</CTableDataCell>
-    //   <CTableDataCell>{el.productivity}</CTableDataCell>
-    //   <CTableDataCell>{el.response}</CTableDataCell>
-    //   <CTableDataCell>{el.additionalComments}</CTableDataCell>
       
       function toFilterData(data){
       return data.filter((el)=>{
@@ -98,7 +90,6 @@ const EmpPerformanceTable = ({staff,addEmpPrformanse,deleteEmpPrformanse,editEmp
        })
       }
       
-      console.log(searchFilter.search9)
   return (
     <>
      
@@ -114,7 +105,7 @@ const EmpPerformanceTable = ({staff,addEmpPrformanse,deleteEmpPrformanse,editEmp
                                     <CTableHeaderCell>Punctuality</CTableHeaderCell>
                                     <CTableHeaderCell>Productivity</CTableHeaderCell>
                                     <CTableHeaderCell>Responsiblity</CTableHeaderCell>
-                                    <CTableHeaderCell>All over feedback</CTableHeaderCell>
+                                    <CTableHeaderCell >All over feedback</CTableHeaderCell>
                                     <CTableHeaderCell style={{display:(editEmpPrformanse||deleteEmpPrformanse)?'':'none'}} >Edit/Delete</CTableHeaderCell>
                             </CTableHead>
                             <CTableBody>
@@ -137,7 +128,7 @@ const EmpPerformanceTable = ({staff,addEmpPrformanse,deleteEmpPrformanse,editEmp
                                     onChange={(e)=>setSearchFilter((prev)=>({...prev,search8:e.target.value}))} /> </CTableDataCell>
                                     
                                     <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search9} 
-                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search9:e.target.value}))} /> </CTableDataCell>  
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search9:e.target.value}))} /> </CTableDataCell>
 
                                      <CTableDataCell style={{minWidth:'80px'}}><CFormInput disabled></CFormInput></CTableDataCell>
                                 </CTableRow>

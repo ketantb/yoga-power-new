@@ -54,7 +54,7 @@ const EmpPerformance = () => {
           active={activeKey === 1}
           onClick={() => setActiveKey(1)}
         >
-          Employee Prformance
+          Employee Performance
         </CNavLink>
       </CNavItem>}
       <CNavItem >
@@ -63,7 +63,7 @@ const EmpPerformance = () => {
           onClick={() => setActiveKey(2)}
           style={{display:deleteEmpTargetPerformance?'':'none'}}
         >
-         Trainer Prformance
+         Trainer Performance
         </CNavLink>
       </CNavItem>
     </CNav>
