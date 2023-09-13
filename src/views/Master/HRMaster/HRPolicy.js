@@ -24,7 +24,8 @@ import {
 } from "@coreui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { MdDelete } from "react-icons/md";
+import { MdDelete,MdEdit } from "react-icons/md";
+
 import { Link } from "react-router-dom";
 
 import { useSelector,useDispatch } from "react-redux";
@@ -38,6 +39,10 @@ const HRPolicy = () => {
     const [Policy, setPolicy] = useState('')
     const dispatch = useDispatch() 
     const [selectedPolicy,setSelectedPolicy] = useState()
+    const [activeUpdate,setActiveUpdate] = useState({
+        showUpdateButton:false,
+        updateElId:''
+    })
 
     
 
@@ -84,7 +89,12 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
             })
     }
 
-    function createPolicy() {
+    function createPolicy(e) {
+        e.preventDefault()
+        if(activeUpdate.showUpdateButton){
+            updateData()
+            return
+        }
         if (Title != '' && Policy != '') {
             const data = {
                 username: username,
@@ -124,6 +134,50 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
         return
     }
 
+    function updateData() {
+        const data = {
+            username: username,
+            Title, Policy,
+            ...uniqObjVal
+        }
+            fetch(`${url}/hrPolicyMaster/update/${activeUpdate.updateElId}`, {
+                method: 'POST',
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body:JSON.stringify(data)
+            }).then((result) => {
+                result.json().then((resp) => {
+                    console.warn(resp)
+                    getPolicy()
+                })
+            })
+        
+    }
+
+
+    function clear(){
+        setActiveUpdate(prev=>({
+            showUpdateButton:false,
+            updateElId:''
+        }))
+        setTitle('')
+        setPolicy('')
+        setAction(prev=>!prev)  
+    }
+
+    function handleUpdate(item){
+    setActiveUpdate({
+        showUpdateButton:true,
+        updateElId:item._id
+    })
+    setTitle(item.Title)
+    setPolicy(item.Policy)
+    setAction(true)
+    }
+
     return (
         <CRow>
             
@@ -150,13 +204,13 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
                             <div>
                                 <CRow>
                                     <CCol>
-                                        <CButton style={{display:addHrPolicy?'':'none' }} className="ms-1 mt-2" onClick={() => setAction(!action)}>{action ? 'Close' : 'Add Policy'}</CButton>
+                                        <CButton style={{display:addHrPolicy?'':'none' }} className="ms-1 mt-2" onClick={() => clear(!action)}>{action ? 'Close' : 'Add Policy'}</CButton>
                                     </CCol>
                                 </CRow>
                             </div>
                         </div>
                         {action &&
-                            <form onSubmit={createPolicy}>
+                            <form onSubmit={createPolicy} className=" p-3">
 
                                 <CRow className='d-flex mb-2' >
                                     <CCol lg={12} sm={12} className='mb-2'>
@@ -184,19 +238,22 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
                                         ></CFormTextarea>
                                     </CCol>
                                 </CRow>
-                                <CButton type='submit' color="primary" >
+                                {activeUpdate.showUpdateButton?<CButton type='submit' color="primary" >
+                                    Update 
+                                </CButton>:<CButton type='submit' color="primary" >
                                     Save
-                                </CButton>
+                                </CButton>}
                             </form>
                         }
                         
-                        <ul className="d-flex" style={{listStyleType:'none'}} >
+                        <ul className=" " style={{listStyleType:'none'}} >
                                   {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
 
                                     list).map((item, index) => (
-                                          <li className="mx-3 "  >
+                                          <li className="mx-3 d-inline-block mt-4"  >
                                             <CButton variant={item.Policy===selectedPolicy?'':'outline'} onClick={()=>setSelectedPolicy(item.Policy)} style={{height:'fit-content'}}   >{item.Title}</CButton>
-                                            <MdDelete className="mx-1" onClick={()=>deleteData(item._id)}/>
+                                            <MdDelete  style={{cursor:'pointer'}} className="mx-2" onClick={()=>deleteData(item._id)}/>
+                                            <MdEdit   style={{cursor:'pointer'}} className="mx-2" onClick={()=>handleUpdate(item)}/>
                                          </li>                                            
                                     ))}
                                </ul>
