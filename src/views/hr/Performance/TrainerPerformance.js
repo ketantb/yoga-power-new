@@ -86,7 +86,7 @@ const TrainerPerformance = () => {
                 <CTableHeaderCell>Renewals %</CTableHeaderCell>
                 <CTableHeaderCell>Training Feed Back</CTableHeaderCell>
                 <CTableHeaderCell>Behaviour</CTableHeaderCell>
-                <CTableHeaderCell>Overall feedback</CTableHeaderCell>
+                <CTableHeaderCell>Trainer Rating</CTableHeaderCell>
         </CTableHead>
         <CTableBody>
         <CTableRow>

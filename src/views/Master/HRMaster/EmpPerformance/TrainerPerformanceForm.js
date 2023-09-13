@@ -259,31 +259,42 @@ setForm(true)
               />
             </CCol>
             <CCol>
-              <CFormInput
+              <CFormSelect
               label='Training Feed Back'
               value={trainerObj.feedBACK}
               onChange={(e)=>{
                 setTrainerObj(prev=>({...prev,feedBACK:e.target.value}))
             }}
-              />
+              >
+               <option>Excelent</option>
+               <option>Good</option>
+               <option>Avarage</option> 
+               <option>Bad</option>    
+              </CFormSelect>
             </CCol>
 
         </CRow>
         <CRow>
             <CCol>
-              <CFormInput
+              <CFormSelect
               label='Behaviour'
               value={trainerObj.Behaviour}
               type='text'
               onChange={(e)=>{
                 setTrainerObj(prev=>({...prev,Behaviour:e.target.value}))
             }}
-              />
+              >
+               <option>Excelent</option>
+               <option>Good</option>
+               <option>Avarage</option> 
+               <option>Bad</option>  
+ 
+              </CFormSelect>
               
             </CCol>
             <CCol>
               <CFormInput
-              label='Overall feedback'
+              label='Trainer Rating'
               value={trainerObj.overallfeedback}
               onChange={(e)=>{
                 setTrainerObj(prev=>({...prev,overallfeedback:e.target.value}))

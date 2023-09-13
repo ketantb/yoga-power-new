@@ -113,7 +113,7 @@ const TrainerPerformance = ({trainer,addTrainerPrformanse,deleteTrainerPrformans
                                     <CTableHeaderCell style={{minWidth:'80px'}}>Renewals %</CTableHeaderCell>
                                     <CTableHeaderCell style={{minWidth:'80px'}}>Training Feed Back</CTableHeaderCell>
                                     <CTableHeaderCell style={{minWidth:'80px'}}>Behaviour</CTableHeaderCell>
-                                    <CTableHeaderCell style={{minWidth:'80px'}}>Overall feedback</CTableHeaderCell>
+                                    <CTableHeaderCell style={{minWidth:'80px'}}>Trainer Rating</CTableHeaderCell>
                                     <CTableHeaderCell style={{display:(editTrainerPrformanse||deleteTrainerPrformanse)?'':'none',minWidth:'80px'}} >Delete/Edit</CTableHeaderCell>
 
 

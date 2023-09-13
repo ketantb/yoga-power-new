@@ -105,7 +105,7 @@ const EmpPerformanceTable = ({staff,addEmpPrformanse,deleteEmpPrformanse,editEmp
                                     <CTableHeaderCell>Punctuality</CTableHeaderCell>
                                     <CTableHeaderCell>Productivity</CTableHeaderCell>
                                     <CTableHeaderCell>Responsiblity</CTableHeaderCell>
-                                    <CTableHeaderCell >All over feedback</CTableHeaderCell>
+                                    <CTableHeaderCell >Remark</CTableHeaderCell>
                                     <CTableHeaderCell style={{display:(editEmpPrformanse||deleteEmpPrformanse)?'':'none'}} >Edit/Delete</CTableHeaderCell>
                             </CTableHead>
                             <CTableBody>

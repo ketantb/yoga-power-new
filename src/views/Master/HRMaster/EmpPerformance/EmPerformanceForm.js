@@ -226,18 +226,22 @@ setForm(false)
 
         <CRow>
             <CCol>
-              <CFormInput
+              <CFormSelect
               label='Responsiblity'
               value={empObj.response}
               type='text'
               onChange={(e)=>{
                 setEmpObj(prev=>({...prev,response:e.target.value}))
             }}
-              />
+              >
+               <option>Very Responsible</option>
+               <option>Not Responsible</option>
+               <option>Avarage</option>
+              </CFormSelect>
             </CCol>
             <CCol>
               <CFormInput
-              label='All over feedback'
+              label='Remark'
               value={empObj.additionalComments}
               onChange={(e)=>{
                 setEmpObj(prev=>({...prev,additionalComments:e.target.value}))

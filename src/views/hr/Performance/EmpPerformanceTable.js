@@ -80,7 +80,7 @@ const EmpPerformanceTable = () => {
                                     <CTableHeaderCell>Punctuality</CTableHeaderCell>
                                     <CTableHeaderCell>Productivity</CTableHeaderCell>
                                     <CTableHeaderCell>Responsiblity</CTableHeaderCell>
-                                    <CTableHeaderCell>All over feedback</CTableHeaderCell>
+                                    <CTableHeaderCell>Remark</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
