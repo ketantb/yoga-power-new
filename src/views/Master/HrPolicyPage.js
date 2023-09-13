@@ -25,7 +25,7 @@ import { useParams } from 'react-router-dom'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-
+import useJobProfileHook from './HRMaster/useJobProfileHook'
 const HrPolicyPage = () => {
   const [hrPolicyData,setHrPolicyData] = useState([])
   const {title} = useParams()
@@ -33,6 +33,7 @@ const HrPolicyPage = () => {
   const pathVal = useAdminValidation()
   const url = useSelector((el)=>el.domainOfApi)
   const content = useSelector((el)=>el.HrPolicyContent) 
+  const jobProfileFun = useJobProfileHook()
   
   let user = JSON.parse(localStorage.getItem('user-info'))
   const token = user.token;
@@ -50,11 +51,9 @@ console.log(title)
 
 async function toGetRequireData() {
     try {
-        const response1 =  axios.get(`${ url }/hrPolicyMaster/title/${title}/${ pathVal }`, {headers})
+        const response1 =  axios.get(`${ url }/hrPolicyMaster/${title}`, {headers})
         const allData = await Promise.all([response1])
-
-        console.log(allData,'hello')
-        setPolicyData(allData[0].data.reverse())
+        setPolicyData(allData[0].data)
     } catch (error) {
       console.log(error)
 
@@ -66,13 +65,13 @@ async function toGetRequireData() {
   return (
     <CCard className="mb-3 border-success">
     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
-        <CCardTitle className="mt-2">{content?.Title}</CCardTitle>
+        <CCardTitle className="mt-2"><h4>{policyData?.Title}</h4></CCardTitle>
     </CCardHeader>
     <CCardBody>
-       
-       
+      <p>
+        {jobProfileFun(policyData?.Policy)}
+      </p>
     </CCardBody>
-   
 </CCard>
   )
 }

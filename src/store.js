@@ -28,7 +28,6 @@ const initialState = {
   genralProductDataClearFun:()=>{},
   getUserRight:()=>{},
   viewNav:false,
-  HrPolicyContent:{}
 }
 
 function toConfirmBooking(state,id){
@@ -209,9 +208,7 @@ function changeState (state = initialState, { type, ...rest }){
     case 'setViewNavFalse':
     state.viewNav = rest.payload
     return  { ...state, ...rest }
-    case 'setHRpolicyContent':
-    state.HrPolicyContent = rest.payload
-    return  { ...state, ...rest }
+  
     default:
 
      return state

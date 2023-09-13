@@ -32,12 +32,12 @@ import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/ad
 import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 import useJobProfileHook from "./useJobProfileHook";
 
-
 const HRPolicy = () => {
     const [action, setAction] = useState(false)
     const [Title, setTitle] = useState('')
     const [Policy, setPolicy] = useState('')
     const dispatch = useDispatch() 
+    const [selectedPolicy,setSelectedPolicy] = useState()
 
     
 
@@ -76,8 +76,9 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
             }
         })
             .then((res) => {
-                // console.log(res.data[2].Policy(' ','&nbsp;'))
                 setResult1(res.data.reverse())
+                setSelectedPolicy(res.data[0]?.Policy)
+
             })
             .catch((error) => {
                 console.error(error)
@@ -190,38 +191,25 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
                             </form>
                         }
                         
-                               <ul className="d-flex" style={{listStyleType:'none'}} >
+                        <ul className="d-flex" style={{listStyleType:'none'}} >
                                   {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
 
                                     list).map((item, index) => (
-                                          <li className="mx-1"  >
-                                            <h6>
-                                            <Link onClick={()=>dispatch({type:'setHRpolicyContent',payload:item})} className="p-4" to={`/hr/hrPolicyPage/${item.Title}`}>{item.Title}</Link>
-                                            <MdDelete onClick={()=>deleteData(item._id)}/>
-                                            </h6>
+                                          <li className="mx-3 "  >
+                                            <CButton variant={item.Policy===selectedPolicy?'':'outline'} onClick={()=>setSelectedPolicy(item.Policy)} style={{height:'fit-content'}}   >{item.Title}</CButton>
+                                            <MdDelete className="mx-1" onClick={()=>deleteData(item._id)}/>
                                          </li>                                            
                                     ))}
                                </ul>
+
+                               <p>
+                                {jobProfileFun(selectedPolicy)}
+                         </p>
+                          
                               
                         
                     </CCardBody>
-                    <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
-                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
-                            <span aria-hidden="true">&laquo;</span>
-                        </CPaginationItem>
-                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-                        {result1.filter((list) => list).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
-
-                        {result1.filter((list) => list).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-                        {result1.filter((list) => list).length > (paging + 1) * 10 ?
-                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
-                                <span aria-hidden="true">&raquo;</span>
-                            </CPaginationItem>
-                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
-                                <span aria-hidden="true">&raquo;</span>
-                            </CPaginationItem>
-                        }
-                    </CPagination>
+                 
                 </CCard>
             </CCol>
         </CRow>

@@ -28,6 +28,8 @@ import { BsPlusCircle, BsWhatsapp } from 'react-icons/bs';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useAdminValidation } from '../Custom-hook/adminValidation';
+import { Link } from "react-router-dom";
+import useJobProfileHook from '../Master/HRMaster/useJobProfileHook';
 
 const HrPolicy = () => {
 
@@ -35,9 +37,11 @@ const HrPolicy = () => {
     const pathValMaster  = useAdminValidation('Master') 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
+    const jobProfileFun = useJobProfileHook()
     const token = user.token;
     const [result1, setResult1] = useState([]);
     const [paging, setPaging] = useState(0);
+    const [selectedPolicy,setSelectedPolicy] = useState()
 
     const headers = {
         'Authorization': `Bearer ${token}`,
@@ -51,6 +55,8 @@ const HrPolicy = () => {
         axios.get(`${url}/hrPolicyMaster/${pathValMaster}`, {headers})
             .then((res) => {
                 setResult1(res.data.reverse())
+                setSelectedPolicy(res.data[0]?.Policy)
+
             })
             .catch((error) => {
                 console.error(error)
@@ -66,27 +72,22 @@ const HrPolicy = () => {
                         <CCardTitle className="mt-2">Hr Policy</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
-                       
-                        <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                            <CTableRow >
-                                    <CTableHeaderCell>Sno.</CTableHeaderCell>
-                                    <CTableHeaderCell>Title</CTableHeaderCell>
-                                    <CTableHeaderCell>Policy</CTableHeaderCell>
-                                </CTableRow>
-                            </CTableHead>
-                            <CTableBody>
+                                            
                                
-                                {result1.map((item, index) => (
-                                        <CTableRow style={{fontSize:'17px',fontWeight:'700'}} key={index} >
-                                            <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-                                            <CTableDataCell>{item.Title}</CTableDataCell>
-                                            <CTableDataCell style={{maxWidth:'400px'}}>{item.Policy}</CTableDataCell>
-                                        </CTableRow>
+                            <ul className="d-flex" style={{listStyleType:'none'}} >
+                                  {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
 
+                                    list).map((item, index) => (
+                                          <li className="mx-1"  >
+                                            <CButton variant={item.Policy===selectedPolicy?'':'outline'} onClick={()=>setSelectedPolicy(item.Policy)} style={{height:'fit-content'}}   >{item.Title}</CButton>
+                                         </li>                                            
                                     ))}
-                            </CTableBody>
-                        </CTable>
+                               </ul>
+
+                               <p>
+                                {jobProfileFun(selectedPolicy)}
+                               </p>
+                          
                     </CCardBody>
                    
                 </CCard>
