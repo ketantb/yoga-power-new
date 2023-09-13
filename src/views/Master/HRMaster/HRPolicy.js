@@ -249,7 +249,7 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
                         <ul className=" " style={{listStyleType:'none'}} >
                                   {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
 
-                                    list).map((item, index) => (
+                                    list).map((item) => (
                                           <li className="mx-3 d-inline-block mt-4"  >
                                             <CButton variant={item.Policy===selectedPolicy?'':'outline'} onClick={()=>setSelectedPolicy(item.Policy)} style={{height:'fit-content'}}   >{item.Title}</CButton>
                                             <MdDelete  style={{cursor:'pointer'}} className="mx-2" onClick={()=>deleteData(item._id)}/>

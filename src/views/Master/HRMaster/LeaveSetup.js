@@ -45,7 +45,7 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 const EmpLeaveListTable =React.lazy(()=>import("./EmpLeaveListTable"))
 const EmpLoyeeLeaveHistory = React.lazy(()=>import('./EmpLoyeeLeaveHistory'))
 
-function LeaveSetup(){
+function LeaveSetup({onlyHr}){
     const obj = {
     username:username,    
     noOfLeave:'0',
@@ -76,22 +76,22 @@ function LeaveSetup(){
     const access = rightsData?rightsData:[]
     const isAdmin = useSelector((el)=>el.isAdmin)
 
-    const viewEmployeeLeave = (access.includes(herMasterRightVal.viewEmployeeLeave) || isAdmin )
-    const viewEmployeeLeaveList =  (access.includes(herMasterRightVal.viewEmployeeLeaveList) || isAdmin )
-    const viewEmployeeLeaveHistory =  (access.includes(herMasterRightVal.viewEmployeeLeaveHistory) || isAdmin )  
-    const addEmployeeLeave =  (access.includes(herMasterRightVal.addEmployeeLeave) || isAdmin )  
-    const updateEmployeeLeave =  (access.includes(herMasterRightVal.updateEmployeeLeave) || isAdmin ) 
-    const deleteEmployeeLeave =  (access.includes(herMasterRightVal.deleteEmployeeLeave) || isAdmin ) 
-    const deleteEmployeeLeaveHistory =  (access.includes(herMasterRightVal.deleteEmployeeLeaveHistory) || isAdmin )  
+    const viewEmployeeLeave = (access.includes(herMasterRightVal.viewEmployeeLeave) || isAdmin||onlyHr )
+    const viewEmployeeLeaveList =  (access.includes(herMasterRightVal.viewEmployeeLeaveList) || isAdmin||onlyHr )
+    const viewEmployeeLeaveHistory =  (access.includes(herMasterRightVal.viewEmployeeLeaveHistory) || isAdmin||onlyHr )  
+    const addEmployeeLeave =  (access.includes(herMasterRightVal.addEmployeeLeave) ||!onlyHr && isAdmin )  
+    const updateEmployeeLeave =  (access.includes(herMasterRightVal.updateEmployeeLeave) || !onlyHr && isAdmin ) 
+    const deleteEmployeeLeave =  (access.includes(herMasterRightVal.deleteEmployeeLeave) || !onlyHr &&isAdmin ) 
+    const deleteEmployeeLeaveHistory =  (access.includes(herMasterRightVal.deleteEmployeeLeaveHistory) ||!onlyHr&& isAdmin )  
  
 
 
 
 
     const [activeKey, setActiveKey] = useState((
-        ((viewEmployeeLeave||isAdmin)&&1)||
-        ((viewEmployeeLeaveList||isAdmin)&&2)||
-        ((viewEmployeeLeaveHistory||isAdmin)&&3)
+        ((viewEmployeeLeave||isAdmin||onlyHr)&&1)||
+        ((viewEmployeeLeaveList||isAdmin||onlyHr)&&2)||
+        ((viewEmployeeLeaveHistory||isAdmin||onlyHr)&&3)
     ))
 
 
@@ -215,7 +215,7 @@ return <div>
                         onClick={() => setActiveKey(1)}
                         style={{cursor:'pointer',display:viewEmployeeLeave?'':'none'}}
                     >
-                        Leave Setup
+                       Emp Leave 
                     </CNavLink>
                 </CNavItem>
                 <CNavItem>
@@ -230,19 +230,19 @@ return <div>
                             setActiveKey(2)
                         }}
                     >
-                        Employee Leave list 
+                        Use Leave 
                     </CNavLink>
                 </CNavItem>
 
-                <CNavItem >
+                {viewEmployeeLeaveHistory&&<CNavItem >
                     <CNavLink
                         active={activeKey === 3}
                         onClick={() =>setActiveKey(3)}
                         style={{cursor:'pointer',display:viewEmployeeLeaveHistory?'':'none'}}
                     >
-                        Employee Leave History
+                       Leave History
                     </CNavLink>
-                </CNavItem>
+                </CNavItem>}
 
             </CNav>
             <CTabContent>
