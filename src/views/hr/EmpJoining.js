@@ -30,13 +30,16 @@ import axios from 'axios';
 import moment from 'moment';
 import { useSelector } from "react-redux";
 import { useAdminValidation } from '../Custom-hook/adminValidation';
-
+import useJobProfileHook from '../Master/HRMaster/useJobProfileHook';
 
 const EmpJoining = () => {
 
     const [empJoininSheetData,setEmpJoininSheetData] = useState([])
     const url = useSelector((el) => el.domainOfApi)
     const pathMasterVel = useAdminValidation('Master')
+    const jobProfileFun = useJobProfileHook()
+    const [selectedDocumentDetails,setSelectedDocumentDetails] = useState('')
+
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -58,6 +61,7 @@ const EmpJoining = () => {
           return 
          }
          setEmpJoininSheetData(el.data)
+         setSelectedDocumentDetails(el.data[0].documentDetails)
        }).catch((error)=>{console.log(error)})
        }
 
@@ -71,36 +75,22 @@ const EmpJoining = () => {
                         <CCardTitle className="mt-2">Employee Joining</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
-                        
-                        <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                                <CTableRow >
-                                    <CTableHeaderCell>Sr.No</CTableHeaderCell>
-                                   <CTableHeaderCell style={{width:'200px'}}>Document Name</CTableHeaderCell>
-                                   <CTableHeaderCell>Document Details</CTableHeaderCell>
-                                
-                                </CTableRow>
-                            </CTableHead>
-                            <CTableBody>
-                              {empJoininSheetData.map((el,i)=>
-                              
-                              <CTableRow className="text-center">
-                                    <CTableDataCell>
-                                         {i+1}
-                                    </CTableDataCell>
-                                    <CTableDataCell > 
-                                        {el.DocumentName}            
-                                    </CTableDataCell>
+                    
 
-                                    <CTableDataCell>
-                                        {el.documentDetails}
-                                    </CTableDataCell>                            
-                                </CTableRow>                             
-                              )}
-                                
-                               
-                            </CTableBody>
-</CTable>
+                            <ul className="d-flex" style={{listStyleType:'none'}} >
+                                  {empJoininSheetData.filter((list) =>
+
+                                    list).map((item) => (
+                                          <li className="mx-1 d-flex mx-2"  >
+                                            <CButton className="mx-1" variant={item.documentDetails===selectedDocumentDetails?'':'outline'} onClick={()=>setSelectedDocumentDetails(item.documentDetails)} style={{height:'fit-content'}}   >{item.DocumentName}</CButton>
+                                            
+                                         </li>                                            
+                                    ))}
+                               </ul>
+
+                               <CCard>
+                                {jobProfileFun(selectedDocumentDetails)}
+                               </CCard>
                     </CCardBody>
                 </CCard>
             </CCol>

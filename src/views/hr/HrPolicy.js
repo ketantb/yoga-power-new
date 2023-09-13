@@ -84,9 +84,9 @@ const HrPolicy = () => {
                                     ))}
                                </ul>
 
-                               <p>
+                               <CCard>
                                 {jobProfileFun(selectedPolicy)}
-                               </p>
+                               </CCard>
                           
                     </CCardBody>
                    

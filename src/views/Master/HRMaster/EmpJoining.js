@@ -12,7 +12,7 @@ import axios from 'axios'
 import { MdEdit,MdDelete } from "react-icons/md";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
-
+import useJobProfileHook from "./useJobProfileHook";
 function EmpJoining (){
 
   let user = JSON.parse(localStorage.getItem('user-info'))
@@ -28,6 +28,7 @@ function EmpJoining (){
   
   const access = rightsData?rightsData:[]
   const isAdmin = useSelector((el)=>el.isAdmin)
+
   
   const addEmployeeJoining = (access.includes(herMasterRightVal.addEmployeeJoining) || isAdmin )
   const editEmployeeJoining=  (access.includes(herMasterRightVal.editEmployeeJoining) || isAdmin )
@@ -43,7 +44,9 @@ function EmpJoining (){
             DocumentName:'',
             documentDetails:'',    
     })
+    const [selectedDocumentDetails,setSelectedDocumentDetails] = useState('')
 
+    const jobProfileFun = useJobProfileHook()
 
    
    const headers = {
@@ -62,6 +65,7 @@ function EmpJoining (){
      return 
     }
     setEmpJoininSheetData(el.data)
+    setSelectedDocumentDetails(el.data[0].documentDetails)
   }).catch((error)=>{console.log(error)})
   }
 
@@ -137,6 +141,8 @@ const toDeleteData= async (id)=>{
 </CCardHeader>
 
 <CCardBody>
+
+                   
           <CCol className='my-3 text-end'>
                    {showForm&&<CButton style={{display:addEmployeeJoining?'':'none'}} onClick={()=>toToggaleFrom()}>Add New </CButton>}
                    {showForm||<CCard className="overflow-hidden my-4 text-start"   >
@@ -188,42 +194,33 @@ const toDeleteData= async (id)=>{
       </CCard>}
 
                 </CCol>
-<CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                                <CTableRow >
-                                   <CTableHeaderCell>Sr.No</CTableHeaderCell>
-                                   <CTableHeaderCell style={{width:'200px'}}>Document Name</CTableHeaderCell>
-                                   <CTableHeaderCell>Document Details</CTableHeaderCell>
-                                   <CTableHeaderCell style={{display:(deleteEmployeeJoining||editEmployeeJoining)?'':'none'}}>Edit/Delete</CTableHeaderCell>
-                                </CTableRow>
-                            </CTableHead>
-                            <CTableBody>
 
-                              {empJoininSheetData.map((el,i)=>
-                              
-                              <CTableRow className="text-center">
-                                    <CTableDataCell>
-                                         {i+1}
-                                    </CTableDataCell>
-                                    <CTableDataCell > 
-                                        {el.DocumentName}            
-                                    </CTableDataCell>
+                <h6 className="mt-2">Write the title in bracket
+                     <span><b>[title]</b></span>    
+                     </h6>
+                     <p className="p-0 m-1">Write the Content in small Bracket <span><b>(Content)</b></span>  </p> 
+                     <p className="p-0 m-1">Between <span><b>(Content)</b></span> and <span><b>[title]</b></span>   Should be Colon <span><b>[title]:(Content)</b></span> </p>
+                     <p className="p-0 m-1">To Split the Line in <span><b>(content)</b> </span>    add this Syntext  <span><b>$brsplit</b></span>  </p> 
+                     <p className="p-0 m-1">To write only title <span><b>[title]:()</b> </span> </p> 
+                     <p className="p-0 m-1 mb-4">To write only content<span><b>(content) or content </b> </span> </p>
 
-                                    <CTableDataCell>
-                                        {el.documentDetails}
-                                    </CTableDataCell>
-                                    <CTableDataCell style={{display:(deleteEmployeeJoining||editEmployeeJoining)?'':'none'}}>
-                                      <MdEdit style={{cursor:'pointer',display:(editEmployeeJoining)?'':'none'}} onClick={()=>updateProduct(el)} />
-                                      <MdDelete style={{cursor:'pointer',display:(deleteEmployeeJoining)?'':'none'}} onClick={()=>toDeleteData(el._id)}/>                                       
-                                    </CTableDataCell>
-                                                               
-                                </CTableRow>
-                              
-                              )}
-                                
-                               
-                            </CTableBody>
-</CTable>
+                          <ul className="d-flex" style={{listStyleType:'none'}} >
+                                  {empJoininSheetData.filter((list) =>
+
+                                    list).map((item) => (
+                                          <li className="mx-1 d-flex mx-2"  >
+                                            <CButton className="mx-1" variant={item.documentDetails===selectedDocumentDetails?'':'outline'} onClick={()=>setSelectedDocumentDetails(item.documentDetails)} style={{height:'fit-content'}}   >{item.DocumentName}</CButton>
+                                            <div style={{display:(deleteEmployeeJoining||editEmployeeJoining)?'':'none'}}>
+                                                  <MdEdit style={{cursor:'pointer',display:(editEmployeeJoining)?'':'none'}} onClick={()=>updateProduct(item)} />
+                                                  <MdDelete style={{cursor:'pointer',display:(deleteEmployeeJoining)?'':'none'}} onClick={()=>toDeleteData(item._id)}/>                                       
+                                            </div>
+                                         </li>                                            
+                                    ))}
+                               </ul>
+
+                               <CCard>
+                                {jobProfileFun(selectedDocumentDetails)}
+                               </CCard>
 </CCardBody>
 
 </CCard>

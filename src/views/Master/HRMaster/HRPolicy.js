@@ -78,7 +78,6 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
             .then((res) => {
                 setResult1(res.data.reverse())
                 setSelectedPolicy(res.data[0]?.Policy)
-
             })
             .catch((error) => {
                 console.error(error)
@@ -202,9 +201,9 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
                                     ))}
                                </ul>
 
-                               <p>
+                               <CCard>
                                 {jobProfileFun(selectedPolicy)}
-                         </p>
+                         </CCard>
                           
                               
                         
