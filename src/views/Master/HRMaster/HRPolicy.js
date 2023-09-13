@@ -27,7 +27,7 @@ import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
 import useJobProfileHook from "./useJobProfileHook";
@@ -37,7 +37,7 @@ const HRPolicy = () => {
     const [action, setAction] = useState(false)
     const [Title, setTitle] = useState('')
     const [Policy, setPolicy] = useState('')
-
+    const dispatch = useDispatch() 
 
     
 
@@ -196,7 +196,7 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
                                     list).map((item, index) => (
                                           <li className="mx-1"  >
                                             <h6>
-                                            <Link className="p-4" to={`/hrPolicy/${item.Title}`}>{item.Title}</Link>
+                                            <Link onClick={()=>dispatch({type:'setHRpolicyContent',payload:item})} className="p-4" to={`/hr/hrPolicyPage/${item.Title}`}>{item.Title}</Link>
                                             <MdDelete onClick={()=>deleteData(item._id)}/>
                                             </h6>
                                          </li>                                            

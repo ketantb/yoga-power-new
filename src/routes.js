@@ -91,6 +91,7 @@ const OffiiceInventory  =  React.lazy(()=>import('./views/Master/Inventory/Offii
 
 // Hr
 const AllEmpProfile = React.lazy(() => import('./views/hr/AllEmpProfile'))
+const EmployeeProfile = React.lazy(() => import('./views/hr/Hr-Employee-Details/Tables/EmployeeProfile'))
 const CreateEmployee = React.lazy(() => import('./views/hr/EmpRecruitment'))
 const AttendanceRegister = React.lazy(() => import('./views/hr/AttendanceRegister'))
 const AttendanceReport = React.lazy(() => import('./views/hr/AttendanceReport'))
@@ -114,7 +115,7 @@ const EmpPerformance = React.lazy(()=>import('./views/hr/EmpPerformance'))
 const Stafftarget = React.lazy(()=>import('./views/hr/staffTarget/Stafftarget'))
 const EmployeeTargetSheet =React.lazy(()=>import('./views/hr/EmployeeTargetSheet'))
 const EmpDocumentsMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpDocuments'))
-const EmployeeProfile = React.lazy(()=>import('./views/hr/Hr-Employee-Details/Tables/EmployeeProfile'))
+const HrPolicyPage =React.lazy(()=>import( './views/Master/HrPolicyPage'))
 // classes 
 const TtcClientDetails  = React.lazy(()=>import('./views/Courses/TtcClientDetails'))
 const TtcVideoDetails = React.lazy(()=>import('./views/Courses/TtcVideoDetails'))
@@ -153,7 +154,6 @@ const TrainerSalarySlipMaster = React.lazy(()=>import('./views/Master/HRMaster/T
 // const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
 const AllProductListingMaster = React.lazy(()=>import('./views/Master/Inventory/AllProductListingMaster'))
 const UserProfile = React.lazy(()=>import('./components/UserProfile'))
-
 
 // Buttons
 
@@ -340,6 +340,7 @@ const routes = [
   { path:'/hr/employee-detail/:id',name:'Employee Details',element:EmpDetails},
   { path:'/hr/employee-profile-edit/:id2/:isEdit',name:'Employee Details',element:EmployeeProfile},
   { path:'/hr/employee-right/:emailUniqId/:isRights',name:'Rights',element:AllRightHr},
+  { path:'/hr/hrPolicyPage/:title',name:'Hr Policy Page',element:HrPolicyPage},
 
 
   // Courses
