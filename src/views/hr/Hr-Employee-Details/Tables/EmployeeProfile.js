@@ -35,7 +35,9 @@ import moment from 'moment/moment'
 import { useUploadResumeHook } from 'src/views/forms/useUploadHook'
 import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
 import { useReactToPrint } from 'react-to-print'
-const EmployeeProfile = ({ id, Edit, getStaff2, setResumeUrl2, setVisi1 }) => {
+import { useParams,useNavigate } from 'react-router-dom'
+
+const EmployeeProfile = ({ id}) => {
 
     const [EmployeeData, setEmployeeData] = useState([])
     const url = useSelector((el) => el.domainOfApi)
@@ -73,6 +75,11 @@ const EmployeeProfile = ({ id, Edit, getStaff2, setResumeUrl2, setVisi1 }) => {
     const pathVal = useAdminValidation('Master')
     const [vis2, seVis2] = useState(false)
     const [leadArr, setLeadArr] = useState([]);
+    const {id2,isEdit} = useParams()
+    const navigateFun =  useNavigate()
+
+
+    const uniqId = (id?.trim()||id2?.trim())
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -97,10 +104,10 @@ const EmployeeProfile = ({ id, Edit, getStaff2, setResumeUrl2, setVisi1 }) => {
 
 
     function getStaff() {
-        if (!id) {
+        if (!uniqId) {
             return
         }
-        axios.get(`${ url }/employeeform/${ id }`, headers)
+        axios.get(`${ url }/employeeform/${ uniqId }`, headers)
             .then((res) => {
                 setEmployeeData(res.data)
                 setFullName(res.data.FullName)
@@ -194,9 +201,9 @@ const EmployeeProfile = ({ id, Edit, getStaff2, setResumeUrl2, setVisi1 }) => {
     }
 
     function updateEmpolyee() {
-        axios.post(`${ url }/employeeform/update/${ id }`, EmpObjToEdit, headers).then(() => {
+        axios.post(`${ url }/employeeform/update/${ uniqId }`, EmpObjToEdit, headers).then(() => {
             alert('Successfully save')
-            getStaff2()
+            getStaff()
         })
 
     }
@@ -235,6 +242,10 @@ const EmployeeProfile = ({ id, Edit, getStaff2, setResumeUrl2, setVisi1 }) => {
                 <CCardTitle>Empolyee Profile Info</CCardTitle>
             </CCardHeader>
             <CCardBody>
+                {Boolean(isEdit)&&<CButton onClick={()=>navigateFun('/hr/all-emp')}>
+                    Go Back
+                </CButton>}     
+
                 <CRow>
                     <CCol lg={12} md={12} className='mt-2 mb-1' >
                         <CImage ref={imgRef} className="mb-1" style={{ borderRadius: "100px" }} width={'200px'} src={ProfileIcon} />
@@ -452,7 +463,7 @@ const EmployeeProfile = ({ id, Edit, getStaff2, setResumeUrl2, setVisi1 }) => {
                                     <p className='p-0 m-0'>{new Date(createdAt).toDateString()}</p>
                                 </div>
                                 <div className='dev-center'>
-                                    <CButton size='sm' onClick={() => { if (setVisi1) { setVisi1(true), setResumeUrl2(resumeUrl) } else { seVis2(true) } }}>View</CButton>
+                                    <CButton size='sm' onClick={() => {  seVis2(true) , setResumeUrl(resumeUrl)}}>View</CButton>
                                 </div>
                             </div>
 
@@ -557,7 +568,7 @@ const EmployeeProfile = ({ id, Edit, getStaff2, setResumeUrl2, setVisi1 }) => {
 
                     <CRow>
                         <CCol>
-                            {Edit && <CButton onClick={updateEmpolyee}>Save</CButton>}
+                            {Boolean(isEdit) && <CButton onClick={updateEmpolyee}>Save</CButton>}
                         </CCol>
                     </CRow>
 

@@ -40,7 +40,7 @@ const useUploadImgaeHook = () => {
 
 
 function useUploadResumeHook(setResumePrograss,setResumeUrl,setResume){
-    return event => {
+    return (event) => {
         const file = event.target.files[0] 
              setResume(file.name)
             const uploadResume = (file)=>{

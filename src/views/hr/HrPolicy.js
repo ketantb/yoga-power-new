@@ -50,7 +50,6 @@ const HrPolicy = () => {
     function getPolicy() {
         axios.get(`${url}/hrPolicyMaster/${pathValMaster}`, {headers})
             .then((res) => {
-                console.log(res.data)
                 setResult1(res.data.reverse())
             })
             .catch((error) => {
@@ -60,6 +59,7 @@ const HrPolicy = () => {
 
     return (
         <CRow>
+
             <CCol lg={12} sm={12}>
                 <CCard className="mb-3 border-success">
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>

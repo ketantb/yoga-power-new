@@ -25,11 +25,12 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 import { herMasterRightVal } from "src/views/hr/Rights/rightsValue/masterRightsValue";
-
+import useJobProfileHook from "./useJobProfileHook";
 
 
 const HRPolicy = () => {
@@ -52,6 +53,7 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
     const url = useSelector((el)=>el.domainOfApi) 
     const uniqObjVal = useUniqAdminObjeact()
     const pathValMaster = useAdminValidation('Master')
+    const jobProfileFun = useJobProfileHook()
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -74,7 +76,7 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
             }
         })
             .then((res) => {
-                console.log(res.data)
+                // console.log(res.data[2].Policy(' ','&nbsp;'))
                 setResult1(res.data.reverse())
             })
             .catch((error) => {
@@ -91,7 +93,6 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
             }
             axios.post(`${url}/hrPolicyMaster/create`, data, { headers })
                 .then((resp) => {
-                    console.log(resp.data)
                     alert('Successfully Added')
                     getPolicy()
                     setAction(false)
@@ -125,12 +126,25 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
 
     return (
         <CRow>
+            
             <CCol lg={12} sm={12}>
+
+
                 <CCard className="mb-3 border-success">
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
                         <CCardTitle className="mt-2">Hr Policy</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
+
+                    <h6 className="mt-2">Write the title in bracket
+                     <span><b>[title]</b></span>    
+                     </h6>
+                     <p className="p-0 m-1">Write the Content in small Bracket <span><b>(Content)</b></span>  </p> 
+                     <p className="p-0 m-1">Between <span><b>(Content)</b></span> and <span><b>[title]</b></span>   Should be Colon <span><b>[title]:(Content)</b></span> </p>
+                     <p className="p-0 m-1">To Split the Line in <span><b>(content)</b> </span>    add this Syntext  <span><b>$brsplit</b></span>  </p> 
+                     <p className="p-0 m-1">To write only title <span><b>[title]:()</b> </span> </p> 
+                     <p className="p-0 m-1">To write only content<span><b>(content) or content </b> </span> </p>
+
                         <div className="d-flex justify-content-between">
                             <div></div>
                             <div>
@@ -142,9 +156,9 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
                             </div>
                         </div>
                         {action &&
-                            <div>
+                            <form onSubmit={createPolicy}>
 
-                                <CRow className='d-flex mb-2'>
+                                <CRow className='d-flex mb-2' >
                                     <CCol lg={12} sm={12} className='mb-2'>
                                         <CFormInput
                                             type='text'
@@ -154,6 +168,7 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
                                             label="Title"
                                             aria-label="Recipient's username"
                                             aria-describedby="button-addon2"
+                                            required
                                         />
                                     </CCol>
                                     <CCol lg={12} sm={12} className='mb-2'>
@@ -165,37 +180,30 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
                                             label="Policy"
                                             rows="5"
                                             text="Must be 8-20 words long."
+                                            required
                                         ></CFormTextarea>
                                     </CCol>
                                 </CRow>
-                                <CButton type="button" color="primary" onClick={() => createPolicy()}>
+                                <CButton type='submit' color="primary" >
                                     Save
                                 </CButton>
-                            </div>
+                            </form>
                         }
-                        <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                                <CTableRow >
-                                    <CTableHeaderCell>Sno.</CTableHeaderCell>
-                                    <CTableHeaderCell>Title</CTableHeaderCell>
-                                    <CTableHeaderCell>Policy</CTableHeaderCell>
-                                    <CTableHeaderCell  style={{display:deleteHrPolicy?'':'none' }} >Action</CTableHeaderCell>
-                                </CTableRow>
-                            </CTableHead>
-                            <CTableBody>
+                        
+                               <ul className="d-flex" style={{listStyleType:'none'}} >
+                                  {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
 
-                                {result1.slice(paging * 10, paging * 10 + 10).filter((list) =>
                                     list).map((item, index) => (
-                                        <CTableRow style={{fontSize:'17px',fontWeight:'700'}} key={index} >
-                                            <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-                                            <CTableDataCell>{item.Title}</CTableDataCell>
-                                            <CTableDataCell style={{maxWidth:'400px'}}>{item.Policy}</CTableDataCell>
-                                            <CTableDataCell style={{display:deleteHrPolicy?'':'none' }}  > <MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} size='20px' onClick={() => deleteData(item._id)} /> </CTableDataCell>
-                                        </CTableRow>
-
+                                          <li className="mx-1"  >
+                                            <h6>
+                                            <Link className="p-4" to={`/hrPolicy/${item.Title}`}>{item.Title}</Link>
+                                            <MdDelete onClick={()=>deleteData(item._id)}/>
+                                            </h6>
+                                         </li>                                            
                                     ))}
-                            </CTableBody>
-                        </CTable>
+                               </ul>
+                              
+                        
                     </CCardBody>
                     <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
                         <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>

@@ -114,6 +114,7 @@ const EmpPerformance = React.lazy(()=>import('./views/hr/EmpPerformance'))
 const Stafftarget = React.lazy(()=>import('./views/hr/staffTarget/Stafftarget'))
 const EmployeeTargetSheet =React.lazy(()=>import('./views/hr/EmployeeTargetSheet'))
 const EmpDocumentsMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpDocuments'))
+const EmployeeProfile = React.lazy(()=>import('./views/hr/Hr-Employee-Details/Tables/EmployeeProfile'))
 // classes 
 const TtcClientDetails  = React.lazy(()=>import('./views/Courses/TtcClientDetails'))
 const TtcVideoDetails = React.lazy(()=>import('./views/Courses/TtcVideoDetails'))
@@ -337,6 +338,7 @@ const routes = [
   { path:'/hr/view-staff-target',name:'View Staff Target',element:Stafftarget},
   { path:'/hr/emp-target-sheet',name:'Employee Target Sheet',element:EmployeeTargetSheet},
   { path:'/hr/employee-detail/:id',name:'Employee Details',element:EmpDetails},
+  { path:'/hr/employee-profile-edit/:id2/:isEdit',name:'Employee Details',element:EmployeeProfile},
   { path:'/hr/employee-right/:emailUniqId/:isRights',name:'Rights',element:AllRightHr},
 
 

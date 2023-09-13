@@ -49,6 +49,10 @@ const AllEmpProfile = () => {
     const exportEmpData = useExportSelctedEmpData('allEmpProfile.xlsx')
     const [resumeUrl,setResumeUrl]=  useState('')
     const [visi1,setVisi1] = useState(false)
+    const [editObj,setEditObj] = useState({
+        showEditModal:false,
+        id:''
+    })
 
     const componentRef = useRef()
 
@@ -177,10 +181,9 @@ const handlePrint = useReactToPrint({
 
 
 
-    function allowToEdit(id){
-        setId(id)
-        setEditModal(true)
-    }
+function allowToEdit(id){     
+   navigate(`/hr/employee-profile-edit/${id}/${true}`)
+}
 
     function tofilterData(data){
 
@@ -202,13 +205,16 @@ const handlePrint = useReactToPrint({
         <>
             <div>
               <CModal  style={{ border: '2px solid #0B5345' }} 
-              visible={showEditModal} size='xl'  onClose={()=>{setEditModal(false)}} scrollable>
+              visible={editObj.showEditModal} size='xl'  onClose={()=>{setEditModal(prev=>({
+                showEditModal:false,
+                id:''
+                }))}} scrollable>
             <CModalHeader   >
                 <CModalTitle>Edit Form</CModalTitle>
             </CModalHeader>
             <CModalBody>
-                 {id&&<EmployeeProfile setVisi1={setVisi1} setResumeUrl2={setResumeUrl} 
-                 getStaff2={getStaff} Edit={showEditModal} id={id}/>}
+                 <EmployeeProfile setVisi1={setVisi1} setResumeUrl2={setResumeUrl} 
+                 getStaff2={getStaff} Edit={editObj.showEditModal} id={editObj.showEditModal}/>
             </CModalBody>
               </CModal>
               </div>
@@ -449,7 +455,8 @@ const handlePrint = useReactToPrint({
                                             </CTableDataCell>
                                             <CTableDataCell style={{display:((isAdmin||allImpProfileStatus)?'':'none')}}  >{item.status ? <>
                                             <CButton size='sm' className='mt-1' color='success' onClick={() => updateRec(item, false)} >Active</CButton></>
-                                                 : <CButton  size='sm' className='mt-1' color='danger' onClick={() => updateRec(item, true)}>Inactive</CButton>}</CTableDataCell>
+                                                 : <CButton  size='sm' className='mt-1' color='danger' onClick={() => updateRec(item, true)}>Inactive</CButton>}
+                                            </CTableDataCell>
                                             <CTableDataCell className='text-center'
                                             style={{display:((isAdmin||allImpProfileAction)?'':'none')}} 
 
