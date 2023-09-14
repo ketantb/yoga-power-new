@@ -113,7 +113,7 @@ const saveData = async  (type)=>{
        response = await  axios.post(`${url}/trainerPerformance/create`,{...trainerObj,...uniqObjVal},{headers})
      }
      if(type==='Update'){
-      response = await  axios.post(`${url}/trainerPerformance/update/${id}`,trainerObj,{headers})
+      response = await  axios.post(`${url}/trainerPerformance/update/${updateActive.obj._id}`,trainerObj,{headers})
      }
     if(response?.status===200){
      alert('successfully save')
@@ -156,7 +156,7 @@ setForm(true)
 
     {form&& <CCard className="mb-3 border-success mt-4">
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
-                        <CCardTitle className="mt-2">trainerloyee Performance form</CCardTitle>
+                        <CCardTitle className="mt-2">trainer Performance form</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
                       <CCol className='text-end'>
@@ -175,7 +175,7 @@ setForm(true)
               value={trainerObj.trainerId}
               onChange={(e)=>setTrainerObj(prev=>({...prev, trainerId:e.target.value}))}
               >
-                <option value=''>Select trainerloyee</option>
+                <option value=''>Select trainer</option>
                         {trainer.filter((list) => list &&
                           list.selected === 'Select').map((item, index) => (
                             <option key={index} value={item._id}> {item.FullName}</option>

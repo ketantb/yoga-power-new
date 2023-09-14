@@ -645,8 +645,8 @@ console.log(salarySheetData)
                                 <CTableRow >
                                     <CTableHeaderCell>Sr no</CTableHeaderCell>
                                     <CTableHeaderCell>Date</CTableHeaderCell>
-                                    <CTableHeaderCell>Name</CTableHeaderCell>
                                     <CTableHeaderCell>Emp ID</CTableHeaderCell>
+                                    <CTableHeaderCell>Name</CTableHeaderCell>
                                     <CTableHeaderCell>JoiningDate</CTableHeaderCell>
                                     <CTableHeaderCell>Gender</CTableHeaderCell>
                                     <CTableHeaderCell>Location</CTableHeaderCell>

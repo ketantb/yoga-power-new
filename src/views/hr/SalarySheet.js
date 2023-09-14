@@ -87,11 +87,11 @@ const SalarySheet = () => {
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
-                                    <CTableHeaderCell>Month</CTableHeaderCell>
+                                    <CTableHeaderCell>Date</CTableHeaderCell>
                                     <CTableHeaderCell>Emp Id</CTableHeaderCell>
                                     <CTableHeaderCell>Emp Name</CTableHeaderCell>
                                     <CTableHeaderCell>Designations</CTableHeaderCell>
-                                    <CTableHeaderCell>Basic Slarry</CTableHeaderCell>
+                                    <CTableHeaderCell>Basic Salary</CTableHeaderCell>
                                     <CTableHeaderCell>Late Mark</CTableHeaderCell>
                                     <CTableHeaderCell>Half day</CTableHeaderCell>
                                     <CTableHeaderCell>Leave day</CTableHeaderCell>
@@ -110,7 +110,7 @@ const SalarySheet = () => {
                                 {salarySheetData.map((item, index) => (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 }</CTableDataCell>
-                                            <CTableDataCell>{item.month}</CTableDataCell>
+                                            <CTableDataCell>{new Date(item.month).toLocaleDateString()}</CTableDataCell>
                                             <CTableDataCell>{item.empId}</CTableDataCell>
                                             <CTableDataCell>{item.empName}</CTableDataCell>
                                             <CTableDataCell>{item.Designations}</CTableDataCell>
