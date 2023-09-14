@@ -70,12 +70,13 @@ const PayrollMaster = () =>{
     adjustLeave:'0',
     TWD:30,
     TPD:'0',
+    TDS:'0',
     grossSalary:'0',
     BasicSalary:'0',
     incentive:'0',
     PT:'0',  
     netSalary:'0',
-    remark:'0',
+    remark:'',
     advancedSalaryDedct:'0',
     Location:'0',
     typeOfJobTimeing:'0',
@@ -88,6 +89,7 @@ const PayrollMaster = () =>{
 
   const [showForm,setForm] = useState(true)
   const [salarySheet,setSalarySheet] = useState({...obj})
+  const [grossSalaryCalculation,setGrossSalaryCalculation] = useState(0)
   const [salarySheetData,setSalarySheetData] = useState([])
   const [updateActive,setUpdateActive] = useState(false)
   const [activeKey, setActiveKey] = useState(1)
@@ -130,14 +132,15 @@ useEffect(()=>{
   setSalarySheet(prev=>({...prev,empId:selectedStaff?.EmployeeID}))
   setSalarySheet(prev=>({...prev,Designations:selectedStaff?.JobDesignation }))
   setSalarySheet(prev=>({...prev,Department:selectedStaff?.Department  }))
-  setSalarySheet(prev=>({...prev,BasicSalary:(selectedStaff?.Salary /12).toFixed(3)}))
+  setSalarySheet(prev=>({...prev,BasicSalary:(selectedStaff?.Salary /12).toFixed(3),
+  grossSalary:(selectedStaff?.Salary /12).toFixed(3)
+}))
   setSalarySheet(prev=>({...prev,ctc:selectedStaff?.Salary }))
   setSalarySheet(prev=>({...prev,joiningDate:selectedStaff?.joiningDate }))
   setSalarySheet(prev=>({...prev,Location:selectedStaff?.address }))
   setSalarySheet(prev=>({...prev,typeOfJobTimeing:selectedStaff?.Grade}))
   setSalarySheet(prev=>({...prev,Gender:selectedStaff?.Gender}))
-
-  
+  setGrossSalaryCalculation((selectedStaff?.Salary /12).toFixed(3))
 },[salarySheet.empName])
 
 
@@ -145,7 +148,7 @@ useEffect(()=>{
 const totalLeave = ((+salarySheet.halfday/100)*50)+ +(salarySheet.lateMark/6)+ +salarySheet.leaveDay
 const removeLeave  =+salarySheet.adjustLeave
 
-const totalDecAdPt  = +salarySheet.TPD + +salarySheet.PT
+const totalDecAdPt  = +salarySheet.TPD + +salarySheet.PT + +salarySheet.TDS
 const basicSalary  =  salarySheet.BasicSalary
 
 const netSlaryCal  = +salarySheet.incentive - +salarySheet.advancedSalaryDedct
@@ -155,7 +158,10 @@ const netSlaryCal  = +salarySheet.incentive - +salarySheet.advancedSalaryDedct
 useEffect(()=>{
  
   setSalarySheet(prev=>{
-    return  {...prev,TWD:30+ - totalLeave + removeLeave }
+    setGrossSalaryCalculation((+prev.grossSalary-((+prev.grossSalary/30)* ( totalLeave-removeLeave )+totalDecAdPt)))
+    return  {...prev,
+      TWD:30+ - totalLeave + removeLeave
+     }
   })    
 
 },[totalLeave,removeLeave])
@@ -164,9 +170,9 @@ useEffect(()=>{
 useEffect(()=>{
 
   setSalarySheet(prev=>{
-    return  {...prev,grossSalary:(basicSalary- totalDecAdPt).toFixed(3) }
+    setGrossSalaryCalculation((+prev.grossSalary-((+prev.grossSalary/30)* (totalLeave-removeLeave ) +totalDecAdPt)))
+    return  {...prev}
   })    
-  
   },[totalDecAdPt,basicSalary])
 
   useEffect(()=>{
@@ -174,10 +180,10 @@ useEffect(()=>{
 
 
     setSalarySheet(prev=>{
-      return  {...prev,netSalary:+salarySheet.grossSalary +netSlaryCal }
+      return  {...prev,netSalary:+grossSalaryCalculation +netSlaryCal }
     })    
     
-    },[salarySheet.grossSalary,netSlaryCal])
+    },[grossSalaryCalculation,netSlaryCal])
 
 
 const getSalarySheetData = ()=>{
@@ -220,10 +226,13 @@ const saveData = async (type)=>{
   let response ={}
   try{
     if(type==='Save'){
-      response = await  axios.post(`${url}/salarySheet/create`,{...salarySheet,...uniqObjVal,empName:selectedStaff?.FullName,employeeID:selectedStaff._id},{headers})
+      response = await  axios.post(`${url}/salarySheet/create`,{...salarySheet,grossSalary:grossSalaryCalculation
+        ,...uniqObjVal,empName:selectedStaff?.FullName,employeeID:selectedStaff._id},{headers})
     }
     if(type==='Update'){
-     response = await  axios.post(`${url}/salarySheet/update/${salarySheet?._id}`,{...salarySheet,empName:selectedStaff?.FullName},{headers})
+     response = await  axios.post(`${url}/salarySheet/update/${salarySheet?._id}`,{...salarySheet,
+      grossSalary:grossSalaryCalculation,
+      empName:selectedStaff?.FullName},{headers})
     }
    if(response?.status===200){
     getSalarySheetData()
@@ -257,11 +266,10 @@ useEffect(()=>{
 
 
 const updateProduct = async (item)=>{
-  console.log(item)
   setForm(false)
   setSalarySheet({...item,empName:item.employeeID})
+  setGrossSalaryCalculation(item.grossSalary)
   setUpdateActive(true)
- 
 }
 
 
@@ -288,7 +296,11 @@ console.log(salarySheetData)
         <CCardBody>
 
             <CCol className="d-flex justify-content-end">
-                <CButton color='danger' onClick={()=>setForm(()=>true)}>Close</CButton>
+                <CButton color='danger' onClick={()=>{
+                  setForm(()=>true)
+                  setGrossSalaryCalculation(0)
+                  setSalarySheet({...obj})
+                  }}>Close</CButton>
             </CCol>
 
         <CNav variant="tabs" role="tablist">
@@ -453,18 +465,18 @@ console.log(salarySheetData)
  
 
             <CRow>
-             
-          
-            <CCol md={6}>
+
+              <CCol lg={6} md={6}>
+              <CCol >
               <CFormInput
-                  label='No Of Half Day'
+                  label='Monthly  Salary'
                   type="number"
-                  value={salarySheet.halfday}
-                  onChange={(e)=>setSalarySheet(prev=>({...prev,halfday:e.target.value}))}    
+                  value={salarySheet.BasicSalary}
+                  // onChange={(e)=>setSalarySheet(prev=>({...prev,BasicSalary:e.target.value}))}    
+                  
               />
-                </CCol>
-             
-                <CCol md={6}>
+                </CCol>   
+                <CCol >
               <CFormInput
                   label='Late Mark'
                   type="number"
@@ -473,8 +485,15 @@ console.log(salarySheetData)
                   
               />
                 </CCol>
-
-                <CCol md={6}>
+                <CCol >
+              <CFormInput
+                  label='No Of Half Day'
+                  type="number"
+                  value={salarySheet.halfday}
+                  onChange={(e)=>setSalarySheet(prev=>({...prev,halfday:e.target.value}))}    
+              />
+                </CCol>
+                <CCol >
               <CFormInput
                   label='No of Leave'
                   type="number"
@@ -483,7 +502,7 @@ console.log(salarySheetData)
                   
               />
                 </CCol>
-                <CCol md={6}>
+                <CCol >
               <CFormInput
                   label='Adjust Leave'
                   type="number"
@@ -492,38 +511,37 @@ console.log(salarySheetData)
                   
               />
                 </CCol>
-
-                <CCol md={6}>
+                <CCol >
               <CFormInput
-                  label='TWD'
-                  type="text"      
+                  label='Total working days'
+                  type="number"      
                   value={salarySheet.TWD}
                   onChange={(e)=>setSalarySheet(prev=>({...prev,TWD:e.target.value}))}             
               />
                 </CCol>
-         
-             
-                <CCol md={6}>
-              <CFormInput
-                  label='Additional Tex/TDS/PF Amount'
-                  type="text"
-                  value={salarySheet.TPD}
-                  onChange={(e)=>setSalarySheet(prev=>({...prev,TPD:e.target.value}))}    
+                <CCol>
+                <CFormInput
+                  label='Gross Salary'
+                  type="number"
+                  value={grossSalaryCalculation}
+                  // onChange={(e)=>setSalarySheet(prev=>({...prev,grossSalary:e.target.value}))}   
                   
               />
                 </CCol>
+              </CCol>
 
-              <CCol md={6}>
-              <CFormInput
-                  label='Basic Salary'
-                  type="text"
-                  value={salarySheet.BasicSalary}
-                  onChange={(e)=>setSalarySheet(prev=>({...prev,BasicSalary:e.target.value}))}    
-                  
-              />
-                </CCol>               
-       
-              <CCol md={6}>
+              <CCol lg={6} md={6}>
+
+               <CCol >
+                <CFormInput
+                  label='Incentive'
+                  type="number"    
+                  value={salarySheet.incentive}
+                  onChange={(e)=>setSalarySheet(prev=>({...prev,incentive:e.target.value}))}              
+                />
+                </CCol>
+               
+                <CCol >
                <CFormInput
                   label='PT'
                   type="number"
@@ -532,28 +550,24 @@ console.log(salarySheetData)
                   
               />
              </CCol>
-
-             <CCol md={6}>
-                <CFormInput
-                  label='Gross Salary'
+             <CCol >
+              <CFormInput
+                  label='PF'
                   type="number"
-                  value={salarySheet.grossSalary}
-                  onChange={(e)=>setSalarySheet(prev=>({...prev,grossSalary:e.target.value}))}   
+                  value={salarySheet.TPD}
+                  onChange={(e)=>setSalarySheet(prev=>({...prev,TPD:e.target.value}))}    
                   
               />
                 </CCol>
-
-
-                <CCol md={6}>
+             <CCol>
               <CFormInput
-                  label='Incentive'
-                  type="text"    
-                  value={salarySheet.incentive}
-                  onChange={(e)=>setSalarySheet(prev=>({...prev,incentive:e.target.value}))}              
+               label='TDS'
+               type="number"
+               value={salarySheet.TDS}
+               onChange={(e)=>setSalarySheet(prev=>({...prev,TDS:e.target.value}))} 
               />
-                </CCol>
-               
-                <CCol md={6}>
+             </CCol>
+             <CCol >
               <CFormInput
                   label='Adev Dec'
                   type="number"
@@ -562,8 +576,7 @@ console.log(salarySheetData)
                   
               />
                 </CCol>
-          
-                <CCol md={6}>
+                <CCol >
               <CFormInput
                   label='Net Salary Remark'
                   type="number"
@@ -572,17 +585,7 @@ console.log(salarySheetData)
                   
               />
                 </CCol>
-
-                <CCol md={6}>
-              <CFormInput
-                  label='Remark'
-                  type="text"
-                  value={salarySheet.remark}
-                  onChange={(e)=>setSalarySheet(prev=>({...prev,remark:e.target.value}))} 
-                  
-              />
-                </CCol>
-                <CCol md={6}>
+                <CCol >
 
                   
                 <CFormSelect
@@ -607,8 +610,17 @@ console.log(salarySheetData)
                     />
             
                 </CCol>
-
-                  </CRow>
+                <CCol >
+              <CFormInput
+                  label='Remark'
+                  type="text"
+                  value={salarySheet.remark}
+                  onChange={(e)=>setSalarySheet(prev=>({...prev,remark:e.target.value}))} 
+                  
+              />
+                </CCol>
+              </CCol>
+            </CRow>
             <CCol className='mt-4'>
                     {updateActive?
                       <CButton onClick={()=>saveData('Update')} >Save Update</CButton>:          
@@ -647,13 +659,13 @@ console.log(salarySheetData)
                                     <CTableHeaderCell>Late Mark</CTableHeaderCell>
                                     <CTableHeaderCell>Leave Day</CTableHeaderCell>
                                     <CTableHeaderCell>Adjust Leave</CTableHeaderCell>
+                                    <CTableHeaderCell>Monthly Salary</CTableHeaderCell>
                                     <CTableHeaderCell>TWD</CTableHeaderCell>
+                                    <CTableHeaderCell>PF</CTableHeaderCell>
                                     <CTableHeaderCell>TDS</CTableHeaderCell>
-                                    <CTableHeaderCell>Basic Salary</CTableHeaderCell>
-                                    <CTableHeaderCell>Gross Salary</CTableHeaderCell>
-                                    <CTableHeaderCell>Incentive</CTableHeaderCell>
                                     <CTableHeaderCell>PT</CTableHeaderCell>
                                     <CTableHeaderCell>Adev Dec</CTableHeaderCell>
+                                    <CTableHeaderCell>Gross Salary</CTableHeaderCell>
                                     <CTableHeaderCell>Incentive</CTableHeaderCell>
                                     <CTableHeaderCell>Net Salary </CTableHeaderCell>
                                     <CTableHeaderCell>Made of Payment</CTableHeaderCell>
@@ -679,19 +691,19 @@ console.log(salarySheetData)
                                             <CTableDataCell>{item.Designations}</CTableDataCell>
                                             <CTableDataCell>{item.halfday}</CTableDataCell>
                                             <CTableDataCell>{item.lateMark}</CTableDataCell>
-                                            <CTableDataCell>{item.leaveDay}</CTableDataCell>
+                                            <CTableDataCell>{item.leaveDay}</CTableDataCell>                                           
                                             <CTableDataCell>{item.adjustLeave}</CTableDataCell>
+                                            <CTableDataCell>{item.BasicSalary}</CTableDataCell>
                                             <CTableDataCell>{item.TWD}</CTableDataCell>
                                             <CTableDataCell>{item.TPD}</CTableDataCell>
-                                            <CTableDataCell>{item.BasicSalary}</CTableDataCell>
-                                            <CTableDataCell>{item.grossSalary}</CTableDataCell>
-                                            <CTableDataCell>{item.incentive}</CTableDataCell>
+                                            <CTableDataCell>{item.TDS}</CTableDataCell>
                                             <CTableDataCell>{item.PT}</CTableDataCell>
                                             <CTableDataCell>{item.advancedSalaryDedct}</CTableDataCell>
+                                            <CTableDataCell>{item.grossSalary}</CTableDataCell>
                                             <CTableDataCell>{item.incentive}</CTableDataCell>
                                             <CTableDataCell>{item.netSalary}</CTableDataCell>
                                             <CTableDataCell>{item.modeOfPayment}</CTableDataCell>
-                                            <CTableDataCell>{item.netSalary}</CTableDataCell>
+                                            <CTableDataCell>{item.remark}</CTableDataCell>
 
                                             <CTableDataCell style={{display:(deleteSalarySheet2||editSalarySheet)?'':'none'}}>
                                                <MdEdit style={{cursor:'pointer',display:editSalarySheet?'':'none'}} onClick={()=>updateProduct(item)}/>

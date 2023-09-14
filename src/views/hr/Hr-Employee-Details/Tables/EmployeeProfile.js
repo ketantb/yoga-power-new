@@ -119,7 +119,7 @@ const EmployeeProfile = ({ id}) => {
                 setDateOfBirth(moment(res.data.DateofBirth).format('YYYY-MM-DD'))
                 setDepartment(res.data.Department)
                 setJobDesignation(res.data.JobDesignation)
-                setExpSalary(res?.data?.Salary * 12)
+                setExpSalary(res?.data?.Salary)
                 setJoiningDate(moment(res.data.joiningDate).format('YYYY-MM-DD'))
                 setEmpCategory(res.data.EmployeeCategory)
                 setAnniversary(moment(res.data.Anniversary).format('YYYY-MM-DD'))
