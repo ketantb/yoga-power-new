@@ -73,7 +73,7 @@ const TrainerSalarySlipMaster = () => {
             <CCol lg={12} sm={12}>
                 <CCard className="mb-3 border-success">
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
-                        <CCardTitle className="mt-2">Trainer Salary Slip</CCardTitle>
+                        <CCardTitle className="mt-2">Trainer Salary Sheet</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
 

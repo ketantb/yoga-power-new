@@ -20,7 +20,9 @@ import {
     CNavItem,
     CNavLink,
     CTabContent,
-    CTabPane
+    CTabPane,
+    CPagination,
+    CPaginationItem
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop, cilInfo } from '@coreui/icons'
@@ -81,7 +83,8 @@ const PayrollMaster = () =>{
     Location:'0',
     typeOfJobTimeing:'0',
     modeOfPayment:'0',
-    ctc:'0'
+    ctc:'0',
+    bankAcountNo:''
   }
 
 
@@ -105,6 +108,24 @@ const PayrollMaster = () =>{
 
 
 
+   const [searchFilter,setSearchFilter] = useState({
+    search1:'',
+    search2:'',
+    search3:'',
+    search4:'',
+    search5:'',
+    search6:'',
+    search7:'',
+    search8:'',
+    search9:'',
+    search10:'',
+    search11:'',
+    search12:'',
+    search13:'',
+    search14:'',
+})
+
+const [paging, setPaging] = useState(0);
 
 
 const [staff, setStaff] = useState([])
@@ -126,14 +147,13 @@ function getStaff() {
 }
 
 
-console.log(staff)
-
 useEffect(()=>{
   setSalarySheet(prev=>({...prev,empId:selectedStaff?.EmployeeID}))
   setSalarySheet(prev=>({...prev,Designations:selectedStaff?.JobDesignation }))
   setSalarySheet(prev=>({...prev,Department:selectedStaff?.Department  }))
   setSalarySheet(prev=>({...prev,BasicSalary:(selectedStaff?.Salary /12).toFixed(3),
-  grossSalary:(selectedStaff?.Salary /12).toFixed(3)
+  grossSalary:(selectedStaff?.Salary /12).toFixed(3),
+  bankAcountNo:selectedStaff?.AccountNo
 }))
   setSalarySheet(prev=>({...prev,ctc:selectedStaff?.Salary }))
   setSalarySheet(prev=>({...prev,joiningDate:selectedStaff?.joiningDate }))
@@ -272,8 +292,23 @@ const updateProduct = async (item)=>{
   setUpdateActive(true)
 }
 
+function toFilterData(data){
+  return data.filter((el)=>{
+      return (new Date(el.month)?.toLocaleDateString()||'').includes(searchFilter.search2.toLowerCase().trim())&&
+      (el.empId.toLowerCase()||'').includes(searchFilter.search3.toLowerCase().trim())&&
+      (el.empName.toLowerCase()||'').includes(searchFilter.search4.toLowerCase().trim())&&
+      (new Date(el.joiningDate)?.toLocaleDateString()||'').includes(searchFilter.search5.toLowerCase().trim())&&
+      (el.Gender.toLowerCase()||'').includes(searchFilter.search6.toLowerCase().trim())&&
+      (el.Location.toLowerCase()||'').includes(searchFilter.search7.toLowerCase().trim())&&
+      (el.typeOfJobTimeing.toLowerCase()||'').includes(searchFilter.search8.toLowerCase().trim())&&
+      (el.Department.toLowerCase()||'').includes(searchFilter.search9.toLowerCase().trim())   &&
+      (el.Designations?.toLowerCase()||'').includes(searchFilter.search10.toLowerCase().trim())   &&
+      (el.bankAcountNo?.toLowerCase()||'').includes(searchFilter.search11.toLowerCase().trim())  && 
 
-console.log(salarySheetData)
+      (el.modeOfPayment.toLowerCase()||'').includes(searchFilter.search13.toLowerCase().trim())
+
+})
+}
 
     return <div>
       <CCard className="mb-3 border-success mt-4">
@@ -451,6 +486,14 @@ console.log(salarySheetData)
                         ))}
                       </CFormSelect>
                 </CCol> 
+                <CCol md={6}>
+              <CFormInput
+                  label='Bank Acount No'
+                  value={salarySheet.bankAcountNo}
+                  onChange={(e)=>setSalarySheet(prev=>({...prev,bankAcountNo:e.target.value}))}
+                  
+              />
+                </CCol>  
 
             </CRow>    
 
@@ -653,6 +696,7 @@ console.log(salarySheetData)
                                     <CTableHeaderCell>Full/Part Time</CTableHeaderCell>
                                     <CTableHeaderCell>Department</CTableHeaderCell>
                                     <CTableHeaderCell>Designations</CTableHeaderCell>
+                                    <CTableHeaderCell>Account No</CTableHeaderCell>
                                     <CTableHeaderCell>No of Half Day</CTableHeaderCell>
                                     <CTableHeaderCell>Late Mark</CTableHeaderCell>
                                     <CTableHeaderCell>Leave Day</CTableHeaderCell>
@@ -669,24 +713,56 @@ console.log(salarySheetData)
                                     <CTableHeaderCell>Made of Payment</CTableHeaderCell>
                                     <CTableHeaderCell>Remark</CTableHeaderCell>
                                     <CTableHeaderCell style={{display:(deleteSalarySheet2||editSalarySheet)?'':'none'}} >Edit/Delete</CTableHeaderCell>
-
-
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
+                            <CTableRow>
+                                <CTableDataCell     ><CFormInput className='min-width-90' disabled value={searchFilter.search1} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search1:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search2} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search2:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search3} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search3:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search4} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search4:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search5} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search5:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90'value={searchFilter.search6} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search6:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search7} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search7:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search8} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search8:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput  className='min-width-90' value={searchFilter.search9} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search9:e.target.value}))} /> </CTableDataCell>           
+                                    <CTableDataCell ><CFormInput className='min-width-90'value={searchFilter.search10} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search10:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput  className='min-width-90'value={searchFilter.search11} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search11:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput disabled className='min-width-90'
+                                    /> </CTableDataCell>
+                                     
+                                     <CTableDataCell colSpan={12} ><CFormInput className='min-width-90' disabled value={searchFilter.search12} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search12:e.target.value}))} /> </CTableDataCell>
+                                 <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search13} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search13:e.target.value}))} /> </CTableDataCell>
+                                <CTableDataCell colSpan={5} ><CFormInput className='min-width-90'  disabled 
+                                    /> </CTableDataCell>
+                                </CTableRow> 
                               
-                                {salarySheetData.filter((el)=>el).map((item, index) => (
+                                {toFilterData(salarySheetData).slice(paging * 10, paging * 10 + 10).map((item, index) => (
                                         <CTableRow key={index} className='text-center'>
-                                            <CTableDataCell>{index + 1 }</CTableDataCell>
-                                            <CTableDataCell>{new Date(item.month).toDateString()}</CTableDataCell>
+                                            <CTableDataCell>{index+ 1 + (paging * 10)  }</CTableDataCell>
+                                            <CTableDataCell>{new Date(item.month).toLocaleDateString()}</CTableDataCell>
                                             <CTableDataCell>{item.empId}</CTableDataCell>
                                             <CTableDataCell>{item.empName}</CTableDataCell>
-                                            <CTableDataCell>{new Date(item.joiningDate).toDateString()}</CTableDataCell>
+                                            <CTableDataCell>{new Date(item.joiningDate).toLocaleDateString()}</CTableDataCell>
                                             <CTableDataCell>{item.Gender}</CTableDataCell>
                                             <CTableDataCell>{item.Location}</CTableDataCell>
                                             <CTableDataCell>{item.typeOfJobTimeing}</CTableDataCell>
                                             <CTableDataCell>{item.Department}</CTableDataCell>
                                             <CTableDataCell>{item.Designations}</CTableDataCell>
+                                            <CTableDataCell>{item.bankAcountNo}</CTableDataCell>
                                             <CTableDataCell>{item.halfday}</CTableDataCell>
                                             <CTableDataCell>{item.lateMark}</CTableDataCell>
                                             <CTableDataCell>{item.leaveDay}</CTableDataCell>                                           
@@ -710,9 +786,26 @@ console.log(salarySheetData)
                                         </CTableRow>
                                 ))}
                                 
+
                                
                             </CTableBody>
 </CTable>
+                    <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {toFilterData(salarySheetData).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {toFilterData(salarySheetData).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {toFilterData(salarySheetData).length > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                    </CPagination>  
 
                     </CCardBody>
                 </CCard>

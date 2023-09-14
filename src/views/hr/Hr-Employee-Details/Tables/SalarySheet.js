@@ -82,21 +82,31 @@ const SalarySheet = ({id}) => {
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                                 <CTableRow >
-                                    <CTableHeaderCell>Sr.No</CTableHeaderCell>
-                                    <CTableHeaderCell>Month</CTableHeaderCell>
-                                    <CTableHeaderCell>Emp Id</CTableHeaderCell>
-                                    <CTableHeaderCell>Emp Name</CTableHeaderCell>
+                                <CTableHeaderCell>Sr no</CTableHeaderCell>
+                                    <CTableHeaderCell>Date</CTableHeaderCell>
+                                    <CTableHeaderCell>Emp ID</CTableHeaderCell>
+                                    <CTableHeaderCell>Name</CTableHeaderCell>
+                                    <CTableHeaderCell>JoiningDate</CTableHeaderCell>
+                                    <CTableHeaderCell>Gender</CTableHeaderCell>
+                                    <CTableHeaderCell>Location</CTableHeaderCell>
+                                    <CTableHeaderCell>Full/Part Time</CTableHeaderCell>
+                                    <CTableHeaderCell>Department</CTableHeaderCell>
                                     <CTableHeaderCell>Designations</CTableHeaderCell>
-                                    <CTableHeaderCell>Basic Salary</CTableHeaderCell>
+                                    <CTableHeaderCell>Account No</CTableHeaderCell>
+                                    <CTableHeaderCell>No of Half Day</CTableHeaderCell>
                                     <CTableHeaderCell>Late Mark</CTableHeaderCell>
-                                    <CTableHeaderCell>Half day</CTableHeaderCell>
-                                    <CTableHeaderCell>Leave day</CTableHeaderCell>
+                                    <CTableHeaderCell>Leave Day</CTableHeaderCell>
                                     <CTableHeaderCell>Adjust Leave</CTableHeaderCell>
-                                    <CTableHeaderCell>T W D</CTableHeaderCell>
-                                    <CTableHeaderCell>Gross Salary</CTableHeaderCell>                                  
+                                    <CTableHeaderCell>Monthly Salary</CTableHeaderCell>
+                                    <CTableHeaderCell>TWD</CTableHeaderCell>
+                                    <CTableHeaderCell>PF</CTableHeaderCell>
+                                    <CTableHeaderCell>TDS</CTableHeaderCell>
+                                    <CTableHeaderCell>PT</CTableHeaderCell>
+                                    <CTableHeaderCell>Adev Dec</CTableHeaderCell>
+                                    <CTableHeaderCell>Gross Salary</CTableHeaderCell>
                                     <CTableHeaderCell>Incentive</CTableHeaderCell>
-                                    <CTableHeaderCell>Advanced Salary Dedct</CTableHeaderCell>
-                                    <CTableHeaderCell>Net Salary</CTableHeaderCell>
+                                    <CTableHeaderCell>Net Salary </CTableHeaderCell>
+                                    <CTableHeaderCell>Made of Payment</CTableHeaderCell>
                                     <CTableHeaderCell>Remark</CTableHeaderCell>
                                     <CTableHeaderCell>Salary Slip </CTableHeaderCell>
                                 </CTableRow>
@@ -104,24 +114,35 @@ const SalarySheet = ({id}) => {
                             <CTableBody>
                                 
                                 
-                                {salarySheetData.filter((el)=>el.username === username).map((item, index) => (
+                                {salarySheetData.map((item, index) => (
                                         <CTableRow key={index}>
                                             <CTableDataCell>{index + 1 }</CTableDataCell>
-                                            <CTableDataCell>{item.month}</CTableDataCell>
+                                            <CTableDataCell>{new Date(item.month).toDateString()}</CTableDataCell>
                                             <CTableDataCell>{item.empId}</CTableDataCell>
                                             <CTableDataCell>{item.empName}</CTableDataCell>
+                                            <CTableDataCell>{new Date(item.joiningDate).toDateString()}</CTableDataCell>
+                                            <CTableDataCell>{item.Gender}</CTableDataCell>
+                                            <CTableDataCell>{item.Location}</CTableDataCell>
+                                            <CTableDataCell>{item.typeOfJobTimeing}</CTableDataCell>
+                                            <CTableDataCell>{item.Department}</CTableDataCell>
                                             <CTableDataCell>{item.Designations}</CTableDataCell>
-                                            <CTableDataCell>{item.BasicSalary}</CTableDataCell>
-                                            <CTableDataCell>{item.lateMark}</CTableDataCell>
+                                            <CTableDataCell>{item.bankAcountNo}</CTableDataCell>
                                             <CTableDataCell>{item.halfday}</CTableDataCell>
-                                            <CTableDataCell>{item.leaveDay}</CTableDataCell>
+                                            <CTableDataCell>{item.lateMark}</CTableDataCell>
+                                            <CTableDataCell>{item.leaveDay}</CTableDataCell>                                           
                                             <CTableDataCell>{item.adjustLeave}</CTableDataCell>
+                                            <CTableDataCell>{item.BasicSalary}</CTableDataCell>
                                             <CTableDataCell>{item.TWD}</CTableDataCell>
+                                            <CTableDataCell>{item.TPD}</CTableDataCell>
+                                            <CTableDataCell>{item.TDS}</CTableDataCell>
+                                            <CTableDataCell>{item.PT}</CTableDataCell>
+                                            <CTableDataCell>{item.advancedSalaryDedct}</CTableDataCell>
                                             <CTableDataCell>{item.grossSalary}</CTableDataCell>
                                             <CTableDataCell>{item.incentive}</CTableDataCell>
-                                            <CTableDataCell>{item.advancedSalaryDedct}</CTableDataCell>
                                             <CTableDataCell>{item.netSalary}</CTableDataCell>
+                                            <CTableDataCell>{item.modeOfPayment}</CTableDataCell>
                                             <CTableDataCell>{item.remark}</CTableDataCell>
+
                                             <CTableHeaderCell><CButton onClick={()=>showSalarySlip(item)} >View</CButton></CTableHeaderCell>
                                         </CTableRow>
                                 ))}

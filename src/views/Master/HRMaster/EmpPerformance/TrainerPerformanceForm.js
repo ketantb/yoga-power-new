@@ -176,7 +176,7 @@ setForm(true)
               onChange={(e)=>setTrainerObj(prev=>({...prev, trainerId:e.target.value}))}
               >
                 <option value=''>Select trainer</option>
-                        {trainer.filter((list) => list &&
+                        {trainer.filter((list) =>
                           list.selected === 'Select').map((item, index) => (
                             <option key={index} value={item._id}> {item.FullName}</option>
                           ))}

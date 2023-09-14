@@ -234,7 +234,7 @@ setForm(false)
                 setEmpObj(prev=>({...prev,response:e.target.value}))
             }}
               >
-               <option>Very Responsible</option>
+               <option>Very Responsible bankAcountNo</option>
                <option>Not Responsible</option>
                <option>Avarage</option>
               </CFormSelect>
@@ -248,6 +248,7 @@ setForm(false)
             }}
               />
             </CCol>
+            
 
         </CRow>
         

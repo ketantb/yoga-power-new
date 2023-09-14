@@ -133,7 +133,7 @@ setTrainerSlarySlipObj({
   return (
     <CCard className="mb-3 border-success mt-4">
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
-                        <CCardTitle className="mt-2">Trainer salary slip form</CCardTitle>
+                        <CCardTitle className="mt-2">Trainer salary Sheet form</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
 
@@ -159,7 +159,7 @@ setTrainerSlarySlipObj({
               onChange={(e)=>setTrainerSlarySlipObj(prev=>({...prev, trainerId:e.target.value}))}
               >
                 <option value=''>Select Employee</option>
-                        {staff.filter((list) => list.username === username &&
+                        {staff.filter((list) => 
                           list.selected === 'Select').map((item, index) => (
                             <option key={index} value={item._id}> {item.FullName}</option>
                           ))}
