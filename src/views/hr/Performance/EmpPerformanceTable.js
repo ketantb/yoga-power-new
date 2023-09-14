@@ -78,7 +78,7 @@ const EmpPerformanceTable = () => {
                                     <CTableHeaderCell>Department</CTableHeaderCell>
                                     <CTableHeaderCell>Designation</CTableHeaderCell>
                                     <CTableHeaderCell>Punctuality</CTableHeaderCell>
-                                    <CTableHeaderCell>Productivity</CTableHeaderCell>
+                                    <CTableHeaderCell>Productivity/Target</CTableHeaderCell>
                                     <CTableHeaderCell>Responsiblity</CTableHeaderCell>
                                     <CTableHeaderCell>Remark</CTableHeaderCell>
                                 </CTableRow>

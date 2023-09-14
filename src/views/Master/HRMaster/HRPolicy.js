@@ -258,7 +258,7 @@ const deleteHrPolicy =  (access.includes(herMasterRightVal.deleteHrPolicy) || is
                                     ))}
                                </ul>
 
-                               <CCard>
+                               <CCard  className='p-2'>
                                 {jobProfileFun(selectedPolicy)}
                          </CCard>
                           

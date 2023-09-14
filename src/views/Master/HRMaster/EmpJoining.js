@@ -218,7 +218,7 @@ const toDeleteData= async (id)=>{
                                     ))}
                                </ul>
 
-                               <CCard>
+                               <CCard className='p-2'>
                                 {jobProfileFun(selectedDocumentDetails)}
                                </CCard>
 </CCardBody>

@@ -88,7 +88,7 @@ const EmpJoining = () => {
                                     ))}
                                </ul>
 
-                               <CCard>
+                               <CCard className='p-2'>
                                 {jobProfileFun(selectedDocumentDetails)}
                                </CCard>
                     </CCardBody>

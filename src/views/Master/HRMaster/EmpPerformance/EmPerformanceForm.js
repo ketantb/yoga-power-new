@@ -214,7 +214,7 @@ setForm(false)
             </CCol>
             <CCol>
               <CFormInput
-              label='Productivity'
+              label='Productivity/Target'
               value={empObj.productivity}
               type='text'
               onChange={(e)=>{

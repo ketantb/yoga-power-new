@@ -266,7 +266,7 @@ setForm(true)
                 setTrainerObj(prev=>({...prev,feedBACK:e.target.value}))
             }}
               >
-               <option>Excelent</option>
+               <option>EXcellent</option>
                <option>Good</option>
                <option>Avarage</option> 
                <option>Bad</option>    
@@ -284,7 +284,7 @@ setForm(true)
                 setTrainerObj(prev=>({...prev,Behaviour:e.target.value}))
             }}
               >
-               <option>Excelent</option>
+               <option>EXcellent</option>
                <option>Good</option>
                <option>Avarage</option> 
                <option>Bad</option>  

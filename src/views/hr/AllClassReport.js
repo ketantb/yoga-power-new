@@ -13,6 +13,8 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
+    CPagination,
+    CPaginationItem
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop, cilInfo } from '@coreui/icons'
@@ -30,6 +32,16 @@ const AllClassReport = () => {
     const pathValMaster = useAdminValidation('Master')
     var month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+    const [searchFilter,setSearchFilter] = useState({
+        search1:'',
+        search2:'',
+        search3:'',
+        search4:'',
+        search5:'',
+        search6:'',
+        search7:'',  
+    })
+    const [paging, setPaging] = useState(0);
 
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
@@ -52,62 +64,23 @@ const AllClassReport = () => {
             })
     }
 
-//  function time_convert_Minutes(hoursNum)
-//     { 
-//       let num =  (+hoursNum.toFixed(2).split('.')[1]||0)
-//       let hours1 = (+hoursNum.toFixed(2).split('.')[0]||0)
+    // <CTableDataCell>{el.Year+" "+el.Month} </CTableDataCell>
+    //                                    <CTableDataCell>{el.Trainer}</CTableDataCell>
+    //                                    <CTableDataCell>{el.category}</CTableDataCell>
+    //                                    <CTableDataCell>{el.numberOfAttended}</CTableDataCell>
+    //                                    <CTableDataCell>{el.BatchTime}</CTableDataCell>
+    //                                    <CTableDataCell>{el.totalWorkingHours}</CTableDataCell>
 
-//         let hours = Math.floor(num / 60);  
-//         let minutes = num % 60;
-//         return (hours1+hours) + ":" + minutes;  
-
-//    }
-
-// function toGetHours(date1 ,date2) {
-
-// // get total seconds between the times
-// var hours = Math.abs(((new Date(date1) - new Date(date2))%86400000) / 3600000) ;
-// return hours
-// }
-
-//     const map = new Map()
-
-//     classReportData.forEach((el)=>{
-
-//         if(el.isTrainer &&el.checkOutDate){
-//             const obj ={
-//                 Year:new Date(el.checkDate).getFullYear(),
-//                 Month:new Date(el.checkDate).getMonth(),
-//                 Trainer:el.trainer_name,
-//                 TrainerId:el.trainerId,    
-//                 totalWorkingHours:toGetHours(el.checkDate,el.checkOutDate)            
-//             }
-//             console.log(el.checkDate,el.checkOutDate)   
-//             console.log(el.trainer_name)
-//             console.log(toGetHours(el.checkDate,el.checkOutDate))
-
-//             const tyepOFClassName = el.MemberId+" "+el.batch_timing+
-//              " "+el.category+" Year "+(obj.Year)+" Month "+
-//              (obj.Month)
-
-//             if(!map.has(tyepOFClassName)){
-//                 map.set(tyepOFClassName,obj)                    
-//             }else{
-//               const prevObj =  map.get(tyepOFClassName)
-//               prevObj.totalWorkingHours+=toGetHours(el.checkDate,el.checkOutDate)            
-//               map.set(tyepOFClassName,{...prevObj})                    
-//             }
-//         }
-//     })
-
-
-//    const uniqObjArr = [] 
-//     map.forEach((el)=>{
-//     const hours = el.totalWorkingHours
-//     el.totalWorkingHours=time_convert_Minutes(hours)
-//     uniqObjArr.push(el)
-//     })
-
+    function toFilterData(data){
+        return data.filter((el)=>{
+                  return ((el.Year+" "+el.Month)?.toLowerCase()||'').includes(searchFilter.search2.toLowerCase().trim())&&
+                  (el.Trainer?.toLowerCase()||'').includes(searchFilter.search3.toLowerCase().trim())&&
+                  (el.category?.toLowerCase()||'').includes(searchFilter.search4.toLowerCase().trim())&&
+                  ((el.numberOfAttended+"")||'').includes(searchFilter.search5.toLowerCase().trim())&&
+                  ((el.BatchTime+"")?.toLowerCase()||'').includes(searchFilter.search6.toLowerCase().trim())&&
+                  ((el.totalWorkingHours+"")?.toLowerCase()||'').includes(searchFilter.search7.toLowerCase().trim()) 
+         })
+        }
 
     return (
         <CRow>
@@ -130,70 +103,25 @@ const AllClassReport = () => {
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
+                            <CTableRow>
+                                    <CTableDataCell  style={{minWidth:'80px'}}><CFormInput disabled value={searchFilter.search1} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search1:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search2} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search2:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search3} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search3:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search4} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search4:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search5} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search5:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search6} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search6:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell style={{minWidth:'80px'}}><CFormInput value={searchFilter.search7} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search7:e.target.value}))} /> </CTableDataCell>
+                            </CTableRow>
+                                {toFilterData(classReportData).slice(paging * 10, paging * 10 + 10).map((el,i)=>
                                 <CTableRow>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "60px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "90px" }}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "120px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="number"
-                                            style={{ minWidth: "100px" }}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>  
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell> 
-                                </CTableRow>
-                                {classReportData.map((el,i)=>
-                                <CTableRow>
-                                       <CTableDataCell>{i+1} </CTableDataCell>
+                                       <CTableDataCell>{i+ 1 + (paging * 10)} </CTableDataCell>
                                        <CTableDataCell>{el.Year+" "+el.Month} </CTableDataCell>
                                        <CTableDataCell>{el.Trainer}</CTableDataCell>
                                        <CTableDataCell>{el.category}</CTableDataCell>
@@ -206,7 +134,22 @@ const AllClassReport = () => {
                             </CTableBody>
                         </CTable>
                     </CCardBody>
-                   
+                    <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {toFilterData(classReportData).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {toFilterData(classReportData).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {toFilterData(classReportData).length > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                    </CPagination>  
                 </CCard>
             </CCol>
         </CRow>
