@@ -42,6 +42,8 @@ import { leadsSuperRight } from 'src/views/hr/Rights/rightsValue/crmRightsValue'
 import menImage from './../../assets/images/avatars/profile_icon.png'
 
 const AppHeaderDropdown = () => {
+
+  const isEmployee = useSelector((el)=>el.isEmployee)
    
   const disPatch = useDispatch()
   const navigate = useNavigate()
@@ -58,6 +60,11 @@ const AppHeaderDropdown = () => {
   const companyProfile = ()=>{
     navigate('/company-profile')
   }
+
+  const handleNavigateFun =(path)=>{
+    navigate(path)
+  }
+  
 
 
   let user = JSON.parse(localStorage.getItem('user-info'))
@@ -125,13 +132,15 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilSettings} className="me-2" />
          User  Profile
         </CDropdownItem>
-
+        /hr/employee-detail/:isEmployee/:id
         <CDropdownItem  className='text-start' onClick={companyProfile}>
           <CIcon icon={cilSettings} className="me-2" />
          Company  Profile
         </CDropdownItem>
-       
-        
+        {!isEmployee?<CDropdownItem className='me-2' onClick>
+          <CIcon icon={cilUser} className="me-2" />
+          Employee Profile
+        </CDropdownItem>:''}
         <CDropdownDivider  />
         <CDropdownItem  onClick={Logout} className='text-center'>
           <CIcon icon={cilLockLocked} className="me-2" />

@@ -63,18 +63,16 @@ const SalarySlip = ({empData,showInvoiceModal,setInvoceModal}) => {
         <CCol className='mt-2 p-2' >
             
             <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                                <CTableRow>
-                                <CTableHeaderCell colSpan={4} className='border'>
-                                      Earning
+                <CTableHead  color={'darkGreen'} >
+                      <CTableHeaderCell colSpan={4} className='border'>
+                                      SALARYES
                                   </CTableHeaderCell>
-                                </CTableRow>
-                                <CTableRow >
+                </CTableHead>
+                            <CTableHead color={'darkGreen'} >
+                               
                                     <CTableHeaderCell>SALARY (CTC)</CTableHeaderCell>
                                     <CTableHeaderCell>MONTHLY SALARY</CTableHeaderCell>
-                                    <CTableHeaderCell>incentive</CTableHeaderCell>
                                     <CTableHeaderCell>SALARY (GROSS)</CTableHeaderCell>
-                                </CTableRow>
                             </CTableHead>
                             <CTableBody>
                             
@@ -82,7 +80,6 @@ const SalarySlip = ({empData,showInvoiceModal,setInvoceModal}) => {
                                         <CTableRow >
                                             <CTableDataCell>{empData.ctc}</CTableDataCell>        
                                             <CTableDataCell>{(empData.BasicSalary)}</CTableDataCell>  
-                                            <CTableDataCell>{empData.incentive}</CTableDataCell>            
                                             <CTableDataCell>{empData.grossSalary}</CTableDataCell>    
                                         </CTableRow>
 
@@ -91,18 +88,16 @@ const SalarySlip = ({empData,showInvoiceModal,setInvoceModal}) => {
 
 
         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                            <CTableRow>
-                                <CTableHeaderCell colSpan={4} className='border'>
+            <CTableHead>
+                       <CTableHeaderCell colSpan={4} className='border'>
                                       Deduction
                                    </CTableHeaderCell>
-                                </CTableRow>
-                                <CTableRow >
+            </CTableHead>
+                            <CTableHead color={'darkGreen'} >
                                     <CTableHeaderCell>TDS</CTableHeaderCell>
                                     <CTableHeaderCell>Professional Tax</CTableHeaderCell>
                                     <CTableHeaderCell>Advanced Salary</CTableHeaderCell>
                                     <CTableHeaderCell>Total Deduction</CTableHeaderCell>
-                                </CTableRow>
                             </CTableHead>
                             <CTableBody>
                                 
@@ -120,28 +115,24 @@ const SalarySlip = ({empData,showInvoiceModal,setInvoceModal}) => {
       
         <CCol className=' text-end '>
 
-            <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                         <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                           
-                            <CTableRow>
-                                <CTableHeaderCell colSpan={4} className='border'>
+            <CTable className='mt-3' hover responsive>
+                <CTableHead color={'darkGreen'} >
+                    <CTableHeaderCell colSpan={4}   className='border'>
                                 Leave's
                                    </CTableHeaderCell>
-                                </CTableRow>
-                                <CTableRow >
+                </CTableHead>
+                         <CTableHead color={'darkGreen'}  >
+                              
                                     <CTableHeaderCell>Half-Day</CTableHeaderCell>
                                     <CTableHeaderCell>Late Mark</CTableHeaderCell>
                                     <CTableHeaderCell>Leave Day</CTableHeaderCell>
                                     <CTableHeaderCell>Adjust Leave</CTableHeaderCell>
-                                </CTableRow>
                             </CTableHead>
                             <CTableBody>   
-                                        <CTableRow >
                                             <CTableDataCell>{empData.halfday}</CTableDataCell>     
                                             <CTableDataCell>{empData.lateMark}</CTableDataCell>    
                                             <CTableDataCell>{empData.leaveDay}</CTableDataCell>  
                                             <CTableDataCell>{empData.adjustLeave}</CTableDataCell>    
-                                        </CTableRow>
                             </CTableBody>
                         </CTable>
 
@@ -150,17 +141,18 @@ const SalarySlip = ({empData,showInvoiceModal,setInvoceModal}) => {
         <CCol>  
                     <CTable>
                     
-                       <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >    
+                       <CTableHead color={'darkGreen'} >    
                            
-                               <CTableRow >
                                    <CTableHeaderCell>TOTAL WORKING DAYS (TWD) </CTableHeaderCell>
+                                   <CTableHeaderCell> INCENTIVE</CTableHeaderCell>
                                    <CTableHeaderCell>   NET SALARY </CTableHeaderCell>
-                               </CTableRow>
+                                   
                            </CTableHead>
                            <CTableBody>   
                                        <CTableRow >
-                                           <CTableDataCell>{empData.TWD}</CTableDataCell>     
-                                           <CTableDataCell>{83100}</CTableDataCell>    
+                                           <CTableDataCell>{empData.TWD}</CTableDataCell> 
+                                           <CTableDataCell>{empData.incentive}</CTableDataCell>        
+                                           <CTableDataCell>{empData.netSalary}</CTableDataCell>    
                                        </CTableRow>
                            </CTableBody>
                 </CTable>   

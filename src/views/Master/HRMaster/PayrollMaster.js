@@ -158,7 +158,7 @@ const netSlaryCal  = +salarySheet.incentive - +salarySheet.advancedSalaryDedct
 useEffect(()=>{
  
   setSalarySheet(prev=>{
-    setGrossSalaryCalculation((+prev.grossSalary-((+prev.grossSalary/30)* ( totalLeave-removeLeave )+totalDecAdPt)))
+    setGrossSalaryCalculation(Math.round(+prev.grossSalary-((+prev.grossSalary/30)* ( totalLeave-removeLeave )+totalDecAdPt)))
     return  {...prev,
       TWD:30+ - totalLeave + removeLeave
      }
@@ -170,7 +170,7 @@ useEffect(()=>{
 useEffect(()=>{
 
   setSalarySheet(prev=>{
-    setGrossSalaryCalculation((+prev.grossSalary-((+prev.grossSalary/30)* (totalLeave-removeLeave ) +totalDecAdPt)))
+    setGrossSalaryCalculation(Math.round(+prev.grossSalary-((+prev.grossSalary/30)* (totalLeave-removeLeave ) +totalDecAdPt)))
     return  {...prev}
   })    
   },[totalDecAdPt,basicSalary])
@@ -530,17 +530,7 @@ console.log(salarySheetData)
                 </CCol>
               </CCol>
 
-              <CCol lg={6} md={6}>
-
-               <CCol >
-                <CFormInput
-                  label='Incentive'
-                  type="number"    
-                  value={salarySheet.incentive}
-                  onChange={(e)=>setSalarySheet(prev=>({...prev,incentive:e.target.value}))}              
-                />
-                </CCol>
-               
+              <CCol lg={6} md={6}>      
                 <CCol >
                <CFormInput
                   label='PT'
@@ -577,6 +567,14 @@ console.log(salarySheetData)
               />
                 </CCol>
                 <CCol >
+                <CCol >
+                <CFormInput
+                  label='Incentive'
+                  type="number"    
+                  value={salarySheet.incentive}
+                  onChange={(e)=>setSalarySheet(prev=>({...prev,incentive:e.target.value}))}              
+                />
+                </CCol>   
               <CFormInput
                   label='Net Salary Remark'
                   type="number"
