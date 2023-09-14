@@ -89,7 +89,7 @@ let num =0
 
     function deleteLeave(id) {
         if (confirm('Do you want to delete this')) {
-            fetch(`${url}/leaveSetUpMaster/delete/${id}`, {
+            fetch(`${url}/empleaveList/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -98,7 +98,7 @@ let num =0
                 },
             }).then((result) => {
                 result.json().then((resp) => {
-                    getLeaveSetupData()
+                  getEmpLeaveListData()
                 })
             })
         }
