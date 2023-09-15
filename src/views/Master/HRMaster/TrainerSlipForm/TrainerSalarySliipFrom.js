@@ -58,7 +58,8 @@ const TrainerSalarySliipFrom = ({updateActive,getData}) => {
     ctc:0,
     joiningDate:'',
     remark:'',
-    Gender:''
+    Gender:'',
+    incentive:'0'
     }
     
   const [trainerSlarySlipObj,setTrainerSlarySlipObj] = useState({...obj}) 
@@ -112,13 +113,13 @@ useEffect(()=>{
 if(!(trainerSlarySlipObj.tds+1)){
       return 
 }
-setTdsAmount(+trainerSlarySlipObj.tds)
+setTdsAmount((trainerSlarySlipObj.totalAmount/100)*trainerSlarySlipObj.tds)
 },[trainerSlarySlipObj.totalAmount,trainerSlarySlipObj.tds])
 
 
 const saveData = async  (type)=>{
    const data = {...trainerSlarySlipObj,trainerName:selectedStaff.FullName,amount:
-     trainerSlarySlipObj.totalAmount-tdsamount-+trainerSlarySlipObj.pt-+trainerSlarySlipObj.advDec}
+     trainerSlarySlipObj.totalAmount-tdsamount-+trainerSlarySlipObj.pt-+trainerSlarySlipObj.advDec-+((trainerSlarySlipObj.totalAmount/100)*trainerSlarySlipObj.Pf)}
 
 
    let response ={}
@@ -132,6 +133,7 @@ const saveData = async  (type)=>{
     if(response?.status===200){
         getData()
      alert('successfully save')
+     setTrainerSlarySlipObj({...obj})
     }
      }catch(error){
        console.error(error)
@@ -144,10 +146,10 @@ useEffect(()=>{
 if(updateActive?.visible){
 setTrainerSlarySlipObj(updateActive?.obj)
 }else{
-setTrainerSlarySlipObj({...obj})
   setTdsAmount(0)
+  setTrainerSlarySlipObj({...obj})
 }
-},[updateActive?.visible])
+},[updateActive?.visible,updateActive?.obj?._id])
 
 
 
@@ -299,6 +301,7 @@ setTrainerSlarySlipObj({...obj})
             <CCol lg={3} md={4} >
             <CFormInput
               label='Per Hour Amount'
+              type='number'
               value={trainerSlarySlipObj.prHourSalary}
               onChange={(e)=>{
                 setTrainerSlarySlipObj(prev=>{
@@ -312,6 +315,7 @@ setTrainerSlarySlipObj({...obj})
             <CCol lg={3} md={4} >
             <CFormInput
               label='Total Amount'
+              type='number'
               value={trainerSlarySlipObj.totalAmount}
               >
               </CFormInput>
@@ -319,7 +323,18 @@ setTrainerSlarySlipObj({...obj})
      
             <CCol  lg={3} md={4} >
               <CFormInput
-              label='TDS'
+              label='Incentive'
+              type='number'
+              value={trainerSlarySlipObj.incentive}
+              onChange={(e)=>{
+                setTrainerSlarySlipObj(prev=>({...prev,incentive:e.target.value}))
+            }}
+              />
+            </CCol>
+            <CCol  lg={3} md={4} >
+              <CFormInput
+              label='TDS%'
+              type='number'
               value={trainerSlarySlipObj.tds}
               onChange={(e)=>{
                 setTrainerSlarySlipObj(prev=>({...prev,tds:e.target.value}))
@@ -328,7 +343,8 @@ setTrainerSlarySlipObj({...obj})
             </CCol>
             <CCol  lg={3} md={4} >
               <CFormInput
-              label='PF'
+              label='PF%'
+              type='number'
               value={trainerSlarySlipObj.Pf}
               onChange={(e)=>{
                 setTrainerSlarySlipObj(prev=>({...prev,Pf:e.target.value}))
@@ -338,6 +354,7 @@ setTrainerSlarySlipObj({...obj})
             <CCol  lg={3} md={4} >
               <CFormInput
               label='PT'
+              type='number'
               value={trainerSlarySlipObj.pt}
               onChange={(e)=>{
                 setTrainerSlarySlipObj(prev=>({...prev,pt:e.target.value}))
@@ -348,12 +365,14 @@ setTrainerSlarySlipObj({...obj})
             <CCol  lg={3} md={4} >
               <CFormInput
               label='ADV DEC'
+              type='number'
               value={trainerSlarySlipObj.advDec}
               onChange={(e)=>{
                 setTrainerSlarySlipObj(prev=>({...prev,advDec:e.target.value}))
             }}
               />
             </CCol>
+            
             <CCol  lg={3} md={4} >
               <CFormSelect
               label='Mode OF Payment'
@@ -386,8 +405,8 @@ setTrainerSlarySlipObj({...obj})
                 </CCol> 
  <CCol lg={3} md={4} >
               <CFormInput
-              label='Net Salar'
-              value={(trainerSlarySlipObj.totalAmount-tdsamount-+trainerSlarySlipObj.pt-+trainerSlarySlipObj.advDec-+trainerSlarySlipObj.Pf||0)}
+              label='Net Salary'
+              value={(trainerSlarySlipObj.totalAmount-tdsamount-+trainerSlarySlipObj.pt-+trainerSlarySlipObj.advDec-+ ((trainerSlarySlipObj.totalAmount/100)*trainerSlarySlipObj.Pf)+(+trainerSlarySlipObj.incentive)||0)}
               />
             </CCol>
         </CRow>

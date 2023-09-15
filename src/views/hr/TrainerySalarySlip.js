@@ -101,9 +101,9 @@ const TrainerySalary = () => {
                                     <CTableHeaderCell>Total Working Hours</CTableHeaderCell>  
                                     <CTableHeaderCell>Per Hours Amount</CTableHeaderCell>  
                                     <CTableHeaderCell>Amount</CTableHeaderCell>             
-                                    <CTableHeaderCell>TDS</CTableHeaderCell>  
+                                    <CTableHeaderCell>TDS%</CTableHeaderCell>  
                                     <CTableHeaderCell>PT</CTableHeaderCell>  
-                                    <CTableHeaderCell>Pf</CTableHeaderCell>  
+                                    <CTableHeaderCell>PF%</CTableHeaderCell>  
                                     <CTableHeaderCell>ADV DEC</CTableHeaderCell> 
                                     <CTableHeaderCell>remark</CTableHeaderCell>           
                                     <CTableHeaderCell>Mode OF Payment</CTableHeaderCell>  
@@ -131,11 +131,11 @@ const TrainerySalary = () => {
                                         <CTableDataCell>{el.totalAmount}</CTableDataCell>
                                         <CTableDataCell>{el.tds}%</CTableDataCell>
                                         <CTableDataCell>{el.pt}</CTableDataCell>
-                                        <CTableDataCell>{el.Pf}</CTableDataCell>  
+                                        <CTableDataCell>{el.Pf}%</CTableDataCell>  
                                         <CTableDataCell>{el.advDec}</CTableDataCell>
                                         <CTableDataCell>{el.remark}</CTableDataCell>
                                         <CTableDataCell>{el.modeOfPayment}</CTableDataCell>
-                                        <CTableDataCell>{el.amount}</CTableDataCell>
+                                        <CTableDataCell>{+el.amount+ +el.incentive}</CTableDataCell>
                                         <CTableHeaderCell><CButton onClick={()=>showSalarySlip(el)} >View</CButton></CTableHeaderCell>
                                     </CTableRow>
                                 })}

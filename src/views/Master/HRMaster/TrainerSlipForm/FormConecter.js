@@ -48,7 +48,7 @@ if(updateActive?.visible ){
        <CTabContent style={{display:!!activeKey?'block':'none'}}>
         
           <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={activeKey === 1}>
-           <TrainerSalarySliipFrom updateActive={updateActive} getData={getData} />
+           <TrainerSalarySliipFrom activeKey={activeKey} updateActive={updateActive} getData={getData} />
           </CTabPane>
         </CTabContent>
 

@@ -90,16 +90,17 @@ const TrainerSalarySlipMaster = () => {
                                     <CTableHeaderCell>Gender</CTableHeaderCell>
                                     <CTableHeaderCell>Department</CTableHeaderCell>
                                     <CTableHeaderCell>designation</CTableHeaderCell>
-                                    <CTableHeaderCell>bankAccountNo</CTableHeaderCell>
+                                    <CTableHeaderCell>bank AccountNo</CTableHeaderCell>
                                     <CTableHeaderCell>Total Working Hours</CTableHeaderCell>  
                                     <CTableHeaderCell>Per Hours Amount</CTableHeaderCell>  
                                     <CTableHeaderCell>Amount</CTableHeaderCell>             
-                                    <CTableHeaderCell>TDS</CTableHeaderCell>  
+                                    <CTableHeaderCell>TDS %</CTableHeaderCell>  
                                     <CTableHeaderCell>PT</CTableHeaderCell>  
-                                    <CTableHeaderCell>Pf</CTableHeaderCell>  
+                                    <CTableHeaderCell>PF %</CTableHeaderCell>  
                                     <CTableHeaderCell>ADV DEC</CTableHeaderCell> 
                                     <CTableHeaderCell>remark</CTableHeaderCell>           
                                     <CTableHeaderCell>Mode OF Payment</CTableHeaderCell>  
+                                    <CTableHeaderCell>Incentive</CTableHeaderCell>  
                                     <CTableHeaderCell>Net Salary</CTableHeaderCell>  
                                     <CTableHeaderCell style={{display:(editTrainerSalarySlip||deleteTrainerSalarySlip)?'':'none'}} >Edit/Delete</CTableHeaderCell>                                    
                                 </CTableRow>
@@ -125,11 +126,12 @@ const TrainerSalarySlipMaster = () => {
                                         <CTableDataCell>{el.totalAmount}</CTableDataCell>
                                         <CTableDataCell>{el.tds}%</CTableDataCell>
                                         <CTableDataCell>{el.pt}</CTableDataCell>
-                                        <CTableDataCell>{el.Pf}</CTableDataCell>  
+                                        <CTableDataCell>{el.Pf}%</CTableDataCell>  
                                         <CTableDataCell>{el.advDec}</CTableDataCell>
                                         <CTableDataCell>{el.remark}</CTableDataCell>
                                         <CTableDataCell>{el.modeOfPayment}</CTableDataCell>
-                                        <CTableDataCell>{el.amount}</CTableDataCell>
+                                        <CTableDataCell>{(+el.incentive||0)}</CTableDataCell>
+                                        <CTableDataCell>{+el.amount+ (+el.incentive||0)}</CTableDataCell>
                                         <CTableDataCell style={{display:(editTrainerSalarySlip||deleteTrainerSalarySlip)?'':'none'}}>
                                             <MdEdit  style={{cursor:'pointer',display:editTrainerSalarySlip?'':'none'}} onClick={()=>setUpdateActive(()=>({visible:true,obj:el}))}/>
                                             <MdDelete style={{cursor:'pointer',display:deleteTrainerSalarySlip?'':'none'}}/>
