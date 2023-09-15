@@ -81,7 +81,7 @@ const TrainerSlip = ({empData,showInvoiceModal,setInvoceModal}) => {
                             </CTableHead>
                             <CTableBody>
                                         
-                                        <CTableRow >
+                                        <CTableRow  className='text-center' >
                                             <CTableDataCell>{empData.totalWorkingHours}</CTableDataCell>        
                                             <CTableDataCell>{empData.prHourSalary}</CTableDataCell>            
                                             <CTableDataCell>{empData.totalAmount}</CTableDataCell>    
@@ -105,7 +105,7 @@ const TrainerSlip = ({empData,showInvoiceModal,setInvoceModal}) => {
                                     <CTableHeaderCell>Total Deduction</CTableHeaderCell>
                             </CTableHead>
                             <CTableBody>  
-                                        <CTableRow >
+                                        <CTableRow  className='text-center' >
                                             <CTableDataCell>{empData.tds}%</CTableDataCell>     
                                             <CTableDataCell>{empData.pt}</CTableDataCell>    
                                             <CTableDataCell>{empData.Pf}%</CTableDataCell>    
@@ -127,7 +127,7 @@ const TrainerSlip = ({empData,showInvoiceModal,setInvoceModal}) => {
                                    <CTableHeaderCell>   NET SALARY </CTableHeaderCell>
                            </CTableHead>
                            <CTableBody>   
-                                       <CTableRow >
+                                       <CTableRow  className='text-center' >
                                            <CTableDataCell>{(empData.incentive||0)}</CTableDataCell>     
                                            <CTableDataCell>{empData.amount+(empData.incentive||0)}</CTableDataCell>    
                                        </CTableRow>
