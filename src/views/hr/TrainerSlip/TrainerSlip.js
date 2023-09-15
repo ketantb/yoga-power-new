@@ -44,12 +44,26 @@ const TrainerSlip = ({empData,showInvoiceModal,setInvoceModal}) => {
         <CRow>                                                                   
             <CCol className='mt-2' style={{ marginLeft: '10px' }}>
                 <div>
-                    <h6>Name:-{empData.trainerName} </h6>
                     <CCol lg={12} className='text-center mt-2'><h6>Salary Slip for {new Date(empData.date).toLocaleDateString()}</h6></CCol>
                 </div>
-            </CCol>
-             
+            </CCol>         
     </CRow>  
+    <CRow>
+    <CCol  className='mt-2' style={{ marginLeft: '10px' }}>
+                        <div>
+                            <h6>Name:-{empData?.trainerName} </h6>
+                            <h6> Designation:- {empData?.designation} </h6>
+                            <h6> Location:- {empData?.location}</h6>
+                        </div>
+                    </CCol>
+            <CCol  className='mt-2' style={{ marginRight: '30px' }}>
+                        <div className='float-end'>
+                            <h6>Department:- {empData.Department}</h6>
+                            <h6>Mode Of Payment:- {empData.modeOfPayment} </h6>
+                            <h6>Bank Account No:- {empData.bankAccountNo}</h6>
+                        </div>
+            </CCol>
+    </CRow>
     
     <CRow>
         <CCol className='mt-2 p-2' >
@@ -82,13 +96,14 @@ const TrainerSlip = ({empData,showInvoiceModal,setInvoceModal}) => {
         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                             <CTableRow>
-                                <CTableHeaderCell colSpan={4} className='border'>
+                                <CTableHeaderCell colSpan={5} className='border'>
                                       Deduction
                                    </CTableHeaderCell>
                                 </CTableRow>
                                 <CTableRow >
                                     <CTableHeaderCell>TDS</CTableHeaderCell>
                                     <CTableHeaderCell>Professional Tax</CTableHeaderCell>
+                                    <CTableHeaderCell>PF</CTableHeaderCell>
                                     <CTableHeaderCell>Advanced Salary</CTableHeaderCell>
                                     <CTableHeaderCell>Total Deduction</CTableHeaderCell>
                                 </CTableRow>
@@ -97,6 +112,7 @@ const TrainerSlip = ({empData,showInvoiceModal,setInvoceModal}) => {
                                         <CTableRow >
                                             <CTableDataCell>{empData.tds}</CTableDataCell>     
                                             <CTableDataCell>{empData.pt}</CTableDataCell>    
+                                            <CTableDataCell>{empData.Pf}</CTableDataCell>    
                                             <CTableDataCell>{empData.advDec}</CTableDataCell>  
                                             <CTableDataCell>{+empData.advDec+ +empData.pt + +empData.tds}</CTableDataCell>     
                                         </CTableRow>

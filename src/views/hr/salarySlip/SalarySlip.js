@@ -116,6 +116,7 @@ const SalarySlip = ({ empData, showInvoiceModal, setInvoceModal }) => {
                             </CTableHead>
                             <CTableHead color={'darkGreen'} >
                                 <CTableHeaderCell>TDS</CTableHeaderCell>
+                                <CTableHeaderCell>PF</CTableHeaderCell>
                                 <CTableHeaderCell>Professional Tax</CTableHeaderCell>
                                 <CTableHeaderCell>Advanced Salary</CTableHeaderCell>
                                 <CTableHeaderCell>Total Deduction</CTableHeaderCell>
@@ -123,10 +124,11 @@ const SalarySlip = ({ empData, showInvoiceModal, setInvoceModal }) => {
                             <CTableBody>
 
                                 <CTableRow >
+                                    <CTableDataCell>{empData.TDS}</CTableDataCell>
                                     <CTableDataCell>{empData.TPD}</CTableDataCell>
                                     <CTableDataCell>{empData.PT}</CTableDataCell>
                                     <CTableDataCell>{empData.advancedSalaryDedct}</CTableDataCell>
-                                    <CTableDataCell>{+empData.advancedSalaryDedct + +empData.PT + +empData.TPD}</CTableDataCell>
+                                    <CTableDataCell>{+empData.advancedSalaryDedct + +empData.PT + +empData.TPD +empData.TDS}</CTableDataCell>
 
                                 </CTableRow>
                             </CTableBody>

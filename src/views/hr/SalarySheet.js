@@ -58,12 +58,6 @@ const SalarySheet = () => {
         "Authorization": `Bearer ${token}`,
        }
 
-
-   
-   
-
-
-
     const getShitTimeData = ()=>{
         axios.get(`${url}/salarySheet/${pathVal}`,{headers}).then((el)=>{
          if(!el.status){

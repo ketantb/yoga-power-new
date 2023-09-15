@@ -9,10 +9,14 @@ import {
     CFormInput,
     CFormSelect,
     CRow,
+    CNav,
+    CNavItem,
+    CNavLink
 } from '@coreui/react'
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useAdminValidation, useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation';
+import moment from 'moment/moment';
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 const username = user.user.username;
@@ -29,9 +33,9 @@ const TrainerSalarySliipFrom = ({updateActive,getData}) => {
     const url = useSelector((el) => el.domainOfApi)
     const pathValMaster = useAdminValidation('Master')
     const uniObjVal =  useUniqAdminObjeact()
-   
-    
-  const [trainerSlarySlipObj,setTrainerSlarySlipObj] = useState({
+    const [activeKey,setActiveKey] = useState(1)
+    const [designationData,setDesignationData] = useState([])
+    const obj = {
     username: username,
     date:new Date(),
     trainerName:'',   
@@ -43,9 +47,21 @@ const TrainerSalarySliipFrom = ({updateActive,getData}) => {
     advDec:0,
     modeOfPayment:'',
     totalAmount:0,
-    trainerId:''
-  }
-) 
+    trainerId:'',
+    designation:'',
+    location:'',
+    Department:'',
+    bankAccountNo:'',
+    EmpId:'',
+    Pf:0,
+    typeOfJobTimeing:'',
+    ctc:0,
+    joiningDate:'',
+    remark:'',
+    Gender:''
+    }
+    
+  const [trainerSlarySlipObj,setTrainerSlarySlipObj] = useState({...obj}) 
 
 const [tdsamount,setTdsAmount] = useState(0)
 
@@ -53,20 +69,38 @@ const [staff, setStaff] = useState([])
 
 const selectedStaff =  staff?.find((el)=>el?._id===trainerSlarySlipObj.trainerId)
 
-function getStaff() {
-    axios.get(`${url}/employeeform/${pathValMaster}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-        .then((res) => {
-            setStaff(res.data.filter((el)=>{
-               return  el.EmployeeCategory.trim()==='Freelancer'||el.trainerStatus?true:false
-            }).reverse())
-        })
-        .catch((error) => {
-            console.error(error)
-        })
+
+useEffect(()=>{
+
+  setTrainerSlarySlipObj((prev)=>({...prev,
+    designation:selectedStaff?.JobDesignation,
+    location:selectedStaff?.address,
+    Department:selectedStaff?.Department,
+    bankAccountNo:selectedStaff?.AccountNo,
+    EmpId:selectedStaff?.EmployeeID,
+    typeOfJobTimeing:selectedStaff?.AccountNo,
+    joiningDate:selectedStaff?.joiningDate,
+    Gender:selectedStaff?.Gender,
+  }))
+},[selectedStaff?._id])
+
+const headers ={
+  'Authorization': `Bearer ${token}`
+}
+
+ function getStaff() {
+
+  const response =   axios.get(`${url}/designation/${pathValMaster}`,{headers})
+  const response2 =   axios.get(`${url}/employeeform/${pathValMaster}`,{headers})
+ 
+  Promise.all([response,response2]).then((res)=>{
+    const allData = res
+    setDesignationData(allData[0].data)
+    setStaff(allData[1].data)
+   }).catch((error) => {
+    console.error(error)
+})
+
 }
 useEffect(()=>{
     getStaff()
@@ -75,10 +109,10 @@ useEffect(()=>{
 
 
 useEffect(()=>{
-if(!trainerSlarySlipObj.tds){
+if(!(trainerSlarySlipObj.tds+1)){
       return 
 }
-setTdsAmount(trainerSlarySlipObj.totalAmount/100 *trainerSlarySlipObj.tds)
+setTdsAmount(+trainerSlarySlipObj.tds)
 },[trainerSlarySlipObj.totalAmount,trainerSlarySlipObj.tds])
 
 
@@ -110,20 +144,7 @@ useEffect(()=>{
 if(updateActive?.visible){
 setTrainerSlarySlipObj(updateActive?.obj)
 }else{
-setTrainerSlarySlipObj({ 
-    username: username,
-    date:new Date(),
-    trainerName:'',   
-    prHourSalary:0,
-    totalWorkingHours:0,
-    amount:0,
-    tds:0,
-    pt:0,
-    advDec:0,
-    modeOfPayment:'',
-    totalAmount:0,
-    trainerId:''
-  } )
+setTrainerSlarySlipObj({...obj})
   setTdsAmount(0)
 }
 },[updateActive?.visible])
@@ -152,7 +173,7 @@ setTrainerSlarySlipObj({
 
 
            <CRow>
-            <CCol >
+            <CCol lg={3} md={4} >
               <CFormSelect
               label='Trainer Name'
               value={trainerSlarySlipObj.trainerId}
@@ -165,7 +186,100 @@ setTrainerSlarySlipObj({
                           ))}
               </CFormSelect>
               </CCol>
-              <CCol>
+
+              <CCol lg={3} md={4} >
+                <CFormInput
+                  type="text"
+                  label='Emp Id'
+                  value={trainerSlarySlipObj.EmpId}
+                  onChange={(e)=>setTrainerSlarySlipObj(prev=>({...prev,EmpId:e.target.value}))}
+                />
+              </CCol>
+
+              <CCol lg={3} md={4} >
+                <CFormInput
+                  type="date"
+                  placeholder="Enter Your Name"
+                  label='Joining Date'
+                  value={moment(trainerSlarySlipObj.joiningDate).format('YYYY-MM-DD')}
+                  onChange={(e)=>setTrainerSlarySlipObj(prev=>({...prev,joiningDate:e.target.value
+                  }))}
+                />
+              </CCol>
+              <CCol  lg={3} md={4} >
+                  <CFormSelect 
+                  label='Select Your Gender'
+                  value={trainerSlarySlipObj.Gender}
+                  onChange={(e)=>setTrainerSlarySlipObj(prev=>({...prev,Gender:e.target.value}))}
+                  options={[
+                    "Select Gender",
+                    { label: 'Male', value: 'Male' },
+                    { label: 'Female', value: 'Female' }
+
+                  ]}
+              />
+
+              </CCol>
+              <CCol lg={3} md={4} >
+              <CFormInput
+              label='Location'
+              value={trainerSlarySlipObj.location}
+              onChange={(e)=>setTrainerSlarySlipObj(prev=>({...prev,location:e.target.value}))}
+              />
+            </CCol>
+
+            
+            <CCol lg={3} md={4}>
+                      <CFormSelect
+                        className="mb-1"
+                        aria-label="Select Job Department"
+                        value={trainerSlarySlipObj.Department}
+                        onChange={(e)=>setTrainerSlarySlipObj(prev=>({...prev,Department:e.target.value}))}
+                        label="Department"
+                      >
+                        <option>Select Department</option>
+
+                        {designationData.map((item, index) => (
+                         (
+                            item.status === true && (
+                              <option key={index} >{item.department}</option>
+                            )
+                          )
+                        ))}
+                      </CFormSelect>
+                </CCol>    
+
+                 <CCol lg={3} md={4}>
+                      <CFormSelect
+                        className="mb-1"
+                        aria-label="Select Job Designation"
+                        value={trainerSlarySlipObj.designation}
+                        onChange={(e)=>setTrainerSlarySlipObj(prev=>({...prev,designation:e.target.value}))}
+                        label="Job Designation"
+                      >
+                        <option>Select Designation</option>
+                        {designationData.map((item, index) => (
+                          item.status === true && (
+                            <option key={index} >{item.jobDesignation}</option>
+                          )
+
+                        ))}
+                      </CFormSelect>
+                </CCol> 
+
+               
+
+                <CCol  lg={3} md={4}>
+              <CFormInput
+                  label='Bank Acount No'
+                  value={trainerSlarySlipObj.bankAccountNo}
+                  onChange={(e)=>setTrainerSlarySlipObj(prev=>({...prev,bankAcountNo:e.target.value}))}
+                  
+              />
+                </CCol> 
+             
+              
+              <CCol lg={3} md={4} >
               <CFormInput
               label='Total Working Hour'
               type='number'
@@ -181,9 +295,8 @@ setTrainerSlarySlipObj({
               </CFormInput>
               </CCol>
              
-        </CRow>
-        <CRow>
-            <CCol>
+       
+            <CCol lg={3} md={4} >
             <CFormInput
               label='Per Hour Amount'
               value={trainerSlarySlipObj.prHourSalary}
@@ -196,25 +309,33 @@ setTrainerSlarySlipObj({
               >
               </CFormInput>
             </CCol>
-            <CCol>
+            <CCol lg={3} md={4} >
             <CFormInput
               label='Total Amount'
               value={trainerSlarySlipObj.totalAmount}
               >
               </CFormInput>
             </CCol>
-        </CRow>
-        <CRow>
-            <CCol>
+     
+            <CCol  lg={3} md={4} >
               <CFormInput
-              label='TDS %'
+              label='TDS'
               value={trainerSlarySlipObj.tds}
               onChange={(e)=>{
                 setTrainerSlarySlipObj(prev=>({...prev,tds:e.target.value}))
             }}
               />
             </CCol>
-            <CCol>
+            <CCol  lg={3} md={4} >
+              <CFormInput
+              label='PF'
+              value={trainerSlarySlipObj.Pf}
+              onChange={(e)=>{
+                setTrainerSlarySlipObj(prev=>({...prev,Pf:e.target.value}))
+            }}
+              />
+            </CCol>
+            <CCol  lg={3} md={4} >
               <CFormInput
               label='PT'
               value={trainerSlarySlipObj.pt}
@@ -223,10 +344,8 @@ setTrainerSlarySlipObj({
             }}
               />
             </CCol>
-        </CRow>
-
-        <CRow>
-            <CCol>
+    
+            <CCol  lg={3} md={4} >
               <CFormInput
               label='ADV DEC'
               value={trainerSlarySlipObj.advDec}
@@ -235,7 +354,7 @@ setTrainerSlarySlipObj({
             }}
               />
             </CCol>
-            <CCol>
+            <CCol  lg={3} md={4} >
               <CFormSelect
               label='Mode OF Payment'
               options={[
@@ -257,19 +376,26 @@ setTrainerSlarySlipObj({
             }}
               />
             </CCol>
-
-        </CRow>
-        
-          <CCol>
+            <CCol  lg={3} md={4}>
+              <CFormInput
+                  label='Remark'
+                  value={trainerSlarySlipObj.remark}
+                  onChange={(e)=>setTrainerSlarySlipObj(prev=>({...prev,remark:e.target.value}))}
+                  
+              />
+                </CCol> 
+ <CCol lg={3} md={4} >
               <CFormInput
               label='Net Salar'
-              value={trainerSlarySlipObj.totalAmount-tdsamount-+trainerSlarySlipObj.pt-+trainerSlarySlipObj.advDec}
+              value={(trainerSlarySlipObj.totalAmount-tdsamount-+trainerSlarySlipObj.pt-+trainerSlarySlipObj.advDec-+trainerSlarySlipObj.Pf||0)}
               />
             </CCol>
+        </CRow>
+        
+         
             <CCol className='text-end py-2'>
               {!updateActive.visible&& <CButton onClick={()=>saveData('Save')}>Save</CButton>}
               {!!updateActive.visible &&<CButton onClick={()=>saveData('Update')}>Update</CButton>}
-
             </CCol>
                     </CCardBody>
                 </CCard>
