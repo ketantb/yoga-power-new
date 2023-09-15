@@ -135,8 +135,8 @@ function toFilterData(data){
                                     <CTableHeaderCell>Adjust Leave</CTableHeaderCell>
                                     <CTableHeaderCell>Monthly Salary</CTableHeaderCell>
                                     <CTableHeaderCell>TWD</CTableHeaderCell>
-                                    <CTableHeaderCell>PF</CTableHeaderCell>
-                                    <CTableHeaderCell>TDS</CTableHeaderCell>
+                                    <CTableHeaderCell>PF%</CTableHeaderCell>
+                                    <CTableHeaderCell>TDS%</CTableHeaderCell>
                                     <CTableHeaderCell>PT</CTableHeaderCell>
                                     <CTableHeaderCell>Adev Dec</CTableHeaderCell>
                                     <CTableHeaderCell>Gross Salary</CTableHeaderCell>
@@ -200,8 +200,8 @@ function toFilterData(data){
                                             <CTableDataCell>{item.adjustLeave}</CTableDataCell>
                                             <CTableDataCell>{item.BasicSalary}</CTableDataCell>
                                             <CTableDataCell>{item.TWD}</CTableDataCell>
-                                            <CTableDataCell>{item.TPD}</CTableDataCell>
-                                            <CTableDataCell>{item.TDS}</CTableDataCell>
+                                            <CTableDataCell>{item.TPD}%</CTableDataCell>
+                                            <CTableDataCell>{item.TDS}%</CTableDataCell>
                                             <CTableDataCell>{item.PT}</CTableDataCell>
                                             <CTableDataCell>{item.advancedSalaryDedct}</CTableDataCell>
                                             <CTableDataCell>{item.grossSalary}</CTableDataCell>

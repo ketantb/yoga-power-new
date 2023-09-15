@@ -110,7 +110,7 @@ const SalarySlip = ({ empData, showInvoiceModal, setInvoceModal }) => {
 
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                             <CTableHead>
-                                <CTableHeaderCell colSpan={4} className='border'>
+                                <CTableHeaderCell colSpan={5} className='border'>
                                     Deduction
                                 </CTableHeaderCell>
                             </CTableHead>
@@ -124,8 +124,8 @@ const SalarySlip = ({ empData, showInvoiceModal, setInvoceModal }) => {
                             <CTableBody>
 
                                 <CTableRow >
-                                    <CTableDataCell>{empData.TDS}</CTableDataCell>
-                                    <CTableDataCell>{empData.TPD}</CTableDataCell>
+                                    <CTableDataCell>{empData.TDS}%</CTableDataCell>
+                                    <CTableDataCell>{empData.TPD}%</CTableDataCell>
                                     <CTableDataCell>{empData.PT}</CTableDataCell>
                                     <CTableDataCell>{empData.advancedSalaryDedct}</CTableDataCell>
                                     <CTableDataCell>{+empData.advancedSalaryDedct + +empData.PT + +empData.TPD +empData.TDS}</CTableDataCell>

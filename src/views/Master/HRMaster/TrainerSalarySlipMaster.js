@@ -15,6 +15,8 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
+    CPagination,
+    CPaginationItem
 
 } from '@coreui/react'
 import   FormConecter from  './TrainerSlipForm/FormConecter'
@@ -45,6 +47,24 @@ const TrainerSalarySlipMaster = () => {
 
   const [updateActive,setUpdateActive] = useState({visible:false,obj:{}})
 
+  const [searchFilter,setSearchFilter] = useState({
+    search1:'',
+    search2:'',
+    search3:'',
+    search4:'',
+    search5:'',
+    search6:'',
+    search7:'',
+    search8:'',
+    search9:'',
+    search10:'',
+    search11:'',
+    search12:'',
+    search13:'',
+    search14:'',
+})
+
+const [paging, setPaging] = useState(0);
 
 
    const getTrainerSalarySlipData = ()=>{
@@ -66,6 +86,32 @@ const TrainerSalarySlipMaster = () => {
     getTrainerSalarySlipData()
   },[])
 
+//   <CTableDataCell>{new Date(el.date).toLocaleDateString()}</CTableDataCell>
+//   <CTableDataCell>{new Date((el.joiningDate||"")).toLocaleDateString()}</CTableDataCell>
+
+//   <CTableDataCell>{el.trainerName}</CTableDataCell>
+//   <CTableDataCell>{el.EmpId}</CTableDataCell>
+//   <CTableDataCell>{el.Gender}</CTableDataCell>
+//   <CTableDataCell>{el.Department}</CTableDataCell>
+//   <CTableDataCell>{el.designation}</CTableDataCell>
+//   <CTableDataCell>{el.bankAccountNo}</CTableDataCell>
+
+
+  function toFilterData(data){
+    return data.filter((el)=>{
+        return (new Date(el.date).toLocaleDateString()||'').includes(searchFilter.search2.toLowerCase().trim())&&
+        (new Date((el.joiningDate||"")).toLocaleDateString()||'').includes(searchFilter.search3.toLowerCase().trim())&&
+        (el.trainerName?.toLowerCase()||'').includes(searchFilter.search4.toLowerCase().trim())&&
+        (el.EmpId?.toLowerCase()||'').includes(searchFilter.search5.toLowerCase().trim())&&
+        (el.Gender?.toLowerCase()||'').includes(searchFilter.search6.toLowerCase().trim())&&
+        (el.Department?.toLowerCase()||'').includes(searchFilter.search7.toLowerCase().trim())&&
+        (el.designation?.toLowerCase()||'').includes(searchFilter.search8.toLowerCase().trim())&&
+        (el.bankAccountNo?.toLowerCase()||'').includes(searchFilter.search9.toLowerCase().trim())&&
+        (el.modeOfPayment?.toLowerCase()||'').includes(searchFilter.search11.toLowerCase().trim())  
+
+  })
+  }
+
     return (
         <>
  
@@ -80,8 +126,7 @@ const TrainerSalarySlipMaster = () => {
                    <FormConecter updateActive={updateActive} setUpdateActive={setUpdateActive} getData={()=>getTrainerSalarySlipData()} />
 
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
-                            <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                                <CTableRow >
+                            <CTableHead color={'darkGreen'}>
                                     <CTableHeaderCell>Sr no</CTableHeaderCell>
                                     <CTableHeaderCell>Date</CTableHeaderCell>
                                     <CTableHeaderCell>Joining Date</CTableHeaderCell>
@@ -103,15 +148,39 @@ const TrainerSalarySlipMaster = () => {
                                     <CTableHeaderCell>Incentive</CTableHeaderCell>  
                                     <CTableHeaderCell>Net Salary</CTableHeaderCell>  
                                     <CTableHeaderCell style={{display:(editTrainerSalarySlip||deleteTrainerSalarySlip)?'':'none'}} >Edit/Delete</CTableHeaderCell>                                    
-                                </CTableRow>
                             </CTableHead>
                             <CTableBody>
+                                <CTableRow>
+                                <CTableDataCell     ><CFormInput className='min-width-90' disabled value={searchFilter.search1} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search1:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search2} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search2:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search3} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search3:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search4} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search4:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search5} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search5:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90'value={searchFilter.search6} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search6:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search7} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search7:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search8} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search8:e.target.value}))} /> </CTableDataCell>
+                                    <CTableDataCell ><CFormInput  className='min-width-90' value={searchFilter.search9} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search9:e.target.value}))} /> </CTableDataCell>           
+                                    <CTableDataCell colSpan={8} ><CFormInput disabled className='min-width-90'
+                                    /> </CTableDataCell><CTableDataCell ><CFormInput  className='min-width-90' value={searchFilter.search11} 
+                                    onChange={(e)=>setSearchFilter((prev)=>({...prev,search11:e.target.value}))} /> </CTableDataCell>  
+                                    <CTableDataCell colSpan={3} ><CFormInput  disabled lassName='min-width-90'  /> </CTableDataCell>  
+                                     
+                                </CTableRow>
                              
-                                {trainerSalarySlipData.map((el,i)=>{
+                                {toFilterData(trainerSalarySlipData).slice(paging * 10, paging * 10 + 10).map((el,i)=>{
                                    
 
                                 return <CTableRow className='text-center' >
-                                        <CTableDataCell>{i+1}</CTableDataCell>
+                                        <CTableDataCell>{i+ 1 + (paging * 10)}</CTableDataCell>
                                         <CTableDataCell>{new Date(el.date).toLocaleDateString()}</CTableDataCell>
                                         <CTableDataCell>{new Date((el.joiningDate||"")).toLocaleDateString()}</CTableDataCell>
 
@@ -141,6 +210,22 @@ const TrainerSalarySlipMaster = () => {
                                       
                             </CTableBody>
                         </CTable>
+                        <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {toFilterData(trainerSalarySlipData).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {toFilterData(trainerSalarySlipData).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {toFilterData(trainerSalarySlipData).length > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                    </CPagination>  
                     </CCardBody>
                  
                 </CCard>

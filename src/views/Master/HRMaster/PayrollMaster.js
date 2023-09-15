@@ -151,8 +151,8 @@ useEffect(()=>{
   setSalarySheet(prev=>({...prev,empId:selectedStaff?.EmployeeID}))
   setSalarySheet(prev=>({...prev,Designations:selectedStaff?.JobDesignation }))
   setSalarySheet(prev=>({...prev,Department:selectedStaff?.Department  }))
-  setSalarySheet(prev=>({...prev,BasicSalary:(selectedStaff?.Salary /12).toFixed(3),
-  grossSalary:(selectedStaff?.Salary /12).toFixed(3),
+  setSalarySheet(prev=>({...prev,BasicSalary:Math.round(selectedStaff?.Salary /12),
+  grossSalary:Math.round(selectedStaff?.Salary /12),
   bankAcountNo:selectedStaff?.AccountNo
 }))
   setSalarySheet(prev=>({...prev,ctc:selectedStaff?.Salary }))
@@ -160,7 +160,7 @@ useEffect(()=>{
   setSalarySheet(prev=>({...prev,Location:selectedStaff?.address }))
   setSalarySheet(prev=>({...prev,typeOfJobTimeing:selectedStaff?.Grade}))
   setSalarySheet(prev=>({...prev,Gender:selectedStaff?.Gender}))
-  setGrossSalaryCalculation((selectedStaff?.Salary /12).toFixed(3))
+  setGrossSalaryCalculation(Math.round(selectedStaff?.Salary /12))
 },[salarySheet.empName])
 
 
@@ -168,7 +168,7 @@ useEffect(()=>{
 const totalLeave = ((+salarySheet.halfday/100)*50)+ +(salarySheet.lateMark/6)+ +salarySheet.leaveDay
 const removeLeave  =+salarySheet.adjustLeave
 
-const totalDecAdPt  = +salarySheet.TPD + +salarySheet.PT + +salarySheet.TDS
+const totalDecAdPt  = +((+salarySheet.BasicSalary/100)*+salarySheet.TPD ) + +salarySheet.PT + + +((+salarySheet.BasicSalary/100)*+salarySheet.TDS )
 const basicSalary  =  salarySheet.BasicSalary
 
 const netSlaryCal  = +salarySheet.incentive - +salarySheet.advancedSalaryDedct
@@ -585,7 +585,7 @@ function toFilterData(data){
              </CCol>
              <CCol >
               <CFormInput
-                  label='PF'
+                  label='PF%'
                   type="number"
                   value={salarySheet.TPD}
                   onChange={(e)=>setSalarySheet(prev=>({...prev,TPD:e.target.value}))}    
@@ -594,7 +594,7 @@ function toFilterData(data){
                 </CCol>
              <CCol>
               <CFormInput
-               label='TDS'
+               label='TDS%'
                type="number"
                value={salarySheet.TDS}
                onChange={(e)=>setSalarySheet(prev=>({...prev,TDS:e.target.value}))} 
@@ -703,8 +703,8 @@ function toFilterData(data){
                                     <CTableHeaderCell>Adjust Leave</CTableHeaderCell>
                                     <CTableHeaderCell>Monthly Salary</CTableHeaderCell>
                                     <CTableHeaderCell>TWD</CTableHeaderCell>
-                                    <CTableHeaderCell>PF</CTableHeaderCell>
-                                    <CTableHeaderCell>TDS</CTableHeaderCell>
+                                    <CTableHeaderCell>PF%</CTableHeaderCell>
+                                    <CTableHeaderCell>TDS%</CTableHeaderCell>
                                     <CTableHeaderCell>PT</CTableHeaderCell>
                                     <CTableHeaderCell>Adev Dec</CTableHeaderCell>
                                     <CTableHeaderCell>Gross Salary</CTableHeaderCell>
@@ -769,8 +769,8 @@ function toFilterData(data){
                                             <CTableDataCell>{item.adjustLeave}</CTableDataCell>
                                             <CTableDataCell>{item.BasicSalary}</CTableDataCell>
                                             <CTableDataCell>{item.TWD}</CTableDataCell>
-                                            <CTableDataCell>{item.TPD}</CTableDataCell>
-                                            <CTableDataCell>{item.TDS}</CTableDataCell>
+                                            <CTableDataCell>{item.TPD}%</CTableDataCell>
+                                            <CTableDataCell>{item.TDS}%</CTableDataCell>
                                             <CTableDataCell>{item.PT}</CTableDataCell>
                                             <CTableDataCell>{item.advancedSalaryDedct}</CTableDataCell>
                                             <CTableDataCell>{item.grossSalary}</CTableDataCell>
