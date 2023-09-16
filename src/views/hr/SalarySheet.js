@@ -209,7 +209,7 @@ function toFilterData(data){
                                             <CTableDataCell>{item.netSalary}</CTableDataCell>
                                             <CTableDataCell>{item.modeOfPayment}</CTableDataCell>
                                             <CTableDataCell>{item.remark}</CTableDataCell>
-                                            <CTableHeaderCell><CButton onClick={()=>showSalarySlip(item)} >View</CButton></CTableHeaderCell>
+                                            <CTableDataCell><CButton onClick={()=>showSalarySlip(item)} >View</CButton></CTableDataCell>
                                         </CTableRow>
                                 ))}
                             </CTableBody>

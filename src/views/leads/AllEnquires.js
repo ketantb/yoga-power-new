@@ -773,7 +773,7 @@ const AllEnquires = () => {
                         </CRow>
             
 
-                        <CModal size='lg'  style={{ border: '2px solid #0B5345' }} visible={visible} color='' onClose={() => setVisible(false)} >
+                        <CModal size='lg'   visible={visible}  onClose={() => setVisible(false)} >
                             <CModalHeader style={{ backgroundColor: '#0B5345', color: 'white' }} >
                                 <CModalTitle>Prospect Form</CModalTitle>
                             </CModalHeader>
