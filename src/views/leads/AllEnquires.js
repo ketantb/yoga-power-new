@@ -989,13 +989,14 @@ const AllEnquires = () => {
 
 
 
-                        <CModal size="xl" scrollable alignment="center" visible={visible1} onClose={() => setVisible1(false)}>
+                        <CModal size="xl" scrollable   alignment="center" visible={visible1} onClose={() => setVisible1(false)}>
                             <CModalHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
                                 <CModalTitle>Edit Form</CModalTitle>
                             </CModalHeader>
                             <CModalBody >
                               
                               {visible1 &&  <EnquiryForm 
+
                               edit={visible1} 
                               editData={toEdit} 
                               getEnquiry={()=>getEnquiry()}

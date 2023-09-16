@@ -383,11 +383,7 @@ useEffect(()=>{
 },[unikqValidateObj.employeeMongoId,staff?.length])
     return (
         <div>
-        <div className={(add && !visi )?'d-none':''}> 
-        <CModal size='xl'   id='parent-model'  style={{ border: '2px solid #0B5345' }} scrollable visible={(add && !visi )} onClick={(e)=>{
-            
-            clickfun(e.target.className)
-        }} >
+        <CModal size='xl'   id='parent-model'  style={{ border: '2px solid #0B5345' }} scrollable visible={(add && !visi )} onClick={(e)=>{ clickfun(e.target.className)}}>
             <CModalHeader  >
                 <CModalTitle>Member Form</CModalTitle>
             </CModalHeader>
@@ -1147,7 +1143,6 @@ useEffect(()=>{
                 </CButton>
             </CModalFooter>
         </CModal>
-        </div>   
         <AddNewInvoice data23={clinetInfoData}
                                    viewInvoice ={visi}
                                    setViewInvoice={setVisi}
