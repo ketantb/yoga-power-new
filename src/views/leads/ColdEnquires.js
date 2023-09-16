@@ -527,7 +527,6 @@ const ColdEnquires = () => {
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>
-                            <CCol lg={4} sm={6} md={6}>
                             <CCol lg={5} md={7}>
 
                         <div className='d-flex justify-content-between mb-2'>
@@ -561,7 +560,6 @@ const ColdEnquires = () => {
                         </div>
 
                         </CCol>
-                            </CCol>
                             <CCol lg={6} sm={6} md={6}>
                                 <CButtonGroup className={coldExport?' mb-2 float-end':'d-none'}>
                                     <CButton color="primary" onClick={()=>exportColdEnquires(result)}>

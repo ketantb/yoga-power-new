@@ -140,15 +140,26 @@ const AllEnquires = () => {
         })
     }, []);
 
+    const [staff, setStaff] = useState([])
+
+    
+    const unikqValidateObj = {
+        ...unikqObj,
+        employeeMongoId:(Counseller||unikqObj.employeeMongoId),
+        empNameC:(staff.find((el)=>el._id===Counseller)?.FullName||unikqObj.empNameC)
+    }
 
     // Import 
     const HandaleImportClick = () => {
-        if(!importStaffId?.trim()){
+        if(!Counseller?.trim()){
             setErrorMessage(true)
              return
         } 
         hiddenXLimportFileInput.current.click()
     }
+
+    console.log(result1)
+
     const HandaleImportChange = (event,totalEnquire) => {
         const importXlFile = event.target.files[0];
 
@@ -159,7 +170,7 @@ const AllEnquires = () => {
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
             const json = XLSX.utils.sheet_to_json(worksheet);
-            importDataFun(json,getEnquiry,totalEnquire,importStaffId)
+            importDataFun(json,getEnquiry,totalEnquire,Counseller)
         };
         reader.readAsArrayBuffer(importXlFile);
 
@@ -182,15 +193,8 @@ const AllEnquires = () => {
             })
     }, []);
 
-    const [staff, setStaff] = useState([])
-
     
 
-    const unikqValidateObj = {
-        ...unikqObj,
-        employeeMongoId:(Counseller||unikqObj.employeeMongoId),
-        empNameC:(staff.find((el)=>el._id===Counseller)?.FullName||unikqObj.empNameC)
-    }
 
     useEffect(()=>{
     setCounseller(unikqObj.employeeMongoId)
@@ -395,6 +399,7 @@ const AllEnquires = () => {
         })
             .then((res) => {
                 if(res.status===200){
+                    console.log(res.data)
                     res.data.reverse()
                     setTotalEnquire(res.data.length)
                     setResult1(res.data)
@@ -588,16 +593,16 @@ const AllEnquires = () => {
                             </CInputGroup>
                         </div>
                         </CCol>
-                            <CCol lg={3} md={6} sm={12} className={(enquiryImport)?' mb-2 float-end':'d-none'}>
+                            {enquiryImport&&<CCol lg={3} md={6} sm={12} className={(enquiryImport)?' mb-2 float-end':'d-none'}>
                                 <CFormSelect
                                     className="mb-1 ms-auto"
                                     aria-label="Select Assign Staff"
-                                    value={importStaffId}
+                                    value={Counseller}
                                     onChange={(e) =>{
                                         if(!!e.target.value?.trim()){
                                             setErrorMessage(false)
                                         }
-                                        setImportStaffId(e.target.value)
+                                        setCounseller(e.target.value)
                                     }}
                                 >
                                     <option value={''}>Select Counseller</option>
@@ -608,7 +613,7 @@ const AllEnquires = () => {
                                     ))}</CFormSelect>
 
                                  {errorMessage&&<label className='text-danger' >Please select the employee before import</label>}  
-                            </CCol>
+                            </CCol>}
                             <CCol lg={3} sm={6} md={6} >
                                 <CButtonGroup className={(enquiryExport||enquiryImport)?' mb-2 float-end':'d-none'}>
                                     <CButton onClick={(e)=>HandaleImportClick(e,(toFilterData(result1).length||0))} color="primary" className={(enquiryImport)?' mb-2 float-end':'d-none'}>

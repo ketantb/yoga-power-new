@@ -20,10 +20,12 @@ const centerCode = user.user.centerCode
 
 return function insertManyCollection(collection,getData=()=>{},number,importStaffId){
 
+    console.log({...unikqValidateObj,employeeMongoId:(importStaffId||unikqValidateObj.employeeMongoId)})
+
     const data = collection.map((el,i)=>{
         return {
         ['EnquiryId']:(centerCode+"Q"+(number+1+i)),
-        ['createdAt']:new Date(el["Date"]),
+        ['EnquiryDate']:new Date(el["Date"]),
         ['Fullname']:el['Name'],
         ['ContactNumber']:el["Mobile"],
         ['ServiceName']:el["Service"],
@@ -52,6 +54,7 @@ return function insertManyCollection(collection,getData=()=>{},number,importStaf
         }
     })
         .then((res) => {
+            console.log(res,'xlax')
             alert('Succcessfully Added XLSX ')
             getData()
         })

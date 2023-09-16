@@ -41,6 +41,7 @@ return function (isEmployee){
 const useUniqAdminObjeact = ()=>{
     let  userInfo = JSON.parse(localStorage.getItem('user-info'))?.user
 
+    console.log((userInfo.isEmployee?userInfo.memBerId:userInfo.emailUniqId))
 
     const uniqObj  = {
         empNameC:userInfo.username,
