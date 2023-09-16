@@ -773,7 +773,7 @@ const AllEnquires = () => {
                         </CRow>
             
 
-                        <CModal size='lg'   visible={visible}  onClose={() => setVisible(false)} >
+                        <CModal size='lg'   scrollable   alignment="center"   visible={visible}  onClose={() => setVisible(false)} >
                             <CModalHeader style={{ backgroundColor: '#0B5345', color: 'white' }} >
                                 <CModalTitle>Prospect Form</CModalTitle>
                             </CModalHeader>
@@ -983,6 +983,8 @@ const AllEnquires = () => {
                                     enquiryStage === 'Join' ? 'Open Admission Form' : 'Save'}</CButton>
                             </CModalFooter>
                         </CModal>
+
+                     
 
 
 
