@@ -23,6 +23,7 @@ import {getDownloadURL, ref,uploadBytesResumable } from "firebase/storage";
 import { useParams } from 'react-router-dom'
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 
+
 const EmployeeDocument = ({id}) => {
 
     
@@ -65,6 +66,8 @@ const handlePrint = useReactToPrint({
     })
     
 
+    const {isEmployee} = useParams()
+    const employeeVal  = (!isEmployee.trim())
 
 
 
@@ -220,7 +223,7 @@ const handlePrint = useReactToPrint({
                     <CCardBody>
                     
                     <CCol className='my-3 text-end'>
-                   {showForm&&<CButton onClick={()=>toToggaleFrom()}>Add New </CButton>}
+                   {showForm&&employeeVal&&<CButton onClick={()=>toToggaleFrom()}>Add New </CButton>}
                    {showForm||<CCard className="overflow-hidden my-4 text-start"   >
         <CCardHeader className="p-4" style={{ backgroundColor: '#0B5345', color: 'white' }}>
                  <CCardTitle> <h5>Employee Document Form</h5></CCardTitle>

@@ -14,6 +14,9 @@ import { useSelector } from 'react-redux'
 import { BsFillPersonCheckFill, BsFillPersonFill } from 'react-icons/bs'
 import { GiTeacher } from 'react-icons/gi'
 import { AiOutlineCheck, AiTwotoneCheckCircle } from 'react-icons/ai'
+import { useParams } from 'react-router-dom'
+import { useAdminValidation } from 'src/views/Custom-hook/adminValidation'
+
 
 const EmpAttendance = ({id}) => {
     const [attendance, setAttendance] = useState(0);
@@ -26,6 +29,11 @@ const EmpAttendance = ({id}) => {
     const [centarId, setCentarId] = useState('');
     const [status, setStatus] = useState('');
     const [error, setError] = useState('');
+    const {isEmployee} = useParams()
+    const employeeVal  = (!isEmployee.trim())
+    const pathVal = useAdminValidation('Master')
+
+
 
     const time = null;
     const [ctime, setDate] = useState(time);
@@ -54,10 +62,13 @@ const EmpAttendance = ({id}) => {
 
 
     const getDataToStaffCheckIn = async () => {
+        if(employeeVal){
+           return
+        }
         try {
-            const response1 = axios.get(`${url1}/shiftTimeSchedule/all`, { headers })
+            const response1 = axios.get(`${url1}/shiftTimeSchedule/${pathVal}`, { headers })
             const response2 = axios.get(`${url1}/employeeform/${id}`, { headers })
-            const response3 = axios.get(`${url1}/Batch/all`, { headers })
+            const response3 = axios.get(`${url1}/Batch/${pathVal}`, { headers })
 
             const data = await Promise.all([response1, response2, response3])
 
@@ -316,12 +327,12 @@ const EmpAttendance = ({id}) => {
                 <CRow className='text-end p-2'>
                     <CCol>
                     {innerProsseccActive&& <CSpinner color="success" variant="grow"/>}
-                    {innerProsseccActive&& <h6>Inner Process Going on Please Wait few Second</h6>}
+                    {innerProsseccActive&&employeeVal&& <h6>Inner Process Going on Please Wait few Second</h6>}
                     </CCol>
                 </CRow>
                 <CRow>
                     <CCol lg={4}>
-                        <CCard>
+                       {employeeVal&& <CCard>
                             <CCardBody>
                                 <label style={{ color: 'red' }}>{error}</label>
                                 <CRow>
@@ -338,9 +349,9 @@ const EmpAttendance = ({id}) => {
                                         />
                                     </CCol>
                                 </CRow>
-                                <CButton className='mt-1 float-end' onClick={submitBtn}>Submit</CButton>
+                                {employeeVal&&<CButton className='mt-1 float-end' onClick={submitBtn}>Submit</CButton>}
                             </CCardBody>
-                        </CCard>
+                        </CCard>}
                     </CCol>
 
 

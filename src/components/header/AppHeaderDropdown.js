@@ -38,12 +38,12 @@ import avatar8 from './../../assets/images/avatars/8.jpg'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
 import { leadsSuperRight } from 'src/views/hr/Rights/rightsValue/crmRightsValue'
-
 import menImage from './../../assets/images/avatars/profile_icon.png'
-
+import { useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
 const AppHeaderDropdown = () => {
 
   const isEmployee = useSelector((el)=>el.isEmployee)
+  const empuniqId = useUniqAdminObjeact().employeeMongoId
    
   const disPatch = useDispatch()
   const navigate = useNavigate()
@@ -120,6 +120,7 @@ const AppHeaderDropdown = () => {
 
          </CCol> 
 
+
         <CDropdownItem  className='text-start'>
           <CIcon icon={cilEnvelopeClosed} className="me-2" />
          {email}
@@ -128,16 +129,16 @@ const AppHeaderDropdown = () => {
                <CIcon icon={cilSettings} className="me-2 " />
                  Settings
         </CDropdownItem>      */}
-         <CDropdownItem  className='text-start'  onClick={profile}>
+         <CDropdownItem  className='text-start'  onClick={()=>handleNavigateFun('/profile/user')}>
           <CIcon icon={cilSettings} className="me-2" />
          User  Profile
         </CDropdownItem>
         /hr/employee-detail/:isEmployee/:id
-        <CDropdownItem  className='text-start' onClick={companyProfile}>
+        <CDropdownItem  className='text-start' onClick={()=>handleNavigateFun('/company-profile')}>
           <CIcon icon={cilSettings} className="me-2" />
          Company  Profile
         </CDropdownItem>
-        {!isEmployee?<CDropdownItem className='me-2' onClick>
+        {isEmployee?<CDropdownItem className='me-2' onClick={()=>handleNavigateFun(`/hr/employee-profile/employee/${empuniqId}`)}>
           <CIcon icon={cilUser} className="me-2" />
           Employee Profile
         </CDropdownItem>:''}

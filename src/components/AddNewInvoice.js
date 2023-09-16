@@ -976,8 +976,7 @@ setPendingAmount(total-paidAmount)
 
                                         <CTableRow>
                                             <CTableDataCell colSpan={4}>
-                                                <div style={{ fontWeight: 'bold' }}>{invoiceViewData.Address}</div>
-                                             
+                                                <div style={{ fontWeight: 'bold' }}>{invoiceViewData.Address}</div>                                            
                                             </CTableDataCell>
                                         </CTableRow>
                                     </CTableBody>

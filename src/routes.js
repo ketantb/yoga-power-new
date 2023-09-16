@@ -338,11 +338,10 @@ const routes = [
   { path:'/hr/view-staff-target',name:'View Staff Target',element:Stafftarget},
   { path:'/hr/emp-target-sheet',name:'Employee Target Sheet',element:EmployeeTargetSheet},
   { path:'/hr/employee-detail/:id',name:'Employee Details',element:EmpDetails},
-  { path:'/hr/employee-detail/:isEmployee/:id',name:'Employee Details',element:EmpDetails},
+  { path:'/hr/employee-profile/:isEmployee/:id',name:'Employee Details',element:EmpDetails},
   { path:'/hr/employee-profile-edit/:id2/:isEdit',name:'Employee Details',element:EmployeeProfile},
   { path:'/hr/employee-right/:emailUniqId/:isRights',name:'Rights',element:AllRightHr},
   { path:'/hr/hrPolicyPage/:title',name:'Hr Policy Page',element:HrPolicyPage},
-
 
   // Courses
   {path:'/course' ,name:'TTC' ,element:TtcClientDetails,exact:true},
