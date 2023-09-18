@@ -1,4 +1,8 @@
-import { CAccordion, CAccordionBody, CAccordionHeader, CAccordionItem, CBadge, CButton, CCard, CCardBody, CCardHeader, CCardImage, CCardText, CCardTitle, CCol, CForm, CFormInput, CFormSelect, CFormSwitch, CFormTextarea, CImage, CInputGroup, CListGroup, CListGroupItem, CPopover, CRow, CSpinner, CWidgetStatsD } from '@coreui/react'
+import { CAccordion, CAccordionBody, CAccordionHeader, CAccordionItem, CBadge, 
+    CButton, CCard, CCardBody, CCardHeader, CCardImage, CCardText, CCardTitle, CCol, CForm,
+     CFormInput, CFormSelect, CFormSwitch, CFormTextarea, CImage, CInputGroup, CListGroup, CListGroupItem,
+      CPopover, CRow, CSpinner, CWidgetStatsD,CTable,CTableHead,CTableHeaderCell,CTableBody, CTableRow
+     } from '@coreui/react'
 import React, { useState } from 'react'
 import EventImage from 'src/assets/images/avatars/eventImage.jpg'
 import { CChartLine } from '@coreui/react-chartjs'
@@ -14,9 +18,9 @@ const EventMaster = () => {
     const [pass, setPass] = useState(false)
     const [paid, setPaid] = useState(false)
     const url = useSelector((el) => el.domainOfApi)
-    const pathVal = useAdminValidation()
-    const uniqObjeact = useUniqAdminObjeact('Master')
-    const [eventMadterData,setEventMasterData] = useState([])
+    const pathVal = useAdminValidation('Master')
+    const uniqObjeact = useUniqAdminObjeact()
+    const [eventMasterData,setEventMasterData] = useState([])
 
 
     const obj ={
@@ -50,7 +54,7 @@ const EventMaster = () => {
 
     const saveCallReport = () => {
 
-        fetch(`${ url }/prospect/create`, {
+        fetch(`${ url }/eventDetails/create`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${ token }`,
@@ -287,246 +291,50 @@ const EventMaster = () => {
                 </CForm>)}
             </CCol>
 
-        </CRow> {eventMadterData}   
+        </CRow>   
         
 
         <CTable className='mt-3' align="middle" bordered  hover responsive scrollable>
-                            <CTableHead color={'darkGreen'} >
+                            <CTableHead  >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
-                                    <CTableHeaderCell>Enquiry ID</CTableHeaderCell>
-                                    <CTableHeaderCell>Date</CTableHeaderCell>
-                                    <CTableHeaderCell>Time</CTableHeaderCell>
-                                    <CTableHeaderCell>Name</CTableHeaderCell>
-                                    <CTableHeaderCell>Mobile</CTableHeaderCell>
+                                    <CTableHeaderCell>Event Name</CTableHeaderCell>
+                                    <CTableHeaderCell>Event Banner</CTableHeaderCell>
+                                    <CTableHeaderCell>Host Name</CTableHeaderCell>
                                     <CTableHeaderCell>Service</CTableHeaderCell>
-                                    <CTableHeaderCell>Source</CTableHeaderCell>
-                                    <CTableHeaderCell>Enquiry stage</CTableHeaderCell>
-                                    <CTableHeaderCell>Call Status</CTableHeaderCell>
-                                    <CTableHeaderCell style={{ minWidth: '100px' }}>Trial Date/Time</CTableHeaderCell>
-                                    {(isAdmin||trailAdd)&&<CTableHeaderCell>Add</CTableHeaderCell>}
+                                    <CTableHeaderCell>Event Type</CTableHeaderCell>
+                                    <CTableHeaderCell>Event Start Date</CTableHeaderCell>
+                                    <CTableHeaderCell>Event End Date</CTableHeaderCell>
+                                    <CTableHeaderCell>Event Time</CTableHeaderCell>
+                                    <CTableHeaderCell>Duration</CTableHeaderCell>
+                                    <CTableHeaderCell >Client Limit</CTableHeaderCell>
+                                    {<CTableHeaderCell>Fess</CTableHeaderCell>}
  
-                                    {(isAdmin || trailEdit) && <CTableHeaderCell>Trial Status</CTableHeaderCell>}
-                                    <CTableHeaderCell>Message</CTableHeaderCell>
-
-                                    <CTableHeaderCell>Assigned by</CTableHeaderCell>
-                                    <CTableHeaderCell>Counsellor</CTableHeaderCell>
-                                    {(isAdmin || trailAdd) && <CTableHeaderCell>Action</CTableHeaderCell>}
-                                    {(isAdmin || (trailEdit || trailDelete)) && <CTableHeaderCell>Edit/Delete</CTableHeaderCell>}
+                                    {<CTableHeaderCell>Paid</CTableHeaderCell>}
+                                    <CTableHeaderCell>Event Active</CTableHeaderCell>
                             </CTableHead>
                             <CTableBody>
-                                <CTableRow>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "60px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "120px" }}
-                                            type="text"
-                                            value={Search1}
-                                            onChange={(e) => setSearch1(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
-                                            value={Search2}
-                                            onChange={(e) => setSearch2(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            disabled
-                                            style={{ minWidth: "90px" }}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
-                                            value={Search3}
-                                            onChange={(e) => setSearch3(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "120px" }}
-                                            value={Search4}
-                                            onChange={(e) => setSearch4(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            value={Search5}
-                                            onChange={(e) => setSearch5(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "80px" }}
-                                            value={Search6}
-                                            onChange={(e) => setSearch6(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "100px" }}
-                                            value={Search7}
-                                            onChange={(e) => setSearch7(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "100px" }}
-                                            value={Search8}
-                                            onChange={(e) => setSearch8(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "100px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell style={{ display: (isAdmin || trailAdd) ? '' : 'none' }}>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "100px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell style={{ display: (isAdmin || trailEdit) ? '' : 'none' }}>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                            style={{ minWidth: "100px" }}
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            style={{ minWidth: "100px" }}
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            style={{ minWidth: "100px" }}
-                                            value={Search9}
-                                            onChange={(e) => setSearch9(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            value={Search10}
-                                            style={{ minWidth: "100px" }}
-                                            onChange={(e) => setSearch10(e.target.value)}
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell style={{ display: (isAdmin || trailAdd) ? '' : 'none' }}>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                            style={{ minWidth: "100px" }}
-
-                                        />
-                                    </CTableDataCell>
-                                    <CTableDataCell style={{ display: (isAdmin || (trailEdit || trailDelete)) ? '' : 'none' }}>
-                                        <CFormInput
-                                            className="mb-1"
-                                            type="text"
-                                            disabled
-                                            aria-describedby="exampleFormControlInputHelpInline"
-                                            style={{ minWidth: "100px" }}
-
-                                        />
-                                    </CTableDataCell>
+                                {eventMasterData.map((el,i)=>
+                               <CTableRow>
+                                  <CTableDataCell>{i+1}</CTableDataCell>
+                                  <CTableDataCell>{el.eventName}</CTableDataCell>
+                                  <CTableDataCell>{el.eventBanner}</CTableDataCell>
+                                  <CTableDataCell>{el.hostName}</CTableDataCell>
+                                  <CTableDataCell>{el.hostName}</CTableDataCell>
+                                  <CTableDataCell>{el.service}</CTableDataCell>
+                                  <CTableDataCell>{el.comments}</CTableDataCell>
+                                  <CTableDataCell>{el.eventType}</CTableDataCell>
+                                  <CTableDataCell>{new Date(el.eventStartDate).toLocaleDateString()}</CTableDataCell>
+                                  <CTableDataCell>{new Date(el.eventEndDate ).toLocaleDateString()}</CTableDataCell>
+                                  <CTableDataCell>{el.eventTime}</CTableDataCell>
+                                  <CTableDataCell>{el.duration}</CTableDataCell>
+                                  <CTableDataCell>{el.clientLimit}</CTableDataCell>
+                                  <CTableDataCell>{el.fess}</CTableDataCell>
+                                  <CTableDataCell>{el.paid?<CButton color='success'>Active</CButton>:<CButton color='danger'>Inactive</CButton>}</CTableDataCell>
+                                  <CTableDataCell>{el.eventActive}</CTableDataCell>
                                 </CTableRow>
-                                {eventMadterData.map((item, index) => (
-                                    (
-                                        <CTableRow key={index}>
-                                            <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-                                            <CTableDataCell>{item.EnquiryId}</CTableDataCell>
-                                            <CTableDataCell className='text-center'>{moment(item.createdAt).format("DD-MM-YYYY")}</CTableDataCell>
-                                            <CTableDataCell>{moment(item.createdAt, "HH:mm").format("hh:mm A")}</CTableDataCell>
-                                            <CTableDataCell>{item.Fullname}</CTableDataCell>
-                                            <CTableDataCell>{item.ContactNumber}</CTableDataCell>
-                                            <CTableDataCell>{item.ServiceName}</CTableDataCell>
-                                            <CTableDataCell>{item.enquirytype}</CTableDataCell>
-                                            <CTableDataCell>{item.appointmentfor}</CTableDataCell>
-                                            <CTableDataCell>{item.CallStatus}</CTableDataCell>
-                                            <CTableDataCell>{moment(item.appointmentDate).format("DD-MM-YYYY") != 'Invalid date' && moment(item.appointmentDate).format("DD-MM-YYYY")}<br />{moment(item.appointmentTime, "HH:mm").format("hh:mm A") != 'Invalid date' && moment(item.appointmentTime, "HH:mm").format("hh:mm A")}</CTableDataCell>
-                                            <CTableDataCell style={{display:(isAdmin|| trailAdd)?'':'none'}} ><BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }}  
-                                        onClick={() => { setEdit(item._id), handleAdmission({...item,type:'bottom'}) }} /></CTableDataCell>
-                                           
-                                            <CTableDataCell style={{ display: (isAdmin || trailEdit) ? '' : 'none' }}>
-                                                {item?.trailStatus ? <CButton size='sm' color='success'>Done</CButton> :
-                                                    <CButton size='sm' color='warning' onClick={() => 
-                                                    conFirmTrailStatus(item._id)} >Pending...</CButton>}
-                                            </CTableDataCell>
-
-                                            <CTableDataCell>{item.Message}</CTableDataCell>
-                                            <CTableDataCell>{item.StaffName}</CTableDataCell>
-                                            <CTableDataCell>{item.Counseller}</CTableDataCell>
-                                            <CTableDataCell className='text-center' style={{ display: (isAdmin || trailAdd) ? '' : 'none' }}><a href={`tel:+${ item.CountryCode }${ item.ContactNumber }`} target="_black"><MdCall style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`https://wa.me/${ item.ContactNumber }`} target="_black"><BsWhatsapp style={{ marginLeft: "4px", cursor: 'pointer', markerStart: '10px' }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a><a href={`mailto: ${ item.Emailaddress }`} target="_black"> <MdMail style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => { setCallReport(true), handleCallReport(item._id) }} size='20px' /></a> <BsPlusCircle id={item._id} style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "4px" }} onClick={() => handleFollowup(item._id,item)} /></CTableDataCell>
-                                            <CTableDataCell className='text-center'>
-                                                {(isAdmin || trailEdit) && <MdEdit id={item._id} style={{ fontSize: '35px', cursor: 'pointer', markerStart: '10px' }}
-                                                    onClick={() => handleEnquiry(item)} size='20px' />}
-                                                {(isAdmin || trailDelete) && <MdDelete style={{ cursor: 'pointer', markerStart: '10px', marginLeft: "5px" }} onClick={() => deleteEnquiry(item._id)} size='20px' />}</CTableDataCell>
-                                        </CTableRow>
-                                    )
-                                ))}
+                                )}
                             </CTableBody>
                         </CTable>
-
-
             </CCardBody>
         </CCard>
   )
