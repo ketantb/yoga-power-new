@@ -382,12 +382,18 @@ useEffect(()=>{
  setAssignStaff((selectedStaff?.FullName||''))
 },[unikqValidateObj.employeeMongoId,staff?.length])
     return (
-        <div>
-        <CModal size='xl' id='parent-model' scrollable visible={(add && !visi )} onClick={(e)=>{ clickfun(e.target.className)}}>
+        <div >
+        <CModal 
+        id='parent-model' 
+        scrollable 
+        fullscreen
+        visible={(add && !visi )}
+        onClick={(e)=>{ clickfun(e.target.className)}}>
             <CModalHeader  >
                 <CModalTitle>Member Form</CModalTitle>
             </CModalHeader>
-            <CModalBody>
+            <CModalBody className='p-4'>
+            <div style={{overflowY:'scroll',height:'70vh'}} >
                 <CCard className="mb-3 border-success">
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
                         <CNav variant="pills" role="tablist" className='d-flex'>
@@ -1136,7 +1142,8 @@ useEffect(()=>{
                         </CTabContent>
                     </CCardBody>
                 </CCard>
-            </CModalBody>
+                </div>
+            </CModalBody>   
             <CModalFooter>
                 <CButton color="secondary" id="btn btn-close" onClick={(e)=>{e.stopPropagation(),clickfun(e.target.id)}}>
                     Close

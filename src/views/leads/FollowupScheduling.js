@@ -692,7 +692,7 @@ const FollowupScheduling = () => {
                             </CCol>
                      </CRow>  
 
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={callReport} color='' onClose={() => setCallReport(false)} >
+                        <CModal size='lg' visible={callReport} color='' onClose={() => setCallReport(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Call Report</CModalTitle>
                             </CModalHeader>
@@ -821,7 +821,7 @@ const FollowupScheduling = () => {
                                 <CButton type='submit' color="primary" onClick={() => saveCallReport()}>Save Call Report</CButton>
                             </CModalFooter>
                         </CModal>
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible1} color='' onClose={() => setVisible1(false)} >
+                        <CModal size='lg'  visible={visible1} color='' onClose={() => setVisible1(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Prospect Form</CModalTitle>
                             </CModalHeader>
@@ -999,7 +999,7 @@ const FollowupScheduling = () => {
                             </CModalFooter>
                         </CModal>
 
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible} color='' onClose={() => setVisible(false)} >
+                        <CModal size='lg' visible={visible} color='' onClose={() => setVisible(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Prospect Form</CModalTitle>
                             </CModalHeader>

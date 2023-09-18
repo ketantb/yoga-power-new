@@ -112,7 +112,6 @@ const TrialEnquires = () => {
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
     const username = user.user.username;
     const centerCode = user.user.centerCode;
@@ -646,7 +645,7 @@ const TrialEnquires = () => {
                         </CRow>
 
 
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={callReport} color='' onClose={() => setCallReport(false)} >
+                        <CModal size='lg' visible={callReport} color='' onClose={() => setCallReport(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Call Report</CModalTitle>
                             </CModalHeader>
@@ -772,7 +771,7 @@ const TrialEnquires = () => {
                             </CModalFooter>
                         </CModal>
                       
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible} color='' onClose={() => setVisible(false)} >
+                        <CModal size='lg'  visible={visible} color='' onClose={() => setVisible(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Prospect Form</CModalTitle>
                             </CModalHeader>
@@ -998,6 +997,7 @@ const TrialEnquires = () => {
                                 </div>
                             </CModalBody>
                         </CModal>
+
                         <CTable className='mt-3' align="middle" bordered  hover responsive scrollable>
                             <CTableHead color={'darkGreen'} >
                                     <CTableHeaderCell>Sr.No</CTableHeaderCell>
@@ -1244,6 +1244,7 @@ const TrialEnquires = () => {
                                 ))}
                             </CTableBody>
                         </CTable>
+
                     </CCardBody>
                     <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
                         <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>

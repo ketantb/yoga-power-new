@@ -116,6 +116,7 @@ const Stafftarget = React.lazy(()=>import('./views/hr/staffTarget/Stafftarget'))
 const EmployeeTargetSheet =React.lazy(()=>import('./views/hr/EmployeeTargetSheet'))
 const EmpDocumentsMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpDocuments'))
 const HrPolicyPage =React.lazy(()=>import( './views/Master/HrPolicyPage'))
+const EventMaster = React.lazy(()=>import('./views/Master/centerSetup/EventMaster'))
 // classes 
 const TtcClientDetails  = React.lazy(()=>import('./views/Courses/TtcClientDetails'))
 const TtcVideoDetails = React.lazy(()=>import('./views/Courses/TtcVideoDetails'))
@@ -394,7 +395,7 @@ const routes = [
   { path:'/master/center-partners',name:'Center Partners',element: CenterPartners},
   { path:'/master/marketing/automated-communication',name:'Center Partners',element: AutomatedCommunication},
   { path:'/master/center-setup/invoice-master',name:'Invoice Master',element: InvoiceMasterLT},
-
+  { path:'/master/event-master',name:'Event Master',element:EventMaster},
 
   //Form
   { path: '/forms/enquiry-form', name: 'Enquiry Form', element: EnquiryForm },

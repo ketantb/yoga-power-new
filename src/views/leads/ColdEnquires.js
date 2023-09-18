@@ -609,7 +609,7 @@ const ColdEnquires = () => {
                             <CCol></CCol>
                         </CRow>
 
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={callReport} color='' onClose={() => setCallReport(false)} >
+                        <CModal size='lg' visible={callReport} color='' onClose={() => setCallReport(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Call Report</CModalTitle>
                             </CModalHeader>
@@ -735,7 +735,7 @@ const ColdEnquires = () => {
                             </CModalFooter>
                         </CModal>
 
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible} color='' onClose={() => setVisible(false)} >
+                        <CModal size='lg'  visible={visible} color='' onClose={() => setVisible(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Prospect Form</CModalTitle>
                             </CModalHeader>
@@ -943,7 +943,7 @@ const ColdEnquires = () => {
                         </CModal>
 
                         <CModal size="xl" scrollable alignment="center" visible={visible1} onClose={() => setVisible1(false)}>
-                            <CModalHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
+                            <CModalHeader >
                                 <CModalTitle>Edit Form</CModalTitle>
                             </CModalHeader>
                             <CModalBody>

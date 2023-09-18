@@ -83,7 +83,6 @@ const FollowupCallReport = () => {
                 console.error(error)
             })
     }
-  console.log(result1)
 
     return (
         <CRow>

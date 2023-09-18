@@ -736,7 +736,7 @@ const EnquireAppointment = () => {
                             </CModalFooter>
                         </CModal>
 
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible} color='' onClose={() => setVisible(false)} >
+                        <CModal size='lg'  visible={visible} color='' onClose={() => setVisible(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Prospect Form</CModalTitle>
                             </CModalHeader>
