@@ -26,6 +26,7 @@ import moment from "moment";
 import ProfileIcon from 'src/assets/images/avatars/profile_icon.png'
 import CIcon from '@coreui/icons-react'
 import { storage } from 'src/firebase'
+import { useErrorStatus } from "src/components/statusHandle/useStatusHandler";
 
 
 
@@ -90,6 +91,8 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
 
     const [staff, setStaff] = useState([])
     const isAdmin = useSelector((el)=>el.isAdmin) 
+
+   const {toHandleStatus,errorCompponent,statusCode} =   useErrorStatus()
 
 
 
@@ -311,7 +314,7 @@ return
             }
             })
             .catch((error) =>
-                console.error(error)
+            toHandleStatus(error)
             )
     }
 
@@ -361,6 +364,7 @@ return
 
     return (
         <CCard className="mb-3 border-success">
+            {errorCompponent}
 
             <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
                 <CCardTitle>Enquiry Form </CCardTitle>
