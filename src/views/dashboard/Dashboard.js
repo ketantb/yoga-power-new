@@ -193,14 +193,14 @@ const Dashboard = () => {
                           [...Object.values(dashborddata.allEnquiry)]:[1] ,
                           backgroundColor: 
                           allEnquiresActive ?
-                          ['red', 'yellow', 'green', 'orange','#00d4ff', '#3535ff']:['#C0C0C0'],
+                          ['red', 'yellow', 'green', 'pink','#00d4ff', '#3535ff']:['#C0C0C0'],
                           hoverBackgroundColor:
                           allEnquiresActive ?
                           [
                             '#ef6052',
                             '#F4D03F',
                             '#2ECC71',
-                            '#F8C471',
+                            'pink',
                             '#0ff9fc',
                             '#1d7bff',
                           ]:['#C0C0C0'],

@@ -52,7 +52,11 @@ const EventMaster = () => {
     const [eventObj, setEventObj] = useState({...obj})
 
 
-    const handleToggle1 = () => {
+    const handleToggle1 = (val=false) => {
+        if(val){
+        setLiveClass(val)
+        return 
+        }
         setLiveClass(!liveClass)
         setPass(false)
     }
@@ -63,7 +67,9 @@ const EventMaster = () => {
 
     const saveCallReport = () => {
 
-        fetch(`${ url }/eventDetails/create`, {
+        const path = eventObj?._id?.trim()?`/eventDetails/update/${eventObj?._id}`:`/eventDetails/create`
+
+        fetch(`${ url }${path}`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${ token }`,
@@ -73,10 +79,14 @@ const EventMaster = () => {
             body: JSON.stringify({ ...uniqObjeact, ...eventObj,eventBanner:imageUrl })
         }).then((resp) => {
             resp.json().then(() => {
+                setEventObj({...obj})
+                setImgPrograss(0)
                 alert('Successfully save')
                 setLiveClass(true)
+                getEventDetails()
             })
         })
+        
     }
 
 
@@ -126,7 +136,10 @@ const EventMaster = () => {
            <CRow> 
 
             { (<CCol className='text-end' lg={12} md={12} sx={12} sm={12}>
-                            <CButton className="mt-2 float-end me-3" onClick={handleToggle1} >{!liveClass ? 'Add Event' : 'Close'}</CButton>
+                            <CButton className="mt-2 float-end me-3" onClick={()=>{
+                                setEventObj({...obj})
+                                handleToggle1()
+                                }} >{!liveClass ? 'Add Event' : 'Close'}</CButton>
                 </CCol>)} 
 
             <CCol sx={12}>
@@ -312,7 +325,7 @@ const EventMaster = () => {
                                             </CCol>
                                             <CCol className='mt-4'>
                                                 <CButton className='float-end' onClick={() => saveCallReport()}>
-                                                    Save
+                                                    {eventObj?._id?.trim()?"Update":"Save"}
                                                 </CButton>
                                             </CCol>
                                         </CRow>
@@ -378,7 +391,11 @@ const EventMaster = () => {
                                   <CTableDataCell>{el.eventActive?<CButton color='success'>Active</CButton>:<CButton color='danger'>Inactive</CButton>}</CTableDataCell>
                                   <CTableDataCell className='p-2'>
                                     <MdDelete className='m-1' onClick={()=>deleteEventDetails(el._id)}/>
-                                    <MdEdit  className='m-1'/>
+                                    <MdEdit  className='m-1' onClick={()=>{
+                                        setEventObj(el)
+                                        setImageUrl(el.eventBanner)
+                                        handleToggle1(true)
+                                        }}/>
                                   </CTableDataCell>
 
                                 </CTableRow>
