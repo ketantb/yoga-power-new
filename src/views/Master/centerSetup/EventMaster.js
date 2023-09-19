@@ -1,7 +1,8 @@
 import { CAccordion, CAccordionBody, CAccordionHeader, CAccordionItem, CBadge, 
     CButton, CCard, CCardBody, CCardHeader, CCardImage, CCardText, CCardTitle, CCol, CForm,
      CFormInput, CFormSelect, CFormSwitch, CFormTextarea, CImage, CInputGroup, CListGroup, CListGroupItem,
-      CPopover, CRow, CSpinner, CWidgetStatsD,CTable,CTableHead,CTableHeaderCell,CTableBody, CTableRow
+      CPopover, CRow, CSpinner, CWidgetStatsD,CTable,CTableHead,CTableHeaderCell,CTableBody, CTableRow,
+      CTableDataCell
      } from '@coreui/react'
 import React, { useState } from 'react'
 import EventImage from 'src/assets/images/avatars/eventImage.jpg'
@@ -12,6 +13,8 @@ import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/ad
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import axios from 'axios'
+import { useUploadImgaeHook } from 'src/views/forms/useUploadHook'
+import { MdEdit,MdDelete } from 'react-icons/md'
 const EventMaster = () => {
 
     const [liveClass, setLiveClass] = useState(false)
@@ -21,6 +24,12 @@ const EventMaster = () => {
     const pathVal = useAdminValidation('Master')
     const uniqObjeact = useUniqAdminObjeact()
     const [eventMasterData,setEventMasterData] = useState([])
+    const [imageProgress,setImgPrograss] = useState(0)
+    const [imageUrl,setImageUrl] = useState('')
+    const [image,setImage] = useState('')
+
+    const handleChange = useUploadImgaeHook(setImageUrl,setImgPrograss,setImage,"event-image-banner")
+
 
 
     const obj ={
@@ -61,7 +70,7 @@ const EventMaster = () => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ ...uniqObjeact, ...obj })
+            body: JSON.stringify({ ...uniqObjeact, ...eventObj,eventBanner:imageUrl })
         }).then((resp) => {
             resp.json().then(() => {
                 alert('Successfully save')
@@ -71,7 +80,7 @@ const EventMaster = () => {
     }
 
 
-    function getStaff() {
+    function getEventDetails() {
         axios.get(`${ url }/eventDetails/${ pathVal }`, {
             headers: {
                 'Authorization': `Bearer ${ token }`
@@ -86,8 +95,27 @@ const EventMaster = () => {
     }
 
     useEffect(()=>{
-        getStaff()
+        getEventDetails()
     },[])
+
+
+    function deleteEventDetails(id) {
+        if(!confirm('Do u really Want to delete this')){
+          return 
+        }
+   
+        axios.delete(`${ url }/eventDetails/delete/${ id }`, { headers:{
+            "Authorization": `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+    } })
+            .then((res) => {
+               getEventDetails()
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }
 
   return (
     <CCard className="mb-3 border-success">
@@ -128,10 +156,9 @@ const EventMaster = () => {
                                                     className="mb-1"
                                                     type="file"
                                                     id="exampleFormControlInput1"
-                                                    label="Event Banner "
+                                                    label={`Event Banner uploaded ${imageProgress}% `}
                                                     placeholder="Enter Name"
-                                                    value={eventObj.eventBanner}
-                                                    onChange={(e)=>setEventObj((prev)=>({...prev,eventName:e.target.value}))}
+                                                    onChange={handleChange}
                                                 />
                                             </CCol>
                                             <CCol xs={3}>
@@ -226,26 +253,34 @@ const EventMaster = () => {
                                                     label="Duration"
                                                     options={[
                                                         "Select Duration",
-                                                        { label: "One", value: "1" },
-                                                        { label: "Two", value: "2" },
-                                                        { label: "Three", value: "3" },
+                                                        { label: "30 min", value: "30 min" },
+                                                        { label: "1 hr", value: "1 hr" },
+                                                        { label: "1 hr:30 min", value: "1 hr : 30 min" },
+                                                        { label: "2 hr", value: "2 hr" },
+                                                        { label: "2 hr:30 min", value: "2 hr : 30 min" },
+                                                        { label: "3 hr", value: "3 hr" },
+                                                        { label: "3 hr:30 min", value: "3 hr : 30 min" },
+                                                        { label: "4 hr", value: "4 hr" },
+                                                        { label: "4 hr:30 min", value: "4 hr : 30 min" },
+                                                        { label: "5 hr", value: "5 hr" },
+                                                        { label: "5 hr:30 min", value: "5 hr : 30 min" },
+                                                        { label: "6 hr", value: "6 hr" },
+                                                        { label: "6 hr:30 min", value: "6 hr : 30 min" },
+                                                        { label: "7 hr", value: "7 hr" },
+                                                        { label: "7 hr:30 min", value: "7 hr : 30 min" },
+                                                        { label: "8 hr", value: "8 hr" },
+                                                        { label: "8 hr:30 min", value: "8 hr : 30 min" },                                                   
                                                     ]}
                                                     value={eventObj.duration}
                                                     onChange={(e)=>setEventObj((prev)=>({...prev,duration:e.target.value}))}
                                                 />
                                             </CCol>
                                             <CCol xs={3}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Duration"
                                                     label="Client Limit"
-                                                    options={[
-                                                        "Select Limit",
-                                                        { label: "100", value: "1" },
-                                                        { label: "200", value: "2" },
-                                                        { label: "300", value: "3" },
-                                                        { label: "No Limit", value: "3" },
-                                                    ]}
+                                                    type='number'                                                   
                                                     value={eventObj.clientLimit}
                                                     onChange={(e)=>setEventObj((prev)=>({...prev,clientLimit:e.target.value}))}
                                                 />
@@ -296,29 +331,40 @@ const EventMaster = () => {
 
         <CTable className='mt-3' align="middle" bordered  hover responsive scrollable>
                             <CTableHead  >
-                                    <CTableHeaderCell>Sr.No</CTableHeaderCell>
-                                    <CTableHeaderCell>Event Name</CTableHeaderCell>
-                                    <CTableHeaderCell>Event Banner</CTableHeaderCell>
-                                    <CTableHeaderCell>Host Name</CTableHeaderCell>
-                                    <CTableHeaderCell>Service</CTableHeaderCell>
-                                    <CTableHeaderCell>Event Type</CTableHeaderCell>
-                                    <CTableHeaderCell>Event Start Date</CTableHeaderCell>
-                                    <CTableHeaderCell>Event End Date</CTableHeaderCell>
-                                    <CTableHeaderCell>Event Time</CTableHeaderCell>
-                                    <CTableHeaderCell>Duration</CTableHeaderCell>
-                                    <CTableHeaderCell >Client Limit</CTableHeaderCell>
-                                    {<CTableHeaderCell>Fess</CTableHeaderCell>}
- 
-                                    {<CTableHeaderCell>Paid</CTableHeaderCell>}
-                                    <CTableHeaderCell>Event Active</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Sr.No</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event Name</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event Banner</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Host Name</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Comments</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Service</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event Type</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event Start Date</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event End Date</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event Time</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Duration</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2' >Client Limit</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Fess</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event Active</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Delete/Edit</CTableHeaderCell>
+
                             </CTableHead>
                             <CTableBody>
                                 {eventMasterData.map((el,i)=>
                                <CTableRow>
                                   <CTableDataCell>{i+1}</CTableDataCell>
                                   <CTableDataCell>{el.eventName}</CTableDataCell>
-                                  <CTableDataCell>{el.eventBanner}</CTableDataCell>
-                                  <CTableDataCell>{el.hostName}</CTableDataCell>
+                                  <CTableDataCell >
+                                <div 
+                                className="border-gray rounded-circle"
+                                style={{width:'100px'}}
+                                >
+                                  <img
+                                  width='100%'
+                                  src={el.eventBanner}
+                                  />
+
+                                </div>
+                              </CTableDataCell>
                                   <CTableDataCell>{el.hostName}</CTableDataCell>
                                   <CTableDataCell>{el.service}</CTableDataCell>
                                   <CTableDataCell>{el.comments}</CTableDataCell>
@@ -328,9 +374,13 @@ const EventMaster = () => {
                                   <CTableDataCell>{el.eventTime}</CTableDataCell>
                                   <CTableDataCell>{el.duration}</CTableDataCell>
                                   <CTableDataCell>{el.clientLimit}</CTableDataCell>
-                                  <CTableDataCell>{el.fess}</CTableDataCell>
-                                  <CTableDataCell>{el.paid?<CButton color='success'>Active</CButton>:<CButton color='danger'>Inactive</CButton>}</CTableDataCell>
-                                  <CTableDataCell>{el.eventActive}</CTableDataCell>
+                                  <CTableDataCell>{el.paid?el.fess:<CButton size='sm'>Free</CButton>}</CTableDataCell>
+                                  <CTableDataCell>{el.eventActive?<CButton color='success'>Active</CButton>:<CButton color='danger'>Inactive</CButton>}</CTableDataCell>
+                                  <CTableDataCell className='p-2'>
+                                    <MdDelete className='m-1' onClick={()=>deleteEventDetails(el._id)}/>
+                                    <MdEdit  className='m-1'/>
+                                  </CTableDataCell>
+
                                 </CTableRow>
                                 )}
                             </CTableBody>

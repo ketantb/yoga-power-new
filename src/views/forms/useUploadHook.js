@@ -1,28 +1,23 @@
 import { getDownloadURL, ref,  uploadBytesResumable } from 'firebase/storage'
 import { storage } from 'src/firebase'
 
-const useUploadImgaeHook = () => {
+const useUploadImgaeHook = (setImageUrl,setImgPrograss,setImage,filename="profile-photo") => {
   return (
      event => {
         const fileUploaded = event.target.files[0];
         const file = event.target.files[0] 
-        const reader = new FileReader();
+        setImage(fileUploaded.name)
         if (!file.type.startsWith('image/')) return;
     
-        reader.onload = (e) => {
-            imgRef.current.src = e.target.result
-        }
-        reader.readAsDataURL(file)
-    
+           
             const uploadImage = (file)=>{
               if(!fileUploaded)return
-             const storageRef =   ref(storage,`profile-photo/${fileUploaded.name}`)
+             const storageRef =   ref(storage,`${filename}/${fileUploaded.name}`)
              const uploadTask = uploadBytesResumable(storageRef,fileUploaded)
       
              uploadTask.on("state_changed",(snapshot)=>{
               const prog = Math.round((snapshot.bytesTransferred/snapshot.totalBytes) *100)
               setImgPrograss(prog)
-      
              },(error)=>{
               console.log(error)
              },
