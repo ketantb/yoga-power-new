@@ -27,7 +27,7 @@ const EventMaster = () => {
     const [imageProgress,setImgPrograss] = useState(0)
     const [imageUrl,setImageUrl] = useState('')
     const [image,setImage] = useState('')
-
+    const [result1, setResult1] = useState([]);
     const handleChange = useUploadImgaeHook(setImageUrl,setImgPrograss,setImage,"event-image-banner")
 
 
@@ -106,7 +106,22 @@ const EventMaster = () => {
 
     useEffect(()=>{
         getEventDetails()
+        toGteService()
     },[])
+
+    function toGteService(){
+        axios.get(`${url}/subservice/${pathVal}`, {
+            headers: {
+                'Authorization': `Bearer ${ token }`
+            }
+        })
+            .then((res) => {
+                setResult1(res.data)
+            })
+            .catch((error) => {
+                console.error(error)
+            }) 
+    }
 
 
     function deleteEventDetails(id) {
@@ -126,6 +141,24 @@ const EventMaster = () => {
                 console.error(error)
             })
     }
+
+    const updateEvent = (id,value) => {
+
+        fetch(`${ url }/eventDetails/update/${id}`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${ token }`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ eventActive:value })
+        }).then((resp) => {
+            resp.json().then(() => {
+            
+                getEventDetails()
+            })
+        })
+    }   
 
   return (
     <CCard className="mb-3 border-success">
@@ -190,15 +223,15 @@ const EventMaster = () => {
                                                     className="mb-1"
                                                     aria-label="Select Service"
                                                     label="Service"
-                                                    options={[
-                                                        "Select Service",
-                                                        { label: "One", value: "1" },
-                                                        { label: "Two", value: "2" },
-                                                        { label: "Three", value: "3" },
-                                                    ]}
                                                     value={eventObj.service}
                                                     onChange={(e)=>setEventObj((prev)=>({...prev,service:e.target.value}))}
-                                                />
+                                                >
+                                                     <option value={""}>Select Variation</option>
+                                    {result1.filter((el)=>{
+                                    return el.status
+                                    })
+                                    .map((el,i)=><option key={i}>{el.selected_service}</option>)}   
+                                                </CFormSelect>
                                             </CCol>
 
                                             <CCol xs={12}>
@@ -212,16 +245,10 @@ const EventMaster = () => {
                                                 ></CFormTextarea>
                                             </CCol>
                                             <CCol xs={3}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Service"
-                                                    label="Event Type"
-                                                    options={[
-                                                        "Select Event Type",
-                                                        { label: "Online Event", value: "1" },
-                                                        { label: "Center Offline Event", value: "2" },
-                                                        { label: "Three", value: "3" },
-                                                    ]}
+                                                    label="Event Type"                                        
                                                     value={eventObj.eventType}
                                                     onChange={(e)=>setEventObj((prev)=>({...prev,eventType:e.target.value}))}
                                                 />
@@ -388,7 +415,7 @@ const EventMaster = () => {
                                   <CTableDataCell>{el.duration}</CTableDataCell>
                                   <CTableDataCell>{el.clientLimit}</CTableDataCell>
                                   <CTableDataCell>{el.paid?el.fess:<CButton size='sm'>Free</CButton>}</CTableDataCell>
-                                  <CTableDataCell>{el.eventActive?<CButton color='success'>Active</CButton>:<CButton color='danger'>Inactive</CButton>}</CTableDataCell>
+                                  <CTableDataCell>{el.eventActive?<CButton color='success' onClick={()=>updateEvent(el._id,false)}>Active</CButton>:<CButton onClick={()=>updateEvent(el._id,true)} color='danger'>Inactive</CButton>}</CTableDataCell>
                                   <CTableDataCell className='p-2'>
                                     <MdDelete className='m-1' onClick={()=>deleteEventDetails(el._id)}/>
                                     <MdEdit  className='m-1' onClick={()=>{
