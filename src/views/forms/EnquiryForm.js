@@ -314,7 +314,7 @@ return
             }
             })
             .catch((error) =>
-            toHandleStatus(error)
+            toHandleStatus(error.response.status)
             )
     }
 

@@ -27,7 +27,6 @@ const EventMaster = () => {
     const [imageProgress,setImgPrograss] = useState(0)
     const [imageUrl,setImageUrl] = useState('')
     const [image,setImage] = useState('')
-    const [result1, setResult1] = useState([]);
     const handleChange = useUploadImgaeHook(setImageUrl,setImgPrograss,setImage,"event-image-banner")
 
 
@@ -46,7 +45,7 @@ const EventMaster = () => {
         clientLimit:'',
         fess:'',
         paid:false,
-        eventActive:false,
+        eventActive:"active",
     }
 
     const [eventObj, setEventObj] = useState({...obj})
@@ -65,8 +64,8 @@ const EventMaster = () => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token;
 
-    const saveCallReport = () => {
-
+    const saveCallReport = (e) => {
+        e.preventDefault()
         const path = eventObj?._id?.trim()?`/eventDetails/update/${eventObj?._id}`:`/eventDetails/create`
 
         fetch(`${ url }${path}`, {
@@ -106,22 +105,9 @@ const EventMaster = () => {
 
     useEffect(()=>{
         getEventDetails()
-        toGteService()
     },[])
 
-    function toGteService(){
-        axios.get(`${url}/subservice/${pathVal}`, {
-            headers: {
-                'Authorization': `Bearer ${ token }`
-            }
-        })
-            .then((res) => {
-                setResult1(res.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            }) 
-    }
+   
 
 
     function deleteEventDetails(id) {
@@ -142,7 +128,7 @@ const EventMaster = () => {
             })
     }
 
-    const updateEvent = (id,value) => {
+    const updateEvent = (id,item) => {
 
         fetch(`${ url }/eventDetails/update/${id}`, {
             method: "POST",
@@ -151,7 +137,7 @@ const EventMaster = () => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ eventActive:value })
+            body: JSON.stringify(item)
         }).then((resp) => {
             resp.json().then(() => {
             
@@ -159,6 +145,40 @@ const EventMaster = () => {
             })
         })
     }   
+
+    async function  StatusOpration(value,id,item){
+        const status = value
+        if(status==='cancel'){
+           let commentValue = prompt("Why you want to cancel")
+       
+           if(commentValue){
+            updateEvent(id,{...item,comments:commentValue,eventActive:value})
+           }
+        }else if(status==='done'||status==='active'){
+            updateEvent(id,{...item,eventActive:value})
+
+        }
+        }  
+        
+        
+
+   const compareFunction = (date)=>{
+
+
+
+      const dateCon = (new Date(date).getFullYear()>=new Date().getFullYear()&&
+       new Date(date).getMonth()>=new Date().getMonth()&&
+       new Date(date).getDate()>=new Date().getDate())
+
+
+
+
+    if(dateCon){
+        return "Start"
+    }else if(!dateCon){
+       return 'Upcoming...'   
+    }
+   }
 
   return (
     <CCard className="mb-3 border-success">
@@ -177,7 +197,7 @@ const EventMaster = () => {
 
             <CCol sx={12}>
             {liveClass && (                
-                <CForm>
+                <form onSubmit={saveCallReport}>
                     <CRow>
                         <CCol>                           
                                 <CCard className="mt-2 border-success">
@@ -205,6 +225,8 @@ const EventMaster = () => {
                                                     label={`Event Banner uploaded ${imageProgress}% `}
                                                     placeholder="Enter Name"
                                                     onChange={handleChange}
+                                                    accept="image/*"
+
                                                 />
                                             </CCol>
                                             <CCol xs={3}>
@@ -219,60 +241,24 @@ const EventMaster = () => {
                                                 />
                                             </CCol>
                                             <CCol xs={3}>
-                                                <CFormSelect
+                                                <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Service"
-                                                    label="Service"
+                                                    label="Topic"
                                                     value={eventObj.service}
                                                     onChange={(e)=>setEventObj((prev)=>({...prev,service:e.target.value}))}
                                                 >
-                                                     <option value={""}>Select Variation</option>
-                                    {result1.filter((el)=>{
-                                    return el.status
-                                    })
-                                    .map((el,i)=><option key={i}>{el.selected_service}</option>)}   
-                                                </CFormSelect>
+                                                
+                                                </CFormInput>
                                             </CCol>
 
-                                            <CCol xs={12}>
-                                                <CFormTextarea
-                                                    id="exampleFormControlTextarea1"
-                                                    label="Comments"
-                                                    rows="2"
-                                                    text="Must be 8-20 words long."
-                                                    value={eventObj.comments}
-                                                    onChange={(e)=>setEventObj((prev)=>({...prev,comments:e.target.value}))}
-                                                ></CFormTextarea>
-                                            </CCol>
                                             <CCol xs={3}>
                                                 <CFormInput
                                                     className="mb-1"
                                                     aria-label="Select Service"
-                                                    label="Event Type"                                        
+                                                    label="Event Venue"                                        
                                                     value={eventObj.eventType}
                                                     onChange={(e)=>setEventObj((prev)=>({...prev,eventType:e.target.value}))}
-                                                />
-                                            </CCol>
-                                            <CCol xs={3}>
-                                                <CFormInput
-                                                    className="mb-1"
-                                                    type="date"
-                                                    id="exampleFormControlInput1"
-                                                    label="Event Start Date"
-                                                    placeholder="Enter date"
-                                                    value={eventObj.eventStartDate}
-                                                    onChange={(e)=>setEventObj((prev)=>({...prev,eventStartDate:e.target.value}))}
-                                                />
-                                            </CCol>
-                                            <CCol xs={3}>
-                                                <CFormInput
-                                                    className="mb-1"
-                                                    type="date"
-                                                    id="exampleFormControlInput1"
-                                                    label="Event End Date"
-                                                    placeholder="Enter date"
-                                                    value={eventObj.eventEndDate}
-                                                    onChange={(e)=>setEventObj((prev)=>({...prev,eventEndDate:e.target.value}))}
                                                 />
                                             </CCol>
                                             <CCol xs={3}>
@@ -286,6 +272,31 @@ const EventMaster = () => {
                                                     onChange={(e)=>setEventObj((prev)=>({...prev,eventTime:e.target.value}))}
                                                 />
                                             </CCol>
+                                            <CCol xs={3}>
+                                                <CFormInput
+                                                    className="mb-1"
+                                                    type="date"
+                                                    id="exampleFormControlInput1"
+                                                    label="Event Start Date"
+                                                    placeholder="Enter date"
+                                                    value={eventObj.eventStartDate}
+                                                    onChange={(e)=>setEventObj((prev)=>({...prev,eventStartDate:e.target.value}))}
+                                                    required
+                                                />
+                                            </CCol>
+                                            <CCol xs={3}>
+                                                <CFormInput
+                                                    className="mb-1"
+                                                    type="date"
+                                                    id="exampleFormControlInput1"
+                                                    label="Event End Date"
+                                                    placeholder="Enter date"
+                                                    value={eventObj.eventEndDate}
+                                                    onChange={(e)=>setEventObj((prev)=>({...prev,eventEndDate:e.target.value}))}
+                                                    required
+                                                />
+                                            </CCol>
+                                          
                                             <CCol xs={3}>
                                                 <CFormSelect
                                                     className="mb-1"
@@ -344,14 +355,9 @@ const EventMaster = () => {
                                                 onChange={(e)=>setEventObj((prev)=>({...prev,paid:!prev.paid}))}
                                                 />
                                             </CCol>
-                                            <CCol className='mt-4' xs={3}>
-                                                <CFormSwitch label="Event Active" id="formSwitchCheckDefault"
-                                                checked={eventObj.eventActive}
-                                                onChange={(e)=>setEventObj((prev)=>({...prev,eventActive:!prev.eventActive}))}
-                                                />
-                                            </CCol>
+                                            
                                             <CCol className='mt-4'>
-                                                <CButton className='float-end' onClick={() => saveCallReport()}>
+                                                <CButton className='float-end' type="submit">
                                                     {eventObj?._id?.trim()?"Update":"Save"}
                                                 </CButton>
                                             </CCol>
@@ -363,7 +369,7 @@ const EventMaster = () => {
                         </CCol>
                     </CRow>
                 
-                </CForm>)}
+                </form>)}
             </CCol>
 
         </CRow>   
@@ -372,29 +378,26 @@ const EventMaster = () => {
         <CTable className='mt-3' align="middle" bordered  hover responsive scrollable>
                             <CTableHead  >
                                     <CTableHeaderCell className='p-2'>Sr.No</CTableHeaderCell>
-                                    <CTableHeaderCell className='p-2'>Event Name</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Event Banner</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event Name</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Host Name</CTableHeaderCell>
-                                    <CTableHeaderCell className='p-2'>Comments</CTableHeaderCell>
-                                    <CTableHeaderCell className='p-2'>Service</CTableHeaderCell>
-                                    <CTableHeaderCell className='p-2'>Event Type</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Topic</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event venue</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Start Time</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Duration</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Event Start Date</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Event End Date</CTableHeaderCell>
-                                    <CTableHeaderCell className='p-2'>Event Time</CTableHeaderCell>
-                                    <CTableHeaderCell className='p-2'>Duration</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2' >Client Limit</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Fess</CTableHeaderCell>
-                                    <CTableHeaderCell className='p-2'>Event Active</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event Status</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Comment of cancel event</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Delete/Edit</CTableHeaderCell>
-
                             </CTableHead>
                             <CTableBody>
                                 {eventMasterData.map((el,i)=>
                                <CTableRow>
                                   <CTableDataCell>{i+1}</CTableDataCell>
-                                  <CTableDataCell>{el.eventName}</CTableDataCell>
-                                  <CTableDataCell >
-                                <div 
+                                  <div 
                                 className="border-gray rounded-circle"
                                 style={{width:'100px'}}
                                 >
@@ -402,23 +405,28 @@ const EventMaster = () => {
                                   width='100%'
                                   src={el.eventBanner}
                                   />
-
                                 </div>
-                              </CTableDataCell>
+                                  <CTableDataCell>{el.eventName}</CTableDataCell>
                                   <CTableDataCell>{el.hostName}</CTableDataCell>
                                   <CTableDataCell>{el.service}</CTableDataCell>
-                                  <CTableDataCell>{el.comments}</CTableDataCell>
                                   <CTableDataCell>{el.eventType}</CTableDataCell>
-                                  <CTableDataCell>{new Date(el.eventStartDate).toLocaleDateString()}</CTableDataCell>
-                                  <CTableDataCell>{new Date(el.eventEndDate ).toLocaleDateString()}</CTableDataCell>
                                   <CTableDataCell>{el.eventTime}</CTableDataCell>
                                   <CTableDataCell>{el.duration}</CTableDataCell>
+                                  <CTableDataCell>{new Date(el.eventStartDate).toLocaleDateString()}</CTableDataCell>
+                                  <CTableDataCell>{new Date(el.eventEndDate ).toLocaleDateString()}</CTableDataCell>
                                   <CTableDataCell>{el.clientLimit}</CTableDataCell>
                                   <CTableDataCell>{el.paid?el.fess:<CButton size='sm'>Free</CButton>}</CTableDataCell>
-                                  <CTableDataCell>{el.eventActive?<CButton color='success' onClick={()=>updateEvent(el._id,false)}>Active</CButton>:<CButton onClick={()=>updateEvent(el._id,true)} color='danger'>Inactive</CButton>}</CTableDataCell>
+                                  <CTableDataCell>
+                                  {el.eventActive==='cancel'&&<CButton color='danger' size='sm'  onClick={()=>StatusOpration('active',el._id,el)} >Cancel</CButton>  }
+                                  {el.eventActive==='active'&& <CButton color='primary' size='sm' onClick={()=>StatusOpration('done',el._id,el)}>{compareFunction(el.eventStartDate)}</CButton> }
+                                  {el.eventActive==='done'&&<CButton color='success' size='sm' onClick={()=>StatusOpration('cancel',el._id,el)} >Complated</CButton>  }          
+                                  </CTableDataCell>
+                                  <CTableDataCell>
+                                  {el.comments }                                  
+                                  </CTableDataCell>
                                   <CTableDataCell className='p-2'>
-                                    <MdDelete className='m-1' onClick={()=>deleteEventDetails(el._id)}/>
-                                    <MdEdit  className='m-1' onClick={()=>{
+                                    <MdDelete  className='m-1 cursor-pointer' onClick={()=>deleteEventDetails(el._id)}/>
+                                    <MdEdit  className='m-1 cursor-pointer' onClick={()=>{
                                         setEventObj(el)
                                         setImageUrl(el.eventBanner)
                                         handleToggle1(true)

@@ -14,6 +14,7 @@ import { cilArrowCircleBottom} from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { useUniqAdminObjeact,useAdminValidation } from '../Custom-hook/adminValidation'
 import { CountryList } from 'src/components/CountryList'
+import { useErrorStatus } from 'src/components/statusHandle/useStatusHandler'
 
 const Recruitment = () => {
 
@@ -21,6 +22,8 @@ const Recruitment = () => {
     const url2 =url1
     const valdationObj = useUniqAdminObjeact() 
     const pathValMaster = useAdminValidation('Master')
+    const {toHandleStatus,errorCompponent,statusCode} =   useErrorStatus()
+
     
     const [error, setError] = useState('')
     const [image, setImage] = useState('')
@@ -126,7 +129,7 @@ if(imgPrograss===100&&resumePrograss===100&&validation){
             let data = {
                 username: username ,
                 image: imageUrl,
-                FullName: Fullname, EmailAddress: Email, ContactNumber,                
+                FullName: Fullname, EmailAddress: Email, ContactNumber:+ContactNumber,             
                 Gender: Gender, address: Address, Area, city, 
                 resume:  resumeUrl, PinCode: pincode, State: state,
                 PayoutType: Source, Grade: grade, Comment: comment, 
@@ -148,6 +151,9 @@ if(imgPrograss===100&&resumePrograss===100&&validation){
                 },
                 body: JSON.stringify({...valdationObj,...data})
             }).then((resp) => {
+                if(resp.status===200){
+
+                }
                 resp.json().then(() => {
                     setImageUrl(null)
                     setFullname('')
@@ -170,6 +176,8 @@ if(imgPrograss===100&&resumePrograss===100&&validation){
                     setResumePrograss(0)
                     setError('')
                     alert("successfully submitted")
+                }).catch((error)=>{
+                    toHandleStatus(error.status)
                 })
             })
         } else {
@@ -255,6 +263,7 @@ if(imgPrograss===100&&resumePrograss===100&&validation){
 
     return (
         <>
+        {errorCompponent}
            <CRow className='mb-2 ms-2'>
                 <CCard color={'primary'} 
                 style={{ padding: '10px', color: '#ffffff', width: '100px', margin: '3px', cursor: 'pointer' }}

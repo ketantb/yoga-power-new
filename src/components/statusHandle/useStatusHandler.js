@@ -33,7 +33,7 @@ const useErrorStatus = () => {
               <h4 className="pt-3 text-danger"> error {username}, we have a problem!</h4>
               <h6 className="pt-3 text-info">Client side error</h6>
               <p className="text-medium-emphasis float-start  text-danger">
-                Duplicate Value found please enter different value and try again 
+                Duplicate Contact number found please enter different Contact number and try again 
               </p>
             </span>
             
@@ -43,30 +43,17 @@ const useErrorStatus = () => {
     </CModalBody>
   </CModal>
 
-  const toHandleStatus = (res)=>{
-    setVisibleModel(true)
-    setStatusCode(res.response.status)
+  const toHandleStatus = (statusCode)=>{
+    if(statusCode===422){
+        setVisibleModel(true)
+        setStatusCode(statusCode)
+    }
   }
 
   return {toHandleStatus,errorCompponent,statusCode}
 
 }
 
-const useResponseStatus = () => {
-    return (
-      <div>
-        
-      </div>
-    )
-}
-
-const useDeletConfermation = ()=>{
-    return (
-        <div>
-
-        </div>
-    )
-}
 
 
-export  {useErrorStatus,useResponseStatus}
+export  {useErrorStatus}
