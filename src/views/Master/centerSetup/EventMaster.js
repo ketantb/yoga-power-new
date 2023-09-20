@@ -151,27 +151,21 @@ const EventMaster = () => {
         if(status==='cancel'){
            let commentValue = prompt("Why you want to cancel")
        
-           if(commentValue){
+        if(commentValue){
             updateEvent(id,{...item,comments:commentValue,eventActive:value})
            }
         }else if(status==='done'||status==='active'){
             updateEvent(id,{...item,eventActive:value})
-
-        }
+         }
         }  
         
         
 
    const compareFunction = (date)=>{
 
-
-
-      const dateCon = (new Date(date).getFullYear()>=new Date().getFullYear()&&
-       new Date(date).getMonth()>=new Date().getMonth()&&
-       new Date(date).getDate()>=new Date().getDate())
-
-
-
+      const dateCon = (new Date(date).getFullYear()<=new Date().getFullYear()&&
+       new Date(date).getMonth()<=new Date().getMonth()&&
+       new Date(date).getDate()<=new Date().getDate())
 
     if(dateCon){
         return "Start"

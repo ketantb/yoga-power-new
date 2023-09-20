@@ -1,4 +1,9 @@
-import { CAccordion, CAccordionBody, CAccordionHeader, CAccordionItem, CBadge, CButton, CCard, CCardBody, CCardHeader, CCardImage, CCardText, CCardTitle, CCol, CForm, CFormInput, CFormSelect, CFormSwitch, CFormTextarea, CImage, CInputGroup, CListGroup, CListGroupItem, CPopover, CRow, CSpinner, CWidgetStatsD } from '@coreui/react'
+import { CAccordion, CAccordionBody, CAccordionHeader, CAccordionItem, 
+    CBadge, CButton, CCard, CCardBody, CCardHeader, CCardImage, CCardText,
+     CCardTitle, CCol, CForm, CFormInput, CFormSelect, CFormSwitch, CFormTextarea,
+      CImage, CInputGroup, CListGroup, CListGroupItem, CPopover, CRow, CSpinner, CWidgetStatsD,
+      CNavItem,CNavLink,CNav,CTabPane,CTabContent
+    } from '@coreui/react'
 import React, { useState } from 'react'
 import Profile from 'src/assets/images/avatars/img_avatar.png'
 import EventImage from 'src/assets/images/avatars/eventImage.jpg'
@@ -6,10 +11,16 @@ import { CChartLine } from '@coreui/react-chartjs'
 import { cibFacebook } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
+const ActiveEvent = React.lazy(()=>import('./ActiveEvent'))
+const EventHistory =  React.lazy(()=>import('./EventHistory'))
+const UpComingEvent  =  React.lazy(()=>import('./UpComingEvent'))
+const EventBoking   =  React.lazy(()=>import('./EventBoking'))
+
 const Event = () => {
     const [liveClass, setLiveClass] = useState(false)
     const [pass, setPass] = useState(false)
     const [paid, setPaid] = useState(false)
+    const [activeKey,setActiveKey] = useState(1)
 
     const handleToggle1 = () => {
         setLiveClass(!liveClass)
@@ -20,13 +31,68 @@ const Event = () => {
         setPass(!pass)
     }
 
+
     return (
         <CCard className="mb-3 border-success">
             <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
                 <CCardTitle>Event</CCardTitle>
             </CCardHeader>
             <CCardBody>
-                <CForm>
+
+            <CNav variant='tabs' >
+
+                <CNavItem>
+                    <CNavLink
+                        active={activeKey === 1}
+                        onClick={() => setActiveKey(1)}
+                        className='cursor-pointer'
+                    >
+                       Active Event 
+                    </CNavLink>
+                </CNavItem>
+                <CNavItem>
+                    <CNavLink
+                        active={activeKey === 2}
+                        onClick={() => setActiveKey(2)}
+                        className='cursor-pointer'
+                    >
+                      Upcoming Event 
+                    </CNavLink>
+                </CNavItem>
+                <CNavItem>
+                    <CNavLink
+                        active={activeKey === 3}
+                        onClick={() => setActiveKey(3)}
+                        className='cursor-pointer'
+                    >
+                        Event History
+                    </CNavLink>
+                </CNavItem>
+                <CNavItem>
+                <CNavLink
+                        active={activeKey === 4}
+                        onClick={() => setActiveKey(4)}
+                        className='cursor-pointer'
+                    >
+                        Event Boking
+                    </CNavLink>
+                </CNavItem>
+            </CNav>
+            <CTabContent>
+            <CTabPane role="tabpanel" aria-labelledby="profile-tab" className='py-5' visible={activeKey === 1}>
+                   <ActiveEvent   />
+            </CTabPane>
+            <CTabPane role="tabpanel" aria-labelledby="profile-tab" className='py-5 ' visible={activeKey === 2}>
+                   <UpComingEvent   />
+            </CTabPane>
+            <CTabPane role="tabpanel" aria-labelledby="profile-tab" className='py-5' visible={activeKey === 3}>
+                   <EventHistory   />
+            </CTabPane>
+            <CTabPane role="tabpanel" aria-labelledby="profile-tab" className='py-5' visible={activeKey === 4}>
+                   <EventBoking   />
+            </CTabPane>
+            </CTabContent>
+                {/* <CForm>
                     <CRow>
                         <CCol xs={9}>
                             {liveClass && (
@@ -841,7 +907,7 @@ const Event = () => {
                             </CCol>
                         </CRow>
                     </CCardBody>
-                </CCard>
+                </CCard> */}
             </CCardBody>
         </CCard>
     )
