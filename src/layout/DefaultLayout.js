@@ -7,12 +7,8 @@ import {
 } from '../components/index'
 
 import {useParams,redirect,useNavigate  } from 'react-router-dom'
-
-
-
-
-
 import { useDispatch,useSelector } from 'react-redux'
+
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user?.token;

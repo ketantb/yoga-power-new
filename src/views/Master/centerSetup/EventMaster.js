@@ -161,13 +161,23 @@ const EventMaster = () => {
         
         
 
-   const compareFunction = (date)=>{
+   const compareFunction = (date,endDate,val)=>{
 
       const dateCon = (new Date(date).getFullYear()<=new Date().getFullYear()&&
        new Date(date).getMonth()<=new Date().getMonth()&&
        new Date(date).getDate()<=new Date().getDate())
 
-    if(dateCon){
+       const dateCon2 = (new Date(endDate).getFullYear()<=new Date().getFullYear()&&
+       new Date(endDate).getMonth()<=new Date().getMonth()&&
+       new Date(endDate).getDate()<new Date().getDate())
+
+    console.log(dateCon2)
+
+    if(val){
+
+    }else if(dateCon2){
+        return "Completed"
+    } else if(dateCon){
         return "Start"
     }else if(!dateCon){
        return 'Upcoming...'   
@@ -412,8 +422,15 @@ const EventMaster = () => {
                                   <CTableDataCell>{el.paid?el.fess:<CButton size='sm'>Free</CButton>}</CTableDataCell>
                                   <CTableDataCell>
                                   {el.eventActive==='cancel'&&<CButton color='danger' size='sm'  onClick={()=>StatusOpration('active',el._id,el)} >Cancel</CButton>  }
-                                  {el.eventActive==='active'&& <CButton color='primary' size='sm' onClick={()=>StatusOpration('done',el._id,el)}>{compareFunction(el.eventStartDate)}</CButton> }
-                                  {el.eventActive==='done'&&<CButton color='success' size='sm' onClick={()=>StatusOpration('cancel',el._id,el)} >Complated</CButton>  }          
+                                  {el.eventActive==='active'&& <CButton color='primary' size='sm' onClick={()=>StatusOpration('done',el._id,el)}>{compareFunction(el.eventStartDate,el.eventEndDate)}</CButton> }
+                                  {el.eventActive==='done'&&<CButton color='success' size='sm' onClick={()=>{
+                                    if(compareFunction(el.eventStartDate,el.eventEndDate)==='Completed'){
+                                        return
+                                    }
+                                    StatusOpration('cancel',el._id,el)}
+                                } >
+                                    {compareFunction(el.eventStartDate,el.eventEndDate)==='Completed'?"Completed":"Done"}
+                                    </CButton>  }          
                                   </CTableDataCell>
                                   <CTableDataCell>
                                   {el.comments }                                  

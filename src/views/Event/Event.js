@@ -74,7 +74,7 @@ const Event = () => {
                         onClick={() => setActiveKey(4)}
                         className='cursor-pointer'
                     >
-                        Event Boking
+                        Event Booking
                     </CNavLink>
                 </CNavItem>
             </CNav>
