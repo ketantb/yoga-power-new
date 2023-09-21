@@ -7,6 +7,7 @@ import { CForm,CFormInput,CCol,CButton,CFormSelect,CFormCheck, CCard,
 import { useAdminValidation } from '../Custom-hook/adminValidation'
 import moment from 'moment/moment'
 import CustomSelectInput from '../Fitness/CustomSelectInput/CustomSelectInput'
+import { useUniqAdminObjeact } from '../Custom-hook/adminValidation'
 const EventBoking = () => {
 
   const url = useSelector((el) => el.domainOfApi)
@@ -14,11 +15,13 @@ const EventBoking = () => {
   const [requreData,seteRequireData] = useState([])
   const [clientData,setClientData] = useState([])
   const [enquiryData,setEnquiryData] = useState([])
+  const [employeeData,setEmployeeData] = useState([])
   const [activeKey2, setActiveKey2] = useState(1)
+  const objectValidation = useUniqAdminObjeact()
 
 
-  const obj={
-    eventName:"",
+const obj={
+ eventName:"",
 eventBanner:"",
 hostName:"",
 service:"",
@@ -30,7 +33,7 @@ eventTime:"",
 duration:"",
 clientLimit:"",
 fess:"",
-paid:Boolean,
+paid:false,
 eventActive:"",
 clientName:"",
 clinetId:"",
@@ -44,9 +47,14 @@ bookingStartDate:"",
 bookingEndDate:"",
 eventUniqID:'',
 clinetType:'',
+createdBy:"",
+emailAddress:'',
+MemberId:"",
+...objectValidation
   }
 
-  const [bookingData,setBookingData] = useState({...obj})
+  const [bookingData,setBookingData] = useState({...obj,...objectValidation})
+
 
   let user = JSON.parse(localStorage.getItem('user-info'))
   const token = user.token; 
@@ -59,11 +67,13 @@ const headers =  {
   const response = axios.get(`${url}/eventDetails/active-event/${pathVal}`,{headers})
   const response1 = axios.get(`${url}/memberForm/${pathVal}`,{headers})
   const response2 = axios.get(`${url}/enquiryForm/${pathVal}`,{headers})
-
-  const allData = await Promise.all([response,response1,response2])
+  const response3 = axios.get(`${url}/employeeform/${pathVal}`,{headers})
+  
+  const allData = await Promise.all([response,response1,response2,response3])
   seteRequireData([...allData[0]?.data])
   setClientData([...allData[1]?.data])
   setEnquiryData([...allData[2]?.data])
+  setEmployeeData([...allData[3]?.data])
  }
    
 
@@ -94,28 +104,57 @@ useEffect(()=>{
     fess:(selectedEvent?.fess||''),
     paid:(selectedEvent?.paid||''),
     eventActive:(selectedEvent?.eventActive),
-    eventUniqID:bookingData.eventUniqID
+    eventUniqID:bookingData.eventUniqID,
+    bookingStartDate:"",
+    bookingEndDate:"",
   }))
 },[bookingData.eventUniqID])
 
 function clientObj(obj,type){
+  console.log(obj)
   setBookingData((prev)=>
   
   ({...prev,...{
       clientName:obj?.Fullname,
       contactNumber:obj?.ContactNumber,
       clinetId:obj?.ClientId?obj?.ClientId:obj?.EnquiryId,
-      // EmailId:obj?.Email?obj?.Email:obj?.Emailaddress,
-      // ClientId:obj?._id,
-      // MemberId:obj?._id,
-      // crea:emp?.FullName,
-      clinetType:type
+      emailAddress:obj?.Email?obj?.Email:obj?.Emailaddress,
+      MemberId:obj?._id,
+      clinetType:type,
+      centerName:objectValidation.centerNameC,
+      clientAdress:obj?.Address?obj?.Address:obj?.address,
+      city:obj?.city
   }}))    
 }
 
+const saveBokingData = (e) => {
+  if(!obj?.Fullname){
+    alert('Please Select client name')
+  }
+  e.preventDefault()
+  const path = `/bookingEvent/create`
+
+  fetch(`${ url }${path}`, {
+      method: "POST",
+      headers: {
+          "Authorization": `Bearer ${ token }`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bookingData)
+  }).then((resp) => {
+      resp.json().then(() => {
+          setBookingData({...obj})
+          alert('Successfully Book')
+      })
+  })
+  
+}
+
+
   return (
 <CCard className="row g-3 ">
-<form className='p-3' >
+<form className='p-3' onSubmit={saveBokingData} >
     <CRow>
     <CCol md={4} lg={3} >
     <CFormSelect 
@@ -123,8 +162,9 @@ function clientObj(obj,type){
     label="Event"  
     value={bookingData.eventUniqID}
     onChange={(e)=>setBookingData(prev=>({...prev,eventUniqID:e.target.value}))}
+    required
     >
-      <option value={""}>Choose...</option>
+      <option value={""}>Choose event...</option>
       {requreData.map((el)=>
      <option value={el._id}>{el.eventName}</option>
      )}
@@ -195,44 +235,89 @@ function clientObj(obj,type){
 
                     </CCol>
   <CCol md={4} lg={3}>
-    <CFormInput type="text" id="inputPassword4" label="Client Id" />
+    <CFormInput type="text"  label="Client Id" 
+    value={bookingData.clinetId}
+    required
+    />
   </CCol>
   <CCol md={4} lg={3}>
-    <CFormInput id="inputAddress" label="Client Address" placeholder="1234 Main St"/>
+    <CFormInput id="inputAddress" label="Client Address" placeholder="1234 Main St"
+    value={bookingData.clientAdress}
+    onChange={(e)=>setBookingData(prev=>({...prev,clientAdress:e.target.value}))}
+    />
   </CCol>
   <CCol md={4} lg={3}>
-    <CFormInput id="inputAddress2" label="Client Address 2" placeholder="Optional"/>
+    <CFormInput id="inputAddress2" label="Email" placeholder="Optional"
+        value={bookingData.emailAddress}
+        onChange={(e)=>setBookingData(prev=>({...prev,emailAddress:e.target.value}))}
+    />
   </CCol>
   <CCol md={4} lg={3}>
-    <CFormInput id="inputCity" label="City"/>
+    <CFormInput id="inputCity" label="City"
+        value={bookingData.city}
+        onChange={(e)=>setBookingData(prev=>({...prev,city:e.target.value}))} 
+    />
   </CCol>
  
   <CCol md={4} lg={3}>
-    <CFormInput id="inputCity" label="Center Name"/>
+    <CFormInput id="inputCity" label="Center Name"
+            value={bookingData.centerName}
+            onChange={(e)=>setBookingData(prev=>({...prev,centerName:e.target.value}))} 
+    />
   </CCol>
 
-  
   <CCol  md={4} lg={3}>
-    <CFormInput type="number" id="gridCheck" label="Contact Number"/>
+    <CFormInput type="number" id="gridCheck" label="Contact Number"
+             value={bookingData.contactNumber}
+             onChange={(e)=>setBookingData(prev=>({...prev,contactNumber:e.target.value}))} 
+             required
+    />
   </CCol>
   <CCol  md={4} lg={3}>
-    <CFormInput type="Booking Time"  id="gridCheck" label="Time"/>
+    <CFormInput  id="gridCheck" label="Time"
+    type='time'
+    value={bookingData.bookingTime}
+    onChange={(e)=>setBookingData(prev=>({...prev,bookingTime:e.target.value}))}
+    required
+    />
   </CCol>
   <CCol  md={8} lg={6}>
     <label>Booking  date  Start and End</label>
     <div className='datePiker'>
     <input type="date" 
-    min="2021-02-18"
+    min={bookingData.eventStartDate}
+    max={bookingData.eventEndDate}
+    value={bookingData.bookingStartDate}
+    onChange={(e)=>setBookingData(prev=>({...prev,bookingStartDate:e.target.value}))}
+    required
+
+
     id="gridCheck" />
      <input type="date" 
-    min="2021-02-18"
+    min={bookingData.bookingStartDate}
+    max={bookingData.eventEndDate}
+    value={bookingData.bookingEndDate}
+    required
+    onChange={(e)=>setBookingData(prev=>({...prev,bookingEndDate:e.target.value}))}
     id="gridCheck" />
     </div>
   </CCol>
   <CCol  md={4} lg={3}>
-    <CFormSelect id="inputState" label="Created By">
-      <option>Choose...</option>
-      <option>...</option>
+    <CFormSelect id="inputState" label="Created By"
+    value={bookingData.employeeMongoId}
+    required
+    onChange={(e)=>{
+      setBookingData((prev)=>({...prev,
+        employeeMongoId:e.target.value,
+        createdBy:employeeData.find((el)=>el._id===e.target.value)?.FullName
+      }))
+      
+    }}
+    >
+      <option value={""}>Choose staff ...</option>
+      {employeeData.map((el)=>
+      <option value={el._id}>{el.FullName} {el.EmployeeID}</option>
+      )}
     </CFormSelect>
   </CCol>
   <CCol xs={12} className='my-4'>
