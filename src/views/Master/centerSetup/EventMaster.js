@@ -171,7 +171,6 @@ const EventMaster = () => {
        new Date(endDate).getMonth()<=new Date().getMonth()&&
        new Date(endDate).getDate()<new Date().getDate())
 
-    console.log(dateCon2)
 
     if(val){
 
