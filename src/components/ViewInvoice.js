@@ -2,8 +2,7 @@ import { CButton, CCol, CImage, CModal, CModalBody, CModalFooter, CModalHeader, 
 import axios from 'axios'
 import logo from 'src/assets/images/avatars/icon.png'
 import { useReactToPrint } from 'react-to-print'
-const url = 'https://yog-seven.vercel.app'
-const url2 = 'https://yog-seven.vercel.app'
+
 import React, { useEffect, useRef, useState } from 'react'
 import moment from 'moment'
 

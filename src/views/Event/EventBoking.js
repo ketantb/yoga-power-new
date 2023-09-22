@@ -64,16 +64,44 @@ const headers =  {
 }
   
  async function toGetRequireData(){
-  const response = axios.get(`${url}/eventDetails/active-event/${pathVal}`,{headers})
+  const response =  axios.get(`${url}/eventDetails/active-event/${pathVal}`,{headers})
   const response1 = axios.get(`${url}/memberForm/${pathVal}`,{headers})
   const response2 = axios.get(`${url}/enquiryForm/${pathVal}`,{headers})
   const response3 = axios.get(`${url}/employeeform/${pathVal}`,{headers})
+  const response4 = axios.get(`${url}/bookingEvent/event-histroy/${pathVal}`,{headers})
+
   
-  const allData = await Promise.all([response,response1,response2,response3])
+  const allData = await Promise.all([response,response1,response2,response3,response4])
   seteRequireData([...allData[0]?.data])
   setClientData([...allData[1]?.data])
   setEnquiryData([...allData[2]?.data])
   setEmployeeData([...allData[3]?.data])
+
+
+  const dateevent = [...allData[4]?.data]
+  console.log(dateevent)
+
+//   // console.log(dateevent)
+//   const map = new Map()
+
+
+//   for (const values of dateevent){
+//     if(!map.has(values.eventUniqID)){
+//       map.set(values.eventUniqID,1)
+//     }else{
+//        const val = map.get(values.eventUniqID)
+//        map.set(values.eventUniqID,val+1)
+//     }
+//   }
+
+//  allData[0]?.data.map((el)=>{
+//     if(map.has(el._id)){
+//         return {...el,attendedClient:map.get(el._id)}
+//     }
+//     return {...el,attendedClient:0}
+// })
+   
+
  }
    
 
@@ -85,6 +113,7 @@ const headers =  {
 
  const selectedEvent = requreData.find((el)=>el._id===bookingData.eventUniqID)
 
+console.log(selectedEvent)
 useEffect(()=>{
   if(!(bookingData.eventUniqID).trim()){
     setBookingData({...obj})
@@ -102,7 +131,7 @@ useEffect(()=>{
     duration:(selectedEvent?.duration||''),
     clientLimit:(selectedEvent?.clientLimit||''),
     fess:(selectedEvent?.fess||''),
-    paid:(selectedEvent?.paid||''),
+    paid:(selectedEvent?.paid||false),
     eventActive:(selectedEvent?.eventActive),
     eventUniqID:bookingData.eventUniqID,
     bookingStartDate:"",
@@ -128,25 +157,26 @@ function clientObj(obj,type){
 }
 
 const saveBokingData = (e) => {
-  if(!obj?.Fullname){
+  if(!bookingData?.clientName){
     alert('Please Select client name')
   }
   e.preventDefault()
-  const path = `/bookingEvent/create`
 
-  fetch(`${ url }${path}`, {
+  fetch(`${ url }/bookingEvent/create`, {
       method: "POST",
       headers: {
           "Authorization": `Bearer ${ token }`,
           'Accept': 'application/json',
           'Content-Type': 'application/json',
       },
-      body: JSON.stringify(bookingData)
+      body: JSON.stringify({...bookingData})
   }).then((resp) => {
       resp.json().then(() => {
           setBookingData({...obj})
           alert('Successfully Book')
       })
+  }).catch((resp)=>{
+    console.log(resp)
   })
   
 }
@@ -308,7 +338,7 @@ const saveBokingData = (e) => {
     required
     onChange={(e)=>{
       setBookingData((prev)=>({...prev,
-        employeeMongoId:e.target.value,
+        employeeMongoId:e.target.value.trim(),
         createdBy:employeeData.find((el)=>el._id===e.target.value)?.FullName
       }))
       
