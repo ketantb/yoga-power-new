@@ -69,39 +69,15 @@ const headers =  {
   const response1 = axios.get(`${url}/memberForm/${pathVal}`,{headers})
   const response2 = axios.get(`${url}/enquiryForm/${pathVal}`,{headers})
   const response3 = axios.get(`${url}/employeeform/${pathVal}`,{headers})
-  const response4 = axios.get(`${url}/bookingEvent/event-histroy/${pathVal}`,{headers})
 
   
-  const allData = await Promise.all([response,response1,response2,response3,response4])
+  const allData = await Promise.all([response,response1,response2,response3])
   seteRequireData([...allData[0]?.data])
   setClientData([...allData[1]?.data])
   setEnquiryData([...allData[2]?.data])
   setEmployeeData([...allData[3]?.data])
 
 
-  const dateevent = [...allData[4]?.data]
-  console.log(dateevent)
-
-//   // console.log(dateevent)
-//   const map = new Map()
-
-
-//   for (const values of dateevent){
-//     if(!map.has(values.eventUniqID)){
-//       map.set(values.eventUniqID,1)
-//     }else{
-//        const val = map.get(values.eventUniqID)
-//        map.set(values.eventUniqID,val+1)
-//     }
-//   }
-
-//  allData[0]?.data.map((el)=>{
-//     if(map.has(el._id)){
-//         return {...el,attendedClient:map.get(el._id)}
-//     }
-//     return {...el,attendedClient:0}
-// })
-   
 
  }
    

@@ -5,10 +5,7 @@ import { CAccordion, CAccordionBody, CAccordionHeader, CAccordionItem, CBadge,
       CTableDataCell
      } from '@coreui/react'
 import React, { useState } from 'react'
-import EventImage from 'src/assets/images/avatars/eventImage.jpg'
-import { CChartLine } from '@coreui/react-chartjs'
-import { cibFacebook } from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
+
 import { useAdminValidation,useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'

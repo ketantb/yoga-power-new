@@ -203,7 +203,7 @@ const EventHistory = () => {
                                                         
     </button>
   </div>
-  <div id="panelsStayOpen-collapseOne" class={`accordion-collapse collapse ${eventId===el.evntId
+  <div id="panelsStayOpen-collapseOne" className={`accordion-collapse collapse ${eventId===el.evntId
 ?"show":''}`}>
     <div class="accordion-body p-1">
     {   <Participants id={eventId}/>}
