@@ -50,6 +50,7 @@ clinetType:'',
 createdBy:"",
 emailAddress:'',
 MemberId:"",
+clientFees:'',
 ...objectValidation
   }
 
@@ -311,6 +312,16 @@ const saveBokingData = (e) => {
     required
     />
   </CCol>
+  {bookingData.paid&&
+   <CCol  md={4} lg={3}>
+   <CFormInput  id="gridCheck" label="Fees"
+   type='number'
+   value={bookingData.clientFees}
+   onChange={(e)=>setBookingData(prev=>({...prev,clientFees:e.target.value}))}
+   required
+   />
+ </CCol>
+  }
   <CCol  md={8} lg={6}>
     <label>Booking  date  Start and End</label>
     <div className='datePiker'>

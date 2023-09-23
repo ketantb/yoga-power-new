@@ -7,7 +7,7 @@ import React,{useState,useEffect} from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
-
+import Participants from './Participants'
 
 
 const EventHistory = () => {
@@ -17,6 +17,7 @@ const EventHistory = () => {
 
     const [eventHistoryData,setEventHistoryData] = useState([])
     const pathVal = useAdminValidation('Master')
+    const [eventId,setEventId] = useState("")
 
 
 
@@ -28,13 +29,15 @@ const EventHistory = () => {
 
       const response = axios.get(`${url}/bookingEvent/event-histroy/${pathVal}`,{headers})
       const allData = await Promise.all([response])
-      setEventHistoryData([...allData[0]?.data])
+      setEventHistoryData([...allData[0]?.data].reverse())
      }
 
      useEffect(()=>{
         toGetRequireData()
     },[])
 
+
+    console.log(eventHistoryData)
     
 
     // const compareFunction = (date,endDate,val)=>{
@@ -60,7 +63,9 @@ const EventHistory = () => {
     //   }
     //  }
 
-    console.log(eventHistoryData)
+    console.log(eventId)
+    console.log(eventId)
+
 
   return (
     <CCard className='mt-3 border-0'>
@@ -106,33 +111,42 @@ const EventHistory = () => {
                 </CCardBody>
             </CCard>
         </CForm>
-        <CRow className='p-0'>
-            {
+
+
+ <div class="accordion" id="accordionPanelsStayOpenExample">
+
+ {
                 eventHistoryData.map((el,i)=>
-                <CCol lg={12} sm={12} className='mt-0 p-0' key={i}>
-                <CAccordion activeItemKey={2} key={i} className='p-0 m-1 ' >
-                    <CAccordionItem itemKey={i} key={i} className='p-0 m-0 '>
-                        <CAccordionHeader className='p-0 m-0 d-flex flex-column'  >
+
+                
+  <div class="accordion-item my-4 border">
+  <div class="accordion-header">
+      
+  <CCol lg={12} sm={12} className='mt-0 p-0' key={i} >
+        
                             {/* <CCol> */}
                             <CCol xs={12}  className='d-flex flex-column'>
-                             <div className='d-flex'>
-                              <h6 >TOTAL ATTENDED : {el.attendedClient}</h6>
-                              <h6 className='mx-3' >CLIENT LIMIT : {el.attendedClient}</h6>
-                             </div>      
+                                
 
                             {/* </CCol> */}
+
+                                 
+
                             <div  className='w-100' style={{overflowX:"scroll"}}>
-                            <CTable  className=' m-0 mt-3 p-0' align="middle" bordered  hover responsive scrollable  >
-                            <CTableHead className='p-0 m-0'  >
+                            <CTable  className=' m-0 p-0' align="middle" bordered  hover responsive scrollable  >
+                            <CTableHead className='p-0 m-0' >
                                     <CTableHeaderCell className='p-2 '>Sr.No</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event Banner</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Event Name</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event Start Date</CTableHeaderCell>
+                                    <CTableHeaderCell className='p-2'>Event End Date </CTableHeaderCell>
+
+
                                     <CTableHeaderCell className='p-2'>Host Name</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Topic</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Event venue</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Start Time</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Duration</CTableHeaderCell>
-                                    <CTableHeaderCell className='p-2'>Event Start Date</CTableHeaderCell>
-                                    <CTableHeaderCell className='p-2'>Event End Date</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Fess</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Event Status</CTableHeaderCell>
                                     <CTableHeaderCell className='p-2'>Comment of cancel event</CTableHeaderCell>
@@ -141,7 +155,8 @@ const EventHistory = () => {
                             <CTableRow>
                                
                                   <CTableDataCell>{i+1}</CTableDataCell>
-                                  {/* <div 
+                             
+                                  <CTableDataCell><div 
                                 className="border-gray rounded-circle"
                                 style={{width:'100px'}}
                                 >
@@ -149,15 +164,16 @@ const EventHistory = () => {
                                   width='100%'
                                   src={el.eventBanner}
                                   />
-                                </div> */}
-                                  <CTableDataCell>{el.eventName}</CTableDataCell>
+                                </div></CTableDataCell>
+                                <CTableDataCell>{el.eventName}</CTableDataCell>
+                                <CTableDataCell>{new Date(el.eventStartDate).toLocaleDateString()}</CTableDataCell>
+                                  <CTableDataCell>{new Date(el.eventEndDate ).toLocaleDateString()}</CTableDataCell>
+
                                   <CTableDataCell>{el.hostName}</CTableDataCell>
                                   <CTableDataCell>{el.service}</CTableDataCell>
                                   <CTableDataCell>{el.eventType}</CTableDataCell>
                                   <CTableDataCell>{el.eventTime}</CTableDataCell>
                                   <CTableDataCell>{el.duration}</CTableDataCell>
-                                  <CTableDataCell>{new Date(el.eventStartDate).toLocaleDateString()}</CTableDataCell>
-                                  <CTableDataCell>{new Date(el.eventEndDate ).toLocaleDateString()}</CTableDataCell>
                                   <CTableDataCell>{el.paid?el.fess:<CButton size='sm'>Free</CButton>}</CTableDataCell>
                                   <CTableDataCell>
                                         
@@ -177,67 +193,28 @@ const EventHistory = () => {
                         </CTable>
                             </div>
                             </CCol>                         
-                        </CAccordionHeader>
-                        <CAccordionBody>
-                            <CListGroup>
-                                <CListGroupItem component="a" href="#" >
-                                    <CRow>
-                                        <CCol>Sr. No</CCol>
-                                        <CCol>Date</CCol>
-                                        <CCol>Attendance ID</CCol>
-                                        <CCol>Client Name</CCol>
-                                        <CCol>Joining time</CCol>
-                                        <CCol>Attendance</CCol>
-                                        <CCol>Details</CCol>
-                                    </CRow>
-                                </CListGroupItem>
-                                <CListGroupItem component="a" href="#" >
-                                    <CRow>
-                                        <CCol>1</CCol>
-                                        <CCol>25-10-2022</CCol>
-                                        <CCol>CLIENT456</CCol>
-                                        <CCol>Sejal</CCol>
-                                        <CCol>11 pm</CCol>
-                                        <CCol>P</CCol>
-                                        <CCol>
-                                            <CButton>View</CButton>
-                                        </CCol>
-                                    </CRow>
-                                </CListGroupItem>
-                                <CListGroupItem component="a" href="#" >
-                                    <CRow>
-                                        <CCol>2</CCol>
-                                        <CCol>25-10-2022</CCol>
-                                        <CCol>CLIENT456</CCol>
-                                        <CCol>Sejal</CCol>
-                                        <CCol>11 pm</CCol>
-                                        <CCol>P</CCol>
-                                        <CCol>
-                                            <CButton>View</CButton>
-                                        </CCol>
-                                    </CRow>
-                                </CListGroupItem>
-                                <CListGroupItem component="a" href="#" >
-                                    <CRow>
-                                        <CCol>3</CCol>
-                                        <CCol>25-10-2022</CCol>
-                                        <CCol>CLIENT456</CCol>
-                                        <CCol>Sejal</CCol>
-                                        <CCol>11 pm</CCol>
-                                        <CCol>P</CCol>
-                                        <CCol>
-                                            <CButton>View</CButton>
-                                        </CCol>
-                                    </CRow>
-                                </CListGroupItem>
-                            </CListGroup>
-                        </CAccordionBody>
-                    </CAccordionItem>
-                </CAccordion>
+                       
             </CCol>
+    <button onClick={()=>setEventId(prev=>prev=== el.evntId?" ":el.evntId)} class="accordion-button bg-body" type="button" data-coreui-toggle="collapse" data-coreui-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+    <div className='d-flex text-black w-50' >
+                              <p >TOTAL ATTENDED : {el.attendedClient}</p>
+                              <p className='mx-3' >CLIENT LIMIT : {el.clientLimit}</p>
+                             </div> 
+                                                        
+    </button>
+  </div>
+  <div id="panelsStayOpen-collapseOne" class={`accordion-collapse collapse ${eventId===el.evntId
+?"show":''}`}>
+    <div class="accordion-body p-1">
+    {   <Participants id={eventId}/>}
+    </div>
+  </div>
+</div>
                 )
-            }
-        </CRow>
+            }  
+
+ 
+</div>
     </div>
 </CCard> 
   )
