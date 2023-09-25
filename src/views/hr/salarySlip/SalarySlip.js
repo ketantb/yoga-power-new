@@ -128,7 +128,10 @@ const SalarySlip = ({ empData, showInvoiceModal, setInvoceModal }) => {
                                     <CTableDataCell>{empData.TPD}%</CTableDataCell>
                                     <CTableDataCell>{empData.PT}</CTableDataCell>
                                     <CTableDataCell>{empData.advancedSalaryDedct}</CTableDataCell>
-                                    <CTableDataCell>{+empData.advancedSalaryDedct + +empData.PT + +empData.TPD +empData.TDS}</CTableDataCell>
+                                    <CTableDataCell>{
+                                    +empData.advancedSalaryDedct + +empData.PT + +
+                                    ((+empData.BasicSalary/100)*+empData.TPD )+
+                                    +((+empData.BasicSalary/100)*+empData.TDS )}</CTableDataCell>
 
                                 </CTableRow>
                             </CTableBody>
