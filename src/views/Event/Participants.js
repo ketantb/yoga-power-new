@@ -96,7 +96,7 @@ function toFilterData(data){
             <CTableHeaderCell className='p-2 '>Sr.No</CTableHeaderCell>
             <CTableHeaderCell className='p-2'>Client Name</CTableHeaderCell>
             <CTableHeaderCell className='p-2'>Client Id</CTableHeaderCell>
-            <CTableHeaderCell className='p-2'>Boking Start Date</CTableHeaderCell>
+            <CTableHeaderCell className='p-2'>Booking Start Date</CTableHeaderCell>
             <CTableHeaderCell className='p-2'>Booking end Date</CTableHeaderCell>
             <CTableHeaderCell className='p-2'>Bookig Time</CTableHeaderCell>
             <CTableHeaderCell className='p-2'>Fees</CTableHeaderCell>
@@ -138,7 +138,7 @@ function toFilterData(data){
        
     {toFilterData(parteCipentsData).slice(paging * 10, paging * 10 + 10).map((el,i)=>
                <CTableRow color={el.clinetType==='Client'?'':'success'}>
-                      <CTableDataCell>{(toFilterData(parteCipentsData).length - i) - (paging * 10)}</CTableDataCell>
+                      <CTableDataCell>{i+ 1 + (paging * 10)}</CTableDataCell>
                       <CTableDataCell>{el.clinetType==='Client'
                       ?<Link  style={{ textDecoration: 'none' }} to={`/clients/member-details/${el.MemberId}/1`} >
                       {el.clientName}</Link>:el.clientName
@@ -180,3 +180,26 @@ function toFilterData(data){
 }
 
 export default Participants
+
+// just assume 
+
+const mongoDbCoolection =[
+    {
+        name:'hellonew'
+    },
+    {
+        name:'newworld'
+    },
+    {
+        name:'newCipt'
+    },
+    {
+        name:'newPalace'
+    },
+    {
+        name:'cnjencfje',
+    }
+]
+
+//and i want to both data beacus my params value is new 
+// and tell me which oprator and query can do that to me 
