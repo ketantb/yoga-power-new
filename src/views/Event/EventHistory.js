@@ -130,37 +130,29 @@ const EventHistory = ({activeKey}) => {
     <div>
 <CTable borderColor={'light'}>
   <CTableHead className='p-0 m-0 border-0' >
-                                    <CTableDataCell className='p-2 border-0'>Sr.No</CTableDataCell>
                                     <CTableDataCell className='p-2 border-0'>Event Name</CTableDataCell>
                                     <CTableDataCell className='p-2 border-0'>Event Start Date</CTableDataCell>
-                                    <CTableDataCell className='p-2 border-0'>Event End Date </CTableDataCell>
 
 
                                     <CTableDataCell className='p-2 border-0'>Host Name</CTableDataCell>
                                     <CTableDataCell className='p-2 border-0'>Topic</CTableDataCell>
                                     <CTableDataCell className='p-2 border-0'>Event venue</CTableDataCell>
-                                    <CTableDataCell className='p-2 border-0'>Start Time</CTableDataCell>
-                                    <CTableDataCell className='p-2 border-0'>Duration</CTableDataCell>
+
     </CTableHead>
     <CTableHead className='p-0 m-0 border-0'>
-         <CTableDataCell className='p-2 border-0'><CFormInput  disabled value={searchFilter.search1} 
-          onChange={(e)=>setSearchFilter((prev)=>({...prev,search1:e.target.value}))} /> </CTableDataCell>
+      
           <CTableDataCell className='p-2 border-0' ><CFormInput  value={searchFilter.search2} 
           onChange={(e)=>setSearchFilter((prev)=>({...prev,search2:e.target.value}))} /> </CTableDataCell>
           <CTableDataCell className='p-2 border-0' ><CFormInput  value={searchFilter.search3} 
           onChange={(e)=>setSearchFilter((prev)=>({...prev,search3:e.target.value}))} /> </CTableDataCell>
-          <CTableDataCell className='p-2 border-0' ><CFormInput  value={searchFilter.search4} 
-          onChange={(e)=>setSearchFilter((prev)=>({...prev,search4:e.target.value}))} /> </CTableDataCell>
+        
           <CTableDataCell  className='p-2 border-0'><CFormInput  value={searchFilter.search5} 
           onChange={(e)=>setSearchFilter((prev)=>({...prev,search5:e.target.value}))} /> </CTableDataCell>
           <CTableDataCell className='p-2 border-0' ><CFormInput value={searchFilter.search6} 
           onChange={(e)=>setSearchFilter((prev)=>({...prev,search6:e.target.value}))} /> </CTableDataCell>
           <CTableDataCell className='p-2 border-0' ><CFormInput  value={searchFilter.search7} 
           onChange={(e)=>setSearchFilter((prev)=>({...prev,search7:e.target.value}))} /> </CTableDataCell>
-          <CTableDataCell className='p-2 border-0' ><CFormInput  value={searchFilter.search8} 
-          onChange={(e)=>setSearchFilter((prev)=>({...prev,search8:e.target.value}))} /> </CTableDataCell>
-          <CTableDataCell className='p-2 border-0' ><CFormInput   value={searchFilter.search9} 
-          onChange={(e)=>setSearchFilter((prev)=>({...prev,search9:e.target.value}))} /> </CTableDataCell>           
+              
                                   
      </CTableHead> 
   </CTable>                          
