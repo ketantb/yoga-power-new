@@ -10,7 +10,7 @@ import { useAdminValidation } from '../Custom-hook/adminValidation'
 import Participants from './Participants'
 
 
-const EventHistory = () => {
+const EventHistory = ({activeKey}) => {
     let user = JSON.parse(localStorage.getItem('user-info'))
     const token = user.token
     const url = useSelector((el) => el.domainOfApi)
@@ -34,7 +34,7 @@ const EventHistory = () => {
 
      useEffect(()=>{
         toGetRequireData()
-    },[])
+    },[activeKey])
 
 
     console.log(eventHistoryData)

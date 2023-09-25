@@ -24,7 +24,7 @@ import {
   cilTask,
   cilUser,
   cilUserPlus,
-  cilClock,
+  cilSpa,
   cilCalendarCheck,
   cilFingerprint,
   cilLinkAlt,
@@ -40,6 +40,8 @@ import { useDispatch,useSelector } from 'react-redux'
 import { leadsSuperRight } from 'src/views/hr/Rights/rightsValue/crmRightsValue'
 import menImage from './../../assets/images/avatars/profile_icon.png'
 import { useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
+import { SiEventstore } from 'react-icons/si'
+
 const AppHeaderDropdown = () => {
 
   const isEmployee = useSelector((el)=>el.isEmployee)
@@ -133,7 +135,6 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilSettings} className="me-2" />
          User  Profile
         </CDropdownItem>
-        /hr/employee-detail/:isEmployee/:id
         <CDropdownItem  className='text-start' onClick={()=>handleNavigateFun('/company-profile')}>
           <CIcon icon={cilSettings} className="me-2" />
          Company  Profile
@@ -176,8 +177,6 @@ const AppHeaderDropdownForm = () => {
     
     <CDropdown variant="nav-item">
  
-
-
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
         <CIcon icon={cilUserPlus} size="lg" />
       </CDropdownToggle>
@@ -224,51 +223,14 @@ const AppHeaderDropdownForm = () => {
 
 const AppHeaderDropdownBook = () => {
   return (
-    <CDropdown variant="nav-item">
-      <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CIcon icon={cilClock} size="lg" />
-      </CDropdownToggle>
-      <CDropdownMenu className="pt-0" placement="bottom-end">
+   
+<CDropdown variant="nav-item">
 
-        <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/live-class">
-            <CIcon icon={cilBell} className="me-2"
-              tabIndex={-1}
-            />
-            Live Classes
-          </Link>
-        </CDropdownItem>
-        <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/offline-class">
-            <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
-            Offline Batch
-          </Link>
-        </CDropdownItem>
-        <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/pt-class">
-            <CIcon icon={cilTask} className="me-2" />
-            PT Classes
-          </Link>
-        </CDropdownItem>
-        <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/ttc">
-            <CIcon icon={cilCommentSquare} className="me-2" />
-            TTC
-          </Link>
-        </CDropdownItem>
-        <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/event">
-            <CIcon icon={cilCommentSquare} className="me-2" />
-            Event
-          </Link>
-        </CDropdownItem>
-        <CDropdownItem >
-          <CIcon icon={cilUser} className="me-2" />
-          Venue
-        </CDropdownItem>
-        <CDropdownDivider />
-      </CDropdownMenu>
-    </CDropdown>
+<Link style={{ textDecoration: 'none',color:'GrayText' }} to="/forms/event">
+<CIcon icon={cilSpa} size="lg" />
+</Link>
+ 
+  </CDropdown>
   )
 }
 

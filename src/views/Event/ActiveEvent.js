@@ -9,7 +9,7 @@ import axios from 'axios'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
 import { useSelector } from 'react-redux'
 
-const ActiveEvent = () => {
+const ActiveEvent = ({activeKey}) => {
 
 
 
@@ -39,7 +39,7 @@ const headers =  {
 
  useEffect(()=>{
   toGetRequireData()
- },[])
+ },[activeKey])
 
  console.log(actveEventData)
   return (

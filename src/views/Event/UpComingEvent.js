@@ -9,7 +9,7 @@ import axios from 'axios'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
 import { useSelector } from 'react-redux'
 
-const UpComingEvent = () => {
+const UpComingEvent = ({activeKey}) => {
 
 
 
@@ -39,9 +39,8 @@ const headers =  {
 
  useEffect(()=>{
   toGetRequireData()
- },[])
+ },[activeKey])
 
- console.log(actveEventData)
   return (
     actveEventData.map((el)=><EeventCard  eventObj={el} />)
   )

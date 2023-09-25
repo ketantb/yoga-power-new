@@ -80,15 +80,15 @@ const Event = () => {
             </CNav>
             <CTabContent>
             <CTabPane role="tabpanel" aria-labelledby="profile-tab" className='py-5' visible={activeKey === 1}>
-                   <ActiveEvent   />
+                   <ActiveEvent  activeKey={activeKey}  />
             </CTabPane>
             <CTabPane role="tabpanel" aria-labelledby="profile-tab" className='py-5 ' visible={activeKey === 2}>
-                   <UpComingEvent   />
+                   <UpComingEvent   activeKey={activeKey} />
             </CTabPane>
             <CTabPane role="tabpanel" aria-labelledby="profile-tab" className='py-5' visible={activeKey === 3}>
-                   <EventHistory   />
+                   <EventHistory   activeKey={activeKey}  />
             </CTabPane>
-            <CTabPane role="tabpanel" aria-labelledby="profile-tab" className='py-5' visible={activeKey === 4}>
+            <CTabPane role="tabpanel"  aria-labelledby="profile-tab" className='py-5' visible={activeKey === 4}>
                    <EventBoking   />
             </CTabPane>
             </CTabContent>
