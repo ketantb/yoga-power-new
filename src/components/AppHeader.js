@@ -29,6 +29,7 @@ import { AppHeaderDropdown, AppHeaderDropdownForm } from './header/index'
 import logo from 'src/assets/images/avatars/YPI-Logo-2022.png'
 import { AppHeaderDropdownBook, AppHeaderDropdownCheckIn, AppHeaderDropdownLink,AppHeaderDropdownBasket,ReminderMessageDropdown } from './header/AppHeaderDropdown'
 import { Link } from 'react-router-dom'
+import GlobelSearchFilter from './GlobelsearcFilter/GlobelSearchFilter'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -48,14 +49,17 @@ const AppHeader = () => {
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
-            <CInputGroup className="ml-3">
-              <CFormInput
+            {/* <CInputGroup className="ml-3"> */}
+              {/* <CFormInput
                 placeholder="Search.."
               />
               <CButton type="button" color="primary" id="button-addon2">
                 Search
-              </CButton>
-            </CInputGroup>
+              </CButton> */}
+            {/* </CInputGroup> */}
+            <div style={{width:'300px'}}>
+               <GlobelSearchFilter/>
+            </div>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav>

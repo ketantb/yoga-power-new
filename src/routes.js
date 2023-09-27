@@ -150,6 +150,8 @@ const PayrollMaster = React.lazy(()=>import('./views/Master/HRMaster/PayrollMast
 const EmpJoiningMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpJoining'))
 const EmpPerformanceMaster = React.lazy(()=>import('./views/Master/HRMaster/EmpPrformanceMaster'))
 const InvoiceMasterLT = React.lazy(()=>import('./views/Master/centerSetup/InvoiceMaster'))
+const Notification = React.lazy(()=>import('./views/Master/notification/Notification'))
+
 // Base
 const TrainerSalarySlipMaster = React.lazy(()=>import('./views/Master/HRMaster/TrainerSalarySlipMaster'))
 // const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
@@ -185,8 +187,8 @@ const   EmpDetails  = React.lazy(()=> import('./views/hr/Hr-Employee-Details/Emp
 
 
 const routes = [
-  { path: '/', exact: true, name: 'Login Page' },
-  { path: '/login', name: 'Login', element: Login },
+  { path: '/', exact: true, name: 'Login Page',valid:true },
+  { path: '/login', name: 'Login',valid:true, element: Login },
   { path: '/profile/:userId', name: 'Profile', element: UserProfile },
   { path: '/company-profile', name: 'Company Profile', element: UserCompanyProfile },
 
@@ -245,7 +247,7 @@ const routes = [
   { path: '/clients/client-management/left-clients', name: 'Left Clients', element: LeftClients },
   { path: '/clients/service-call', name: 'Member Calls', element: ServiceCall },
   { path: '/clients/all-service', name: 'All Service', element: AllService },
-  { path: '/clients/member-details/:id/:i', name: 'Member Details', element: MemberDetails },
+  { path: '/clients/member-details/:id/:i', name: 'Member Details', element: MemberDetails,valid:true },
   { path: '/clients/sales-call', name: 'Sales Call', element: SalesCall },
   { path: '/clients/servicesrate-card', name: 'ServicesRate Card', element: ServicesRateCard },
   { path:'/clients/client-management/client-support',name:'Client Support',element:ClientSupport},
@@ -334,15 +336,15 @@ const routes = [
   { path:'/hr/all-class-report',name:'All Classs Report',element:AllClassReport},
   { path:'/hr/shift-timing-managment',name:'Shift Timing ',element:ShiftTimingManagment},
   { path:'/hr/all-righthr',name:'All Right',element:AllRightHr},
-  { path:'/hr/member-rightshr/:emailUniqId',name:'Rights',element:Rights},
+  { path:'/hr/member-rightshr/:emailUniqId',valid:true,name:'Rights',element:Rights},
   { path:'/hr/emp-performance',name:'Emp Performance',element:EmpPerformance},
   { path:'/hr/view-staff-target',name:'View Staff Target',element:Stafftarget},
   { path:'/hr/emp-target-sheet',name:'Employee Target Sheet',element:EmployeeTargetSheet},
-  { path:'/hr/employee-detail/:id',name:'Employee Details',element:EmpDetails},
-  { path:'/hr/employee-profile/:isEmployee/:id',name:'Employee Details',element:EmpDetails},
-  { path:'/hr/employee-profile-edit/:id2/:isEdit',name:'Employee Details',element:EmployeeProfile},
-  { path:'/hr/employee-right/:emailUniqId/:isRights',name:'Rights',element:AllRightHr},
-  { path:'/hr/hrPolicyPage/:title',name:'Hr Policy Page',element:HrPolicyPage},
+  { path:'/hr/employee-detail/:id',valid:true,name:'Employee Details',element:EmpDetails},
+  { path:'/hr/employee-profile/:isEmployee/:id',valid:true,name:'Employee Details',element:EmpDetails},
+  { path:'/hr/employee-profile-edit/:id2/:isEdit',valid:true,name:'Employee Details',element:EmployeeProfile},
+  { path:'/hr/employee-right/:emailUniqId/:isRights',valid:true,name:'Rights',element:AllRightHr},
+  { path:'/hr/hrPolicyPage/:title',valid:true,name:'Hr Policy Page',element:HrPolicyPage},
 
   // Courses
   {path:'/course' ,name:'TTC' ,element:TtcClientDetails,exact:true},
@@ -396,6 +398,8 @@ const routes = [
   { path:'/master/marketing/automated-communication',name:'Center Partners',element: AutomatedCommunication},
   { path:'/master/center-setup/invoice-master',name:'Invoice Master',element: InvoiceMasterLT},
   { path:'/master/event-master',name:'Event Master',element:EventMaster},
+  { path:'/master/notification',name:'Notification',element:Notification},
+
 
   //Form
   { path: '/forms/enquiry-form', name: 'Enquiry Form', element: EnquiryForm },

@@ -23,6 +23,7 @@ import {
   cilStar,
   cilUser,
   cilWeightlifitng,
+  cilCommentSquare
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -752,6 +753,14 @@ const _nav = [
     to: '/master/support',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
     id:'masterClientFeedback'
+  },
+  {
+    component: CNavItem,
+    name: 'Notification',
+    to: '/master/notification',
+    icon: <CIcon icon={cilCommentSquare
+    } customClassName="nav-icon" />,
+    id:'masterClientNotification'
   },
   {
     component: CNavGroup,
