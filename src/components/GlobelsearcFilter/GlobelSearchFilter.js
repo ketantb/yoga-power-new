@@ -66,7 +66,6 @@ console.log(response1?.data?.allCollection)
       </div>
       <div className='member-content-data-li-c' style={{display:`${visibale?'block':'none'}`}}>
       <div className="search-data-li-c">
-          <div ><AiOutlineSearch/></div>
           <input spellcheck="false" type="text" placeholder="Search" className='w-100'
           value={inputvalName}
            onChange={(e)=>setInputValName(e.target.value)}/> 
