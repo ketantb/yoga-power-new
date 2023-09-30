@@ -49,10 +49,20 @@
     padding: 0 10px;
   }
   .search-data-li-c >input{
-   outline: none;
-   border: none;
    font-size: 17px;
+   margin: 0px 3px;
+   border-color: rgba(0, 81, 255, 0.451);
+   border-radius: 5px;
   }
+  .search-data-li-c >input:focus{
+    font-size: 17px;
+    margin: 0px 3px;
+    border-color: rgba(0, 81, 255, 0.283);
+    outline-color: rgba(0, 81, 255, 0.283);
+    border-radius: 5px;
+   }
+   
+
   .member-content-data-li-c{
     box-shadow: 1px 1px 5px 3px rgba(21, 21, 82, 0.199);
     margin-top: 20px;
@@ -64,3 +74,4 @@
     padding: 10px;
 
   }
+  

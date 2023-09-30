@@ -190,7 +190,7 @@ const routes = [
   { path: '/', exact: true, name: 'Login Page',valid:true },
   { path: '/login', name: 'Login',valid:true, element: Login },
   { path: '/profile/:userId', name: 'Profile', element: UserProfile },
-  { path: '/company-profile', name: 'Company Profile', element: UserCompanyProfile },
+  { path: '/company-profile', name: 'Company Profile', element: UserCompanyProfile,mongoCollectionName:'CompanyProfile'},
 
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   {
@@ -229,19 +229,19 @@ const routes = [
 
 
   //Leads
-  { path: '/leads', name: 'Leads', element: AllEnquires, exact: true },
-  { path: '/leads/all-enquires', name: 'All Enquires', element: AllEnquires },
-  { path: '/leads/enquires-appointment', name: 'Enquiry Appointment', element: EnquireAppoitment },
-  { path: '/leads/trial-updated', name: 'Trial Updated', element: TrialUpdated },
-  { path: '/leads/followups-scheduling', name: 'Prospect', element: FollowupScheduling },
-  { path: '/leads/followups-call-report', name: 'Calls Report', element: FollowupCallReport },
-  { path: '/leads/cold-enquires', name: 'Cold Enquires', element: ColdEnquires },
+  { path: '/leads', name: 'Leads', element: AllEnquires, exact: true},
+  { path: '/leads/all-enquires', name: 'All Enquires', element: AllEnquires,mongoCollectionName:'enquiryforms'},
+  { path: '/leads/enquires-appointment', name: 'Enquiry Appointment', element: EnquireAppoitment,mongoCollectionName:'Appointment' },
+  { path: '/leads/trial-updated', name: 'Trial Updated', element: TrialUpdated,mongoCollectionName:'Trial Session' },
+  { path: '/leads/followups-scheduling', name: 'Prospect', element: FollowupScheduling,mongoCollectionName:'enquiryforms' },
+  { path: '/leads/followups-call-report', name: 'Calls Report', element: FollowupCallReport,mongoCollectionName:'prospect' },
+  { path: '/leads/cold-enquires', name: 'Cold Enquires', element: ColdEnquires,mongoCollectionName:'Cold' },
 
   //Clients
-  { path: '/clients', name: 'Clients', element: ServiceCall, exact: true },
-  { path: '/clients/client-management', name: 'Client Management', element: AllClients, exact: true },
+  // { path: '/clients', name: 'All Clients', element: AllClients, exact: true,mongoCollectionName:"memberfroms" },
+  // { path: '/clients/client-management', name: 'All Clients', element: AllClients, exact: true,mongoCollectionName:"memberfroms" },
   { path: '/clients/client-management/active-clients', name: 'Active Clients', element: ActiveClients },
-  { path: '/clients/client-management/all-clients', name: 'All Clients', element: AllClients },
+  { path: '/clients/client-management/all-clients', name: 'All Clients', element: AllClients,mongoCollectionName:"memberfroms" },
   { path: '/clients/client-management/renewals-clients', name: 'Renewals Clients', element: RenewalsClients },
   { path: '/clients/client-management/renewed-clients', name: 'Renewed Clients', element: RenewedClients },
   { path: '/clients/client-management/left-clients', name: 'Left Clients', element: LeftClients },

@@ -2,23 +2,19 @@
 import { useEffect, useState } from 'react'
 import './GlobelSerachFilter.css'
 import {AiOutlineDown,AiOutlineUp,AiOutlineSearch} from 'react-icons/ai'
-import {CFormCheck} from '@coreui/react'
+import {CFormCheck,CFormInput,CButton} from '@coreui/react'
 import routes from 'src/routes'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 const GlobelSearchFilter = ({data,getData,employeeId}) => {
     const [visibale,setVisibale] = useState(false)
     const [inputvalName,setInputValName] = useState('')
     const [selectedName,setSelectedName] = useState('Search...')
+    const url1 = useSelector((el)=>el.domainOfApi) 
+    const [routesFilterData,setRoutesFilterData] = useState(routes)
     const navigate = useNavigate()
-
-function getDataFun(event,el){
-       if(event.target.id==='data-li-c'){
-          getData(el)
-          setSelectedName(el?.FullName)
-          setVisibale(false)
-       }
-}
 
   useEffect(()=>{
 if(employeeId){
@@ -27,6 +23,39 @@ if(employeeId){
 }
   },[employeeId,data?.length])
 
+
+  let user = JSON.parse(localStorage.getItem('user-info'))
+  const token = user.token;
+  const getRequireData = async ()=>{
+    try{
+   
+    const headers = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }
+
+    const response1 = await axios.get(`${url1}/search-filter/${inputvalName.trim()}`,headers)
+
+console.log(response1?.data?.allCollection)
+    if(response1.status===200&&response1?.data){
+      const data = [...response1?.data?.allCollection]
+      const filterRoutes = routes.filter((el)=>{
+        return ((el?.name).toLocaleLowerCase().includes(inputvalName.toLocaleLowerCase())
+         ||data.includes(el.mongoCollectionName))
+      })
+
+      setRoutesFilterData(filterRoutes)
+    }
+
+}catch(error){
+    console.log(error)
+}
+}
+
+ useEffect(()=>{
+    getRequireData()
+},[])
 
   return (
  <div className='input-containenr'>
@@ -39,15 +68,18 @@ if(employeeId){
       <div className="search-data-li-c">
           <div ><AiOutlineSearch/></div>
           <input spellcheck="false" type="text" placeholder="Search" className='w-100'
-           value={inputvalName}
-           onChange={(e)=>setInputValName(e.target.value)}/>
+          value={inputvalName}
+           onChange={(e)=>setInputValName(e.target.value)}/> 
+           <CButton onClick={()=>getRequireData()}>
+             Search 
+           </CButton>
         </div>
       <div className="member-content" calssName='w-100'>
       
         <ul className="options-data-li-c">
         
 
-        {routes?.filter((el)=>((el?.name).toLocaleLowerCase().includes(inputvalName.toLocaleLowerCase()) && (!el.valid))).map((el)=>{
+        {routesFilterData.map((el)=>{
                         return <li  id='data-li-c' onClick={()=>navigate(el.path)} >{(el?.name )}
                         </li>
                     })} 
@@ -55,6 +87,7 @@ if(employeeId){
       </div>
       </div>
  </div>
+
   )
 }
 
