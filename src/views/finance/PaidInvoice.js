@@ -80,9 +80,7 @@ const PaidInvoice = () => {
         
         setAllInvoiceData(data.reverse())     
         setResult(functionRemoveDuplicate(data.map((el)=>el.ServiceName?.toLowerCase()?.trim())))  
-        setEmployeeData(functionRemoveDuplicate(data.map((el)=>el.counseller)))
-                
-                
+        setEmployeeData(functionRemoveDuplicate(data.map((el)=>el.counseller)))                                
     } 
     
   
@@ -307,7 +305,8 @@ const PaidInvoice = () => {
                             </CTableHead>
                             <CTableBody>
                                 {AllInvoiceData.filter((el)=>{
-                                 return el.counseller?.includes(selectedEmployee)})
+                                 return el.counseller?.includes(selectedEmployee) && (+el.pendingAmount>=0)
+                                })
                                 .filter((el)=>{ if(startDate&&endDate){
                                 return compareDate(startDate,el.createdAt,endDate)}return true})
                                 .filter((el)=>{if(serviceName){num =0

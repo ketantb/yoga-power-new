@@ -39,6 +39,8 @@ const ServiceRevenue = () => {
 
     const url1 = useSelector((el)=>el.domainOfApi) 
     const pathVal =  useAdminValidation()
+    const pathValMaster =  useAdminValidation('Master')
+
     const [result, setResult] = useState([]);
     const [serviceRevinueData,setServiceRevenueData] = useState([])
     const [serviceName,setServiceName] = useState('')
@@ -54,7 +56,7 @@ const [pagination, setPagination] = useState(10)
 
 
     function getPackage() {
-        axios.get(`${url1}/packagemaster`, {
+        axios.get(`${url1}/packageMaster/${pathValMaster}`, {
     
         })
             .then((res) => {

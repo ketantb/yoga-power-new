@@ -159,21 +159,9 @@ setYears([...new Set(AllYear.map((el)=>el.year)).filter((el)=>el)])
 
 }
 
-function getPackage() {
-    axios.get(`${url1}/packagemaster`, {headers
 
-    })
-        .then((res) => {
-            setserviceData(res.data)
-            console.log(res.data)
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-}
 useEffect(()=>{
 getAllData()
-getPackage()                    
 },[])
 
 

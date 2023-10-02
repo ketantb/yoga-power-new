@@ -21,8 +21,6 @@ import {
     CPaginationItem,
 } from '@coreui/react'
 
-import CIcon from '@coreui/icons-react'
-import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
 import {BsEye } from 'react-icons/bs'
 
 import { useSelector } from "react-redux";
@@ -31,7 +29,6 @@ import axios from 'axios'
 import { MdDelete } from 'react-icons/md';
 import YogaSpinnar from '../theme/YogaSpinnar';
 import {Link} from 'react-router-dom'
-import moment from 'moment/moment'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
 import { financeRight } from '../hr/Rights/rightsValue/erpRightsValue'
 
@@ -40,16 +37,12 @@ const Invoice = React.lazy(()=>import('../clients/Invoice'))
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))
-    console.log(user);
     const token = user.token;
-    const username = user.user.username;
 
 
 const TotalInvoice = () => {
 
     const pathVal =    useAdminValidation()
-    const pathValMaster =    useAdminValidation('Master')
-
 
     const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights?.erpFinance?.items
     ?.erpInvoices?.items?.erpTotalInvoice?.rights) 

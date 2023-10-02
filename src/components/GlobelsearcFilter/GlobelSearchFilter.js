@@ -7,6 +7,7 @@ import routes from 'src/routes'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import { useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
 
 const GlobelSearchFilter = ({data,getData,employeeId}) => {
     const [visibale,setVisibale] = useState(false)
@@ -15,6 +16,8 @@ const GlobelSearchFilter = ({data,getData,employeeId}) => {
     const url1 = useSelector((el)=>el.domainOfApi) 
     const [routesFilterData,setRoutesFilterData] = useState(routes)
     const navigate = useNavigate()
+
+    const addminId = useUniqAdminObjeact().partnerAdminMongoId
 
   useEffect(()=>{
 if(employeeId){
@@ -35,16 +38,18 @@ if(employeeId){
         }
     }
 
-    const response1 = await axios.get(`${url1}/search-filter/${inputvalName.trim()}`,headers)
+    const response1 = await axios.get(`${url1}/search-filter/${inputvalName.replace(/ /g, '$dv2e62e').trim()}/${addminId}`,headers)
 
-console.log(response1?.data?.allCollection)
     if(response1.status===200&&response1?.data){
       const data = [...response1?.data?.allCollection]
       const filterRoutes = routes.filter((el)=>{
         return ((el?.name).toLocaleLowerCase().includes(inputvalName.toLocaleLowerCase())
-         ||data.includes(el.mongoCollectionName))
+         ||data.includes(el.mongoCollectionName)||
+         el?.mongoCollectionNameArr?.some((el)=>{
+          return data.includes(el)
+         })
+         )
       })
-
       setRoutesFilterData(filterRoutes)
     }
 
@@ -79,7 +84,7 @@ console.log(response1?.data?.allCollection)
         
 
         {routesFilterData.map((el)=>{
-                        return <li  id='data-li-c' onClick={()=>navigate(el.path)} >{(el?.name )}
+                        return <li  id='data-li-c' onClick={()=>navigate((el.path2?el.path2:el.path))} >{(el?.name )}
                         </li>
                     })} 
         </ul>

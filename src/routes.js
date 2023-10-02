@@ -233,8 +233,8 @@ const routes = [
   { path: '/leads/all-enquires', name: 'All Enquires', element: AllEnquires,mongoCollectionName:'enquiryforms'},
   { path: '/leads/enquires-appointment', name: 'Enquiry Appointment', element: EnquireAppoitment,mongoCollectionName:'Appointment' },
   { path: '/leads/trial-updated', name: 'Trial Updated', element: TrialUpdated,mongoCollectionName:'Trial Session' },
-  { path: '/leads/followups-scheduling', name: 'Prospect', element: FollowupScheduling,mongoCollectionName:'enquiryforms' },
-  { path: '/leads/followups-call-report', name: 'Calls Report', element: FollowupCallReport,mongoCollectionName:'prospect' },
+  { path: '/leads/followups-scheduling', name: 'Prospect', element: FollowupScheduling,mongoCollectionName:'Prospect' },
+  { path: '/leads/followups-call-report', name: 'Calls Report', element: FollowupCallReport,mongoCollectionName:'prospects' },
   { path: '/leads/cold-enquires', name: 'Cold Enquires', element: ColdEnquires,mongoCollectionName:'Cold' },
 
   //Clients
@@ -250,12 +250,14 @@ const routes = [
   { path: '/clients/member-details/:id/:i', name: 'Member Details', element: MemberDetails,valid:true },
   { path: '/clients/sales-call', name: 'Sales Call', element: SalesCall },
   { path: '/clients/servicesrate-card', name: 'ServicesRate Card', element: ServicesRateCard },
-  { path:'/clients/client-management/client-support',name:'Client Support',element:ClientSupport},
+  { path:'/clients/client-management/client-support',name:'Client Support',element:ClientSupport,mongoCollectionName:'clientsupports'},
   { path:'/forms/support',name:'Support',element: ClientSupportForm  },
 
   // Fitness
 
-  {path:'/fitness/fitness-Goal/:id',name:'Fitness Goal',element:Fitness},
+  {path:'/fitness/fitness-Goal/:id',
+  path2:'fitness/fitness-Goal/all-client-fitness',
+  name:'Fitness Goal',element:Fitness,mongoCollectionNameArr:['fitnessdetails',"alldietclients","dietplantemplates"]},
 
   //Marketing
   { path: '/Marketing', name: 'Marketing', element: EmailMarketing, exact: true },
@@ -272,48 +274,45 @@ const routes = [
 
   //Inventory
   { path: '/inventory', name: 'Inventory', element: ImpCallList, exact: true },
-  { path: '/inventory/all-call-list', name: 'All Call List', element: AllCallList },
+  { path: '/inventory/all-call-list', name: 'Imp Call List', element: AllCallList,mongoCollectionNameArr:["impcalllists","allsupplierlists","guestlists"] },
   { path: '/inventory/imp-call', name: 'Imp Call List', element: ImpCallList },
   { path: '/inventory/all-suppiler', name: 'All Suppiler List', element: AllSuppilerList },
   { path: '/inventory/stock-listing1', name: 'Products List', element: StockListing1 },
   { path: '/inventory/stock-report', name: 'Product Report', element: StockReport },
-  { path: '/inventory/sales-report', name: 'Product Sales Report', element: ProductSalesReport },
+  { path: '/inventory/sales-report', name: 'Product Sales Report', element: ProductSalesReport,mongoCollectionName:'stockorderlistsSold' },
   { path: '/inventory/purchase-report', name: 'Stock Report', element: PurchaseReport},
-  { path:'/inventory/stock-assgning', name: 'Office Inventory', element: StockAssigning},
+  { path:'/inventory/stock-assgning', name: 'Office Inventory', element: StockAssigning,mongoCollectionNameArr:['stockassignings',"inventorylistingmasters"]},
   { path:'/inventory/stock-alert', name: 'Stock Alert', element: StockAlert},
-  { path:'/inventory/stock-order-list', name: 'Stock List', element: StockOrderList},
-  { path:'/inventory/product-invoice', name: 'Product Invoice', element:ProductInvoice},
+  { path:'/inventory/stock-order-list', name: 'Stock List', element: StockOrderList,mongoCollectionNameArr:["allproductlistingmasters",'StockOrderList']},
+  { path:'/inventory/product-invoice', name: 'Product Invoice', element:ProductInvoice,mongoCollectionName:'productinvoices'},
 
   
-
-
-
   //Finance
   { path: '/finance', name: 'Finance', element: TotalInvoices, exact: true },
-  { path: '/finance/total-invoice', name: 'Total Invoice', element: TotalInvoices },
-  { path: '/finance/paid-invoice', name: 'Paid Invoice', element: PaidInvoices },
-  { path: '/finance/balance-payment', name: 'Balance Payment', element: BalancePayment },
-  { path: '/finance/receipt', name: 'Receipt', element: Receipts },
-  { path: '/finance/cancel-invoice', name: 'cancel Invoice', element: CancelInvoices },
-  { path: '/finance/comment-written', name: 'Comments Of written Off Invoice', element: CommentOfWritten },
+  { path: '/finance/total-invoice', name: 'Total Invoice', element: TotalInvoices,mongoCollectionName:'invoices' },
+  { path: '/finance/paid-invoice', name: 'Paid Invoice', element: PaidInvoices,mongoCollectionName:'paidinvoice' },
+  { path: '/finance/balance-payment', name: 'Balance Payment', element: BalancePayment,mongoCollectionName:'pendingAmount' },
+  { path: '/finance/receipt', name: 'Receipt', element: Receipts,mongoCollectionName:'receipts' },
+  { path: '/finance/cancel-invoice', name: 'cancel Invoice', element: CancelInvoices,mongoCollectionName:'cancelinvoice' },
+  { path: '/finance/comment-written', name: 'Comments Of written Off Invoice', element: CommentOfWritten,mongoCollectionName:'"cancelinvoicereports"' },
   { path: '/finance/revenue-details', name: 'Revenue details', element: RevenueDetails },
-  { path: '/finance/service-revenue', name: 'Services Revenue', element: ServiceRevenue },
-  { path: '/finance/renew-revenue', name: 'Renew Revenue', element: RenewRevenue },
-  { path: '/finance/newc-revenue', name: 'Newc Revenue', element: NewcRevenue },
-  { path: '/finance/l-r', name: 'Lead Report', element: LeadReport },
+  { path: '/finance/service-revenue', name: 'Services Revenue', element: ServiceRevenue,mongoCollectionName:'serviceRevenue' },
+  { path: '/finance/renew-revenue', name: 'Renewals/Upgrade Revenue', element: RenewRevenue,mongoCollectionName:'renewalsUpgradeRevenue' },
+  { path: '/finance/newc-revenue', name: 'New Revenue', element: NewcRevenue,mongoCollectionName:'newClientRevenue'},
+  { path: '/finance/l-r', name: 'Lead Report', element: LeadReport ,mongoCollectionName:'leadReport'},
   { path: '/finance/revenue-report', name: 'Revenue Report', element: RevenueReport },
-  { path: '/finance/total-c', name: 'Total Collection', element: TotalCollection },
-  { path: '/finance/payment-mode', name: 'Payment Mode', element: PaymentMode },
+  { path: '/finance/total-c', name: 'Total Collection', element: TotalCollection,mongoCollectionName:'invoices' },
+  { path: '/finance/payment-mode', name: 'Payment Mode', element: PaymentMode,mongoCollectionName:'paymentMode' },
   { path: '/stock/stock-list', name: 'Stock', element:ClientInvoice},
 
   
-  { path: '/finance/cash-report', name: 'Cash Report', element: CashReport },
-  { path: '/finance/cheque-report', name: 'Cheque Report', element: ChequeReport },
-  { path: '/finance/daily-expense', name: 'Daily Expense', element: DailyExpense },
-  { path: '/finance/petty-cash', name: 'Petty Cash', element: PettyCash},
+  { path: '/finance/cash-report', name: 'Cash Report', element: CashReport,mongoCollectionName:'dailyCashReprt' },
+  { path: '/finance/cheque-report', name: 'Cheque Report', element: ChequeReport,mongoCollectionName:'chequeReport' },
+  { path: '/finance/daily-expense', name: 'Daily Expense', element: DailyExpense,mongoCollectionName:'dailyexpenses' },
+  { path: '/finance/petty-cash', name: 'Petty Cash', element: PettyCash,mongoCollectionName:'pettycashes'},
   { path: '/finance/dsr-report', name: 'DSR Report', element: DSRreport},
   { path: '/finance/targetvs-achievment', name: 'Target vs Achievment', element: TargetvsAchievment},  
-  { path: '/finance/center-expense', name: 'Center Expense', element: CenterExpenses },
+  { path: '/finance/center-expense', name: 'Center Expense', element: CenterExpenses,mongoCollectionName:'budgetingmasters'},
   { path:'/voucher/expense',name:'Expense Voucher ',element:ExpenseVoucher },
   //HR
   { path: '/hr', name: 'HR Management', element: AllEmpProfile, exact: true },
@@ -387,7 +386,7 @@ const routes = [
   { path:'/master/hr/job-profile',name:'Job Profile',element:JobProfileMaster},
   { path:'/master/hr/leave-setup',name:'Leave Setup',element:LeaveSetupMaster},
   { path:'/master/hr/shift-timing-management',name:'Shift Timing',element:ShiftTimingManagmentMastr},
-  { path: '/master/all-produt-Listing-Master', name: 'All Product Listing Master', element: AllProductListingMaster },
+  { path: '/master/all-produt-Listing-Master', name: 'All Product Listing Master', element: AllProductListingMaster,mongoCollectionName:'allproductlistingmasters' },
   { path: '/master/product-assign-master', name: 'Product Assign Master', element: OffiiceInventory },
   { path:'/master/hr/payrol-setup',name:'Salary Sheet',element:PayrollMaster},
   { path:'/master/hr/emp-joining',name:'Employee Joining Master',element:EmpJoiningMaster},
