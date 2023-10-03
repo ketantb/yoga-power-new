@@ -87,6 +87,7 @@ const IrregularMemberCall = ({visible,filterObj,id,setPageLength,paging,isEmploy
                       array.push(el2.checkDate)
                    }
                 })    
+                
                 array.sort(function(a,b){
                     return new Date(b.date) - new Date(a.date);
                   });

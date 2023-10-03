@@ -107,10 +107,10 @@ const TtcClasses = () => {
 
                const dateWithAttendance =getDaysInMonth(new Date().getMonth(),new Date().getFullYear())
                const attendedData = updateAttendance(clientAttendanceData.filter((el)=>el.category==="TTC Classes"),
-               dateWithAttendance,memBerData.filter((el)=>el.typeOFBatchClasses==="PT Classes"))
+               dateWithAttendance,memBerData.filter((el)=>el.typeOFBatchClasses==="TTC Classes"))
                setClientAttendenceReg(attendedData)
                setClientAttendence2(clientAttendanceData)    
-               setMemberData(memBerData.filter((el)=>el.typeOFBatchClasses==="PT Classes")) 
+               setMemberData(memBerData.filter((el)=>el.typeOFBatchClasses==="TTC Classes")) 
                HandleTotalAtten(attendedData,dateWithAttendance)
                setttClassesDailyreportData(ttCClassesDailyReport(clientAttendanceData.filter((el)=>el.category==="TTC Classes")))  
                setTtcMonthlyReport(ttcMonthLyReport(clientAttendanceData.filter((el)=>el.category==="TTC Classes"),memBerData))
@@ -143,7 +143,7 @@ const TtcClasses = () => {
      const newDate =getDaysInMonth(+selectedMonth,+selectedYear)
             setDateOfMonth(newDate)
             if(!clientAttendenceReg[0] && !memBerData2[0])return
-            const  attendedData = updateAttendance(clientAttendance2.filter((el)=>el.category==="PT Classes"),newDate,memBerData2)
+            const  attendedData = updateAttendance(clientAttendance2.filter((el)=>el.category==="TTC Classes"),newDate,memBerData2)
             HandleTotalAtten(attendedData,newDate)
             setClientAttendenceReg(attendedData)
           },[selectedMonth,selectedYear])

@@ -38,13 +38,15 @@ if(employeeId){
         }
     }
 
+
     const response1 = await axios.get(`${url1}/search-filter/${inputvalName.replace(/ /g, '$dv2e62e').trim()}/${addminId}`,headers)
 
-    console.log(response1)
+    console.log(response1?.data)
+
     if(response1.status===200&&response1?.data){
       const data = [...response1?.data?.allCollection]
-      const filterRoutes = routes.filter((el)=>{
-        return ((el?.name).toLocaleLowerCase().includes(inputvalName.toLocaleLowerCase())
+      const filterRoutes = routes.filter((el)=>{ 
+        return !el.valid&& ((el?.name).toLocaleLowerCase().includes(inputvalName.toLocaleLowerCase())
          ||data.includes(el.mongoCollectionName)||
          el?.mongoCollectionNameArr?.some((el)=>{
           return data.includes(el)

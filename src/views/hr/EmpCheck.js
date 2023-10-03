@@ -100,7 +100,7 @@ const EmpCheck = () => {
             <CCol lg={12} sm={12}>
                 <CCard className="mb-3 border-success">
                     <CCardHeader style={{ backgroundColor: '#0B5345', color: 'white' }}>
-                        <CCardTitle className="mt-2">   Check Ins</CCardTitle>
+                        <CCardTitle className="mt-2">Daily Check Ins</CCardTitle>
                     </CCardHeader>
                     <CCardBody>
                     <CCol lg={4} md={6} sm={8} className='d-flex justify-content-between mb-2' >
