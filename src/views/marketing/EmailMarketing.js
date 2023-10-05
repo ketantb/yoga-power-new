@@ -70,7 +70,6 @@ const response =
 await  axios.post(`${url}/sendMultipalMail/mail`,{...emailObj,client:emailStr},{headers})
 
  if(response?.status===200){
-    console.log(response)
     alert('successfully save')
    }
 }catch(error){
