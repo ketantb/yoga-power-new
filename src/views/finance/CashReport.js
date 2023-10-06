@@ -45,6 +45,7 @@ const CashReport = () => {
     const [depositorInfo,setDepositorInfo] = useState({
         nameOfDepositor:'',
         depositorContact:0,
+        discription:''
     })
 
 
@@ -63,7 +64,7 @@ const CashReport = () => {
                     delete el2._id
                  return ({
                           cashHandOverto:'',
-                          totalCash:+el2.PaidAmount,
+                          totalCash:(+el2.PaidAmount),
                           date:el2.NewSlipDate,
                           type,
                           clientName:el.MemberName,
@@ -102,24 +103,24 @@ const CashReport = () => {
     const getAllInvoiceData = async  ()=>{
     
         try{
-        const response1 = await axios.get(`${url1}/invoice/${pathVal}`,{headers})
+        const response1 = await axios.get(`${url1}/invoice/daily-cash-report`,{headers})
+          console.log(response1)
+        // if(response1.status===200){
 
-        if(response1.status===200){
-
-            const response2 = response1.data.reverse().map((el)=>{
-                const resiptsData =  el.Receipts.map((el2,i)=>{
-                  if(el2?.Pay_Mode ==='Cash'){
-                    return {el,no:i}
-                  }   
-                }).filter((el)=>el)
-               return {...el,Receipts:resiptsData}
-          })
+        //     const response2 = response1.data.reverse().map((el)=>{
+        //         const resiptsData =  el.Receipts.map((el2,i)=>{
+        //           if(el2?.Pay_Mode ==='Cash'){
+        //             return {el,no:i}
+        //           }   
+        //         }).filter((el)=>el)
+        //        return {...el,Receipts:resiptsData}
+        //   })
                
-               const ReciptsData =   togetCashData('Recipt',[...response2.filter((el)=>el?.Receipts[0])])
-               const InvoiceData =  togetCashData('Invoice',response1.data.filter((el)=>el?.paymode ==='Cash'))  
+        //        const ReciptsData =   togetCashData('Recipt',[...response2.filter((el)=>el?.Receipts[0])])
+        //        const InvoiceData =  togetCashData('Invoice',response1.data.filter((el)=>el?.paymode ==='Cash'))  
 
-               setCashData(ReciptsData.concat(InvoiceData))
-        }
+        //        setCashData(ReciptsData.concat(InvoiceData))
+        // }
 
         }catch(error){
         console.log(error)
@@ -164,12 +165,13 @@ const CashReport = () => {
                      <CRow>
                      <CModal visible={visibleDataObj.visibale} 
                         onClose={() => setVisibleDataObj({
-                            visibale:true,
+                            visibale:false,
                             selectedItem:{},
                             itemType:'',
                             id:'',
                             bothId:''
                          })}
+
                            >
                           <CModalHeader >
                              <h2> Cash deposite info</h2>
@@ -198,15 +200,15 @@ const CashReport = () => {
                                 <CFormTextarea
                                 type='text'
                                 label={'Discription'}
-                                value={depositorInfo.depositorContact}
+                                value={depositorInfo.discription}
                                 onChange={(e)=>{
-                                  setDepositorInfo(prev=>({...prev,depositorContact:e.target.value}))
+                                  setDepositorInfo(prev=>({...prev,discription:e.target.value}))
                                 }}
                                 required
                                 />
                                  </CCol>
 
-                                <CCol>
+                                <CCol className='mt-2'>
                                  <CButton type='submit' onClick={saveCashReport}>Save</CButton>
                                </CCol> 
                               </form>
@@ -272,14 +274,14 @@ const CashReport = () => {
                                         <CTableDataCell>{el.totalCash}</CTableDataCell>
                                         <CTableDataCell>{el.counseller}</CTableDataCell>
                                         <CTableDataCell className='text-center'>
-                                            <CButton size='sm' color={el.type==='Recipt'?'success':'warning'}>
+                                            <CButton size='sm' color={el.type==='Recipt'?'success':'warning'} className='cursor-pointer'>
                                                 {el.type}
                                             </CButton>                                           
                                         </CTableDataCell>
                                         <CTableDataCell>
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            <BsPlusCircle onClick={()=>setVisibleDataObj({
+                                            <BsPlusCircle className='cursor-pointer' onClick={()=>setVisibleDataObj({
                                                visibale:true,
                                                selectedItem:el,
                                                itemType:el.type,
