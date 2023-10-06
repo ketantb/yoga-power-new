@@ -26,6 +26,7 @@ import { useSelector } from 'react-redux'
 import { useAdminValidation,useUniqAdminObjeact } from "src/views/Custom-hook/adminValidation";
 import { useReactToPrint } from 'react-to-print'
 import moment from "moment";
+import useJobProfileHook from "src/views/Master/HRMaster/useJobProfileHook";
 function AddNewInvoice({id,data23,viewInvoice,setViewInvoice,getDetails,isFirstInoice,clickfun}){
 
  const pathVal = useAdminValidation('Master')   
@@ -43,6 +44,7 @@ function AddNewInvoice({id,data23,viewInvoice,setViewInvoice,getDetails,isFirstI
     endDate:''
  })
 
+ const jobProfileFun = useJobProfileHook()
  
  var currentdate = new Date();
  var datetime = currentdate.getDay() + "/" + currentdate.getMonth()
@@ -196,11 +198,9 @@ if(validation){
 
 const RenewedClient = async () =>{
 if(RenewedObj){
-  
-  const data1 = {"renewed": true}        
+const data1 = {"renewed": true}        
  axios.post(`${url1}/memberForm/update/${RenewedObj?._id}`,data1,{headers})       
 }
-
 
 
 }
@@ -794,13 +794,13 @@ setPendingAmount(total-paidAmount)
                 </CTableRow>
                 <CTableRow>
                     <CTableDataCell colSpan={4}>
-                        <div>{invoiceViewData.TNC}</div>
+                        <div>{jobProfileFun(invoiceViewData.TNC)}</div>
                     </CTableDataCell>
                 </CTableRow>
 
                 <CTableRow>
                     <CTableDataCell colSpan={4}>
-                        <div style={{ fontWeight: 'bold' }}>{invoiceViewData.Address}</div>
+                        <div style={{ fontWeight: 'bold' }}>{jobProfileFun(invoiceViewData.Address)}</div>
                       
                     </CTableDataCell>
                 </CTableRow>
@@ -970,13 +970,13 @@ setPendingAmount(total-paidAmount)
                                         </CTableRow>
                                         <CTableRow>
                                             <CTableDataCell colSpan={4}>
-                                                <div>{invoiceViewData.TNC}</div>
+                                                <div>{jobProfileFun(invoiceViewData.TNC)}</div>
                                             </CTableDataCell>
                                         </CTableRow>
 
                                         <CTableRow>
                                             <CTableDataCell colSpan={4}>
-                                                <div style={{ fontWeight: 'bold' }}>{invoiceViewData.Address}</div>                                            
+                                                <div style={{ fontWeight: 'bold' }}>{jobProfileFun(invoiceViewData.Address)}</div>                                            
                                             </CTableDataCell>
                                         </CTableRow>
                                     </CTableBody>

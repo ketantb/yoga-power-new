@@ -26,7 +26,7 @@ import { storage } from "src/firebase";
 import {getDownloadURL, ref,uploadBytesResumable } from "firebase/storage";
 import { useSelector } from "react-redux";
 import { useAdminValidation } from "src/views/Custom-hook/adminValidation";
-
+import useJobProfileHook from "../HRMaster/useJobProfileHook";
 const InvoiceMaster = () => {
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -34,6 +34,7 @@ const InvoiceMaster = () => {
     const [imageUrl, setImageUrl] = useState('')
     const [activeForm,setActiveForm] = useState(false)
     const pathVal = useAdminValidation('Master')
+    const jobProfileFun = useJobProfileHook()
 
     const obj = {
         TNC:'',
@@ -73,6 +74,9 @@ const InvoiceMaster = () => {
 
         axios.patch(pathUrl,{...invoiceMasterObj,InvoiceLogo:imageUrl},{headers}).then((el)=>{
             alert('Successfully Save')
+            getInvoiceLogo()
+            setActiveForm(false)
+            setImageUrl('')
         })
         }catch(error){
             console.log(error)
@@ -179,6 +183,18 @@ const InvoiceMaster = () => {
                             setActiveForm(true)
                         }}>Add On</CButton>
                     </div>
+
+                    <CCard className='p-2 w-fit-cnt mt-3' >
+                        <h5>To Address and TNC</h5>
+                     <h6 className="mt-2">Write the title in bracket
+                     <span><b>[title]</b></span>    
+                     </h6>
+                     <p className="p-0 m-1">Write the Content in small Bracket <span><b>(Content)</b></span>  </p> 
+                     <p className="p-0 m-1">Between <span><b>(Content)</b></span> and <span><b>[title]</b></span>   Should be Colon <span><b>[title]:(Content)</b></span> </p>
+                     <p className="p-0 m-1">To Split the Line in <span><b>(content)</b> </span>    add this Syntext  <span><b>$brsplit</b></span>  </p> 
+                     <p className="p-0 m-1">To write only title <span><b>[title]:()</b> </span> </p> 
+                     <p className="p-0 m-1">To write only content<span><b>(content) or content </b> </span> </p>
+                     </CCard>
                 
                 <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                 <CTableHead color={'darkGreen'} >
@@ -197,10 +213,10 @@ const InvoiceMaster = () => {
                             {invoiceData.InvoiceTitle}
                             </CTableDataCell>
                             <CTableDataCell>
-                            {invoiceData.TNC}
+                            {jobProfileFun(invoiceData.TNC)}
                             </CTableDataCell>
                             <CTableDataCell>
-                            {invoiceData.Address}            
+                            {jobProfileFun(invoiceData.Address)}            
                             </CTableDataCell>
                             </CTableRow>
                 </CTableBody>

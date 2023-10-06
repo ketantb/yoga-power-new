@@ -23,7 +23,7 @@ import { useReactToPrint } from 'react-to-print'
 import { useSelector } from 'react-redux'
 import { useAdminValidation } from '../Custom-hook/adminValidation'
 import axios from 'axios'
-
+import useJobProfileHook from '../Master/HRMaster/useJobProfileHook'
 
 
 function Invoice ({allIvoiceOfaUser,showInvoiceModal,setInvoceModal,ClientData}){
@@ -41,6 +41,7 @@ function Invoice ({allIvoiceOfaUser,showInvoiceModal,setInvoceModal,ClientData})
     Address:""
 })
 
+  const jobProfileFun = useJobProfileHook()
 
     const getInvoiceLogo = async ()=>{
         const response = await axios.get(`${url}/center-invoice-setup/${pathVal}`,{ headers: {
@@ -298,13 +299,13 @@ return <div  className='my-5' >
                                         </CTableRow>
                                         <CTableRow>
                                             <CTableDataCell colSpan={4}>
-                                                <div>{invoiceDataView.TNC}</div>
+                                                <div>{jobProfileFun(invoiceDataView.TNC)}</div>
                                             </CTableDataCell>
                                         </CTableRow>
 
                                         <CTableRow>
                                             <CTableDataCell colSpan={4}>
-                                                <div style={{ fontWeight: 'bold' }}>{invoiceDataView.Address}</div>
+                                                <div style={{ fontWeight: 'bold' }}>{jobProfileFun(invoiceDataView.Address)}</div>
                                             </CTableDataCell>
                                         </CTableRow>
                                     </CTableBody>

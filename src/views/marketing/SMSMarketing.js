@@ -69,7 +69,10 @@ useEffect(()=>{
 
 async function toSendMessage(url){
     try{
-        let response1 = await axios.get(url,{headers:{ 'Content-Type': 'application/json'}})
+        let response1 = await axios.get(url,{headers:{ 
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Methods': '*'
+        }})
         console.log(response1)
 
          if(response1.status===200){
@@ -112,7 +115,7 @@ useEffect(()=>{
 
 
 const  smsendToAllClient  =()=>{
-toSendMessage(sendedUrl)
+toSendMessage(`http://164.52.205.46:6005/api/v2/Template?ApiKey=qgKjg0b18qNu4X3sXDF%2BBjgmKYPidkiY%2FW4YfmAoSSw%3D&ClientId=e97842d7-70f0-4cbd-84c7-33770b20f34f`)
 }
 
 
