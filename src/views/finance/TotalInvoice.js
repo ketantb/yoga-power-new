@@ -79,6 +79,8 @@ const TotalInvoice = () => {
         setAllInvoiceData(data.reverse())  
         setResult(functionRemoveDuplicate(data.map((el)=>el.ServiceName?.toLowerCase()?.trim())))  
         setEmployeeData(functionRemoveDuplicate(data.map((el)=>el.counseller)))
+
+        console.log(data)
                 
     } 
     
@@ -188,6 +190,19 @@ setServiceName('')
 
 const toCheckValiDate= (val)=>{
 return  (access.includes(val)||isAdmin) ?'':'none'
+}
+
+
+function discountHandler(rs,discount){
+
+  const obj =   { P: "%",R: "₹", }
+
+  if(rs?.trim()==='R'&&+discount){
+  return obj.R +discount
+  }else if(+discount&&rs?.trim()==='P'){
+  return discount +'%'
+  }
+  return discount
 }
 
     return (
@@ -345,7 +360,7 @@ return  (access.includes(val)||isAdmin) ?'':'none'
                                     <CTableDataCell>{el.counseller}</CTableDataCell>
                                     <CTableDataCell>{el.counseller}</CTableDataCell>
                                     <CTableDataCell>{el.fees}</CTableDataCell>
-                                    <CTableDataCell>{el.discount}</CTableDataCell>
+                                    <CTableDataCell>{discountHandler(el.typesofdiscount,el.discount) }</CTableDataCell>
                                     <CTableDataCell>{el.tax}</CTableDataCell>
                                     <CTableDataCell>{el.amount}</CTableDataCell>
                                     <CTableDataCell>{+el.paidAmount + +el.Receipts.reduce((crr,el)=>crr+ (+el.PaidAmount),0)}</CTableDataCell>

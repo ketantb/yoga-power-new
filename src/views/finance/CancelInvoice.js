@@ -274,7 +274,7 @@ const CancelInvoice = () => {
                                     <CTableHeaderCell scope="col">
                                         Invoice No
                                     </CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Clien Id</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Client Id</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Service</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Service Duration</CTableHeaderCell>

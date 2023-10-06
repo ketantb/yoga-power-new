@@ -73,7 +73,7 @@ const CommentOfWritten = () => {
                 }})
         
         setAllInvoiceData(data.reverse())     
-        setResult(functionRemoveDuplicate(data.map((el)=>el.ServiceName?.toLowerCase()?.trim())))  
+        setResult(functionRemoveDuplicate(data.map((el)=>el.MemberName?.toLowerCase()?.trim())))  
         setEmployeeData(functionRemoveDuplicate(data.map((el)=>el.counseller)))
                 
     } 
@@ -185,7 +185,7 @@ async function getEmployee() {
                                     value={serviceName}
                                      onChange={(e)=>setServiceName(e.target.value)}
                                     >
-                                    <option>Select Service</option>
+                                    <option>Select Client</option>
                                         {result.map((item, index) => (
                                             (
                                            (

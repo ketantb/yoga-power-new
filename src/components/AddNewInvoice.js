@@ -85,7 +85,7 @@ const handlePrint = useReactToPrint({
     const [total, setTotal] = useState(0)
     const [paidAmount, setpaidAmount] = useState('')
     const [discount, setDiscount] = useState()
-    const [dis1, setDis1] = useState()
+    const [dis1, setDis1] = useState('P')
     const [pendingAmount, setPendingAmount] = useState('')
     const [paymode, setPayMode] = useState('')
     const [finalTotal, setFinalTotal] = useState('')
@@ -594,6 +594,7 @@ setPendingAmount(total-paidAmount)
                                             style={{ minWidth: "100px" }}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                             value={ser3}
+                                            onChange={(e) => {}}
 
                                         />
                                     </CTableDataCell>
@@ -826,6 +827,26 @@ setPendingAmount(total-paidAmount)
            }
             setPrintInoiceActive(false)
             setViewInvoice(false)
+            setInvoiceInfo(
+                {
+                    Fullname:'',
+                    ContactNumber:'',
+                    ClientId:'',
+                    Email:'',
+                    datetime:'',
+                    InvoiceNo:'',
+                    StaffFullName:'',
+                    PackageName:'',
+                    ServiceName:'',
+                    startDate:'',
+                    endDate:''
+                 }
+            )
+            setSer2('')
+            setSer3('')
+            setDis1('')
+            setTotal('')
+            setpaidAmount('')
 } }>
                             <CModalHeader>
                                 <CModalTitle>Invoice Preview</CModalTitle>

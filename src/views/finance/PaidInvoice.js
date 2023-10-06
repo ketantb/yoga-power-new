@@ -305,7 +305,9 @@ const PaidInvoice = () => {
                             </CTableHead>
                             <CTableBody>
                                 {AllInvoiceData.filter((el)=>{
-                                 return el.counseller?.includes(selectedEmployee) && (+el.pendingAmount>=0)
+                                 return el.counseller?.includes(selectedEmployee) && (+el.pendingAmount>=0) &&
+                                  el.status!=='active'&&
+                                  el.status!=='cancel'
                                 })
                                 .filter((el)=>{ if(startDate&&endDate){
                                 return compareDate(startDate,el.createdAt,endDate)}return true})
