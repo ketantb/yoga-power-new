@@ -182,7 +182,7 @@ const toCheckValiDate= (val)=>{
                                     console.log(el)
                                  return    <CTableRow>
                                     <CTableDataCell>{i+1}</CTableDataCell>
-                                    <CTableDataCell>{el.Date}</CTableDataCell>
+                                    <CTableDataCell>{new Date(el.Date).toLocaleString()}</CTableDataCell>
                                     <CTableDataCell>{el.Voucher_Number}</CTableDataCell>
                                     <CTableDataCell>{el.Expense_Category}</CTableDataCell>
                                     <CTableDataCell>{el.Details_Of_Expense}</CTableDataCell>

@@ -43,7 +43,7 @@ const Totalc= () => {
   const getInvoiceDataToTotalCollection = async  ()=>{
 
   const {data} = await axios.get(`${url1}/invoice/${pathVal}`,{headers})
-  
+  console.log(data)
   setTotalCollection(data.reverse())
   }
 
@@ -62,7 +62,7 @@ function getStaff() {
         }
     })
         .then((res) => {
-            setStaff(res.data)
+            setStaff(res.data.reverse())
         })
         .catch((error) => {
             console.error(error)
@@ -140,7 +140,7 @@ function totfilterData(data){
                                 <CTableRow>
                                     <CTableHeaderCell scope="col">Sr No</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Date</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Brach</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Center Code</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">
                                         Invoice No
                                     </CTableHeaderCell>
@@ -192,7 +192,7 @@ function totfilterData(data){
                                     <CTableDataCell>{el.paymode}</CTableDataCell>
                                     <CTableDataCell>{el.bankName}</CTableDataCell>
                                     <CTableDataCell>{el.ifcCode}</CTableDataCell>
-                                    <CTableDataCell>{el.amount}</CTableDataCell>
+                                    <CTableDataCell>{el.paidAmount}</CTableDataCell>
                                     <CTableDataCell>{el.counseller}</CTableDataCell>
                                 </CTableRow>
 })}
