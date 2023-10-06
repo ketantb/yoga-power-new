@@ -177,7 +177,7 @@ setserviceData([...new Set(serviceRevenueData.map((el)=>el.typeOfService))])
         <CCol lg={12} sm={12}>
             <CCard className='mb-3 border-top-success border-top-3'>
                 <CCardHeader>
-                    <strong className="mt-2">Service Revenue</strong>
+                    <strong className="mt-2">Revenue Service Wise</strong>
                 </CCardHeader>
                 <CCardBody>
 

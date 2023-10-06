@@ -195,13 +195,13 @@ onChange={(e) => setRightObject(prev => {
 </CCol>
 
     <CCol>
-       <h5 className='d-flex'>Revenue Details<span className='mx-2'><CFormSwitch size="lg"
+       <h5 className='d-flex'>Revenue FY Details<span className='mx-2'><CFormSwitch size="lg"
        checked={erpFinance.items.erpRevenues.items.erpRevenueDetails.value}
        onChange={(e)=>thirdLavleRightFun('erpRevenueDetails','erpRevenues')}
        /></span></h5>
    </CCol>
    <CCol>
-       <h5 className='d-flex'>Service Revenue<span className='mx-2'><CFormSwitch size="lg"
+       <h5 className='d-flex'>Revenue Service Wise<span className='mx-2'><CFormSwitch size="lg"
           checked={erpFinance.items.erpRevenues.items.erpServicesWiseRevenue.value}
           onChange={(e)=>thirdLavleRightFun('erpServicesWiseRevenue','erpRevenues')}
        /></span></h5>
@@ -219,20 +219,20 @@ onChange={(e) => setRightObject(prev => {
 <CRow >
 
     <CCol>
-       <h5 className='d-flex'>New Client Revenue<span className='mx-2'><CFormSwitch size="lg"
+       <h5 className='d-flex'>Revenue New Client<span className='mx-2'><CFormSwitch size="lg"
         checked={erpFinance.items.erpRevenues.items.erpNewClientRevenue.value}
         onChange={(e)=>thirdLavleRightFun('erpNewClientRevenue','erpRevenues')}
        /></span></h5>
    </CCol>
    <CCol>
-       <h5 className='d-flex'>Lead Report<span className='mx-2'><CFormSwitch size="lg"
+       <h5 className='d-flex'>Revenue Lead Report <span className='mx-2'><CFormSwitch size="lg"
         checked={erpFinance.items.erpRevenues.items.erpLeadReport.value}
         onChange={(e)=>thirdLavleRightFun('erpLeadReport','erpRevenues')}
        /></span></h5>
 
    </CCol>
    <CCol>
-       <h5 className='d-flex'>Revenue Report<span className='mx-2'><CFormSwitch size="lg"
+       <h5 className='d-flex'>Revenue FY Report<span className='mx-2'><CFormSwitch size="lg"
           checked={erpFinance.items.erpRevenues.items.erpRevenueReport.value}
           onChange={(e)=>thirdLavleRightFun('erpRevenueReport','erpRevenues')}
        /></span></h5>

@@ -250,7 +250,7 @@ const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                 <CCardHeader>
-                        <strong className="mt-2">Renewals/Upgrade Revenue</strong>
+                        <strong className="mt-2">Renewals Revenue Wise</strong>
                     </CCardHeader>
 
             

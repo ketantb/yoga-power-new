@@ -17,6 +17,8 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
+    CPagination,
+    CPaginationItem
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilArrowCircleBottom, cilArrowCircleTop, cilPlus } from '@coreui/icons'
@@ -48,6 +50,7 @@ const LeadReport= props => {
     const [month,setMonth] = useState('')
     const [serviceName,setServiceName] = useState('')
     const [serviceData,setserviceData] = useState([])
+    const [paging, setPaging] = useState(0)
 
 
     const getAllData = async  ()=>{
@@ -61,6 +64,7 @@ const LeadReport= props => {
         const invoiceData = allApiData[0].data
         const clientData = allApiData[1].data
         const enquiryData = allApiData[2].data 
+
 
         
         const serviceAcordingToMonth   = ([...enquiryData.filter((list) => list)?.reverse()?.map((el)=>{
@@ -153,12 +157,24 @@ const LeadReport= props => {
     
 
 
+    function toFilterData(data){
+
+     return   data.filter((el)=>{
+                                       
+            return monthName[el.month].includes(month) &&  
+            (el.year+"").includes(selectedYear)&&
+            el.typeOfEnquiry.includes(serviceName)   
+
+            })
+    }
+
+
   return (
     <CRow>
         <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
-                        <strong className="mt-2">Lead Report</strong>
+                        <strong className="mt-2">Revenue Lead Report </strong>
                     </CCardHeader>
                     <CCardBody>
                     <CRow className=' mb-2' >
@@ -217,13 +233,7 @@ const LeadReport= props => {
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                               {leadReportData.filter((el)=>{
-                                       
-                                       return monthName[el.month].includes(month) &&  
-                                       (el.year+"").includes(selectedYear)&&
-                                       el.typeOfEnquiry.includes(serviceName)   
-                           
-                                       }).map((el,i)=>{
+                               {toFilterData(leadReportData).slice(paging * 10, paging * 10 + 10).map((el,i)=>{
                                return <CTableRow key={i}>
                                 <CTableDataCell>{i+1}</CTableDataCell>
                                     <CTableDataCell>{el.year}</CTableDataCell>
@@ -240,6 +250,27 @@ const LeadReport= props => {
                             </CTableBody>
                         </CTable>
                     </CCardBody>
+
+                        <div className='d-flex justify-content-center mt-3' >
+
+                        <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                            <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                                <span aria-hidden="true">&laquo;</span>
+                            </CPaginationItem>
+                            <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                            {toFilterData(leadReportData).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+
+                            {toFilterData(leadReportData).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                            {toFilterData(leadReportData).length > (paging + 1) * 10 ?
+                                <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </CPaginationItem>
+                                : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </CPaginationItem>
+                            }
+                        </CPagination>
+      </div>
                 </CCard>
             </CCol>
         </CRow>

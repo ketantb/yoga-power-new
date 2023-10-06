@@ -421,38 +421,38 @@ const _nav = [
         items: [
           {
             component: CNavItem,
-            name: 'Revenue Details',
+            name: 'Revenue FY Details',
             to: '/finance/revenue-details',
             id:'erpRevenueDetails'
           },
           {
             component: CNavItem,
-            name: 'Services Wise Revenue',
+            name: 'Revenue Service Wise',
             to: '/finance/service-revenue',
             id:'erpServicesWiseRevenue'
           },
          
           {
             component: CNavItem,
-            name: 'New Cilent Revenue',
+            name: 'Revenue New Client',
             to: '/finance/newc-revenue',
             id:'erpNewClientRevenue'
           },
           {
             component: CNavItem,
-            name: 'Renewals Revenue',
+            name: 'Renewals Revenue Wise',
             to: '/finance/renew-revenue',
             id:'erpRenewalsRevenue'
           },
           {
             component: CNavItem,
-            name: 'Lead Report',
+            name: 'Revenue Lead Report ',
             to: '/finance/l-r',
             id:'erpLeadReport'
           },
           {
             component: CNavItem,
-            name: 'Revenue Report',
+            name: 'Revenue FY Report',
             to: '/finance/revenue-report',
             id:'erpRevenueReport'
           },
