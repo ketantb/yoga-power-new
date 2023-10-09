@@ -248,7 +248,7 @@ async function getEmployee() {
 
 <CModal size="xl" alignment="center" scrollable visible={showResiptsModal} onClose={() => setResiptsModal(false)} >
                      <CModalHeader>
-                     <CModalTitle>Add client resipts</CModalTitle>
+                     <CModalTitle>Add client Receipt</CModalTitle>
                  </CModalHeader>
                  <CModalBody  style={{ padding: '25px' }}>
                      <CRow>

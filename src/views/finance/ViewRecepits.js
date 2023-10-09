@@ -86,7 +86,7 @@ console.log(error)
   <CModal size="lg" alignment="center" scrollable visible={showReceipts} onClose={() => setShowReceipts(false)}>
 
     <CModalHeader>
-        <CModalTitle>Recepits Preview</CModalTitle>
+        <CModalTitle>Receipt Preview</CModalTitle>
     </CModalHeader>
   
     <CModalBody ref={ElRef}>

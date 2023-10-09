@@ -7,6 +7,8 @@ import { useAdminValidation } from '../Custom-hook/adminValidation';
 
 const SMSMarketing = () => {
     const url = useSelector((el) => el.domainOfApi)
+    const url1 =`http://164.52.205.46:6005/api/v2/Template?ApiKey=qgKjg0b18qNu4X3sXDF%2BBjgmKYPidkiY%2FW4YfmAo
+    SSw%3D&ClientId=e97842d7-70f0-4cbd-84c7-33770b20f34f`
     const pathVal  = useAdminValidation()
     let user = JSON.parse(localStorage.getItem('user-info'))
     const [typeOfClientData,setTypeOfClientData] = useState([])
@@ -45,10 +47,10 @@ const SMSMarketing = () => {
 const getEmailMarhetingInput = async  ()=>{
         try{
             let response1 =  axios.get(`${url}/marketingContact/${pathVal}`,{headers})
-           
+            let response2 =  axios.get(`${url1}`,{headers})  
 
 
-            const allData = await Promise.all([response1])
+            const allData = await Promise.all([response1,response2])
             
            console.log(allData)   
 
@@ -71,7 +73,6 @@ async function toSendMessage(url){
     try{
         let response1 = await axios.get(url,{headers:{ 
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Methods': '*'
         }})
         console.log(response1)
 
@@ -81,6 +82,8 @@ async function toSendMessage(url){
       console.error(error)
      }
 }
+
+
 
 const messages = encodeURIComponent(`We received your inquiry for Yoga , Weight Loss with Yogic 
 Management program, Ttc courses.\nWe'd be happy to help with the details and guides YOGPOWER`)
@@ -115,7 +118,7 @@ useEffect(()=>{
 
 
 const  smsendToAllClient  =()=>{
-toSendMessage(`http://164.52.205.46:6005/api/v2/Template?ApiKey=qgKjg0b18qNu4X3sXDF%2BBjgmKYPidkiY%2FW4YfmAoSSw%3D&ClientId=e97842d7-70f0-4cbd-84c7-33770b20f34f`)
+toSendMessage(sendedUrl)
 }
 
 
@@ -159,6 +162,21 @@ toSendMessage(`http://164.52.205.46:6005/api/v2/Template?ApiKey=qgKjg0b18qNu4X3s
                         >
                            
                         </CFormTextarea>    
+
+                            <CFormSelect
+                                className="mb-1"
+                                aria-label="Select Currency"
+                                label="Select Contact Number type of Client"
+                                value={slectedClient}
+                                onChange={(e)=>{setSelectedClient(e.target.value)}}
+                                >
+
+                                <option value={''}>Select type of Client</option>
+                            {typeOfClientData.map((el)=>
+                               <option value={`${el.value.parent} ${el.value.child}`}>{el.label}</option>
+                            )}
+
+                        </CFormSelect>  
 
                         <CFormTextarea xs={12}
                         label='message'
