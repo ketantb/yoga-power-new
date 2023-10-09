@@ -427,17 +427,22 @@ const _nav = [
           },
           {
             component: CNavItem,
-            name: 'Revenue Service Wise',
-            to: '/finance/service-revenue',
-            id:'erpServicesWiseRevenue'
+            name: 'Revenue FY Report',
+            to: '/finance/revenue-report',
+            id:'erpRevenueReport'
           },
-         
           {
             component: CNavItem,
             name: 'Revenue New Client',
             to: '/finance/newc-revenue',
             id:'erpNewClientRevenue'
           },
+          {
+            component: CNavItem,
+            name: 'Revenue Service Wise',
+            to: '/finance/service-revenue',
+            id:'erpServicesWiseRevenue'
+          },        
           {
             component: CNavItem,
             name: 'Renewals Revenue Wise',
@@ -450,12 +455,7 @@ const _nav = [
             to: '/finance/l-r',
             id:'erpLeadReport'
           },
-          {
-            component: CNavItem,
-            name: 'Revenue FY Report',
-            to: '/finance/revenue-report',
-            id:'erpRevenueReport'
-          },
+        
         ],
       },
       

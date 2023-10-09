@@ -18,7 +18,9 @@ import {
     CModalFooter,
     CModalBody,
     CFormInput,
-    CFormTextarea
+    CFormTextarea,
+    CPagination,
+    CPaginationItem
 } from '@coreui/react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
@@ -35,6 +37,7 @@ const CashReport = () => {
     const url1 = useSelector((el)=>el.domainOfApi) 
     const pathVal = useAdminValidation()
     const [staffS,setStaffS] = useState('')
+    const [paging, setPaging] = useState(0);
     const [visibleDataObj,setVisibleDataObj] = useState({
         visibale:false,
         selectedItem:{},
@@ -45,7 +48,7 @@ const CashReport = () => {
     const [depositorInfo,setDepositorInfo] = useState({
         nameOfDepositor:'',
         depositorContact:0,
-        discription:''
+        discription:'',
     })
 
 
@@ -56,47 +59,7 @@ const CashReport = () => {
     };
 
 
-    function togetCashData(type,data){
-    const data2 = (data||[]).reverse().flatMap((el)=>{
-          if(type==='Recipts')
-          {
-             return   el.Receipts.map((el2,i)=>{
-                    delete el2._id
-                 return ({
-                          cashHandOverto:'',
-                          totalCash:(+el2.PaidAmount),
-                          date:el2.NewSlipDate,
-                          type,
-                          clientName:el.MemberName,
-                          id:el.MemberId,
-                          clientId:el.clientId,
-                          InvoiceNo:el.InvoiceNo +"RN"+(i+1),
-                          counseller:el2.Counseller,
-                          invoiceUniqId:el._id,
-                          bothId:el2._id,
-                          Receipts:el.Receipts,
-                          no:el2.no
-                    })})
-
-          }else{
-              return [{
-                cashHandOverto:'',
-                totalCash:el.paidAmount,
-                date:el.createdAt,
-                counseller:el.counseller,
-                type,
-                clientName:el.MemberName,
-                clientId:el.clientId,
-                InvoiceNo:el.InvoiceNo,
-                id:el.MemberId,
-                invoiceUniqId:el._id,
-                bothId:el._id
-          }] 
-         }
-    })
-
-    return data2 
-}
+  
 
 
     
@@ -105,22 +68,9 @@ const CashReport = () => {
         try{
         const response1 = await axios.get(`${url1}/invoice/daily-cash-report`,{headers})
           console.log(response1)
-        // if(response1.status===200){
-
-        //     const response2 = response1.data.reverse().map((el)=>{
-        //         const resiptsData =  el.Receipts.map((el2,i)=>{
-        //           if(el2?.Pay_Mode ==='Cash'){
-        //             return {el,no:i}
-        //           }   
-        //         }).filter((el)=>el)
-        //        return {...el,Receipts:resiptsData}
-        //   })
-               
-        //        const ReciptsData =   togetCashData('Recipt',[...response2.filter((el)=>el?.Receipts[0])])
-        //        const InvoiceData =  togetCashData('Invoice',response1.data.filter((el)=>el?.paymode ==='Cash'))  
-
-        //        setCashData(ReciptsData.concat(InvoiceData))
-        // }
+        if(response1.status===200){
+               setCashData(response1.data)
+        }
 
         }catch(error){
         console.log(error)
@@ -135,6 +85,7 @@ const CashReport = () => {
         }
     })
         .then((res) => {
+            // console.log(res.data)
             setStaff(res.data)
         })
         .catch((error) => {
@@ -147,11 +98,50 @@ const CashReport = () => {
         },[])
 
 
-        const saveCashReport = (e) =>{e.preventDefault()        
-            }
+        const updateCashReport = (e) =>{
+            e.preventDefault()
   
-            
         
+             if(visibleDataObj.itemType!=='Invoice'){
+                visibleDataObj.bothId ==="6520f8a30ab2190d2e096d23"
+
+               const reciptsData= visibleDataObj.selectedItem.Receipts.map((el)=>{
+                    if(el._id===visibleDataObj.bothId){
+                        return {...el,...depositorInfo}         
+                    }
+                    return el
+                }) 
+
+
+                axios.post(`${url1}/invoice/update/${visibleDataObj.id}`,{Receipts:reciptsData}, {headers},)
+                .then((resp) => {
+                  console.log(resp) 
+                    alert('Successfully save')
+                   
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+
+             }else{
+                axios.post(`${url1}/invoice/update/${visibleDataObj.id}`,obj, {headers},)
+                .then((resp) => {
+                  console.log(resp) 
+                    alert('Successfully save')
+                   
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+             } 
+            
+            }
+            
+     function toFilterData(data){
+       return data.filter((el)=>{
+        return el?.counseller?.includes(staffS)
+    })
+     }   
 
     return (
         <CRow>
@@ -177,7 +167,7 @@ const CashReport = () => {
                              <h2> Cash deposite info</h2>
                           </CModalHeader>  
                           <CModalBody>
-                              <form onSubmit={saveCashReport}>
+                              <form onSubmit={updateCashReport}>
                               <CCol>
                                 <CFormInput
                                 type='text'
@@ -209,7 +199,7 @@ const CashReport = () => {
                                  </CCol>
 
                                 <CCol className='mt-2'>
-                                 <CButton type='submit' onClick={saveCashReport}>Save</CButton>
+                                 <CButton type='submit'>Save</CButton>
                                </CCol> 
                               </form>
                                        
@@ -258,11 +248,9 @@ const CashReport = () => {
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
-                                {cashData.filter((el)=>{
-                                    return el?.counseller?.includes(staffS)
-                                }) .map((el,i)=>{
-                                    return  <CTableRow className='text-center'>
-                                    <CTableDataCell>{i+1}</CTableDataCell>
+                                {toFilterData(cashData).slice(paging * 10, paging * 10 + 10).map((el,i)=>{
+                                    return  <CTableRow className='text-center' key={i}>
+                                    <CTableDataCell>{i + 1 + (paging * 10)}</CTableDataCell>
                                         <CTableDataCell>{moment(el.date).format('MM-DD-YYYY')}</CTableDataCell>
                                         <CTableDataCell>
                                             {
@@ -274,11 +262,12 @@ const CashReport = () => {
                                         <CTableDataCell>{el.totalCash}</CTableDataCell>
                                         <CTableDataCell>{el.counseller}</CTableDataCell>
                                         <CTableDataCell className='text-center'>
-                                            <CButton size='sm' color={el.type==='Recipt'?'success':'warning'} className='cursor-pointer'>
+                                            <CButton size='sm' color={el.type==='Invoice'?'success':'warning'} className='cursor-pointer'>
                                                 {el.type}
                                             </CButton>                                           
                                         </CTableDataCell>
                                         <CTableDataCell>
+                                            {el.nameOfDepositor}
                                         </CTableDataCell>
                                         <CTableDataCell>
                                             <BsPlusCircle className='cursor-pointer' onClick={()=>setVisibleDataObj({
@@ -293,6 +282,29 @@ const CashReport = () => {
                                 })}                                                          
                             </CTableBody>
                         </CTable>
+                        
+                        <div className='d-flex justify-content-center mt-3' >
+                        <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem style={{ cursor: 'pointer' }} aria-label="Previous" disabled={paging != 0 ? false : true}
+                            onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem style={{ cursor: 'pointer' }} active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {toFilterData(cashData).length > (paging + 1) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
+                            onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+
+                        {toFilterData(cashData).length > (paging + 2) * 10 && <CPaginationItem style={{ cursor: 'pointer' }}
+                            onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {toFilterData(cashData).length > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" style={{ cursor: 'pointer' }} onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" style={{ cursor: 'pointer' }} onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                    </CPagination>
+      </div>
                     </CCardBody>
                 </CCard>
             </CCol>
