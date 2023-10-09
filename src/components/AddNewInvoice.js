@@ -394,7 +394,7 @@ setPendingAmount(total-paidAmount)
     </CModalHeader>    
     <CModalBody>
 
-    <form onSubmit={saveInvoice} >
+    <form  >
     <CModalBody>
         <CRow>
             <CCol lg={12} className='text-center'><CImage src={invoiceViewData.InvoiceLogo} width="100px" height='100px' /></CCol>
@@ -595,7 +595,7 @@ setPendingAmount(total-paidAmount)
                                             aria-describedby="exampleFormControlInputHelpInline"
                                             value={ser3}
                                             onChange={(e) => {}}
-
+                                            type="number"
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
@@ -616,6 +616,7 @@ setPendingAmount(total-paidAmount)
                                                         { label: "%", value: "P" },
                                                         { label: "₹", value: "R" },
                                                     ]}
+                                                    type="number"
                                                 />
                                             </CCol>
                                         </CRow>
@@ -647,6 +648,7 @@ setPendingAmount(total-paidAmount)
                                                     options={
                                                         texData
                                                     }
+                                                    type="number"
                                                 /></CCol>
                                         </CRow>
                                     </CTableDataCell>
@@ -656,6 +658,7 @@ setPendingAmount(total-paidAmount)
                                             style={{ minWidth: "100px" }}
                                             aria-describedby="exampleFormControlInputHelpInline"
                                             value={ser3 / 100 * tax}
+                                            type="number"
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
@@ -683,7 +686,7 @@ setPendingAmount(total-paidAmount)
                                                  setFinalTotal(e.target.value) }}
                                             style={{ minWidth: "100px" }}
                                             aria-describedby="exampleFormControlInputHelpInline"
-                                            required                            
+                                            required                
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
@@ -723,7 +726,9 @@ setPendingAmount(total-paidAmount)
                                                 { label: "PhonePe", value: "PhonePe" },
                                                 { label: "Account Pay", value: "Account Pay" },
                                             ]}
-                                            required                            
+                                            required    
+                                            type='text'  
+                        
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
@@ -740,7 +745,9 @@ setPendingAmount(total-paidAmount)
                                             onChange={(e) => { setBankDetails(prev=>({
                                                 ...prev,bankName:e.target.value})) }}
                                             style={{ minWidth: "100px" }}          
-                                            required={!bankDetailsVal}             
+                                            required={!bankDetailsVal}     
+                                            type='text'  
+        
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
@@ -754,7 +761,9 @@ setPendingAmount(total-paidAmount)
                                             onChange={(e) => { setBankDetails(prev=>({
                                                 ...prev,ifcCode:e.target.value})) }}
                                             style={{ minWidth: "100px" }}   
-                                            required={!bankDetailsVal}                                 
+                                            required={!bankDetailsVal}    
+                                            type='text'  
+                             
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
@@ -768,7 +777,8 @@ setPendingAmount(total-paidAmount)
                                             onChange={(e) => { setBankDetails(prev=>({
                                                 ...prev,checkNo:e.target.value})) }}
                                             style={{ minWidth: "100px" }}            
-                                            required={!bankDetailsVal}             
+                                            required={!bankDetailsVal}            
+                                            type='text'  
                                         />
                                     </CTableDataCell>
                                 </CTableRow>
@@ -815,7 +825,7 @@ setPendingAmount(total-paidAmount)
         <CButton color="secondary" onClick={() => { setViewInvoice(false) }}>
             Close
         </CButton>
-        <CButton color="primary" type='submit'>Submit</CButton>
+        <CButton color="primary" onClick={saveInvoice}>Submit</CButton>
     </CModalFooter>
     </form>
     </CModalBody>
