@@ -295,7 +295,7 @@ return   <>
         <AiOutlineShoppingCart/>
      </CCard>
      <CCol style={{height:'50px'} }>
-        {num?<p className="p-0" style={{fontSize:'20px'}}>No of item {num}</p>:''}
+        {num?<p className="p-0" style={{fontSize:'20px'}}>No of Item {num}</p>:''}
      </CCol>
      </div>
     </CCol>

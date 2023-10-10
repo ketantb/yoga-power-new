@@ -445,7 +445,7 @@ const _nav = [
           },        
           {
             component: CNavItem,
-            name: 'Renewals Revenue Wise',
+            name: 'Revenue Renewals  Wise',
             to: '/finance/renew-revenue',
             id:'erpRenewalsRevenue'
           },

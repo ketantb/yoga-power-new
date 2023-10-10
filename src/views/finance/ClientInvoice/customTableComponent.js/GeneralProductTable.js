@@ -64,7 +64,7 @@ import { useSelector } from 'react-redux';
                           <CTableHeaderCell>Brand Name</CTableHeaderCell>
                           <CTableHeaderCell>Size</CTableHeaderCell>
                           <CTableHeaderCell>Color</CTableHeaderCell>
-                          <CTableHeaderCell>No of item</CTableHeaderCell>
+                          <CTableHeaderCell>No of Item</CTableHeaderCell>
                           <CTableHeaderCell>Total Price</CTableHeaderCell>
                           {status || <CTableHeaderCell>Status</CTableHeaderCell>}
                   </CTableRow>

@@ -216,7 +216,7 @@ item:el?.item,
                         <CTableHeaderCell>Product Code</CTableHeaderCell>
                         <CTableHeaderCell>Product Name</CTableHeaderCell>
                         <CTableHeaderCell>Brand Name</CTableHeaderCell>
-                        <CTableHeaderCell>No of item</CTableHeaderCell>
+                        <CTableHeaderCell>No of Item</CTableHeaderCell>
                         <CTableHeaderCell>Total Price</CTableHeaderCell>
                     </CTableRow>
                 </CTableHead>

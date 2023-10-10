@@ -301,7 +301,7 @@ const routes = [
   { path: '/finance/comment-written', name: 'Comments Of written Off Invoice', element: CommentOfWritten,mongoCollectionName:'"cancelinvoicereports"' },
   { path: '/finance/revenue-details', name: 'Revenue FY Details', element: RevenueDetails },
   { path: '/finance/service-revenue', name: 'Services Revenue', element: ServiceRevenue,mongoCollectionName:'serviceRevenue' },
-  { path: '/finance/renew-revenue', name: 'Renewals Revenue Wise', element: RenewRevenue,mongoCollectionName:'renewalsUpgradeRevenue' },
+  { path: '/finance/renew-revenue', name: 'Revenue Renewals Wise', element: RenewRevenue,mongoCollectionName:'renewalsUpgradeRevenue' },
   { path: '/finance/newc-revenue', name: 'New Revenue', element: NewcRevenue,mongoCollectionName:'newClientRevenue'},
   { path: '/finance/l-r', name: 'Revenue Lead Report ', element: LeadReport ,mongoCollectionName:'leadReport'},
   { path: '/finance/revenue-report', name: 'Revenue FY Report', element: RevenueReport },

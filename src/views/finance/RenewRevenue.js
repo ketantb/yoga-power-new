@@ -259,7 +259,7 @@ const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
                     <CRow className=' mb-2' >
                        <CCol lg={4} className='mb-2'>
                             <CFormSelect value={selectedYear} onChange={(e)=>setSelectedYear(e.target.value)}>
-                                <option>slecte Year</option>
+                                <option>Select Year</option>
                                 {years.map((el)=>{
                                     return <option>{el}</option>
                                 })}  

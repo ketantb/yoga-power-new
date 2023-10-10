@@ -10,6 +10,8 @@ import {CCard,CTable,CCol,CTableHead,CTableRow,CTableHeaderCell,
     CFormCheck,
     CPagination,
     CPaginationItem,
+    CInputGroup,
+    CInputGroupText
  } from '@coreui/react'
 
  import { useSelector } from 'react-redux'
@@ -23,7 +25,6 @@ import {CCard,CTable,CCol,CTableHead,CTableRow,CTableHeaderCell,
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
-const username = user.user.username;
 
 
 import useAddProduct from '../finance/ClientInvoice/customHook/useAddProduct';
@@ -32,9 +33,8 @@ import useInputItemVal from '../finance/ClientInvoice/customHook/useInputItemVal
 import StockOrderListRecived from './StockOrderList/StockOrderListRecived';
 import { useAdminValidation,useUniqAdminObjeact } from '../Custom-hook/adminValidation';
 import { inventoryRight } from '../hr/Rights/rightsValue/erpRightsValue';
-
- 
-
+import StockListing from './CustomTableCompo/StockListing'
+import moment from 'moment/moment'
 
 function StockOrderList (){
 
@@ -47,7 +47,11 @@ function StockOrderList (){
         pagination2:0,
         pagination3:0,
     })
-
+    
+    const [dateFilterObj,setDteFilterObj] = useState({
+        startDate:moment(new Date(new Date().getFullYear(),new Date().getMonth(),1)).format('YYYY-MM-DD'),
+        endDate:moment(new Date()).format('YYYY-MM-DD')
+      })
     const rightsData = useSelector((el)=>el.empLoyeeRights?.erpRights.erpInventory.items.erpStockList.rights) 
 
     const access = rightsData?rightsData:[]
@@ -73,10 +77,29 @@ function StockOrderList (){
     const [error2,setError2] = useState(false)
     const [receviedProduct,setReceviedProductData]  = useState([])
 
+    const [searchFilter,setSearchFilter] = useState({
+        search1:'',
+        search2:'',
+        search3:'',
+        search4:'',
+        search5:'',
+        search6:'',
+        search7:'',
+        search8:'',
+        search9:'',
+        search10:'',
+        search11:'',
+        search12:'',
+        search13:'',
+        search14:'',
+    })    
+    const [paging, setPaging] = useState(0);
+
     const pathVal = useAdminValidation()
     const pathValMaster = useAdminValidation('Master')
 
     const uniqObj =  useUniqAdminObjeact()
+
 
 
 
@@ -291,7 +314,7 @@ axios.post(`${url}/stockorderlist/update/${item._id}`, {...UpdateObj,...uniqObjV
 }
 
 function getStockAssigningR() {
-    axios.get(`${url}/stockorderlist/recevied/${pathVal}`,{headers})
+    axios.get(`${url}/stockorderlist/${dateFilterObj.startDate}/${dateFilterObj.endDate}/recevied/${pathVal}`,{headers})
    
            .then((res) => {
              setReceviedProductData(res.data.reverse())
@@ -301,6 +324,16 @@ function getStockAssigningR() {
            })
    }
 
+   function toFilterData(data){
+    return data.filter((el)=>{
+        return (el?.productCategory?.toLowerCase()).includes(searchFilter.search2.toLowerCase().trim())&&
+        (el.productName?.toLowerCase()||'').includes(searchFilter.search3.toLowerCase().trim())&&
+        (el.brandName?.trim()?.toLowerCase()||'').includes(searchFilter.search4.toLowerCase().trim())&&
+        (el.category?.toLowerCase()||'').includes(searchFilter.search5.toLowerCase().trim())&&
+        (el.Color?.toLowerCase()||'').includes(searchFilter.search6.toLowerCase().trim())&&
+        (el.productPrize?.toLowerCase()||'').includes(searchFilter.search7.toLowerCase().trim())
+  })
+  }
 
 
     return (
@@ -338,6 +371,7 @@ function getStockAssigningR() {
       </CNavItem>}
 
     </CNav>
+
     <CTabContent>
 
     {((access.includes(inventoryRight.stockListAdd) || isAdmin)&& 
@@ -362,6 +396,41 @@ function getStockAssigningR() {
            </div>
     </CCol>}
 
+    <CCol lg={5} md={7} style={{display:activeKey !==3?'none':'block' }}>
+                        <div className='d-flex justify-content-between mb-2'>
+                            <CInputGroup >
+
+                                <CInputGroupText
+                                    component="label"
+                                    htmlFor="inputGroupSelect01"
+                                >
+                                    Form
+                                </CInputGroupText>
+                                <CFormInput
+                                    type="date"
+                                    value={dateFilterObj.startDate}
+                                    onChange={(e)=>setDteFilterObj((prev)=>({...prev,startDate:e.target.value}))}
+
+                                  
+                                /><CInputGroupText
+                                    component="label"
+                                    htmlFor="inputGroupSelect01"
+
+                                >
+                                    To
+                                </CInputGroupText>
+                                <CFormInput
+                                    type="date"
+                                    value={dateFilterObj.endDate}
+                                    onChange={(e)=>setDteFilterObj((prev)=>({...prev,endDate:e.target.value}))}
+                                                                   />
+                                <CButton type="button" color="primary" onClick={()=>getStockAssigningR()} >
+                                    Go
+                                </CButton>
+                            </CInputGroup>
+                        </div>
+                        </CCol>
+
       <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={activeKey ===((access.includes(inventoryRight.stockListView) || isAdmin) &&1)}>   
          
 
@@ -380,13 +449,37 @@ function getStockAssigningR() {
                                 Add quantity<br/>To order</CTableHeaderCell>                      
                            </CTableRow>
                        </CTableHead>
+
                        <CTableBody>
-                           
-                       {allProductData.map((item,i)=>{        
+                     <CTableRow>
+ 
+ 
+                     <CTableDataCell >
+                            <CFormInput className='min-width-90' disabled value={searchFilter.search1} 
+                            onChange={(e)=>setSearchFilter((prev)=>({...prev,search1:e.target.value}))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search2} 
+                            onChange={(e)=>setSearchFilter((prev)=>({...prev,search2:e.target.value}))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search3} 
+                            onChange={(e)=>setSearchFilter((prev)=>({...prev,search3:e.target.value}))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search4} 
+                            onChange={(e)=>setSearchFilter((prev)=>({...prev,search4:e.target.value}))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search5} 
+                            onChange={(e)=>setSearchFilter((prev)=>({...prev,search5:e.target.value}))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput className='min-width-90'value={searchFilter.search6} 
+                            onChange={(e)=>setSearchFilter((prev)=>({...prev,search6:e.target.value}))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search7} 
+                            onChange={(e)=>setSearchFilter((prev)=>({...prev,search7:e.target.value}))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput disabled className='min-width-90' value={searchFilter.search8} 
+                            onChange={(e)=>setSearchFilter((prev)=>({...prev,search8:e.target.value}))} /> </CTableDataCell>
+
+                     </CTableRow>
+                                  
+                            
+                       {toFilterData(allProductData).slice(paging * 10, paging * 10 + 10).map((item,i)=>{        
                                                  const itemVal =   noofProduct.find((el)=>el.id===item._id)?.item
                   
                          return <CTableRow >
-                               <CTableDataCell>{i+1}</CTableDataCell>
+                               <CTableDataCell>{i+ 1 + (paging * 10) }</CTableDataCell>
                                <CTableDataCell>{item.productCategory}</CTableDataCell>
                                <CTableDataCell>{item.productName}</CTableDataCell>
                                <CTableDataCell>{item.brandName}</CTableDataCell>
@@ -426,79 +519,38 @@ function getStockAssigningR() {
                          
                        </CTableBody>
          </CTable>
+         <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {toFilterData(allProductData).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {toFilterData(allProductData).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {toFilterData(allProductData).length > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                    </CPagination>  
       </CTabPane>
 
       <CTabPane role="tabpanel" aria-labelledby="contact-tab" visible={activeKey === 2}>
+        <StockListing
+         access={access}
+         isAdmin={isAdmin}
+         toSetExcelData={toSetExcelData}
+         orderList={orderList}
+         ordeReceived={ordeReceived}   
+         error2={error2}
+         activeCExcelCheck={activeCExcelCheck}   
+         selectAllOption={selectAllOption}
+        />
 
-        <CCol className='pt-4'>
-            {
-                (access.includes(inventoryRight.orderListSelect) || isAdmin)&&
-                <CButton onClick={()=>selectAllOption()} className='me-2'>Select all optiom</CButton>
-            }   
-            {
-                (access.includes(inventoryRight.orderListExport) || isAdmin)&&
-                <CButton onClick={()=>downloadAsExcel()}>Export to excel</CButton>
-            }  
 
-            {error2&&<p style={{color:'red'}}>Please select data to export</p>}
-         </CCol>
-      <CTable className='mt-3 ' align="middle" bordered style={{ borderColor: "#0B5345"}} hover responsive>                  
-                       <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                           <CTableRow >
-                             <CTableHeaderCell
-                             style={{display:
-                                (access.includes(inventoryRight.orderListSelect) || isAdmin)?'':'none'}}
-                             >Select Option</CTableHeaderCell>
-                               <CTableHeaderCell>Sr No</CTableHeaderCell>
-                               <CTableHeaderCell>Order Date</CTableHeaderCell>
-                               <CTableHeaderCell>Product Category</CTableHeaderCell>
-                               <CTableHeaderCell>Product Name</CTableHeaderCell>
-                               <CTableHeaderCell>Brand Name</CTableHeaderCell>
-                               <CTableHeaderCell>Size/Kg</CTableHeaderCell>
-                               <CTableHeaderCell>Color</CTableHeaderCell>
-                               <CTableHeaderCell>Product Prize</CTableHeaderCell>
-                               <CTableHeaderCell>Product quantity</CTableHeaderCell>     
-                               <CTableHeaderCell>Order by</CTableHeaderCell>                      
-                               <CTableHeaderCell 
-                               style={{display:
-                                (access.includes(inventoryRight.receivedStatus) || isAdmin)?'':'none'}}
-                               >Status</CTableHeaderCell>                      
-                           </CTableRow>
-                       </CTableHead>
-                       <CTableBody>
-                           
-                       {   orderList?.filter((el)=>el?.Status!=='Recevied').map((item,i)=>{        
-                  
-                         return <CTableRow >
-                               <CTableDataCell style={{display:
-                                (access.includes(inventoryRight.orderListSelect) || isAdmin)?'':'none'}} >
-                                {(access.includes(inventoryRight.orderListSelect) || isAdmin)&&
-                                <CFormCheck  checked={activeCExcelCheck.includes(item._id)}  onChange={()=>toSetExcelData(item)}  />
-                                }
-                                </CTableDataCell>
-
-                               <CTableDataCell>{i+1}</CTableDataCell>
-                               <CTableDataCell>{new Date(item.Order_Date).toLocaleString()}</CTableDataCell>
-                               <CTableDataCell>{item.Product_Category}</CTableDataCell>
-                               <CTableDataCell>{item.Product_Name}</CTableDataCell>
-                               <CTableDataCell>{item.Brand_Name}</CTableDataCell>
-                               <CTableDataCell>{item.Category}</CTableDataCell>
-                               <CTableDataCell>{item.Color}</CTableDataCell>
-                               <CTableDataCell>{item.Product_Price}</CTableDataCell>
-                               <CTableDataCell>{item.Orders_Quantity}</CTableDataCell>
-                               <CTableDataCell>{item.EmployeeName}</CTableDataCell>  
-                               <CTableDataCell
-                               style={{display:
-                                (access.includes(inventoryRight.receivedStatus) || isAdmin)?'':'none'}}
-                               >
-               
-                                <CButton  onClick={()=>ordeReceived(item)}>Received?</CButton>
-                                </CTableDataCell>                                                                                                            
-                           </CTableRow>                   
-                       })}                         
-                       </CTableBody>
-                    
-         </CTable>
+      
 
 
       </CTabPane>

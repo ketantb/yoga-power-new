@@ -34,6 +34,8 @@ const StockOrderListRecived = ({visible,receviedProduct}) => {
                        </CTableRow>
                    </CTableHead>
                    <CTableBody>
+
+                    
                        
                    {receviedProduct.slice(paging * 10, paging * 10 + 10).map((item,i)=>{        
               

@@ -197,7 +197,7 @@ function totfilterData(data){
                     <CRow className=' mb-2' >
                         <CCol lg={4} className='mb-2'>
                             <CFormSelect value={selectedYear} onChange={(e)=>setSelectedYear(e.target.value)}>
-                                <option>slecte Year</option>
+                                <option>Select Year</option>
                                 {years.map((el)=>{
                                     return <option>{el}</option>
                                 })}  
@@ -245,7 +245,7 @@ function totfilterData(data){
                                     <CTableHeaderCell scope="col">
                                         No of Leads
                                     </CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">No of clients</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">No of Clients</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>

@@ -131,7 +131,7 @@ console.log(annualRevenue)
                         <CRow >
                         <CCol lg={4} className='mb-2'>
                             <CFormSelect value={selectedYear} onChange={(e)=>setSelectedYear(e.target.value)}>
-                                <option>slecte Year</option>
+                                <option>Select Year</option>
                                 {years.map((el)=>{
                                     return <option>{el}</option>
                                 })}  

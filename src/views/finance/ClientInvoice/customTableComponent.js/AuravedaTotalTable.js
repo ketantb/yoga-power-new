@@ -60,7 +60,7 @@ const AuravedaTotalTable = ({auravedaStore,status,validate,toRenderErrorOnFronte
                         <CTableHeaderCell>Product Name</CTableHeaderCell>
                         <CTableHeaderCell>Brand Name</CTableHeaderCell>
                         <CTableHeaderCell>Size</CTableHeaderCell>
-                        <CTableHeaderCell>No of item</CTableHeaderCell>
+                        <CTableHeaderCell>No of Item</CTableHeaderCell>
                         <CTableHeaderCell>Total Price</CTableHeaderCell>
                         {status || <CTableHeaderCell>Status</CTableHeaderCell>}
 

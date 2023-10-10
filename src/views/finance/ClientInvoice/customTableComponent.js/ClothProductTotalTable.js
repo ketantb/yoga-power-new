@@ -60,7 +60,7 @@ if(updatedItemId.length){
                         <CTableHeaderCell>Brand Name</CTableHeaderCell>
                         <CTableHeaderCell>Size</CTableHeaderCell>
                         <CTableHeaderCell>Color</CTableHeaderCell>
-                        <CTableHeaderCell>No of item</CTableHeaderCell>
+                        <CTableHeaderCell>No of Item</CTableHeaderCell>
                         
                         <CTableHeaderCell>Total Price</CTableHeaderCell>
                        
