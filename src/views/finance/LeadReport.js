@@ -235,7 +235,7 @@ const LeadReport= props => {
                             <CTableBody>
                                {toFilterData(leadReportData).slice(paging * 10, paging * 10 + 10).map((el,i)=>{
                                return <CTableRow key={i}>
-                                <CTableDataCell>{i+1}</CTableDataCell>
+                                <CTableDataCell>{i + 1 + (paging * 10)}</CTableDataCell>
                                     <CTableDataCell>{el.year}</CTableDataCell>
                                     <CTableDataCell>{monthName[el.month]}</CTableDataCell>
                                     <CTableDataCell>{el.typeOfEnquiry}</CTableDataCell>

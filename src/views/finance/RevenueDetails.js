@@ -89,7 +89,7 @@ useEffect(()=>{
         if(!val){crr.push(el)}} return crr
         },[])
 
-      setYears(AllYear.map((el)=>el.Year))
+      setYears(AllYear.map((el)=>el.Year).filter((el,i,arr)=>arr.indexOf(el)===i))
 
 
 let revenueDetails = {
@@ -204,7 +204,7 @@ function clearFilter(){
 
               }).map((el,i)=>
                                 <CTableRow key={i}>
-                                <CTableDataCell>{i+1}</CTableDataCell>
+                                <CTableDataCell>{i + 1 + pagination - 10}</CTableDataCell>
                                     <CTableDataCell>{el.Year}</CTableDataCell>
                                     <CTableDataCell>{monthNaame[el.Month]}</CTableDataCell>
                                     <CTableDataCell>Rs {el.totaLInvoiceAmount}</CTableDataCell>

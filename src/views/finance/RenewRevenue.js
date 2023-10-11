@@ -250,7 +250,7 @@ const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                 <CCardHeader>
-                        <strong className="mt-2">Renewals Revenue Wise</strong>
+                        <strong className="mt-2"> Revenue Renewals Wise</strong>
                     </CCardHeader>
 
             
@@ -323,7 +323,7 @@ const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
                                     if (pagination - 10 < i + 1 && pagination >= i + 1) {
                                     return el}}).map((el,i)=>
                                 <CTableRow>
-                                   <CTableDataCell>{i+1}</CTableDataCell>
+                                   <CTableDataCell>{i + 1 + pagination - 10}</CTableDataCell>
                                    <CTableDataCell>{el.year}</CTableDataCell>
                                     <CTableDataCell>{monthName[el.month]}</CTableDataCell>
                                     <CTableDataCell>{el.typeOfService}</CTableDataCell>

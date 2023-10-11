@@ -253,7 +253,7 @@ setserviceData([...new Set(serviceRevenueData.map((el)=>el.typeOfService))])
 
               }).map((el,i)=>
                             <CTableRow key={i}>
-                              <CTableDataCell>{i+1}</CTableDataCell>
+                              <CTableDataCell>{i + 1 + pagination - 10}</CTableDataCell>
                                 <CTableDataCell>{el.year}</CTableDataCell>
                                 <CTableDataCell> {monthName[el.month]}</CTableDataCell>
                                 <CTableDataCell>{el.typeOfService}</CTableDataCell>
