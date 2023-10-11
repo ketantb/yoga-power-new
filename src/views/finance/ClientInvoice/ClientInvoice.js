@@ -378,7 +378,7 @@ return   <>
 
                      <div className="ps-4">
                          <CFormSelect
-                         label="Counselor"
+                         label="Counsellor"
                          value={selectedStaffId}
                          onChange={(e)=>setSelectedStaffId( e.target.value)}                                                                                                                                  
                                     >

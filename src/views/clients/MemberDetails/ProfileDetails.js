@@ -528,7 +528,7 @@ const ProfileDetails = ({ ids, deleteId,clinetData }) => {
                                             <CCol xs={6}>
                                                 <CFormInput
                                                     className="mb-1"
-                                                    aria-label="Counselor"
+                                                    aria-label="Counsellor"
                                                     value={MemberManager}
                                                     disabled
                                                     label="Member Manager"   

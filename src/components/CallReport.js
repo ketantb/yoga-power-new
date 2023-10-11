@@ -159,7 +159,7 @@ const CallReport = ({ add, clickfun, id }) => {
                                 onChange={(e) => setCounseller(e.target.value)}
                                 id="exampleFormControlInput1"
                                 label="Counsellor"
-                                placeholder="Enter Counselor Name"
+                                placeholder="Enter Counsellor Name"
                             />
                         </CCol>
 

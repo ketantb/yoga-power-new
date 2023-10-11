@@ -735,10 +735,10 @@ setImageUrl(data?.image)
                                                 aria-label="Select Member Manager"
                                                 value={MemberManager}
                                                 onChange={(e) => setMemberManager(e.target.value)}
-                                                label="Counselor"                                                     
+                                                label="Counsellor"                                                     
                                                 
                                             >
-                                                 <option>Select Counselor</option>
+                                                 <option>Select Counsellor</option>
                                                 {staff.filter((list) => 
                                                  list.selected === 'Select').map((item, index) => (
                                                     <option key={index}>{item.FullName}</option>

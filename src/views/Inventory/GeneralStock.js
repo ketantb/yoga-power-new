@@ -7,6 +7,8 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
+    CPagination,
+    CPaginationItem
 } from "@coreui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -74,7 +76,10 @@ const ClothesProduct = () => {
  
     function toFilterData(data){
         return data.filter((el)=>{
-            return((el.productName+"").toLowerCase()||'').includes(searchFilter.search3.toLowerCase().trim())&&
+            return(
+                ((el.productCode+"").toLowerCase()||'').includes(searchFilter.search2.toLowerCase().trim())&&
+
+                ((el.productName+"").toLowerCase()||'').includes(searchFilter.search3.toLowerCase().trim())&&
             (el.productDetails.Brand_Name.toLowerCase()||'').includes(searchFilter.search4.toLowerCase().trim())&&
             (el.productDetails.Product_Price.toLowerCase()||'').includes(searchFilter.search5.toLowerCase().trim())&&
             ((el.Total_Stock+""||'').toLowerCase()||'').includes(searchFilter.search6.toLowerCase().trim())&&
@@ -82,7 +87,7 @@ const ClothesProduct = () => {
             ((el.Available_Stock+"")?.toLowerCase()||'').includes(searchFilter.search8.toLowerCase().trim())   &&
             ((el.productDetails.Color+"")?.toLowerCase()||'').includes(searchFilter.search9.toLowerCase().trim()) &&
             ((el.productDetails.Category+"")?.toLowerCase()||'').includes(searchFilter.search10.toLowerCase().trim())
-      })
+        )})
       }
 
     
@@ -111,7 +116,7 @@ const ClothesProduct = () => {
                            <CTableDataCell >
                             <CFormInput className='min-width-90' disabled value={searchFilter.search1} 
                             onChange={(e)=>setSearchFilter((prev)=>({...prev,search1:e.target.value}))} /> </CTableDataCell>
-                            <CTableDataCell ><CFormInput disabled className='min-width-90' value={searchFilter.search2} 
+                            <CTableDataCell ><CFormInput  className='min-width-90' value={searchFilter.search2} 
                             onChange={(e)=>setSearchFilter((prev)=>({...prev,search2:e.target.value}))} /> </CTableDataCell>
                             <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search3} 
                             onChange={(e)=>setSearchFilter((prev)=>({...prev,search3:e.target.value}))} /> </CTableDataCell>
@@ -131,9 +136,9 @@ const ClothesProduct = () => {
                             onChange={(e)=>setSearchFilter((prev)=>({...prev,search10:e.target.value}))} /> </CTableDataCell>                
                    </CTableRow>
                     
-                    {toFilterData(result1).map((item, index) => (
-                        <CTableRow key={index} className="text-center">
-                            <CTableDataCell>{index +1}</CTableDataCell>
+                    {toFilterData(result1).slice(paging * 10, paging * 10 + 10).map((item, i) => (
+                        <CTableRow key={i} className="text-center">
+                            <CTableDataCell>{(i+1+ (paging * 10))}</CTableDataCell>
                             <CTableDataCell>{item.productCode}</CTableDataCell>
                             <CTableDataCell>{item.productName}</CTableDataCell>
                             <CTableDataCell>{item.productDetails.Brand_Name}</CTableDataCell>
@@ -150,6 +155,22 @@ const ClothesProduct = () => {
                 </CTableBody>
             </CTable>
 
+            <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {toFilterData(result1).length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {toFilterData(result1).length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {toFilterData(result1).length > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                    </CPagination> 
            
         </CRow>
 

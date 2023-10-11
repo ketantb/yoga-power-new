@@ -72,13 +72,15 @@ const ClothesProduct = () => {
     
     function toFilterData(data){
         return data.filter((el)=>{
-            return((el.productName+"").toLowerCase()||'').includes(searchFilter.search3.toLowerCase().trim())&&
+            return(
+            ((el.productCode+"").toLowerCase()||'').includes(searchFilter.search2.toLowerCase().trim())&&
+            ((el.productName+"").toLowerCase()||'').includes(searchFilter.search3.toLowerCase().trim())&&
             (el?.productDetails?.Brand_Name.toLowerCase()||'').includes(searchFilter.search4.toLowerCase().trim())&&
             (el?.productDetails.Category.toLowerCase()||'').includes(searchFilter.search5.toLowerCase().trim())&&
             (el.productDetails.Product_Price.toLowerCase()||'').includes(searchFilter.search6.toLowerCase().trim())   &&
             ((el.Total_Stock+"")?.toLowerCase()||'').includes(searchFilter.search7.toLowerCase().trim())   &&
             ((Math.abs(el.soldQuantity)+"")?.toLowerCase()||'').includes(searchFilter.search8.toLowerCase().trim()) &&
-            ((el.Available_Stock+"")?.toLowerCase()||'').includes(searchFilter.search9.toLowerCase().trim()) 
+            ((el.Available_Stock+"")?.toLowerCase()||'').includes(searchFilter.search9.toLowerCase().trim()) )
       })
       }
     
@@ -112,7 +114,7 @@ const ClothesProduct = () => {
                            <CTableDataCell >
                             <CFormInput className='min-width-90' disabled value={searchFilter.search1} 
                             onChange={(e)=>setSearchFilter((prev)=>({...prev,search1:e.target.value}))} /> </CTableDataCell>
-                            <CTableDataCell ><CFormInput disabled className='min-width-90' value={searchFilter.search2} 
+                            <CTableDataCell ><CFormInput  className='min-width-90' value={searchFilter.search2} 
                             onChange={(e)=>setSearchFilter((prev)=>({...prev,search2:e.target.value}))} /> </CTableDataCell>
                             <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search3} 
                             onChange={(e)=>setSearchFilter((prev)=>({...prev,search3:e.target.value}))} /> </CTableDataCell>
@@ -129,9 +131,9 @@ const ClothesProduct = () => {
                             <CTableDataCell ><CFormInput  className='min-width-90' value={searchFilter.search9} 
                             onChange={(e)=>setSearchFilter((prev)=>({...prev,search9:e.target.value}))} /> </CTableDataCell>                    
                    </CTableRow>  
-                    {toFilterData(result1).map((item, index) => (
-                        <CTableRow key={index}>
-                            <CTableDataCell>{index +1}</CTableDataCell>
+                    {toFilterData(result1).slice(paging * 10, paging * 10 + 10).map((item, i) => (
+                        <CTableRow key={i}>
+                            <CTableDataCell>{i+ 1 + (paging * 10) }</CTableDataCell>
                             <CTableDataCell>{item.productCode}</CTableDataCell>
                             <CTableDataCell>{item.productName}</CTableDataCell>
                             <CTableDataCell>{item.productDetails.Brand_Name}</CTableDataCell>

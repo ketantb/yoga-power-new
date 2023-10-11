@@ -378,7 +378,7 @@ function getStockAssigningR() {
       (access.includes(inventoryRight.receivedStatus) || isAdmin))
     &&<CCol className='p-4 d-flex justify-content-end'  >
            <div style={{display:activeKey ===3?'none':'block' }}>
-            <h6>{activeKey===1?'Order by':' Recevied by'}</h6>
+            <h6>{activeKey===1?'Order by':' Received by'}</h6>
            <CFormSelect 
             style={{maxWidth:'350px',minWidth:'150px'}}
             value={selectedStaff}
