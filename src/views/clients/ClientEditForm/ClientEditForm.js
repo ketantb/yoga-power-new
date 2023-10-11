@@ -323,7 +323,7 @@ setImageUrl(data?.image)
 
 
 
-  return  <CModal size='xl' style={{ border: '2px solid #0B5345' }} scrollable visible={showEdit} onClose={closeEdit} >
+  return  <CModal size='xl'  scrollable visible={showEdit} onClose={closeEdit} >
 
     <CModalHeader  >
         <CModalTitle>Edit Form</CModalTitle>
