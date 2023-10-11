@@ -106,9 +106,9 @@ const Assigned = ({stockAssigningData}) => {
                         </CTableRow>
 
 
-        {toFilterData(stockAssigningData).map((item, index) =>
+        {toFilterData(stockAssigningData).slice(paging * 10, paging * 10 + 10).map((item, i) =>
             <CTableRow >
-                <CTableDataCell>{index + 1}</CTableDataCell>
+                <CTableDataCell>{i + 1 + (paging * 10)}</CTableDataCell>
                 <CTableDataCell>{new Date(item.Assigned_Date).toLocaleString()}</CTableDataCell>
                 <CTableDataCell>{item.Product_Category}</CTableDataCell>
                 <CTableDataCell>{item.Product_Name}</CTableDataCell>

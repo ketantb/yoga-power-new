@@ -347,10 +347,10 @@ return (
                     
                         </CTableRow>
 
-                           {toFilterData(allProductData).map((el,i)=>
+                           {toFilterData(allProductData).slice(paging * 10, paging * 10 + 10).map((el,i)=>
                            
                       <CTableRow >
-                           <CTableDataCell>{i+1}</CTableDataCell>
+                           <CTableDataCell>{i + 1 + (paging * 10)}</CTableDataCell>
                            <CTableDataCell>{el.productCategory}</CTableDataCell>
                            <CTableDataCell>{el.productName}</CTableDataCell>
                            <CTableDataCell>{el.brandName}</CTableDataCell>

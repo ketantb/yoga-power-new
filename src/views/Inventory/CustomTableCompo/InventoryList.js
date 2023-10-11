@@ -98,16 +98,14 @@ function toFilterData(data){
                             <CTableDataCell ><CFormInput  className='min-width-90' value={searchFilter.search8}
                                 onChange={(e) => setSearchFilter((prev) => ({ ...prev, search8: e.target.value }))} /> </CTableDataCell>
                              <CTableDataCell ><CFormInput disabled className='min-width-90' value={searchFilter.search9}
-                                onChange={(e) => setSearchFilter((prev) => ({ ...prev, search9: e.target.value }))} /> </CTableDataCell> 
-                                       
+                                onChange={(e) => setSearchFilter((prev) => ({ ...prev, search9: e.target.value }))} /> </CTableDataCell>                                        
                         </CTableRow>
 
-
-        {toFilterData(allProductData).map((item, i) => {
+        {toFilterData(allProductData).slice(paging * 10, paging * 10 + 10).map((item, i) => {
             const itemVal = noofProduct.find((el) => el.id === item._id)?.item
 
             return <CTableRow >
-                <CTableDataCell>{i + 1}</CTableDataCell>
+                <CTableDataCell>{i + 1 + (paging * 10)}</CTableDataCell>
                 <CTableDataCell>{item.productCategory}</CTableDataCell>
                 <CTableDataCell>{item.productName}</CTableDataCell>
                 <CTableDataCell>{item.brandName}</CTableDataCell>
