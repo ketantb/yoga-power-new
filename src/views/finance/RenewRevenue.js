@@ -303,9 +303,9 @@ const serviceRevenueData =  classiFyAcordingToMonth.map((el)=>{
                                     <CTableHeaderCell scope="col">Sr No</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Year</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Month</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Services wise client</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Services </CTableHeaderCell>
                                     <CTableHeaderCell scope="col">
-                                        Total Renewal client
+                                        Total Renewal Client
                                     </CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Renewed</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">No. of Left</CTableHeaderCell>
