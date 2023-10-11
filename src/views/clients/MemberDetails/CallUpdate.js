@@ -29,7 +29,7 @@ const CallUpdate = ({ id }) => {
                                 active={activeKey === 1}
                                 onClick={() => setActiveKey(1)}
                             >
-                                Salles Call
+                                Sales Call
                             </CNavLink>
                         </CNavItem>
                         <CNavItem>

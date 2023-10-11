@@ -131,7 +131,7 @@ const editClientDataFun =(el)=>{
             <CTableHeaderCell>Calf(R)</CTableHeaderCell>
             <CTableHeaderCell>Calf(L)</CTableHeaderCell>
 
-            <CTableHeaderCell>Counseller</CTableHeaderCell>
+            <CTableHeaderCell>Counsellor</CTableHeaderCell>
             <CTableHeaderCell>NextFollowup Date</CTableHeaderCell>
             <CTableHeaderCell>Edit/Delete</CTableHeaderCell>
 

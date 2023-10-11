@@ -120,7 +120,7 @@ const PostpaidRevenueRealisation = () => {
                             <CTableHead style={{ backgroundColor: "#106103", color: "white" }}>
                                 <CTableRow>
                                     <CTableHeaderCell scope="col">Sr No</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Counseller</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Counsellor</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Target</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">
                                         Achieved/Collected

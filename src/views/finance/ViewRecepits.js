@@ -103,7 +103,7 @@ console.log(error)
         <CRow className='mt-3 text-center'>
           <CCol className='text-start'>Date {getDate(receptsData.NewSlipDate,true)}</CCol>
           <CCol>{receptsInvoiceData.InvoiceNo+"RN"+resiptNo}</CCol>
-          <CCol className='text-end' >Counseller :-  {receptsData.Counseller||receptsData.counseller} </CCol>
+          <CCol className='text-end' >Counsellor :-  {receptsData.Counseller||receptsData.counseller} </CCol>
         </CRow>   
     </header>
     <section>

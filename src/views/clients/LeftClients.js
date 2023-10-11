@@ -433,7 +433,7 @@ function NavigateFitnnesofClient(id){
 
                         <CallUpdate add={Calls} clickfun={() => setCalls(false)} ids={CallUpdateID} />
                         
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible} 
+                        <CModal size='lg'  visible={visible} 
                         onClose={() => setVisible(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Upgrade Form</CModalTitle>
@@ -502,9 +502,9 @@ function NavigateFitnnesofClient(id){
                                                 aria-label="Select Assign Staff"
                                                 value={Counseller}
                                                 onChange={(e) => setCounseller(e.target.value)}
-                                                label='Counseller'
+                                                label='Counsellor'
                                             >
-                                                <option>Select Counseller</option>
+                                                <option>Select Counsellor</option>
                                                 {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                                    (
                                                         <option key={index}>{item.FullName}</option>

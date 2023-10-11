@@ -250,7 +250,7 @@ const obj2 = {
                                                 service
                                             </CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Discussion</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">Counseller</CTableHeaderCell>
+                                            <CTableHeaderCell scope="col">Counsellor</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Follow up by</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                                         </CTableRow>

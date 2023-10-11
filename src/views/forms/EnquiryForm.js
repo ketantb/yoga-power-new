@@ -555,7 +555,7 @@ return
                                         onChange={(e) => setCounseller(e.target.value)}
                                         label='Counseller'
                                     >
-                                        <option value={''}>Select Counseller</option>
+                                        <option value={''}>Select Counsellor</option>
                                         {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                              (
                                                 <option key={index} value={item._id}>{[item.FullName,item.EmployeeID].join('\n')}</option>

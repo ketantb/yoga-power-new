@@ -249,7 +249,7 @@ setUpdateForm(prev=>({...prev,followupby:uniqObjectVal.employeeMongoId}))
                                             <CTableHeaderCell scope="col">Paid</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Balance</CTableHeaderCell>
                                             <CTableHeaderCell scope="col" style={{maxWidth:'300px'}} >Discussion</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">Counseller</CTableHeaderCell>
+                                            <CTableHeaderCell scope="col">Counsellor</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Follow up by</CTableHeaderCell>
 
                                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>

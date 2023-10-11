@@ -43,7 +43,7 @@ const CallUpdate = ({ add, clickfun, ids }) => {
                             <CTableHeaderCell>Date</CTableHeaderCell>
                             <CTableHeaderCell>Time</CTableHeaderCell>
                             <CTableDataCell>Discussion</CTableDataCell>
-                            <CTableHeaderCell>Counseller</CTableHeaderCell>
+                            <CTableHeaderCell>Counsellor</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>

@@ -122,7 +122,7 @@ return <div  className='my-5' >
                                      <div className='float-end'>
                                          Date : { getDate(el?.date,true)}<br />
                                          Invoice No: {el.InvoiceNo} <br />
-                                         Counseller : {el?.counseller}
+                                         Counsellor : {el?.counseller}
                                      </div>
                                  </CCol>
                             </CRow>    

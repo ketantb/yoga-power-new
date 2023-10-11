@@ -45,7 +45,7 @@ const AppointmentHistory = ({ add, clickfun, ids }) => {
                             <CTableHeaderCell>Date</CTableHeaderCell>
                             <CTableHeaderCell>Time</CTableHeaderCell>
                             <CTableDataCell>Discussion</CTableDataCell>
-                            <CTableHeaderCell>Counseller</CTableHeaderCell>
+                            <CTableHeaderCell>Counsellor</CTableHeaderCell>
                             <CTableHeaderCell>Action</CTableHeaderCell>
                             <CTableHeaderCell>Edit</CTableHeaderCell>
                         </CTableRow>

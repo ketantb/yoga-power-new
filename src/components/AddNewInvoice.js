@@ -419,7 +419,7 @@ setPendingAmount(total-paidAmount)
                                 component="label"
                                 htmlFor="inputGroupSelect01"
                             >
-                                Counseller :
+                                Counselor :
                             </CInputGroupText>
                             <CFormSelect
                              value={ser5}
@@ -875,7 +875,7 @@ setPendingAmount(total-paidAmount)
                                         <div className='float-end'>
                                             Date : {datetime}<br />
                                             Invoice No : {getInvoiceInfo.InvoiceNo} <br />
-                                            Counseller : {getInvoiceInfo.StaffFullName}
+                                            Counselor : {getInvoiceInfo.StaffFullName}
                                         </div>
                                     </CCol>
                                     <CCol lg={12} className='text-center mt-2'><h4>Invoice</h4></CCol>

@@ -461,7 +461,7 @@ function NavigateFitnnesofClient(id){
 
                         <CallUpdate add={Calls} clickfun={() => setCalls(false)} ids={CallUpdateID} />
                         
-                        <CModal size='lg' style={{ border: '2px solid #0B5345' }} visible={visible} 
+                        <CModal size='lg' visible={visible} 
                         onClose={() => setVisible(false)} >
                             <CModalHeader  >
                                 <CModalTitle>Upgrade Form</CModalTitle>

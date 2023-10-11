@@ -77,7 +77,7 @@ const TrainerDashboard = () => {
                             <CTableHead color="dark">
                                 <CTableRow>
                                     <CTableHeaderCell scope="col">Sr No</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Counseller</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Counsellor</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Target</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">
                                         Achieved/Collected

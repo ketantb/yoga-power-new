@@ -578,7 +578,7 @@ const ColdEnquires = () => {
 
                                 >
                                     <option value=''>Select</option>
-                                    <option value='Counseller'>Counseller </option>
+                                    <option value='Counseller'>Counsellor </option>
                                     <option value='enquirytype'>Lead Sources </option>
                                     <option value='appointmentfor'>Enquiry Stage </option>
                                     <option value='Message'>Last Call Status </option>
@@ -673,8 +673,8 @@ const ColdEnquires = () => {
                                                 value={Counseller}
                                                 onChange={(e) => setCounseller(e.target.value)}
                                                 id="exampleFormControlInput1"
-                                                label="Counseller"
-                                                placeholder="Enter Counseller Name"
+                                                label="Counsellor"
+                                                placeholder="Enter Counsellor Name"
                                             />
                                         </CCol>
 
@@ -799,9 +799,9 @@ const ColdEnquires = () => {
                                                 aria-label="Select Assign Staff"
                                                 value={Counseller}
                                                 onChange={(e) => setCounseller(e.target.value)}
-                                                label='Counseller'
+                                                label='Counsellor'
                                             >
-                                                <option>Select Counseller</option>
+                                                <option>Select Counsellor</option>
                                                 {staff.filter((list) =>  list.selected === 'Select')
                                                 .map((item, index) => (
                                                   (
@@ -978,7 +978,7 @@ const ColdEnquires = () => {
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
                                     <CTableHeaderCell>Message</CTableHeaderCell>
                                     <CTableHeaderCell>Assigned by</CTableHeaderCell>
-                                    <CTableHeaderCell>Counseller</CTableHeaderCell>
+                                    <CTableHeaderCell>Counsellor</CTableHeaderCell>
                                     {(isAdmin|| coldAdd)&&<CTableHeaderCell>Action</CTableHeaderCell>}
                                     {(isAdmin||coldDelete||coldEdit)&&<CTableHeaderCell>Edit</CTableHeaderCell>}
                             </CTableHead>

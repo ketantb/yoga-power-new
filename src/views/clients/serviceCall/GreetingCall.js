@@ -346,7 +346,7 @@ function filterData(feedBackCallData){
                 <CTableHeaderCell scope="col">Date of Birth</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Birth day status </CTableHeaderCell>
                 <CTableHeaderCell scope="col">Discussion</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Counseller</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Counsellor</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Follow up by</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>

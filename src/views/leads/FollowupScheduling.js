@@ -660,7 +660,7 @@ const FollowupScheduling = () => {
 
                                 >
                                     <option value=''>Select</option>
-                                    <option value='Counseller'>Counseller </option>
+                                    <option value='Counseller'>Counsellor </option>
                                     <option value='enquirytype'>Lead Sources </option>
                                     <option value='appointmentfor'>Enquiry Stage </option>
                                     <option value='Message'>Last Call Status </option>
@@ -760,8 +760,8 @@ const FollowupScheduling = () => {
                                                 value={Counseller}
                                                 onChange={(e) => setCounseller(e.target.value)}
                                                 id="exampleFormControlInput1"
-                                                label="Counseller"
-                                                placeholder="Enter Counseller Name"
+                                                label="Counsellor"
+                                                placeholder="Enter Counsellor Name"
                                             />
                                         </CCol>
 
@@ -886,9 +886,9 @@ const FollowupScheduling = () => {
                                                 aria-label="Select Assign Staff"
                                                 value={Counseller}
                                                 onChange={(e) => setCounseller(e.target.value)}
-                                                label='Counseller'
+                                                label='Counsellor'
                                             >
-                                                <option>Select Counseller</option>
+                                                <option>Select Counsellor</option>
                                                 {staff.filter((list) =>list.selected === 'Select')
                                                 .map((item, index) => (
                                                      (
@@ -1063,9 +1063,9 @@ const FollowupScheduling = () => {
                                                 aria-label="Select Assign Staff"
                                                 value={Counseller}
                                                 onChange={(e) => setCounseller(e.target.value)}
-                                                label='Counseller'
+                                                label='Counsellor'
                                             >
-                                                <option>Select Counseller</option>
+                                                <option>Select Counsellor</option>
                                                 {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (
                                                      (
                                                         <option key={index} value={item._id} >{[item.FullName,item.EmployeeID].join('\n')}</option>
@@ -1221,7 +1221,7 @@ const FollowupScheduling = () => {
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry Stage</CTableHeaderCell>
                                     <CTableHeaderCell>Discussion</CTableHeaderCell>
-                                    <CTableHeaderCell>Counseller</CTableHeaderCell>
+                                    <CTableHeaderCell>Counsellor</CTableHeaderCell>
                                     {(isAdmin|| prospectAdd)&&<CTableHeaderCell>Action</CTableHeaderCell>}
                                     {(isAdmin|| prospectEdit||prospectDelete)&&<CTableHeaderCell>Edit</CTableHeaderCell>}
                             </CTableHead>

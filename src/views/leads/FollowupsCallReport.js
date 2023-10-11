@@ -140,7 +140,7 @@ const FollowupCallReport = () => {
                                     <CTableHeaderCell>Call Status</CTableHeaderCell>
                                  
                                     <CTableHeaderCell>Discussion</CTableHeaderCell>
-                                    <CTableHeaderCell>Counseller</CTableHeaderCell>
+                                    <CTableHeaderCell>Counsellor</CTableHeaderCell>
                             </CTableHead>
                             <CTableBody>
                                 <CTableRow>

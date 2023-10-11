@@ -314,7 +314,7 @@ function discountHandler(rs,discount){
                                     <CTableHeaderCell scope="col">Service Duration</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Start Date</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">End Date</CTableHeaderCell>
-                                    <CTableHeaderCell scope="col">Counsellor</CTableHeaderCell>
+                                    <CTableHeaderCell scope="col">Counseller</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Created By</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Package Amount</CTableHeaderCell>
                                     <CTableHeaderCell scope="col">Discount</CTableHeaderCell> 

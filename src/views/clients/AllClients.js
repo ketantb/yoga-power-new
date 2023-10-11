@@ -585,8 +585,8 @@ function findLeftClient(list){
                                     <CTableHeaderCell>Invoice No</CTableHeaderCell>
                                     <CTableHeaderCell>Attendance ID</CTableHeaderCell>
                                     <CTableHeaderCell>Enquiry source</CTableHeaderCell>
-                                    <CTableHeaderCell>Course Name</CTableHeaderCell>
                                     <CTableHeaderCell>Service</CTableHeaderCell>
+                                    <CTableHeaderCell>T</CTableHeaderCell>
                                     <CTableHeaderCell>Duration</CTableHeaderCell>
                                     <CTableHeaderCell>Start Date</CTableHeaderCell>
                                     <CTableHeaderCell>End Date</CTableHeaderCell>

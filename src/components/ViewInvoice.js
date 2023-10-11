@@ -53,7 +53,7 @@ const ViewInvoice = ({ add, clickfun, invoiceId, clientId }) => {
             <div className='float-end'>
               Date : {moment(invoiceArr.datetime).format("MM-DD-YYYY")}<br />
               Invoice No : {invoiceArr.InvoiceNo} <br />
-              Counseller : {invoiceArr.counseller}
+              Counsellor : {invoiceArr.counseller}
             </div>
           </CCol>
 

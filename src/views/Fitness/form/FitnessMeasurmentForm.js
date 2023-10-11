@@ -429,7 +429,7 @@ console.log(error)
                 </CCol>
 
                 <CCol className='d-flex justify-content-between my-2' lg={6} >
-                    <h5 className="me-1">Counseller</h5>
+                    <h5 className="me-1">Counsellor</h5>
                     <div className="w-50">
                     <CustomSelectinput
                      data={employeeData}

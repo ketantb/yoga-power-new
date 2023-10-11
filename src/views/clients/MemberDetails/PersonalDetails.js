@@ -346,7 +346,7 @@ const PersonalDetails = ({ id }) => {
                             >
                                 <option>Select Service</option>
                                 {result1.map((item, index) => (
-                                    item.username === username && (
+                                    (
                                         item.status === true && (
                                             <option key={index}>{item.selected_service}</option>
                                         )
@@ -363,7 +363,7 @@ const PersonalDetails = ({ id }) => {
                             >
                                 <option>Select Service</option>
                                 {result1.filter((list) => list.selected_service === serviceName).map((item, index) => (
-                                    item.username === username && (
+                                     (
                                         item.status === true && (
                                             <option key={index}>{item.sub_Service_Name}</option>
                                         )
@@ -399,8 +399,8 @@ const PersonalDetails = ({ id }) => {
 
                             >
                                 <option>Select Enquiry Type</option>
-                                {leadArr.filter((list) => list.username === username).map((item, index) => (
-                                    item.username === username && (
+                                {leadArr.filter((list) => list).map((item, index) => (
+                                     (
                                         <option key={index}>{item.LeadSource}</option>
                                     )
                                 ))}</CFormSelect>
@@ -418,7 +418,7 @@ const PersonalDetails = ({ id }) => {
                                 label="Assign Staff"
                             >
                                 <option>Select Assign Staff</option>
-                                {staff.filter((list) => list.username === username && list.Department === 'Sales').map((item, index) => (
+                                {staff.filter((list) => list.Department === 'Sales').map((item, index) => (
                                     <option key={index}>{item.FullName}</option>
                                 ))}
                             </CFormSelect>
@@ -429,7 +429,7 @@ const PersonalDetails = ({ id }) => {
                                 aria-label="Select Member Manager"
                                 value={MemberManager}
                                 onChange={(e) => setMemberManager(e.target.value)}
-                                label="Member Manager"
+                                label="counsellor"
                                 options={[
                                     "Select Member Manager",
                                     { label: "prabha", value: "prabha" },
@@ -448,7 +448,7 @@ const PersonalDetails = ({ id }) => {
                                 label="Batch"
                             ><option>Select Batch</option>
                                 {result.map((item, index) => (
-                                    item.username === username && (
+                                    item (
                                         <option key={index} value={item.batch_timing}>{item.batch_timing} {item.Batch_Duration}</option>
                                     )
                                 ))}</CFormSelect>

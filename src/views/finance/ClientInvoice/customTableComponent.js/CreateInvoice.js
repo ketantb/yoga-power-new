@@ -171,7 +171,7 @@ item:el?.item,
                                         component="label"
                                         htmlFor="inputGroupSelect01"
                                     >
-                                        Counseller :
+                                        Counsellor :
                                     </CInputGroupText>
                                     <CFormInput
                                      value={clientReferance.StatffName}

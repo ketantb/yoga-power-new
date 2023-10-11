@@ -33,7 +33,7 @@ return function insertManyCollection(collection,getData=()=>{},number,importStaf
         ['identifyStage']:el["Enquiry stage"],
         ['CallStatus']:el["Call Status"],
         ['StaffName']:el['Assigned by'],
-        ['Counseller']:el['Counseller'],
+        ['Counsellor']:el['Counsellor'],
         ['Address']:el['Address'],
         ['Emailaddress']:el['Email'],
         ['Gander']:el['Gander'],

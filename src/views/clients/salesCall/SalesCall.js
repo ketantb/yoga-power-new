@@ -308,7 +308,7 @@ const SalesCall = ({}) => {
                                                 Service
                                             </CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Discussion</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">Counseller</CTableHeaderCell>
+                                            <CTableHeaderCell scope="col">Counsellor</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Delete</CTableHeaderCell>
                                         </CTableRow>
@@ -368,7 +368,7 @@ const SalesCall = ({}) => {
                                                 service
                                             </CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Discussion</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">Counseller</CTableHeaderCell>
+                                            <CTableHeaderCell scope="col">Counsellor</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Delete</CTableHeaderCell>
 
@@ -425,7 +425,7 @@ const SalesCall = ({}) => {
                                                 Service
                                             </CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Discussion</CTableHeaderCell>
-                                            <CTableHeaderCell scope="col">Counseller</CTableHeaderCell>
+                                            <CTableHeaderCell scope="col">Counsellor</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                                             <CTableHeaderCell scope="col">Delete</CTableHeaderCell>
 

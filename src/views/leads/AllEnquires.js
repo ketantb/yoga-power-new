@@ -606,7 +606,7 @@ const AllEnquires = () => {
                                         setCounseller(e.target.value)
                                     }}
                                 >
-                                    <option value={''}>Select Counseller</option>
+                                    <option value={''}>Select Counsellor</option>
                                     {staff.filter((list) => list.selected === 'Select').map((item, index) => (
                                         (
                                             <option key={index} value={item._id}>{[item.FullName, item.EmployeeID].join('\n')}</option>
@@ -744,7 +744,7 @@ const AllEnquires = () => {
                                     label="Filter By"
                                 >
                                     <option value=''>Select</option>
-                                    <option value='Counseller'>Counseller </option>
+                                    <option value='Counseller'>Counsellor </option>
                                     <option value='enquirytype'>Lead Sources </option>
                                     <option value='appointmentfor'>Enquiry Stage </option>
                                     <option value='Message'>Last Call Status </option>
@@ -839,9 +839,9 @@ const AllEnquires = () => {
                                                 aria-label="Select Assign Staff"
                                                 value={Counseller}
                                                 onChange={(e) => setCounseller(e.target.value)}
-                                                label='Counseller'
+                                                label='Counsellor'
                                             >
-                                                <option>Select Counseller</option>
+                                                <option>Select Counsellor</option>
                                                 {staff.filter((list) => list.selected === 'Select').map((item, index) => (
                                                     (
                                                         <option key={index} value={item._id}>{[item.FullName,item.EmployeeID].join('\n')}</option>
