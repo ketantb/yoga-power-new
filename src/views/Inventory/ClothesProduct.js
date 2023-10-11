@@ -96,7 +96,7 @@ const AllSuppilerList = () => {
                         <CTableHeaderCell>Size</CTableHeaderCell>
                         <CTableHeaderCell>Color</CTableHeaderCell>
                         <CTableHeaderCell>Price</CTableHeaderCell>
-                        <CTableHeaderCell>TOtal Stock</CTableHeaderCell>
+                        <CTableHeaderCell>Total Stock</CTableHeaderCell>
                         <CTableHeaderCell>Sold</CTableHeaderCell>
                         <CTableHeaderCell>AVL Stock</CTableHeaderCell>
                     </CTableRow>

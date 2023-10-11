@@ -154,7 +154,7 @@ function getStaff() {
 
 
 function toAddProduct(item){
-if(!selectedStaff.trim()){
+if(!selectedStaff?.trim()){
 setError(true)
 return 
 }
@@ -162,7 +162,7 @@ addProduct(item)
 }
     
 useEffect(()=>{
-if(!!selectedStaff.trim()){
+if(!!selectedStaff?.trim()){
         setError(false)
 }
 if(!!activeCExcelCheck.length){
@@ -191,7 +191,7 @@ function ConfirmProduct(id){
 
     const fullName = staff.find((el)=>el._id===selectedStaff)?.FullName
 
-if(!fullName.trim()){
+if(!fullName?.trim()){
         setError(true)
         return 
 }

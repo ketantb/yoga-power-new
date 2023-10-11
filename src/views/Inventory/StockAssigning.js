@@ -24,12 +24,14 @@ import useIncrementNoOfItem from '../finance/ClientInvoice/customHook/useIncreme
 import useInputItemVal from '../finance/ClientInvoice/customHook/useInputItemVal';
 import { useAdminValidation, useUniqAdminObjeact } from '../Custom-hook/adminValidation';
 import { inventoryRight } from '../hr/Rights/rightsValue/erpRightsValue';
-
+import InventoryList from './CustomTableCompo/InventoryList'
+import Assigned from './CustomTableCompo/Assigned'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
 
 function StockAssigning() {
+    
     const url = useSelector((el) => el.domainOfApi)
     const pathValMaster = useAdminValidation('Master')
     const pathVal = useAdminValidation('')
@@ -173,8 +175,6 @@ function StockAssigning() {
             }
 
         })
-        console.log(selctedProduct[0])
-
         axios.all([
             axios.post(`${ url }/stockAssigning/create`, { ...selctedProduct[0], ...uniAdminObjVal }, { headers }),
             axios.post(`${ url }/inventoryListingMaster/update/${ id }`, {
@@ -279,67 +279,17 @@ function StockAssigning() {
                 <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={activeKey === 1}>
 
 
-                    <CTable className='mt-3 ' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
 
-                        <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
-                            <CTableRow >
-                                <CTableHeaderCell>Sr No</CTableHeaderCell>
-                                <CTableHeaderCell>Product Category</CTableHeaderCell>
-                                <CTableHeaderCell>Product Name</CTableHeaderCell>
-                                <CTableHeaderCell>Brand Name</CTableHeaderCell>
-                                <CTableHeaderCell>Size/Kg</CTableHeaderCell>
-                                <CTableHeaderCell>Color</CTableHeaderCell>
-                                <CTableHeaderCell>Product Prize</CTableHeaderCell>
-                                <CTableHeaderCell>Available Stock</CTableHeaderCell>
-                                <CTableHeaderCell>Add quantity<br />To order</CTableHeaderCell>
-                            </CTableRow>
-                        </CTableHead>
-                        <CTableBody>
-
-                            {allProductData.map((item, i) => {
-                                const itemVal = noofProduct.find((el) => el.id === item._id)?.item
-
-                                return <CTableRow >
-                                    <CTableDataCell>{i + 1}</CTableDataCell>
-                                    <CTableDataCell>{item.productCategory}</CTableDataCell>
-                                    <CTableDataCell>{item.productName}</CTableDataCell>
-                                    <CTableDataCell>{item.brandName}</CTableDataCell>
-                                    <CTableDataCell>{item.category}</CTableDataCell>
-                                    <CTableDataCell>{item.Color}</CTableDataCell>
-                                    <CTableDataCell>{item.productPrize}</CTableDataCell>
-                                    <CTableDataCell>{item.Available_Stock}</CTableDataCell>
-                                    <CTableDataCell style={{ width: '200px',display:
-                                    (access.includes(inventoryRight.inventoryAdd) || isAdmin)?'':'none'
-                                    
-                                }} className='text-center'> {
-                                        activeToIncrement.includes(item._id) ?
-
-                                            <>
-
-                                                <div className='p-0' style={{ fontSize: '25px' }}>
-                                                    <div className='d-flex border rounded-2 bg-white p-0 justify-content-between  align-items-center' >
-                                                        <div cl style={{ width: '50px', cursor: 'pointer' }} onClick={(e) => incrementNoOfItem(item, 'decrement')} className='bg-light m-1 rounded-2 text-center'>-</div>
-                                                        <input style={{ fontSize: '20px', width: '100px' }} value={itemVal} onChange={(e) => inputItemVal(e.target.value, item)} />
-                                                        <div style={{ width: '50px', cursor: 'pointer' }} onClick={() => incrementNoOfItem(item, 'increment')} className='bg-light m-1 rounded-2 text-center'>+</div>
-                                                    </div>
-
-                                                </div>
-                                                <CCol className='d-flex p-2'>
-                                                    <CButton className='w-100' onClick={() => ConfirmProduct(item)}>Confirm</CButton>
-                                                </CCol>
-                                            </>
-                                            :
-                                            <CButton onClick={() => toAddProduct({ ...item, Available_Stock: item.Available_Stock })} >Add </CButton>
-
-                                    }</CTableDataCell>
-
-                                </CTableRow>
-                            })}
-
-
-
-                        </CTableBody>
-                    </CTable>
+                   <InventoryList
+                    noofProduct={noofProduct}
+                    access={access}
+                    ConfirmProduct={ConfirmProduct}
+                    activeToIncrement={activeToIncrement}
+                    incrementNoOfItem={incrementNoOfItem}
+                    toAddProduct={toAddProduct}
+                    allProductData={allProductData}
+                    isAdmin={isAdmin}
+                   />
                 </CTabPane>
 
 
@@ -347,7 +297,7 @@ function StockAssigning() {
 
 
                 <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={activeKey === 2}>
-                    <CTable className='mt-3 ' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
+                    {/* <CTable className='mt-3 ' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                         <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                             <CTableRow >
                                 <CTableHeaderCell>Sr.No</CTableHeaderCell>
@@ -380,24 +330,13 @@ function StockAssigning() {
                                 </CTableRow>
                             )}
                         </CTableBody>
-                    </CTable>
+                    </CTable> */}
+                    <Assigned
+                    stockAssigningData={stockAssigningData}
+                    />
                 </CTabPane>
             </CTabContent>
-            <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
-     <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
-         <span aria-hidden="true">&laquo;</span>
-     </CPaginationItem>
-     <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
-     {stockAssigningData?.length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
-     {stockAssigningData?.length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
-     {stockAssigningData?.length > (paging + 1) * 10 ?
-         <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
-             <span aria-hidden="true">&raquo;</span>
-         </CPaginationItem>
-         : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
-             <span aria-hidden="true">&raquo;</span>
-         </CPaginationItem>}
-    </CPagination>
+         
         </CCardBody>
     </CCard>
 

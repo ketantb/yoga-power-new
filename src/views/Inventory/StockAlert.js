@@ -79,7 +79,7 @@ return (
                         <CTableHeaderCell>Brand Name</CTableHeaderCell>
                         <CTableHeaderCell>Total Stock</CTableHeaderCell>
                         <CTableHeaderCell>Use Stock</CTableHeaderCell>
-                        <CTableHeaderCell>Avaible Stock </CTableHeaderCell>
+                        <CTableHeaderCell>Available Stock </CTableHeaderCell>
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
