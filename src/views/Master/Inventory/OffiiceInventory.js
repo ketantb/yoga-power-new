@@ -315,7 +315,6 @@ return (
                                 <CTableHeaderCell>Color</CTableHeaderCell>
                                 <CTableHeaderCell>Product Prize</CTableHeaderCell>
                                 <CTableHeaderCell>Order Stock</CTableHeaderCell>
-                               
                                 <CTableHeaderCell style={{display:(editProductListing||deleteProductListing)?'':'none'}}>Edit/Delete</CTableHeaderCell>
                             </CTableRow>
                         </CTableHead>
@@ -325,7 +324,8 @@ return (
                             <CTableDataCell >
                                 <CFormInput className='min-width-90' disabled value={searchFilter.search1}
                                     onChange={(e) => setSearchFilter((prev) => ({ ...prev, search1: e.target.value }))} /> </CTableDataCell>
-                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search2}
+                            <CTableDataCell >
+                              <CFormInput className='min-width-90' value={searchFilter.search2}
                                 onChange={(e) => setSearchFilter((prev) => ({ ...prev, search2: e.target.value }))} /> </CTableDataCell>
                             <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search3}
                                 onChange={(e) => setSearchFilter((prev) => ({ ...prev, search3: e.target.value }))} /> </CTableDataCell>

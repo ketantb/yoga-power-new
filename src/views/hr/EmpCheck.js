@@ -133,9 +133,9 @@ const EmpCheck = () => {
                                     <CTableHeaderCell style={{minWidth:'150px'}}>Attendance Id</CTableHeaderCell>
                                     <CTableHeaderCell>Name</CTableHeaderCell>
                                     <CTableHeaderCell>Designation</CTableHeaderCell>
-                                    <CTableHeaderCell>Shift Timeing</CTableHeaderCell>
-                                    <CTableHeaderCell>Start Time</CTableHeaderCell>
-                                    <CTableHeaderCell>End Time</CTableHeaderCell>
+                                    <CTableHeaderCell>Shift timing</CTableHeaderCell>
+                                    <CTableHeaderCell>In Time</CTableHeaderCell>
+                                    <CTableHeaderCell>Out Time</CTableHeaderCell>
                                     <CTableHeaderCell style={{ minWidth: "150px" }}>Check In Time</CTableHeaderCell>
                                     <CTableHeaderCell>Check  Out Time</CTableHeaderCell>
                                     <CTableHeaderCell>Total working hour</CTableHeaderCell>
