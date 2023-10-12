@@ -28,7 +28,7 @@ const CallUpdate = ({ add, clickfun, ids }) => {
     }, [ids,add]);
 
     return (
-        <CModal size='xl' scrollable style={{ border: '2px solid #0B5345' }} visible={add} onClose={clickfun} >
+        <CModal size='xl' scrollable  visible={add} onClose={clickfun} >
             <CModalHeader  >
                 <CModalTitle>Call Update</CModalTitle>
             </CModalHeader>
