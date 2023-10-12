@@ -53,6 +53,8 @@ const AttendanceRegister = () => {
 
     var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const url1 = useSelector((el) => el.domainOfApi)
+    const isAdmin = useSelector((el) => el.isAdmin)
+
 
     function getDaysInMonth(month, year) {
         var date = new Date(year, month, 1);
@@ -162,6 +164,9 @@ const AttendanceRegister = () => {
         setSelectedStaffData('')
         setPaging(0)
     }
+
+    console.log(staffAttendanceData)
+
     return (
         <CRow>
             <CCol lg={12} sm={12}>
@@ -265,7 +270,12 @@ const AttendanceRegister = () => {
                                             <CTableDataCell>{el.attentanceId}</CTableDataCell>
 
                                             <CTableDataCell>{el.centerId}</CTableDataCell>
-                                            <CTableDataCell>{el.StaffName}</CTableDataCell>
+                                            <CTableDataCell>
+                                            {(isAdmin)?
+                                                <Link style={{textDecoration:'none'}} to={`/hr/employee-detail/${el.staffId}`}>
+                                                    {el.StaffName}</Link>:el.StaffName
+                                            }
+                                            </CTableDataCell>
                                             <CTableDataCell>{el.staffContact}</CTableDataCell>
                                             <CTableDataCell>{el.Department}</CTableDataCell>
                                             <CTableDataCell>{el.Designation}</CTableDataCell>

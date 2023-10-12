@@ -218,7 +218,7 @@ return (
                       options={[
                         'Open this select menu',
                         { label: 'Clothes product', value: 'Clothes product' },
-                        { label: 'Ayurveda Medicine', value: 'Ayurveda Medicine ' },
+                        { label: 'Medicine', value: 'Ayurveda Medicine ' },
                         { label: 'Fitness Product', value: 'Fitness Product'},
                         { label: 'Foods Product', value: 'Foods Product'},
                         { label: 'General Inventory', value: 'General Inventory'}
@@ -314,7 +314,7 @@ return (
                                 <CTableHeaderCell>Size/Kg</CTableHeaderCell>
                                 <CTableHeaderCell>Color</CTableHeaderCell>
                                 <CTableHeaderCell>Product Prize</CTableHeaderCell>
-                                <CTableHeaderCell>Available Stock</CTableHeaderCell>
+                                <CTableHeaderCell>Order Stock</CTableHeaderCell>
                                
                                 <CTableHeaderCell style={{display:(editProductListing||deleteProductListing)?'':'none'}}>Edit/Delete</CTableHeaderCell>
                             </CTableRow>
@@ -341,10 +341,7 @@ return (
                             <CTableDataCell ><CFormInput  className='min-width-90' value={searchFilter.search8}
                                 onChange={(e) => setSearchFilter((prev) => ({ ...prev, search8: e.target.value }))} /> </CTableDataCell>
                              <CTableDataCell ><CFormInput disabled className='min-width-90' value={searchFilter.search9}
-                                onChange={(e) => setSearchFilter((prev) => ({ ...prev, search9: e.target.value }))} /> </CTableDataCell>
-                            
-                           
-                    
+                                onChange={(e) => setSearchFilter((prev) => ({ ...prev, search9: e.target.value }))} /> </CTableDataCell>           
                         </CTableRow>
 
                            {toFilterData(allProductData).slice(paging * 10, paging * 10 + 10).map((el,i)=>

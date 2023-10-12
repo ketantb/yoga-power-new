@@ -43,9 +43,7 @@ function useAttendanceEmp(){
        let dateWithAttendance2 =dateWithAttendance.slice()
    
         const staffID = [];
-        console.log(staffID)
         const dataWitNotAttended = [...reverseData,...clinetToAddWitAttended]
-        console.log(dataWitNotAttended)
         dataWitNotAttended.forEach(el => {if(!staffID.some((el2)=>el2===el.staffId)){staffID.push(el.staffId)}});
         const sortData = []
 
@@ -62,7 +60,6 @@ function useAttendanceEmp(){
    
    
         const newAt =    sortData.sort(a=>a.staffId).map((el,i,arr)=>{      
-            console.log(el)  
          const dateWithAttendance1 = dateWithAttendance2.map((el2)=>{
                         if(compareDateFun(el2.attendanceDate,el.checkDate)){
                           return {attendanceDate:el2.attendanceDate,value:true}      

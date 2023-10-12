@@ -132,7 +132,7 @@ const FoodProduct = () => {
                         <CTableHeaderCell>Product Code</CTableHeaderCell>
                         <CTableHeaderCell>Product Name</CTableHeaderCell>
                         <CTableHeaderCell>Brand Name</CTableHeaderCell>
-                        <CTableHeaderCell>Category</CTableHeaderCell>
+                        <CTableHeaderCell>Size</CTableHeaderCell>
                         <CTableHeaderCell>Price</CTableHeaderCell>
                         <CTableHeaderCell>Sold</CTableHeaderCell>
                         <CTableHeaderCell>AVL Stock</CTableHeaderCell>

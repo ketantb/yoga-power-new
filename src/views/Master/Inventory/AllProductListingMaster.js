@@ -2,7 +2,7 @@ import React from 'react'
 
 import {CCard,CTable,CCol,CTableHead,CTableRow,CTableHeaderCell,
   CTableBody,CTableDataCell,CFormInput,CCardHeader,CCardTitle,CButton, CCardBody, CForm,CRow,
-  CFormSelect
+  CFormSelect,CPaginationItem,CPagination
 } from '@coreui/react'
 
 import { MdDelete, MdEdit} from "react-icons/md";
@@ -23,15 +23,13 @@ const AllProductListingMaster = () => {
   const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterInverntory
     ?.items?.masterAllProductListingMaster?.rights) 
 
-    const access = rightsData?rightsData:[]
-    const isAdmin = useSelector((el)=>el.isAdmin)
+  const access = rightsData?rightsData:[]
+  const isAdmin = useSelector((el)=>el.isAdmin)
                                          
     
-   const  addProductListing = (access.includes(inventoryMasterRights.addProductListing)||isAdmin)
-   const  deleteProductListing = (access.includes(inventoryMasterRights.deleteProductListing)||isAdmin)
-   const  editProductListing = (access.includes(inventoryMasterRights.editProductListing)||isAdmin)
-
-
+  const  addProductListing = (access.includes(inventoryMasterRights.addProductListing)||isAdmin)
+  const  deleteProductListing = (access.includes(inventoryMasterRights.deleteProductListing)||isAdmin)
+  const  editProductListing = (access.includes(inventoryMasterRights.editProductListing)||isAdmin)
 
 
   const [allProductData,setAllProductData] = useState([])
@@ -52,6 +50,24 @@ const AllProductListingMaster = () => {
     ordersQty:'',
     Color:'',
   })
+
+  const [searchFilter,setSearchFilter] = useState({
+    search1:'',
+    search2:'',
+    search3:'',
+    search4:'',
+    search5:'',
+    search6:'',
+    search7:'',
+    search8:'',
+    search9:'',
+    search10:'',
+    search11:'',
+    search12:'',
+    search13:'',
+    search14:'',
+ })    
+ const [paging, setPaging] = useState(0);
 
 const headers =   {
     "Authorization": `Bearer ${token}`,
@@ -143,7 +159,24 @@ if(response.status===200){
 }
 
 }
-console.log(topostAllProductData)
+function toFilterData(data){
+  return data.filter((item)=>{
+
+      return(item.productCategory.toLocaleString().toLowerCase()||'').includes(searchFilter.search2.toLowerCase().trim())&&
+      (item.productName.toLowerCase()||'').includes(searchFilter.search3.toLowerCase().trim())&&
+      (item.brandName.toLowerCase()||'').includes(searchFilter.search4.toLowerCase().trim())&&
+      (item.category.toLowerCase()||'').includes(searchFilter.search5.toLowerCase().trim())&&
+      (item.Color.toLowerCase()||'').includes(searchFilter.search6.toLowerCase().trim())   &&
+      ((item.productPrize+"")?.toLowerCase()||'').includes(searchFilter.search7.toLowerCase().trim())  
+  })
+}
+
+{/* <CTableDataCell>{el.productCategory}</CTableDataCell>
+<CTableDataCell>{el.productName}</CTableDataCell>
+<CTableDataCell>{el.brandName}</CTableDataCell>
+<CTableDataCell>{el.category}</CTableDataCell>
+<CTableDataCell>{el.Color}</CTableDataCell>
+<CTableDataCell>{el.productPrize}</CTableDataCell> */}
 
 return (
     <CCard>
@@ -175,7 +208,7 @@ return (
                       options={[
                         'Open this select menu',
                         { label: 'Clothes product', value: 'Clothes product' },
-                        { label: 'Ayurveda Medicine', value: 'Ayurveda Medicine' },
+                        { label: 'Medicine', value: 'Ayurveda Medicine' },
                         { label: 'Fitness Product', value: 'Fitness Product'},
                         { label: 'Foods Product', value: 'Foods Product'},
                         { label: 'General Inventory', value: 'General Inventory'}
@@ -223,7 +256,7 @@ return (
 
                     <CCol lg={6} md={6} >
                       <CFormInput
-                      label='Product Prize'
+                      label='Product Price'
                       type='number'
                       value={topostAllProductData.productPrize}
                       onChange={(e)=>setToPostAllProductData((prev)=>({...prev,productPrize:e.target.value}))}
@@ -258,13 +291,37 @@ return (
                                 <CTableHeaderCell>Brand Name</CTableHeaderCell>
                                 <CTableHeaderCell>Size/Kg</CTableHeaderCell>
                                 <CTableHeaderCell>Color</CTableHeaderCell>
-                                <CTableHeaderCell>Product Prize</CTableHeaderCell>
+                                <CTableHeaderCell>Product Price</CTableHeaderCell>
                                
                                 <CTableHeaderCell style={{display:(editProductListing||addProductListing)?'':'none'}} >Edit/Delete</CTableHeaderCell>
                             </CTableRow>
                         </CTableHead>
                         <CTableBody>
-                           {allProductData.map((el,i)=>
+                           
+                        <CTableRow>
+                            <CTableDataCell >
+                                <CFormInput className='min-width-90' disabled value={searchFilter.search1}
+                                    onChange={(e) => setSearchFilter((prev) => ({ ...prev, search1: e.target.value }))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search2}
+                                onChange={(e) => setSearchFilter((prev) => ({ ...prev, search2: e.target.value }))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search3}
+                                onChange={(e) => setSearchFilter((prev) => ({ ...prev, search3: e.target.value }))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search4}
+                                onChange={(e) => setSearchFilter((prev) => ({ ...prev, search4: e.target.value }))} /> </CTableDataCell>
+                           
+                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search5}
+                                onChange={(e) => setSearchFilter((prev) => ({ ...prev, search5: e.target.value }))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search6}
+                                onChange={(e) => setSearchFilter((prev) => ({ ...prev, search6: e.target.value }))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search7}
+                                onChange={(e) => setSearchFilter((prev) => ({ ...prev, search7: e.target.value }))} /> </CTableDataCell>
+                            <CTableDataCell ><CFormInput disabled className='min-width-90' value={searchFilter.search8}
+                                onChange={(e) => setSearchFilter((prev) => ({ ...prev, search8: e.target.value }))} /> </CTableDataCell>
+                             
+                        </CTableRow>
+
+
+                           {toFilterData(allProductData).map((el,i)=>
                            
                       <CTableRow >
                            <CTableDataCell>{i+1}</CTableDataCell>
@@ -286,6 +343,22 @@ return (
                           
                         </CTableBody>
                     </CTable>
+
+                    <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+     <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+         <span aria-hidden="true">&laquo;</span>
+     </CPaginationItem>
+     <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+     {toFilterData(allProductData)?.length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+     {toFilterData(allProductData)?.length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+     {toFilterData(allProductData)?.length > (paging + 1) * 10 ?
+         <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+             <span aria-hidden="true">&raquo;</span>
+         </CPaginationItem>
+         : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+             <span aria-hidden="true">&raquo;</span>
+         </CPaginationItem>}
+    </CPagination>
 
       </CCardBody>
         
