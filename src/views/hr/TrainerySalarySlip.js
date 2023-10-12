@@ -192,7 +192,7 @@ const [paging, setPaging] = useState(0);
                                         <CTableDataCell>{el.remark}</CTableDataCell>
                                         <CTableDataCell>{el.modeOfPayment}</CTableDataCell>
                                         <CTableDataCell>{+el.amount+ +el.incentive}</CTableDataCell>
-                                        <CTableHeaderCell><CButton onClick={()=>showSalarySlip(el)} >View</CButton></CTableHeaderCell>
+                                        <CTableDataCell><CButton onClick={()=>showSalarySlip(el)} >View</CButton></CTableDataCell>
                                     </CTableRow>
                                 })}
                                       

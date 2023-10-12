@@ -173,11 +173,11 @@ function toFilterData(data){
                                     <CTableDataCell ><CFormInput disabled className='min-width-90'
                                     /> </CTableDataCell>
                                      
-                                     <CTableDataCell colSpan={13} ><CFormInput className='min-width-90' disabled value={searchFilter.search12} 
+                                     <CTableDataCell colSpan={12} ><CFormInput className='min-width-90' disabled value={searchFilter.search12} 
                                     onChange={(e)=>setSearchFilter((prev)=>({...prev,search12:e.target.value}))} /> </CTableDataCell>
                                  <CTableDataCell ><CFormInput className='min-width-90' value={searchFilter.search13} 
                                     onChange={(e)=>setSearchFilter((prev)=>({...prev,search13:e.target.value}))} /> </CTableDataCell>
-                                <CTableDataCell colSpan={4} ><CFormInput className='min-width-90'  disabled 
+                                <CTableDataCell colSpan={5} ><CFormInput className='min-width-90'  disabled 
                                     /> </CTableDataCell>
                                 </CTableRow>                                
                                 

@@ -18,7 +18,9 @@ import {
     CNavItem,
     CNavLink,
     CTabContent,
-    CTabPane
+    CTabPane,
+    CPagination,
+    CPaginationItem
 
 } from "@coreui/react";
 import axios from "axios";
@@ -68,6 +70,7 @@ function LeaveSetup({onlyHr}){
     const url = useSelector((el) => el.domainOfApi)
     const pathValMaster = useAdminValidation('Master')
     const uniqObjVal = useUniqAdminObjeact()
+    const [paging, setPaging] = useState(0);
 
 
     const rightsData = useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterHr
@@ -343,10 +346,10 @@ return <div>
                             </CTableRow>
                         </CTableHead>
                         <CTableBody>
-                            {leaveData.map((el,i)=>
+                            {leaveData.slice(paging * 10, paging * 10 + 10).map((el,i)=>
                             <CTableRow className="text-center">
                                 <CTableDataCell>
-                                   {i+1}
+                                   {i + 1 + (paging * 10)}
                                 </CTableDataCell>
                                 <CTableDataCell>{el.year}
                                 </CTableDataCell>
@@ -369,9 +372,27 @@ return <div>
                                         onClick={()=>deleteLeave(el._id)}/>
                                 </CTableDataCell>                            
                             </CTableRow>   
-                            )}                   
+                            )}      
+
+                                         
                         </CTableBody>
                     </CTable>  
+                    <CPagination aria-label="Page navigation example" align="center" className='mt-2'>
+                        <CPaginationItem aria-label="Previous" disabled={paging != 0 ? false : true} onClick={() => paging > 0 && setPaging(paging - 1)}>
+                            <span aria-hidden="true">&laquo;</span>
+                        </CPaginationItem>
+                        <CPaginationItem active onClick={() => setPaging(0)}>{paging + 1}</CPaginationItem>
+                        {leaveData.length > (paging + 1) * 10 && <CPaginationItem onClick={() => setPaging(paging + 1)} >{paging + 2}</CPaginationItem>}
+                        {leaveData.length > (paging + 2) * 10 && <CPaginationItem onClick={() => setPaging(paging + 2)}>{paging + 3}</CPaginationItem>}
+                        {leaveData.length > (paging + 1) * 10 ?
+                            <CPaginationItem aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                            : <CPaginationItem disabled aria-label="Next" onClick={() => setPaging(paging + 1)}>
+                                <span aria-hidden="true">&raquo;</span>
+                            </CPaginationItem>
+                        }
+                       </CPagination>  
                 </CTabPane>
 
                 <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={true}>
