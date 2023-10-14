@@ -218,6 +218,14 @@ const HolidaysListMaster = () => {
                                 )}
                               </CFormSelect>
                             </CCol>
+                            <CCol lg={12} md={12} sm={12} className="mt-2">
+                               <CButton
+                               onClick={()=>{
+                                setMonth(new Date().getMonth())
+                                setSelectedFullYear('0')
+                               }}
+                               >Clear Filter</CButton>
+                            </CCol>
                         </CRow>
                         <CTable className='mt-3' align="middle" bordered style={{ borderColor: "#0B5345" }} hover responsive>
                             <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
