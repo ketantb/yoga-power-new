@@ -216,8 +216,8 @@ const ServiceMaster = () => {
                     <CTableHead style={{ backgroundColor: "#0B5345", color: "white" }} >
                         <CTableRow >
                             <CTableHeaderCell>Sr.No</CTableHeaderCell>
-                            <CTableHeaderCell>Job Designation</CTableHeaderCell>
                             <CTableHeaderCell>Department</CTableHeaderCell>
+                            <CTableHeaderCell>Job Designation</CTableHeaderCell>
                             <CTableHeaderCell>Available Vacancy</CTableHeaderCell>
                             <CTableHeaderCell style={{display:designationMasterStatus?'':'none'}}>Status</CTableHeaderCell>
                             <CTableHeaderCell style={{display:deleteDesignationMaster?'':'none'}}>Action</CTableHeaderCell>
@@ -228,8 +228,8 @@ const ServiceMaster = () => {
                            (
                                 <CTableRow key={index}>
                                     <CTableDataCell>{index + 1 + (paging * 10)}</CTableDataCell>
-                                    <CTableDataCell>{item.jobDesignation}</CTableDataCell>
                                     <CTableDataCell>{item.department}</CTableDataCell>
+                                    <CTableDataCell>{item.jobDesignation}</CTableDataCell>
                                     <CTableDataCell>{item.availableVacancy}</CTableDataCell>
                                     <CTableDataCell style={{display:designationMasterStatus?'':'none'}}><CFormSwitch size="xl" style={{ cursor: 'pointer' }} id={item._id} value={item.status} checked={item.status} onChange={() => updateStatus2(item._id, !item.status)} /></CTableDataCell>
                                     <CTableDataCell style={{display:deleteDesignationMaster?'':'none'}}><MdDelete style={{ cursor: 'pointer', markerStart: '10px' }} onClick={() => deleteDesignation(item._id)} size='20px' /> </CTableDataCell>

@@ -33,7 +33,7 @@ const MemberDetails = React.lazy(() => import('./views/clients/MemberDetails/Mem
 const SalesCall = React.lazy(() => import('./views/clients/salesCall/SalesCall'))
 const ServicesRateCard = React.lazy(() => import('./views/clients/ServicesRateCard/ServicesRateCard'))
 const ClientSupport = React.lazy(()=>import('./views/clients/ClientSupport'))
-const ClientSupportForm =  React.lazy(()=>import('./views/clients/ClientSupportForm')) 
+const ClientSupportForm =  React.lazy(()=>import('./views/clients/ClientEditForm/ClientSupportForm')) 
 //Marketing
 const EmailMarketing = React.lazy(() => import('./views/marketing/EmailMarketing'))
 const SMSMarketing = React.lazy(() => import('./views/marketing/SMSMarketing'))

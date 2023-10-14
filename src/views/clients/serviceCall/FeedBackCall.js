@@ -138,7 +138,8 @@ const obj2 = {
     clientName:uniqClient.Fullname,
     phone: uniqClient.ContactNumber,
     empolyeeId:emp._id,
-    ...uniValiObject
+    ...{...uniValiObject,employeeMongoId:(emp._id|| uniValiObject.employeeMongoId)}
+
 
 }
 

@@ -50,7 +50,7 @@ const HolidaysListMaster = () => {
     const holidayListMasterStatus =  (access.includes(herMasterRightVal.holidayListMasterStatus) || isAdmin )
     const deleteHolidayListMaster =  (access.includes(herMasterRightVal.deleteHolidayListMaster) || isAdmin )
 
-    const [selectedFullYear,setSelectedFullYear] = useState(new Date().getFullYear())
+    const [selectedFullYear,setSelectedFullYear] = useState('0')
     const [month,setMonth] = useState(new Date().getMonth()) 
 
 
@@ -96,7 +96,6 @@ const HolidaysListMaster = () => {
             console.log(data)
             axios.post(`${url}/holidaysListMaster/create`, data, { headers })
                 .then((resp) => {
-                    console.log(resp.data)
                     alert('Successfully Added')
                     getHolidayList()
                     setAction1(false)
@@ -148,11 +147,10 @@ const HolidaysListMaster = () => {
 
     function toFilterData(data){
         return data.filter((item)=>{
-        return new Date(item.Date).getFullYear() === +selectedFullYear&&
+        return selectedFullYear==='0'?true:new Date(item.Date).getFullYear() === +selectedFullYear&&
         new Date(item.Date).getMonth() === +month
         })
         }
-    
     
 
     return (

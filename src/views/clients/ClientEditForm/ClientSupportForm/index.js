@@ -6,7 +6,7 @@ import {useEffect, useState} from'react'
 import axios from "axios"
 import { useSelector } from 'react-redux'
 import CustomSelectInput from "src/views/Fitness/CustomSelectInput/CustomSelectInput"
-import { useAdminValidation,useUniqAdminObjeact } from '../../Custom-hook/adminValidation'
+import { useAdminValidation,useUniqAdminObjeact } from '../../../Custom-hook/adminValidation'
 
 
 let user = JSON.parse(localStorage.getItem('user-info'))

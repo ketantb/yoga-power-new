@@ -129,7 +129,8 @@ const getAllInvoiceData = async ()=>{
       clientName:uniqClient.MemberName ,
       phone: uniqClient.contact ,
       empolyeeId:emp._id,
-      ...uniqObjectVal
+      ...{...uniqObjectVal,employeeMongoId:(emp?._id||uniqObjectVal.employeeMongoId)}
+
   }
   
 

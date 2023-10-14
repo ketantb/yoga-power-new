@@ -42,7 +42,7 @@ const CallUpdate = ({ add, clickfun, ids }) => {
                             <CTableHeaderCell>Type Of Calls</CTableHeaderCell>
                             <CTableHeaderCell>Date</CTableHeaderCell>
                             <CTableHeaderCell>Time</CTableHeaderCell>
-                            <CTableDataCell>Discussion</CTableDataCell>
+                            <CTableHeaderCell>Discussion</CTableHeaderCell>
                             <CTableHeaderCell>Counsellor</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>

@@ -43,7 +43,7 @@ function CallesTargetTable({EmployeeData}) {
     const [pagination, setPagination] = useState(10)
     const [selectedEmployee, setSselectedEmployee] = useState('')
     const [selectedMonth,setSelectedMonth] = useState('')
-    const [selectedYear,setSelectedYear] = useState('')
+    const [selectedYear,setSelectedYear] = useState('2023')
 
     let totalTarget = 0
     let leadCall = 0
@@ -63,13 +63,16 @@ function CallesTargetTable({EmployeeData}) {
 
             const response1 =  axios.get(`${url}/callsTarget/${pathValMaster}`,{headers})
             const response2 =  axios.get(`${url}/memberCallReport/${pathVal}`,{headers})
-            const response3 =  axios.get(`${url}/prospect/${new Date(2023,1)}/${new Date(2023)}/${pathVal}`,{headers})
+            const response3 =  axios.get(`${url}/prospect/${new Date(+selectedYear,0)}/${new Date(+selectedYear,11)}/${pathVal}`,{headers})
             const data  =  await Promise.all([response1,response2,response3])
 
             data[0].data?.forEach(el => {
-                const memBerCallHistory = data[1].data.filter((el2)=>el2.empolyeeId===el.Sr_No )   
-                const enqCallHistory = data[2].data.filter((el2)=>el2.EmployeeId===el.Sr_No )   
-                console.log(enqCallHistory)
+                const memBerCallHistory = data[1].data.filter((el2)=>el2.employeeMongoId===el.Sr_No )   
+                const enqCallHistory = data[2].data.filter((el2)=>el2.employeeMongoId===el.Sr_No )   
+ 
+
+
+                console.log(memBerCallHistory,el.Sr_No)
 
                el.annualTarget.forEach((el3)=>{
 
@@ -79,6 +82,8 @@ function CallesTargetTable({EmployeeData}) {
 
 
                    memBerCallHistory.forEach((el4)=>{
+                    // console.log(el4.callFollowUpDate,allMonthName[new Date(el4.callFollowUpDate).getMonth()],el4.callFollowupby)
+
                     if(el3.monthName === allMonthName[new Date(el4.callFollowUpDate).getMonth()] 
                      &&+el.Year===new Date(el4.callFollowUpDate).getFullYear()){                        
                                 el3.Members_Call+= 1
@@ -158,7 +163,10 @@ function percentage(partialValue, totalValue) {
                     </CInputGroupText>
                    <CFormInput
                    value={selectedYear}
-                   onChange={(e)=>setSelectedYear(e.target.value)}
+                   onChange={(e)=>{
+                    getLiveClasses()
+                    setSelectedYear(e.target.value)               
+                }}
                    >
                     
                    </CFormInput>
@@ -206,7 +214,7 @@ function percentage(partialValue, totalValue) {
                     <CTableHeaderCell scope="col">Employee</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Call Target</CTableHeaderCell>
                     <CTableHeaderCell scope="col">
-                      New Follow Up Call Report
+                      New Follow Up Call Report/Lead Call
                     </CTableHeaderCell>
                     <CTableHeaderCell scope="col">Members Call</CTableHeaderCell>
                     <CTableHeaderCell scope="col">

@@ -22,6 +22,13 @@ const CallHistory = ({visible,filterObj,id,setPageLength,paging}) => {
     const url = useSelector((el)=>el.domainOfApi) 
 
     const [callHistoryData,setCallHistoryData] = useState([])
+    const obj ={
+        "welcomeCallInfo":'Welcome Call',
+        "feedBackCallInfo":'Feedback Call',
+        "paymentCallsInfo":'Payment Call',
+        "greetingCall":'Greeting Call',
+        "irreguralMemberCall":"Irregural Member Call"
+    }
 
 
     let user = JSON.parse(localStorage.getItem('user-info'))
@@ -60,6 +67,7 @@ const CallHistory = ({visible,filterObj,id,setPageLength,paging}) => {
             <CTableRow>
                 <CTableHeaderCell scope="col">S.No</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Date</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Type of call</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Follow up date</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Timing</CTableHeaderCell>
                 <CTableHeaderCell scope="col">
@@ -80,6 +88,7 @@ const CallHistory = ({visible,filterObj,id,setPageLength,paging}) => {
              <CTableRow>
                 <CTableDataCell>{(i+1+ (paging * 10))}</CTableDataCell>
                 <CTableDataCell>{moment(el.createdAt).format('YYYY-MM-DD')}</CTableDataCell>
+                <CTableDataCell>{(obj[el.typeOfCall]||'')}</CTableDataCell>
                 <CTableDataCell>{moment(el.callFollowUpDate).format('YYYY-MM-DD')}</CTableDataCell>
                 <CTableDataCell>{el.callTimeing}</CTableDataCell>
                 <CTableDataCell>{el.clientId}</CTableDataCell>

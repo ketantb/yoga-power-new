@@ -158,7 +158,7 @@ const IrregularMemberCall = ({visible,filterObj,id,setPageLength,paging,isEmploy
         clientName:uniqClient.ClientName,
         phone: uniqClient.contact,
         empolyeeId:emp._id,
-       ...uniValiObject
+       ...{...uniValiObject,employeeMongoId:(emp?._id||uniValiObject.employeeMongoId)}
 
     }
         axios.post(`${url}/clientAttendance/update/${followupId}`,obj, { headers },

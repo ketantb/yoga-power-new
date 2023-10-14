@@ -131,6 +131,8 @@ console.log(isEmployee)
                 console.error(error)
             })
     }
+    const emp =  staff.find((el)=>el._id=== updateFormData.wellComeCallFollowupby)
+
 
     const saveCallUpDate = async ()=>{
         
@@ -142,12 +144,12 @@ console.log(isEmployee)
             'My-Custom-Header': 'foobar'
         }
 
-        const emp =  staff.find((el)=>el._id=== updateFormData.wellComeCallFollowupby)
         updateFormData.wellComeCallFollowupby= emp.FullName
 
         const obj = {
             welcomeCallInfo: { ...updateFormData }
         }
+
 
         const obj2 = {
             username: username,
@@ -161,7 +163,7 @@ console.log(isEmployee)
             clientName:uniqClient.Fullname,
             phone: uniqClient.ContactNumber,
             empolyeeId:emp._id,
-            ...uniObjVal
+            ...{...uniObjVal,employeeMongoId:(emp?._id||uniObjVal.employeeMongoId)}
         }
 
 
