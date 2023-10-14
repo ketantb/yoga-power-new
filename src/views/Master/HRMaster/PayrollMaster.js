@@ -304,7 +304,6 @@ function toFilterData(data){
       (el.Department.toLowerCase()||'').includes(searchFilter.search9.toLowerCase().trim())   &&
       (el.Designations?.toLowerCase()||'').includes(searchFilter.search10.toLowerCase().trim())   &&
       (el.bankAcountNo?.toLowerCase()||'').includes(searchFilter.search11.toLowerCase().trim())  && 
-
       (el.modeOfPayment.toLowerCase()||'').includes(searchFilter.search13.toLowerCase().trim())
 
 })
@@ -690,7 +689,7 @@ function toFilterData(data){
                                     <CTableHeaderCell>Date</CTableHeaderCell>
                                     <CTableHeaderCell>Emp ID</CTableHeaderCell>
                                     <CTableHeaderCell>Name</CTableHeaderCell>
-                                    <CTableHeaderCell>JoiningDate</CTableHeaderCell>
+                                    <CTableHeaderCell>Joining Date</CTableHeaderCell>
                                     <CTableHeaderCell>Gender</CTableHeaderCell>
                                     <CTableHeaderCell>Location</CTableHeaderCell>
                                     <CTableHeaderCell>Full/Part Time</CTableHeaderCell>
