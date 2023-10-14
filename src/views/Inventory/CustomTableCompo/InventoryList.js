@@ -71,7 +71,7 @@ function toFilterData(data){
             <CTableHeaderCell>Brand Name</CTableHeaderCell>
             <CTableHeaderCell>Size/Kg</CTableHeaderCell>
             <CTableHeaderCell>Color</CTableHeaderCell>
-            <CTableHeaderCell>Product Prize</CTableHeaderCell>
+            <CTableHeaderCell>Product Price</CTableHeaderCell>
             <CTableHeaderCell>Available Stock</CTableHeaderCell>
             <CTableHeaderCell>Add quantity<br />To order</CTableHeaderCell>
         </CTableRow>

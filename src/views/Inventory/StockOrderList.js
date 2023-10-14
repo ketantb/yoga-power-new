@@ -444,7 +444,7 @@ function getStockAssigningR() {
                                <CTableHeaderCell>Brand Name</CTableHeaderCell>
                                <CTableHeaderCell>Size/Kg</CTableHeaderCell>
                                <CTableHeaderCell>Color</CTableHeaderCell>
-                               <CTableHeaderCell>Product Prize</CTableHeaderCell>
+                               <CTableHeaderCell>Product Price</CTableHeaderCell>
                                <CTableHeaderCell style={{display:(access.includes(inventoryRight.stockListAdd) || isAdmin)?'':'none'}}>
                                 Add quantity<br/>To order</CTableHeaderCell>                      
                            </CTableRow>

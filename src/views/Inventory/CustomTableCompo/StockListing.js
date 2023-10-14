@@ -94,7 +94,7 @@ const StockListing = ({access,isAdmin,toSetExcelData,orderList,ordeReceived,erro
                        <CTableHeaderCell>Brand Name</CTableHeaderCell>
                        <CTableHeaderCell>Size/Kg</CTableHeaderCell>
                        <CTableHeaderCell>Color</CTableHeaderCell>
-                       <CTableHeaderCell>Product Prize</CTableHeaderCell>
+                       <CTableHeaderCell>Product Price</CTableHeaderCell>
                        <CTableHeaderCell>Product quantity</CTableHeaderCell>     
                        <CTableHeaderCell>Order by</CTableHeaderCell>                      
                        <CTableHeaderCell 

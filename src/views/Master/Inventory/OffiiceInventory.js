@@ -268,7 +268,7 @@ return (
 
                     <CCol lg={6} md={6} >
                       <CFormInput
-                      label='Product Prize'
+                      label='Product Price'
                       type='number'
                       value={topostAllProductData.productPrize}
                       onChange={(e)=>setToPostAllProductData((prev)=>({...prev,productPrize:e.target.value}))}
@@ -278,7 +278,7 @@ return (
 
                     <CCol lg={6} md={6} >
                       <CFormInput
-                      label='Available Stock'
+                      label='Order Stock'
                       type='number'
                       value={topostAllProductData.Available_Stock}
                       onChange={(e)=>setToPostAllProductData((prev)=>({...prev,Available_Stock:e.target.value}))}
@@ -313,7 +313,7 @@ return (
                                 <CTableHeaderCell>Brand Name</CTableHeaderCell>
                                 <CTableHeaderCell>Size/Kg</CTableHeaderCell>
                                 <CTableHeaderCell>Color</CTableHeaderCell>
-                                <CTableHeaderCell>Product Prize</CTableHeaderCell>
+                                <CTableHeaderCell>Product Price</CTableHeaderCell>
                                 <CTableHeaderCell>Order Stock</CTableHeaderCell>
                                 <CTableHeaderCell style={{display:(editProductListing||deleteProductListing)?'':'none'}}>Edit/Delete</CTableHeaderCell>
                             </CTableRow>
