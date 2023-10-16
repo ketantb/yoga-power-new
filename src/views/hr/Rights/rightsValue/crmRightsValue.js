@@ -43,7 +43,7 @@ const clientManagementRights = {
     allClientAction:"allClientActiony97y",activeClientsAction:'activeClientsiu78y7',renewalsClientsAction:'renewalsClients7t8ggy',
     renewalsInvoice:'renewalsInvoice6rf6r',
     renewedClientsAction:'renewedClientswjhr3r8',leftClientsAction:'leftClientsiur32',clientSupportAction:'clientSupportAction38u3r8',
-    renewedClients:'renewedClientsgio489',leftClients:'leftClientsjt438',clientSupport:'clientSupportgj34u'
+    renewedClients:'renewedClientsgio489',leftClients:'leftClientsjt438',clientSupport:'clientSupportgj34u',clientSupportForm:'clientSupportFormekfwrio'
 }
 
 const marketingRights = {

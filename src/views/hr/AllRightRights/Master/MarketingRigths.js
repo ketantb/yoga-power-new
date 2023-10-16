@@ -7,10 +7,17 @@ import {
 
 import React from 'react'
 import { masterMarketingRightVal } from '../../Rights/rightsValue/masterRightsValue'
+import { useDispatch,useSelector } from 'react-redux'
 
 const MarketingRigths = ({masterMarketing,setRightObject}) => {
 
-    console.log(masterMarketing)
+    // console.log(masterMarketing)
+
+    const rightsData4 =
+      useSelector((el)=>el?.empLoyeeRights?.masterRights?.masterMarketing?.items?.masterAutomatedComToStaff?.
+      rights) 
+
+      console.log(rightsData4)
 
     const handleRight = (val,parrent)=>{
 
@@ -111,6 +118,9 @@ const toCheckRightVal = (val,parrent)=>{
         })}
        /></span>
     </h5>
+    <CFormSwitch size="xl" label="Event Emp View" 
+     checked={toCheckRightVal(masterMarketingRightVal.eventEmpView,'masterAutomatedComToStaff')}
+     onChange={()=>handleRight(masterMarketingRightVal.eventEmpView,'masterAutomatedComToStaff')} />
    </CCol>
 </CRow>
 

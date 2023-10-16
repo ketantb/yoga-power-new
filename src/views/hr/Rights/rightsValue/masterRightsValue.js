@@ -12,7 +12,7 @@ const masterRightValue = {
 
 const masterMarketingRightVal = {
     leadSourceMaster:'leadSourceMaster348tyfne',addSourceMaster:'addSourceMaster2984t4yfh',
-    deleteSourceMaster:'deleteSourceMaster4930tuy3'
+    deleteSourceMaster:'deleteSourceMaster4930tuy3',eventEmpView:'eventEmpVieww9r24t'
 }
 
 const herMasterRightVal = {

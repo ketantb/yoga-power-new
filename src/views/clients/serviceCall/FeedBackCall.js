@@ -37,7 +37,7 @@ import React, { useState,useCallback,useEffect } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import moment  from  'moment/moment';
-import { useUniqAdminObjeact,useAdminValidation } from 'src/views/Custom-hook/adminValidation';
+import { useUniqAdminObjeact,useAdminValidation,useEmployeeValidation } from 'src/views/Custom-hook/adminValidation';
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user.token;
@@ -50,6 +50,7 @@ const FeedBackCall = ({visible,filterObj,id,setPageLength,paging,isEmployee}) =>
     const pathVal = useAdminValidation()
     const pathValMaster = useAdminValidation('Master')
     const uniValiObject =  useUniqAdminObjeact()
+    const isEmployeeRoute = useEmployeeValidation()
 
     const [feedBackCallsData,setWelcomeCallsData] = useState([])
     const [visibalCallUpdateForm,setVisibalCallUpdateForm] = useState(false)
@@ -62,10 +63,12 @@ const FeedBackCall = ({visible,filterObj,id,setPageLength,paging,isEmployee}) =>
     })
     const [staff, setStaff] = useState([])
 
-
     useEffect(()=>{
         setFollowUpid(uniValiObject.employeeMongoId)
         },[uniValiObject.employeeMongoId])
+
+
+
 
     
     function getAllMemberData() {
@@ -96,7 +99,7 @@ const FeedBackCall = ({visible,filterObj,id,setPageLength,paging,isEmployee}) =>
 
 
     function getStaff() {
-        axios.get(`${url}/employeeForm/${pathValMaster}`, {
+        axios.get(`${url}/employeeform/${isEmployeeRoute(isEmployee)}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -217,8 +220,10 @@ const obj2 = {
                onChange={(e)=>setUpdateForm(prev=>({...prev,feedBackCallFollowupby:e.target.value}))}
                >
                           <option className={isEmployee?'d-none':''}>Select staff name</option>
-                          {staff.filter((list) => 
-                              list.selected === 'Select'&&list._id=== uniValiObject.employeeMongoId).map((item, index) => (
+                      
+
+{staff.filter((list) => 
+                              list.selected === 'Select' && (list._id===uniValiObject.employeeMongoId||!isEmployee) ).map((item, index) => (
                                   <option key={index} value={item._id} >{item.FullName} {item.EmployeeID}</option>
                               ))}
                </CFormSelect>

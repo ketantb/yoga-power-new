@@ -46,7 +46,6 @@ import { useAdminValidation,useUniqAdminObjeact,useEmployeeValidation } from 'sr
 const WelcomeCalls = ({visible,filterObj,id,setPageLength,paging,isEmployee}) => {
     const url = useSelector((el)=>el.domainOfApi) 
     const pathVal  =  useAdminValidation()
-    const pathValMaster = useAdminValidation('Master')
     const isEmployeeRoute = useEmployeeValidation()
 
 

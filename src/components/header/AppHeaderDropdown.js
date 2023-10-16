@@ -37,12 +37,12 @@ import CIcon from '@coreui/icons-react'
 import avatar8 from './../../assets/images/avatars/8.jpg'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
-import { leadsSuperRight } from 'src/views/hr/Rights/rightsValue/crmRightsValue'
+import { leadsSuperRight,clientManagementRights } from 'src/views/hr/Rights/rightsValue/crmRightsValue'
 import menImage from './../../assets/images/avatars/profile_icon.png'
 import { useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
 import { SiEventstore } from 'react-icons/si'
 import LeadsRight from 'src/views/hr/AllRightRights/LeadsRight'
-import { hrManagement } from 'src/views/hr/Rights/rightsValue/erpRightsValue';
+import { hrManagement,financeRight } from 'src/views/hr/Rights/rightsValue/erpRightsValue';
 
 
 
@@ -51,11 +51,6 @@ const AppHeaderDropdown = () => {
   const isEmployee = useSelector((el)=>el.isEmployee)
   const empuniqId = useUniqAdminObjeact().employeeMongoId
 
-  const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
-  ?.crmLeads?.items?.superRight)  
-
-  const rightsData2 = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
-    ?.items?.empLoyeeHrProfile?.items?.erpEmployeeProfile?.rights) 
 
   const disPatch = useDispatch()
   const navigate = useNavigate()
@@ -186,15 +181,15 @@ const AppHeaderDropdownForm = () => {
   const rightsData3 =  useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpFinance?.items?.  
   erpDailyExpense?.items?.erpExpense?.rights) 
   
+  const rightsData4 =  useSelector((el)=>el?.empLoyeeRights?.crmRights?.crmCientManagment?.items?.superRight?.profile) 
+
 
   const isAdmin = useSelector((el)=>el.isAdmin) 
   const enquiryForm =  (rightsData?.addOn?.includes(leadsSuperRight.enquiryForm)||isAdmin)
   const recrutMentForm =  (rightsData2?.includes(hrManagement.recruitmentmentForm)||isAdmin)
-  const expenceForm = (rightsData3?.includes(hrManagement.recruitmentmentForm)||isAdmin)
+  const expenceForm = (rightsData3?.includes(financeRight.expenseForm)||isAdmin)
+  const supportForm = (rightsData4?.includes(clientManagementRights.clientSupport)||isAdmin)
 
-                        
-  // const rightsData2 = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
-  //   ?.items?.empLoyeeHrProfile?.items?.erpEmployeeProfile?.rights) 
 
   return (
     
@@ -228,12 +223,12 @@ const AppHeaderDropdownForm = () => {
           </Link>
         </CDropdownItem>}
 
-        <CDropdownItem >
-        <Link style={{ textDecoration: 'none' }} to="/forms/support">
+        {supportForm&& <CDropdownItem style={{display:supportForm?'':'none'}}>
+      <Link style={{ textDecoration: 'none' }} to="/forms/support" >
           <CIcon icon={cilFile} className="me-2" />
           Support
         </Link>
-        </CDropdownItem>
+        </CDropdownItem>}
 
         <CDropdownDivider />
       </CDropdownMenu>
@@ -244,14 +239,11 @@ const AppHeaderDropdownForm = () => {
 
 const AppHeaderDropdownBook = () => {
   return (
-   
 <CDropdown variant="nav-item">
-
 <Link style={{ textDecoration: 'none',color:'GrayText' }} to="/forms/event">
 <CIcon icon={cilSpa} size="lg" />
 </Link>
- 
-  </CDropdown>
+</CDropdown>
   )
 }
 
@@ -317,7 +309,7 @@ const AppHeaderDropdownLink = () => {
       <CDropdownMenu className="pt-0" placement="bottom-end">
 
         <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/enquiry-form">
+          <Link style={{ textDecoration: 'none' }} >
             <CIcon icon={cilBell} className="me-2"
               tabIndex={-1}
             />
@@ -325,19 +317,19 @@ const AppHeaderDropdownLink = () => {
           </Link>
         </CDropdownItem>
         <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/member-form">
+          <Link style={{ textDecoration: 'none' }} >
             <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
             Google Review Link
           </Link>
         </CDropdownItem>
         <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/member-form">
+          <Link style={{ textDecoration: 'none' }} >
             <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
             Payment Link
           </Link>
         </CDropdownItem>
         <CDropdownItem >
-          <Link style={{ textDecoration: 'none' }} to="/forms/member-form">
+          <Link style={{ textDecoration: 'none' }} >
             <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
             Social Media Link
           </Link>
