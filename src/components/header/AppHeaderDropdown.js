@@ -41,12 +41,22 @@ import { leadsSuperRight } from 'src/views/hr/Rights/rightsValue/crmRightsValue'
 import menImage from './../../assets/images/avatars/profile_icon.png'
 import { useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
 import { SiEventstore } from 'react-icons/si'
+import LeadsRight from 'src/views/hr/AllRightRights/LeadsRight'
+import { hrManagement } from 'src/views/hr/Rights/rightsValue/erpRightsValue';
+
+
 
 const AppHeaderDropdown = () => {
 
   const isEmployee = useSelector((el)=>el.isEmployee)
   const empuniqId = useUniqAdminObjeact().employeeMongoId
-   
+
+  const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
+  ?.crmLeads?.items?.superRight)  
+
+  const rightsData2 = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
+    ?.items?.empLoyeeHrProfile?.items?.erpEmployeeProfile?.rights) 
+
   const disPatch = useDispatch()
   const navigate = useNavigate()
   const Logout = () => {
@@ -170,8 +180,21 @@ const AppHeaderDropdownForm = () => {
   const rightsData = useSelector((el)=>el.empLoyeeRights?.crmRights
   ?.crmLeads?.items?.superRight) 
 
+  const rightsData2 =  useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
+    ?.items?.erpRecuritment?.rights) 
+
+  const rightsData3 =  useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpFinance?.items?.  
+  erpDailyExpense?.items?.erpExpense?.rights) 
+  
+
   const isAdmin = useSelector((el)=>el.isAdmin) 
-  const enquiryAdd =  rightsData?.addOn?.includes(leadsSuperRight.allEnquires)
+  const enquiryForm =  (rightsData?.addOn?.includes(leadsSuperRight.enquiryForm)||isAdmin)
+  const recrutMentForm =  (rightsData2?.includes(hrManagement.recruitmentmentForm)||isAdmin)
+  const expenceForm = (rightsData3?.includes(hrManagement.recruitmentmentForm)||isAdmin)
+
+                        
+  // const rightsData2 = useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement
+  //   ?.items?.empLoyeeHrProfile?.items?.erpEmployeeProfile?.rights) 
 
   return (
     
@@ -182,30 +205,28 @@ const AppHeaderDropdownForm = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
 
-        <CDropdownItem style={{display:(isAdmin|| enquiryAdd)?'':'none'}} >
+        {enquiryForm&&<CDropdownItem style={{display:enquiryForm?'':'none'}} >
           <Link style={{ textDecoration: 'none' }} to="/forms/enquiry-form">
             <CIcon icon={cilBell} className="me-2"
               tabIndex={-1}
             />
             Enquiry
           </Link>
-        </CDropdownItem>
-        <CDropdownItem >
+        </CDropdownItem>}
 
+        {recrutMentForm&&<CDropdownItem  style={{display:recrutMentForm?'':'none'}} >
           <Link style={{ textDecoration: 'none' }} to="/forms/staff-form">
             <CIcon icon={cilTask} className="me-2" />
             Recruitment
           </Link>
-        </CDropdownItem>
+        </CDropdownItem>}
        
-        <CDropdownItem>
-            
-          <Link style={{ textDecoration: 'none' }} to='/voucher/expense' >
+    {expenceForm&&<CDropdownItem style={{display:expenceForm?'':'none'}}>        
+       <Link style={{ textDecoration: 'none' }} to='/voucher/expense'   >
           <CIcon icon={cilUser} className="me-2" />
           Expense
           </Link>
-
-        </CDropdownItem>
+        </CDropdownItem>}
 
         <CDropdownItem >
         <Link style={{ textDecoration: 'none' }} to="/forms/support">

@@ -80,12 +80,14 @@ const AttendanceRegister = () => {
     const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+ 
+
     async function getAttendance() {
         const dateWithAttendance = getDaysInMonth(new Date().getMonth(), new Date().getFullYear())
         setDateOfMonth(dateWithAttendance)
         try {
             const response1 = axios.get(`${ url1 }/staffAttendance/${ pathValMaster }`, { headers: { 'Authorization': `Bearer ${ token }` } })
-            const response2 = axios.get(`${ url1 }/employeeform/${ pathValMaster }`, { headers: { 'Authorization': `Bearer ${ token }` } })
+            const response2 = axios.get(`${ url1 }/employeeform/all/${ pathValMaster }`, { headers: { 'Authorization': `Bearer ${ token }` } })
 
             const data = await Promise.all([response1, response2])
             const attendanceData = data[0].data
@@ -96,7 +98,9 @@ const AttendanceRegister = () => {
             setAttendanceData2(attendanceData)
 
             const dataAttended = updateAttendanceData(attendanceData, dateWithAttendance, empolyeeData
-                .filter((list) => list.selected === 'Select'))
+                .filter((list) => list.selected === 'Select'&&list?.EmployeeID&&list?.AttendanceID
+                && (list.FullName)&&(list.ContactNumber)&&(list.DateofBirth) &&(list.EmailAddress) &&
+                (list.Gender) &&(list.EmployeeID)&&(list.AttendanceID)&&(list.Department)&&(list.JobDesignation)))
             HandleTotalAtten(dataAttended, dateWithAttendance)
             setStaffAttendanceData(dataAttended)
             setAllStaffAttendedData(dataAttended.map((el) => `${ el.StaffName?.trim() } ${ el.attentanceId?.trim() }`))

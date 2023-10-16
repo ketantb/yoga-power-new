@@ -34,11 +34,8 @@ const financeRight = {
 
     deleteBalancePayment:'deleteBalancePayment12e23e',addBalancePayment:'addBalancePayment32r32',viewBalanceInvoice:'viewBalanceInvoice2e12',
 
-    printReceiptInvoice:'printReceiptInvoice8786tg',printReceiptReceipt:'printReceipt8978',
-
-    statusCancelInvoice:'statusCancelInvoice2434e',deleteCancelledInvoice:'deleteCancelledInvoice23423rd',
-    viewCancelInvoice:'viewCancelInvoice0443it',
-
+    printReceiptInvoice:'printReceiptInvoice8786tg',printReceiptReceipt:'printReceipt8978',statusCancelInvoice:'statusCancelInvoice2434e',
+    deleteCancelledInvoice:'deleteCancelledInvoice23423rd',expenseForm:'expenseFormAdeut437ty',viewCancelInvoice:'viewCancelInvoice0443it',
     dailyExpenseStatus:'dailyExpenseStatus6756iji',deleteDailyExpense:'deleteDailyExpense876t8',
 
     addPettyCash:'addPettyCash65670',deletePettyCash:'deletePettyCash5456'
@@ -48,7 +45,7 @@ const financeRight = {
 const hrManagement ={
     recruitmentImportExport:'recruitmentImportExport3498ty', recruitmentEdit:' recruitmentEdit8766hjgh',
     recruitmentResume:'recruitmentResume343ed',recruitmentStatus:'recruitmentStatus23r23',recruitmentDelete:'recruitmentDelete32rd3',
-    recruitmentAction:'recruitmentAction2423e',
+    recruitmentAction:'recruitmentAction2423e',recruitmentmentForm:'recruitmentmentForm94u4t',
 
     allImpProfileImportExport:'allImpProfileImportExport54tr3e32',allImpProfileView:'allImpProfileView3r43r',allImpProfileStatus:'allImpProfileStatus32e',
     allImpProfileAction:'allImpProfileAction32r2',allImpProfileEdit:'allImpProfileEdit345',allImpProfileDelete:'allImpProfileDelete3r23',

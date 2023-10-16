@@ -5,14 +5,13 @@ import { useSelector ,useDispatch} from 'react-redux'
 
 import { CBadge } from '@coreui/react'
 
+
 export const AppSidebarNav = ({ items }) => {
   let user = JSON.parse(localStorage.getItem('user-info'))
 
   const data = useSelector((el)=>el.empLoyeeRights)  
   const viewNav = useSelector((el)=>el.viewNav)  
   const  setViewNav =  useDispatch()
-
-console.log(viewNav)
 
   const [arr1,setArr1] = useState([...items])
 

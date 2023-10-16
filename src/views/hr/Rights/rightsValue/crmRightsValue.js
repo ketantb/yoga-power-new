@@ -20,18 +20,18 @@ const empLoyeeeRights =
         welcomeCalls:'welcomeCallskfj834',feedbackCalls:'feedbackCallsgk3409ut',paymentCalls:'paymentCalls',
         irregularMemberCall:'irregularMemberCallkjhjuh89',greetingCalls:'greetingCallskjhiu9',callHistory:'lkjokj099',
         // upgrade call
-        upgradeCalls:'upgradeCallsfwi348',renewalsCalls:'renewalsCalls;lwrgkl48',crossCellCalls:'crossCellCallskwejf82'
+        upgradeCalls:'upgradeCallsfwi348',renewalsCalls:'renewalsCalls;lwrgkl48',crossCellCalls:'crossCellCallskwejf82',
 
     }    
 
 const trainerSuperRight = {
        liveClasses:'liveClassesijf2u98',allBatches:'allBatcheslkdop399',pTClasses:'pTClassesdj3289yr',
-       ttCClasses:'ttCClassesdj3iod830',allMembers:'allMembersrkg34998'
+       ttCClasses:'ttCClassesdj3iod830',allMembers:'allMembersrkg34998',
 }
 
 const leadsSuperRight = {
     allEnquires:'allEnquiresj9uo',appointment :'appointmenth9h9h78',trailUpdate:'trailUpdateiuhy87',
-    prospect:'prospecttgt76',callReport:'allMembersrkg34998',coldEnquires:'coldEnquireshd38',
+    prospect:'prospecttgt76',callReport:'allMembersrkg34998',coldEnquires:'coldEnquireshd38',enquiryForm:'ewuhf74ty4tg4',
 
     allEnquiresExportImp:'allEnquiresj9uoexport',appointmentExport :'appointmenth9h9h78Export',
     trailUpdateExport:'trailUpdateExport56456e',prospectExport:'prospectExport7t67t',coldEnquiresExport

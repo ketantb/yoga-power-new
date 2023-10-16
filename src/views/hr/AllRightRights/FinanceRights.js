@@ -31,7 +31,6 @@ function FinanceRights({erpFinance,setRightObject}){
   function handleSubRights(parent,grandParent,val){
     setRightObject(prev => {
         const  arr = prev.erpRights.erpFinance.items[grandParent].items[parent].rights
-        console.log(arr)
         if(arr.includes(val)){
             arr?.splice(arr?.indexOf(val),1)
             return { ...prev }
@@ -313,6 +312,10 @@ onChange={(e) => setRightObject(prev => {
        <CFormSwitch size="xl" label="Delete Daily Expense" 
          checked={toCheckRightVal('erpDailyExpense','erpExpense',financeRight.deleteDailyExpense)}
          onChange={()=>{handleSubRights('erpDailyExpense','erpExpense',financeRight.deleteDailyExpense)}} 
+       />
+        <CFormSwitch size="xl" label="Daily Expense Form" 
+         checked={toCheckRightVal('erpDailyExpense','erpExpense',financeRight.expenseForm)}
+         onChange={()=>{handleSubRights('erpDailyExpense','erpExpense',financeRight.expenseForm)}} 
        />
    </CCol>
    <CCol>

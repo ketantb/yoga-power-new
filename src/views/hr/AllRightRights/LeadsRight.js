@@ -57,6 +57,7 @@ const LeadsRight = ({crmLeads,setRightObject }) => {
             <CFormSwitch size="xl" label="Add "  checked={checkDashRights(leadsSuperRight.allEnquires,'addOn')} onChange={()=>totoggaleRights(leadsSuperRight.allEnquires,'addOn')}  />
             <CFormSwitch size="xl" label="Edit enquiries" checked={checkDashRights(leadsSuperRight.allEnquires,'edit')} onChange={()=>totoggaleRights(leadsSuperRight.allEnquires,'edit')} />
             <CFormSwitch size="xl" label="Delete enquiries" checked={checkDashRights(leadsSuperRight.allEnquires,'delete')} onChange={()=>totoggaleRights(leadsSuperRight.allEnquires,'delete')} />
+            <CFormSwitch size="xl" label="Enquiries form" checked={checkDashRights(leadsSuperRight.allEnquires,'delete')} onChange={()=>totoggaleRights(leadsSuperRight.allEnquires,'delete')} />
 
         </CCol>
 

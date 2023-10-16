@@ -119,6 +119,13 @@ checked={erpHrManagement.value}
    />
 </CCol>   
 
+<CCol  md={4}>
+   <CFormSwitch size="xl" label="Recruitment Form" 
+    checked={toCheckRightVal1(hrManagement.recruitmentmentForm,'erpRecuritment')}
+    onChange={(e)=>handleRight1(hrManagement.recruitmentmentForm,'erpRecuritment')}
+   />
+</CCol>   
+
 </CRow>
 
 <CRow className='my-5'>

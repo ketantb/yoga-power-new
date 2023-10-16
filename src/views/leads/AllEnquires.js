@@ -159,7 +159,6 @@ const AllEnquires = () => {
         hiddenXLimportFileInput.current.click()
     }
 
-    console.log(result1)
 
     const HandaleImportChange = (event,totalEnquire) => {
         const importXlFile = event.target.files[0];
@@ -174,7 +173,6 @@ const AllEnquires = () => {
             importDataFun(json,getEnquiry,totalEnquire,Counseller)
         };
         reader.readAsArrayBuffer(importXlFile);
-
     }
  
     useEffect(() => {
