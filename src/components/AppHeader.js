@@ -27,7 +27,7 @@ import {
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown, AppHeaderDropdownForm } from './header/index'
 import logo from 'src/assets/images/avatars/YPI-Logo-2022.png'
-import { AppHeaderDropdownBook, AppHeaderDropdownCheckIn, AppHeaderDropdownLink,AppHeaderDropdownBasket,ReminderMessageDropdown } from './header/AppHeaderDropdown'
+import { AppHeaderDropdownBook, AppHeaderDropdownCheckIn, AppHeaderDropdownLink,AppHeaderAppointment,AppHeaderDropdownBasket,ReminderMessageDropdown } from './header/AppHeaderDropdown'
 import { Link } from 'react-router-dom'
 import GlobelSearchFilter from './GlobelsearcFilter/GlobelSearchFilter'
 
@@ -83,10 +83,7 @@ const AppHeader = () => {
           </CNavItem>
           <CNavItem>
             <CNavLink href="#">
-              <Link style={{ textDecoration: 'none' }} to="/forms/appointment">
-                <CIcon icon={cilCalendarCheck} size="lg" />
-              </Link>
-
+              <AppHeaderAppointment/>
             </CNavLink>
           </CNavItem>
           <CNavItem>

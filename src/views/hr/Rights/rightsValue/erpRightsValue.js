@@ -14,8 +14,7 @@ const inventoryRight = {
     foodsProduct:'foodsProductkjoiu089u8',generalInventory:'generalInventory8789hubh',
 
     // Office Inventory 
-    inventoryList:'inventoryListdhiu3h983',inventoryAdd:'inventoryAddokg438u',assignedList:'AssignedList92484th',
-    
+    inventoryList:'inventoryListdhiu3h983',inventoryAdd:'inventoryAddokg438u',assignedList:'AssignedList92484th',inventoryShop:'inventoryShop67ty',  
     // impCallList
     viewCallList:'viewCallList8475thf',addCall:'addCall947948yt',editCall:'editCallsoirg38',deleteICall:'deleteCalllkdfh438',
     action:'actionkgr94',
@@ -49,12 +48,9 @@ const hrManagement ={
 
     allImpProfileImportExport:'allImpProfileImportExport54tr3e32',allImpProfileView:'allImpProfileView3r43r',allImpProfileStatus:'allImpProfileStatus32e',
     allImpProfileAction:'allImpProfileAction32r2',allImpProfileEdit:'allImpProfileEdit345',allImpProfileDelete:'allImpProfileDelete3r23',
-
-    empDocView:'empDocView4t4t',
-
+    empDocView:'empDocView4t4t',createAttendance:'createAttendanceru348tyh',
     addEmpTargetSheet:'addEmpTargetSheetr4t493k',deleteEmpTargetSheet:'deleteEmpTargetSheet4t34t',
     addEmpTargetPerformance:'addEmpTargetPerformance656rf',deleteEmpTargetPerformance:'deleteEmpTargetPerformance878t',
-
     biometricStaff:'biometricStaff24398743',editBiometricStaff:'editBiometricStaff24543',deleteBiometricStaff:'deleteBiometricStaff4t43',
 
 }

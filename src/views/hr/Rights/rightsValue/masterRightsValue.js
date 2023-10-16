@@ -68,7 +68,6 @@ const  financeMasterRights = {
     invoiceSetupMaster:'invoiceSetupMaster4yt894hg',addInvoice:'addInvoice38yt7g',deleteInvoice:'deleteInvoice83ytgf',
  
     adddTax:'adddTax835yh',deleteTax:'deleteTax49ut8ygh'
-
 }
 
 export {masterRightValue,masterMarketingRightVal,herMasterRightVal,inventoryMasterRights, financeMasterRights }

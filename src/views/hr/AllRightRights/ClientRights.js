@@ -123,6 +123,30 @@ const ClientRights = ({crmCientManagment,setRightObject}) => {
             <CFormSwitch size="xl" label="Delete  Client"  checked={checkDashRights(clientManagementRights.clientSupport,'delete')} onChange={()=>totoggaleRights(clientManagementRights.clientSupport,'delete')} />
         </CCol>
     </CRow>
+    <CRow>
+           <CCol>
+           <h5 className='mb-4 d-flex mt-5' >
+           Appointment <span className='mx-1'>
+           <CFormSwitch size="lg" 
+         checked={checkDashRights(clientManagementRights.allClients+"appointment",'profile')}
+          onChange={()=>totoggaleRights(clientManagementRights.allClients+"appointment",'profile')}
+           /></span>
+          </h5>
+            </CCol>   
+             
+            <CCol>
+            <h5 className='mb-4 d-flex mt-5' >
+           Client Attendance <span className='mx-1'>
+           <CFormSwitch size="lg" 
+         checked={checkDashRights(clientManagementRights.allClients+"attendanceCheckIn",'profile')}
+          onChange={()=>totoggaleRights(clientManagementRights.allClients+"attendanceCheckIn",'profile')}
+           /></span>
+          </h5>
+            </CCol>
+            <CCol>
+              
+            </CCol>
+           </CRow>
 </div>
   )
 }

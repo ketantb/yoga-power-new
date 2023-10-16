@@ -96,7 +96,7 @@ function getUserRight(token,emailUniqId){
   store.dispatch(functionUser(token,emailUniqId))
 }
 
-function changeState (state = initialState, { type, ...rest }){
+function changeState (state = {...initialState}, { type, ...rest }){
   switch (type) {
     case 'set':
       return { ...state, ...rest }
@@ -208,7 +208,8 @@ function changeState (state = initialState, { type, ...rest }){
     case 'setViewNavFalse':
     state.viewNav = rest.payload
     return  { ...state, ...rest }
-  
+    case 'clear':
+    return   {...initialState}
     default:
 
      return state

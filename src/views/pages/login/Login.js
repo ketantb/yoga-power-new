@@ -78,6 +78,7 @@ useEffect(()=>{
         },
         body: JSON.stringify(item)
       })
+      let status = result.status
 
       if (result.status == 400||result.status == 404) {
         setClick(false)
@@ -89,6 +90,7 @@ useEffect(()=>{
       setUserInfo(result)
       localStorage.setItem('user-info', JSON.stringify(result))
       let user = JSON.parse(localStorage.getItem('user-info'))
+
 
       if (user?.user?.isAdmin) {
         disPatch({type:'dispatchIsAdmin'})
@@ -105,6 +107,8 @@ useEffect(()=>{
       setClick(false)
       setError('Please Enter Details')
     }
+ 
+  
   }
   /*  */
 

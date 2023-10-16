@@ -177,6 +177,14 @@ onChange={(e) => setRightObject(prev => {
         <CFormSwitch size="xl" label="View Product Invoice" checked={toCheckRightVal(inventoryRight.viewProductInvoice,'erpProductInvoice')}  onChange={()=>handleRight(inventoryRight.viewProductInvoice,'erpProductInvoice')}  />
        <CFormSwitch size="xl" label="Delete Product Invoice"  checked={toCheckRightVal(inventoryRight.deleteProductInvoice,'erpProductInvoice')}  onChange={()=>handleRight(inventoryRight.deleteProductInvoice,'erpProductInvoice')} /> 
    </CCol>
+
+   <CCol>
+   <h5 className='mb-4 pt-2 d-flex ' >Inventory Shop<span className='mx-2'><CFormSwitch size="lg"
+   checked={toCheckRightVal(inventoryRight.inventoryShop,'erpProductInvoice')}
+   onChange={()=>handleRight(inventoryRight.inventoryShop,'erpProductInvoice')}
+   /></span></h5> 
+   </CCol>
+   <CCol></CCol>
 </CRow>
 </div> 
 

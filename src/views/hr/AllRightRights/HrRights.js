@@ -279,8 +279,12 @@ onChange={()=>{handleSubRights('erpEmpPerformance','erpHrTargetSheet',hrManageme
 <CCol>
    <h5 className='mb-4   d-flex ' >Emp Attendance Register<span className='mx-2'><CFormSwitch size="lg"
     checked={erpHrManagement.items.erpEmpAttendess.items.erpEmpAttedanceRegister.value}
-    onChange={(e)=>thirdLavleRightFun('erpEmpAttedanceRegister','erpEmpAttendess')}
+    onChange={()=>thirdLavleRightFun('erpEmpAttedanceRegister','erpEmpAttendess')}
    /></span></h5>
+    <CFormSwitch size="xl" label="Create Attendance Emp view"
+        checked={toCheckRightVal('erpEmpAttedanceRegister','erpEmpAttendess',hrManagement.createAttendance)}
+        onChange={()=>{handleSubRights('erpEmpAttedanceRegister','erpEmpAttendess',hrManagement.createAttendance)}} 
+   />
 </CCol>
 
 

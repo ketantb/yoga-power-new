@@ -42,8 +42,8 @@ import menImage from './../../assets/images/avatars/profile_icon.png'
 import { useUniqAdminObjeact } from 'src/views/Custom-hook/adminValidation'
 import { SiEventstore } from 'react-icons/si'
 import LeadsRight from 'src/views/hr/AllRightRights/LeadsRight'
-import { hrManagement,financeRight } from 'src/views/hr/Rights/rightsValue/erpRightsValue';
-
+import { hrManagement,financeRight,inventoryRight } from 'src/views/hr/Rights/rightsValue/erpRightsValue';
+import { masterMarketingRightVal } from 'src/views/hr/Rights/rightsValue/masterRightsValue'
 
 
 const AppHeaderDropdown = () => {
@@ -55,9 +55,9 @@ const AppHeaderDropdown = () => {
   const disPatch = useDispatch()
   const navigate = useNavigate()
   const Logout = () => {
+    disPatch({type:'clear'})
     localStorage.clear()
     navigate('/login')
-    disPatch({type:'clearentireStore'})
   }
 
   const profile = ()=>{
@@ -238,8 +238,15 @@ const AppHeaderDropdownForm = () => {
 }
 
 const AppHeaderDropdownBook = () => {
+
+  const rightsData4 =  useSelector((el)=>el?.empLoyeeRights?.masterRights
+  ?.masterMarketing?.items?.masterAutomatedComToStaff?.rights) 
+  const isAdmin = useSelector((el)=>el.isAdmin) 
+
+  const eventEmpView =(isAdmin||rightsData4?.includes(masterMarketingRightVal.eventEmpView))
+
   return (
-<CDropdown variant="nav-item">
+eventEmpView&&<CDropdown variant="nav-item" style={{display:eventEmpView?'':'none'}}>
 <Link style={{ textDecoration: 'none',color:'GrayText' }} to="/forms/event">
 <CIcon icon={cilSpa} size="lg" />
 </Link>
@@ -249,37 +256,38 @@ const AppHeaderDropdownBook = () => {
 
 
 const AppHeaderDropdownCheckIn = () => {
+
+  const rightsData4 =  useSelector((el)=>el?.empLoyeeRights?.crmRights?.crmCientManagment?.items?.superRight?.profile) 
+  const rightsData3 =  useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpHrManagement?.items?.erpEmpAttendess?.items?.
+                                   erpEmpAttedanceRegister?.rights) 
+  const isAdmin = useSelector((el)=>el.isAdmin) 
+
+  const clientAttendanceEmpView =(isAdmin||rightsData4?.includes(clientManagementRights.allClients+"attendanceCheckIn"))
+  const createEmpAttendance =(isAdmin||rightsData3?.includes(hrManagement.createAttendance))
+
+
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
         <CIcon icon={cilFingerprint} size="lg" />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-
-        <CDropdownItem >
-          <Link  to="/forms/client-checkin">
-            <CIcon icon={cilBell} className="me-2"
-              tabIndex={-1}
-            />
-            Client Batches CheckIn
-          </Link>
-        </CDropdownItem>
          
-        <CDropdownItem >
+       {clientAttendanceEmpView&& <CDropdownItem style={{display:clientAttendanceEmpView?'':'none'}}  >
           <Link  to="/forms/client-checkin">
             <CIcon icon={cilBell} className="me-2"
               tabIndex={-1}
             />
             Client Membership CheckIn
           </Link>
-        </CDropdownItem>
+        </CDropdownItem>}
 
-        <CDropdownItem >
+        {createEmpAttendance&&<CDropdownItem  style={{display:createEmpAttendance?'':'none'}} >
           <Link  to="/forms/staff-checkin">
             <CIcon icon={cilEnvelopeOpen} className="me-2" tabIndex={-1} />
             Employee CheckIn
           </Link>
-        </CDropdownItem>
+        </CDropdownItem>}
 
         
         <CDropdownDivider />
@@ -287,15 +295,42 @@ const AppHeaderDropdownCheckIn = () => {
     </CDropdown>
   )
 }
-const AppHeaderDropdownBasket= () => {
-  return (
-    <CDropdown variant="nav-item">
+const AppHeaderAppointment= () => {
 
- 
+
+
+  const rightsData4 =  useSelector((el)=>el?.empLoyeeRights?.crmRights?.crmCientManagment?.items?.superRight?.profile) 
+
+  const isAdmin = useSelector((el)=>el.isAdmin) 
+
+
+  const appointMentEmpView =(isAdmin||rightsData4?.includes(clientManagementRights.allClients+"appointment"))
+
+
+  return (
+   appointMentEmpView&&<CDropdown variant="nav-item" style={{display:appointMentEmpView?'':'none'}} >
+  <Link style={{ textDecoration: 'none',color:'GrayText' }} to="/forms/appointment">
+  <CIcon icon={cilCalendarCheck} size="lg" />
+  </Link>
+    </CDropdown>
+  )
+}
+
+const AppHeaderDropdownBasket= () => {
+
+  const rightsData4 =  useSelector((el)=>el?.empLoyeeRights?.erpRights?.erpInventory?.items
+  ?.erpProductInvoice?.rights) 
+  const isAdmin = useSelector((el)=>el.isAdmin) 
+
+
+  const appointMentEmpView =(isAdmin||rightsData4?.includes(inventoryRight.inventoryShop))
+
+
+  return (
+   appointMentEmpView&&<CDropdown variant="nav-item" style={{display:appointMentEmpView?'':'none'}} >
   <Link style={{ textDecoration: 'none',color:'GrayText' }} to="/stock/stock-list">
   <CIcon icon={cilBasket} size="lg" />
   </Link>
-      
     </CDropdown>
   )
 }
@@ -342,4 +377,4 @@ const AppHeaderDropdownLink = () => {
 
 export { AppHeaderDropdown, AppHeaderDropdownForm, AppHeaderDropdownBook, 
   AppHeaderDropdownCheckIn, AppHeaderDropdownLink,AppHeaderDropdownBasket
-,ReminderMessageDropdown }
+,ReminderMessageDropdown,AppHeaderAppointment }
