@@ -783,8 +783,8 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Automated Communication To staff  Master',
-        to: '/master/marketing/automated-communication',
+        name: 'Event',
+        to: '/master/event-master',
         id:'masterAutomatedComToStaff'
       }
     ],

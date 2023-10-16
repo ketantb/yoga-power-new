@@ -333,7 +333,7 @@ useEffect(()=>{
 <CCardBody>
 
       <CCol className='text-end px-3'>
-            <h5>Total Clinet :- {clientCertificateData.length}</h5>
+            <h5>Total Client :- {clientCertificateData.length}</h5>
           </CCol>
 
       <CRow className="mx-3">
@@ -587,9 +587,9 @@ useEffect(()=>{
            <CTableHeaderCell>Theory Exam</CTableHeaderCell>    
            <CTableHeaderCell>Result</CTableHeaderCell>    
            <CTableHeaderCell>Grade</CTableHeaderCell>    
-           <CTableHeaderCell>Certificat Number</CTableHeaderCell>   
+           <CTableHeaderCell>Certificate Number</CTableHeaderCell>   
            <CTableHeaderCell>Course Complition</CTableHeaderCell>    
-           <CTableHeaderCell style={{cursor:'pointer',display: viewClientCertificate?'':'none'}}>Certificat view</CTableHeaderCell>        
+           <CTableHeaderCell style={{cursor:'pointer',display: viewClientCertificate?'':'none'}}>Certificate view</CTableHeaderCell>        
            <CTableHeaderCell style={{cursor:'pointer',display:(editClientCertificate||deleteClientCertificate)?'':'none'}}>Edit/Delete</CTableHeaderCell>   
         </CTableRow>
       </CTableHead>

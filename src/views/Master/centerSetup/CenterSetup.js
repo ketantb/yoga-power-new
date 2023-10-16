@@ -37,7 +37,6 @@ const CenterSetup = () => {
                     { id:'masterPackageMaster', color: 'dark', icon: <HiCurrencyRupee style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Package Master', link: '/master/center-setup/package-master' },
                     { id:'masterLeadSourseMaster', color: 'warning', icon: <FaFileInvoiceDollar style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Lead Master',link: '/master/center-setup/leadSourceMaster' },
                     { id:'masterEmployeeDesignation', color: 'success', icon: <FaFileInvoiceDollar style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Designation Master',link: '/master/center-setup/designation' },
-                    { id:'masterInvoiceMaster', color: 'danger', icon: <FaFileInvoiceDollar style={{ marginLeft: '20px', marginRight: '20px' }} className='ml-2' size='60px' />, title: 'Event Master',link: '/master/event-master' },
                 ].filter((el)=>{
                 return (rightsDataObj?.[el?.id]?.value || isAdmin)
                 }).map((item, index) => (

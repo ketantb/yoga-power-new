@@ -102,7 +102,7 @@ const toCheckRightVal = (val,parrent)=>{
 </CRow>
 <CRow className='mt-2'>
 <CCol>
-       <h5 className='mb-4 p-0 d-flex ' >Automated Communication<span className='mx-2'>
+       <h5 className='mb-4 p-0 d-flex ' >Event<span className='mx-2'>
         <CFormSwitch  size="xl"
         checked={masterMarketing.items.masterAutomatedComToStaff.value}
         onChange={(e)=>setRightObject(prev=>{

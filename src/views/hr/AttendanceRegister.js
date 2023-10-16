@@ -91,16 +91,14 @@ const AttendanceRegister = () => {
 
             const data = await Promise.all([response1, response2])
             const attendanceData = data[0].data
-            const empolyeeData = data[1].data
-
-
+            const empolyeeData = data[1].data?.filter((list) => list.selected === 'Select'&&list?.EmployeeID&&list?.AttendanceID
+            && (list.FullName)&&(list.ContactNumber)&&(list.DateofBirth) &&(list.EmailAddress) &&
+            (list.Gender) &&(list.EmployeeID)&&(list.AttendanceID)&&(list.Department)&&(list.JobDesignation))
+ 
             setEmpData2(empolyeeData)
             setAttendanceData2(attendanceData)
 
-            const dataAttended = updateAttendanceData(attendanceData, dateWithAttendance, empolyeeData
-                .filter((list) => list.selected === 'Select'&&list?.EmployeeID&&list?.AttendanceID
-                && (list.FullName)&&(list.ContactNumber)&&(list.DateofBirth) &&(list.EmailAddress) &&
-                (list.Gender) &&(list.EmployeeID)&&(list.AttendanceID)&&(list.Department)&&(list.JobDesignation)))
+            const dataAttended = updateAttendanceData(attendanceData, dateWithAttendance, empolyeeData)
             HandleTotalAtten(dataAttended, dateWithAttendance)
             setStaffAttendanceData(dataAttended)
             setAllStaffAttendedData(dataAttended.map((el) => `${ el.StaffName?.trim() } ${ el.attentanceId?.trim() }`))
@@ -168,8 +166,6 @@ const AttendanceRegister = () => {
         setSelectedStaffData('')
         setPaging(0)
     }
-
-    console.log(staffAttendanceData)
 
     return (
         <CRow>

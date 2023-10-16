@@ -172,7 +172,7 @@ return<CCard className=''>
         <CTableHeaderCell>Start Date</CTableHeaderCell>    
         <CTableHeaderCell>End Date</CTableHeaderCell> 
         <CTableHeaderCell>Invoice No</CTableHeaderCell>    
-        <CTableHeaderCell>Trainner</CTableHeaderCell>    
+        <CTableHeaderCell>Trainer</CTableHeaderCell>    
         <CTableHeaderCell style={{display:clientCourseAction?'':'none'}} >Action</CTableHeaderCell>    
        </CTableRow>
    </CTableHead>
