@@ -15,6 +15,7 @@ import { useUploadResumeHook } from './useUploadHook';
 
 const ApplicationForm = ({shouldEdit,data,editEnquiry,getStaff,toViewDoc}) => {
 
+    
 const imgRef = useRef(null)
 const [fullName,setFullName] = useState('')
 const [contactNumber,setContactNumber] = useState('')
@@ -23,6 +24,7 @@ const [Gender, setGender] = useState('')
 const [address,setAddress] = useState('')
 const [age,setAge] = useState('')
 const [resume, setResume] = useState(null)
+const [resumeUrl,setResumeUrl] = useState('')
 const [jobDesignation,setJobDesignation] = useState('')
 const [department,setDepartment] = useState('')
 const [expSalary,setExpSalary] = useState('')
@@ -36,6 +38,7 @@ const [leadArr, setLeadArr] = useState([]);
 const [typesOfTime,setTypesOfTime] = useState('')
 const [imgPrograss,setImgPrograss] = useState(0)
 const imageInput = useRef('')
+
 
 
 
@@ -81,6 +84,7 @@ const AllowEditHandler = ()=>{
     setPayouttype(data.PayoutType)
     setGrade(data.Grade)
     setResume(data.resumeName)
+    setResumeUrl((data.resume||''))
     setImageUrl(data.image)
     setComment(data.Comment)
     setAge(data?.Age)
@@ -326,10 +330,10 @@ const handleImage = event => {
                                         placeholder="Enter Upload Resume"
                             />
 
-                      <div className={!!resume?.trim()?'resume-dev h-100px border text-white d-flex':'d-none'}>
+                      <div className={!!resumeUrl?.trim()?'resume-dev h-100px border text-white d-flex':'d-none'}>
                                         <div className='w-30 bg-lightRed h-100 dev-center'>PDF</div>
                                         <div className='w-70 h-100 dev-center text-dark'>
-                                          <p className='p-0 m-0'> {((resume?.slice(0,30)?resume?.slice(0,20)+"...":null)||"Resume is not uploaded...")}</p> 
+                                          <p className='p-0 m-0'> {((!!resumeUrl?.trim()?(resume?.slice(0,20)||'')+"...":null)||"Resume is not uploaded...")}</p> 
                                           <p className='p-0 m-0'>{new Date(data.createdAt).toDateString()}</p>
                                         </div>
                                         <div className='dev-center'>

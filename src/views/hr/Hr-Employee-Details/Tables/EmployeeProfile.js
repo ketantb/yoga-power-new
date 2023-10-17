@@ -109,6 +109,7 @@ const EmployeeProfile = ({ id}) => {
         }
         axios.get(`${ url }/employeeform/${ uniqId }`, headers)
             .then((res) => {
+                console.log(res.data)
                 setEmployeeData(res.data)
                 setFullName(res.data.FullName)
                 setContactNumber(res.data.ContactNumber)
@@ -164,7 +165,7 @@ const EmployeeProfile = ({ id}) => {
     }
 
 
-
+console.log(resumeUrl,resume)
 
 
     // Editing Scope //////////////////////////////////////////////////////////////////////////////
