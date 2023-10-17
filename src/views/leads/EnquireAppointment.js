@@ -536,7 +536,7 @@ const EnquireAppointment = () => {
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
-                        <strong className="mt-2">Enquire Appointment <span className='float-end'>Total Member : {result1.filter((list) =>list.enquirestatus!=='notshow'&& list.appointmentfor === 'Appointment').length}</span></strong>
+                        <strong className="mt-2">Enquire Appointment <span className='float-end'>Total follow up : {result1.filter((list) =>list.enquirestatus!=='notshow'&& list.appointmentfor === 'Appointment').length}</span></strong>
                     </CCardHeader>
                     <CCardBody>
                         <CRow className='d-flex justify-content-between'>

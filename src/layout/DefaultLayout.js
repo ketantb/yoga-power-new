@@ -76,12 +76,11 @@ useEffect(()=>{
     validateLayout&&
     <>
     <div className={hidde?'hidde':'main-div'}>
-      <AppSidebar />
+      <AppSidebar className='left-er3' />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
-        <AppHeader />
+        <AppHeader className='header-38ru' />
         <div className="body flex-grow-1 px-3 mb-3">
-          
-          <AppContent params={params} />
+          <AppContent params={params} className='bottom-rwei' />
         </div>
       </div>
     </div>

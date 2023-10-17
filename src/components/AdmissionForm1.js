@@ -210,7 +210,7 @@ const AdmissionForm1 = ({ add, setAdmissionForm, ids, deleteId,getEnquiry }) => 
             }
         }
 
-        const response1 =  axios.get(`${url}/Package/${pathValMaster}`,headers)
+        const response1 =  axios.get(`${url1}/packageMaster/${pathValMaster}`,headers)
         const response2 =  axios.get(`${url}/leadSourceMaster/${pathValMaster}`,headers)
         const response3 =  axios.get(`${url1}/employeeForm/${pathValMaster}`,headers)
         const response4 =  axios.get(`${url1}/packageMaster/${pathValMaster}`,headers)
@@ -711,13 +711,13 @@ useEffect(()=>{
                                                         label="Service Name"
                                                     >
                                                         <option>Select Name</option>
-                                                        {[...subService].filter((el)=>el).map((item, index) => (
-                                            (
-                                               item.Status=== true && (
-                                                    <option key={index}>{item.Service }</option>                                                  
-                                                )
+                                                        {[...subService].map((item) => (
+                                            (item.Status=== true && (item.Service.toLocaleLowerCase().trim()))))
+                                            .filter((el,i,arr)=>i===arr.indexOf(el)).map((Service,ind)=>{
+                                              return   <option key={ind}>{Service }</option>                                                  
+                                            })
                                             
-                                            )))}</CFormSelect>
+                                            }</CFormSelect>
                                                 </CCol>
                                                 <CCol xs={6}>
                                                     <CFormSelect
@@ -728,16 +728,15 @@ useEffect(()=>{
                                                         label="Service Package"
                                                     >
                                                         <option>Service Package</option>
-                                                            {[...subService].filter((list) =>
-                                            list.Service=== serviceName
+                                                        {[...subService].filter((list) =>
+                                            list.Service.toLocaleLowerCase().trim()=== serviceName
                                         ).map((item, index) => (
-                                            (
+                                             (
                                                 item.Status === true && (
                                                     <option key={index}>{item.Package_Name }</option>
                                                 )
                                             )
-                                        ))
-                                    }</CFormSelect> 
+                                        ))}</CFormSelect> 
                                     
                                                 </CCol>
 
@@ -855,7 +854,7 @@ useEffect(()=>{
                                                         label="Class Timeing"
                                                     >
                                                      
-                                                 <option>Select Class Timeing</option>     
+                                                 <option>Select Class Timing</option>     
                                                      {batchesData.
                                                      filter((el)=>el.category === typeOFBatchClasses                                   
                                                      

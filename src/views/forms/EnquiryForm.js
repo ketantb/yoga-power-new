@@ -88,11 +88,10 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
     const [imageUrl, setImageUrl] = useState(null)
     const [centerPartnerData,setCenterPartnerData] = useState([])
     const [clientId,setClientId] = useState()
-
     const [staff, setStaff] = useState([])
+    const [imageUurlAndBt,setImageUrlAndBt] = useState('')
     const isAdmin = useSelector((el)=>el.isAdmin) 
-
-   const {toHandleStatus,errorCompponent,statusCode} =   useErrorStatus()
+    const {toHandleStatus,errorCompponent} =   useErrorStatus()
 
 
 
@@ -125,7 +124,6 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
       const allData = await Promise.all([response1,response2,response3,response4,response5,response6])
       const centerData = allData[5]?.data?.filter((el)=> el._id===uniqObj.partnerAdminMongoId)
 
-      console.log(allData[5].data,uniqObj.partnerAdminMongoId)
       setStaff(allData[0].data)
       setClientData(allData[1].data)
       setLeadArr(allData[2].data.filter((el)=>el.Status))
@@ -177,6 +175,7 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
         setClientReferance((editData.ClientReferenceName||'')) 
         setCenterName((editData.CenterName||''))
         setDateofBirth(editData.DateofBirth?moment(new Date(editData.DateofBirth)).format('YYYY-MM-DD'):'')
+        setImageUrlAndBt((editData.image||''))
      }
     },[edit])
 
@@ -196,7 +195,8 @@ const EnquiryForm = ({edit,editData,getEnquiry,setVisible}) => {
                                          && CountryCode!=='' && contact && Gander !==''  
                                          && address1!==''&&Area!=='' &&city!==''&& Profession!==''
 
-    const ScheduleenquiryfollowUp   = StaffName.trim() !==''&& CenterName.trim()!==''&& CallStatus.trim()!=='' &&counseller.trim()!==''
+    const ScheduleenquiryfollowUp   = StaffName.trim() !==''&& CenterName.trim()!==''&& CallStatus.trim()!=='' &&counseller.trim()
+    !==''
 
     const LeadInformationValidation = EnquiryDate !==''   && ServiceName !=='' && ServiceVariation !=='' &&
                                       Customertype !=='' && enquirytype !=='' && appointmentfor !==''  
@@ -336,7 +336,7 @@ return
         if (!file.type.startsWith('image/')) return;
 
         reader.onload = (e) => {
-            imgRef.current.src = e.target.result
+            setImageUrlAndBt(e.target.result)
         }
         reader.readAsDataURL(file)
 
@@ -378,7 +378,8 @@ return
 
                             <CRow>
                                 <CCol sm={12} className='p-3'>
-                                    <CImage ref={imgRef}  style={{ borderRadius: "100px" }} width={'200px'} src={ProfileIcon} className="me-4" />
+
+                                    <CImage ref={imgRef}  style={{ borderRadius: "100px" }} width={'200px'} src={imageUurlAndBt?imageUurlAndBt:ProfileIcon} className="me-4" />
                                 
                                     <CFormInput
                                         type="file"
@@ -389,7 +390,6 @@ return
                                     />
                                     <CButton onClick={HandaleImageClick} > <CIcon icon={cilArrowCircleBottom} /> {imgPrograss}% Upload Image</CButton>
                                 </CCol>
-
 
                                 <CCol lg={6} md={6} sm={12}>
                                     <CFormInput
@@ -553,7 +553,7 @@ return
                                         aria-label="Select Assign Staff"
                                         value={counseller}
                                         onChange={(e) => setCounseller(e.target.value)}
-                                        label='Counseller'
+                                        label='Counsellor'
                                     >
                                         <option value={''}>Select Counsellor</option>
                                         {staff.filter((list) =>  list.selected === 'Select').map((item, index) => (

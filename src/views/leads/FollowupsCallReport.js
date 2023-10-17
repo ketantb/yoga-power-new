@@ -89,7 +89,7 @@ const FollowupCallReport = () => {
             <CCol lg={12} sm={12}>
                 <CCard className='mb-3 border-top-success border-top-3'>
                     <CCardHeader>
-                        <strong className="mt-2">Call Report <span className='float-end'>Total Call Report 
+                        <strong className="mt-2"> Lead Call Report <span className='float-end'>Total Call Report 
                         : {result1.length}</span></strong>
                     </CCardHeader>
                     <CCardBody>

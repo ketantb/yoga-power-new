@@ -558,6 +558,7 @@ const TrialEnquires = () => {
                                         aria-label="Example select with button addon"
                                         value={select}
                                         onChange={(e) => setSelect(e.target.value)}
+                                        label={'Filter by year'}
                                     >
                                         <option value={day}>Today</option>
                                         <option value={month}>Last Month</option>

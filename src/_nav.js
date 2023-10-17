@@ -166,7 +166,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Calls Report',
+        name: 'Lead Calls Report',
         id:'crmCallsReports1',
         to: '/leads/followups-call-report',
       },

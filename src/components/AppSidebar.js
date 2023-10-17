@@ -19,7 +19,7 @@ import { hexToRgba } from '@coreui/utils'
 // sidebar nav config
 import navigation from '../_nav'
 
-const AppSidebar = () => {
+const AppSidebar = ({className}) => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
@@ -35,6 +35,7 @@ const AppSidebar = () => {
 
   return (
     <CSidebar
+      className={className}
       position="fixed"
       unfoldable={unfoldable}
       visible={sidebarShow}
