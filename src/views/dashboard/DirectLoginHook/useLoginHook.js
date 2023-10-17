@@ -47,6 +47,7 @@ const useLoginHook = () => {
   
   
   return  async function login(email, password) {
+    disPatch({type:'hidde'})
 
       if (email != '' || password != '') {
         setViewNav({type:'setViewNavFalse',payload:false})
@@ -76,15 +77,17 @@ const useLoginHook = () => {
         
         if (user?.user?.isAdmin) {
           disPatch({type:'dispatchIsAdmin'})
-          navigate('/')
-        }if(user?.user?.isAdminPatner){
+          navigate('/dashboard')
+        } if(user?.user?.isAdminPatner){
           disPatch({type:'dispatchIsAdminPatner'})
-          navigate('/')
+          navigate('/dashboard')
         } if(user?.user?.isEmployee){
           disPatch({type:'dispatchIsEmployee'})
-          navigate('/')
+          navigate('/dashboard')
         }
-
+  
+        window.location.reload()
+        
       } else {
        return 'Please Enter Details'
       }

@@ -1,0 +1,17 @@
+
+/* LandingPage.css */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.main-div {
+    opacity: 0;
+}
+
+.main-div {
+    animation: fadeIn 1s forwards;
+}
+.hidde{
+    opacity: 0;
+}

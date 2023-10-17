@@ -60,11 +60,14 @@ useEffect(()=>{
       }
       disPatch({type:'getRightDataFun'})
       getUserRight(userinfo.token,userinfo.user.emailUniqId)
+      
     }
   },[getUserRight,activeToCall,userinfo?.user?.emailUniqId,isEmployee,userinfo.token])
 
 
   async function login() {
+    disPatch({type:'hidde'})
+
     if (email != '' || password != '') {
       setClick(true)
       setError(null)
@@ -94,23 +97,28 @@ useEffect(()=>{
 
       if (user?.user?.isAdmin) {
         disPatch({type:'dispatchIsAdmin'})
-        navigate('/')
+        navigate('/dashboard')
       } if(user?.user?.isAdminPatner){
         disPatch({type:'dispatchIsAdminPatner'})
-        navigate('/')
+        navigate('/dashboard')
       } if(user?.user?.isEmployee){
         disPatch({type:'dispatchIsEmployee'})
-        navigate('/')
+        navigate('/dashboard')
       }
+
+      window.location.reload()
       
     } else {
       setClick(false)
       setError('Please Enter Details')
     }
  
+
   
   }
   /*  */
+
+
 
 
 

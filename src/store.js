@@ -28,6 +28,7 @@ const initialState = {
   genralProductDataClearFun:()=>{},
   getUserRight:()=>{},
   viewNav:false,
+  hidde:true
 }
 
 function toConfirmBooking(state,id){
@@ -210,9 +211,14 @@ function changeState (state = {...initialState}, { type, ...rest }){
     return  { ...state, ...rest }
     case 'clear':
     return   {...initialState}
+    case 'hidde':
+    state.hidde=true
+    return  { ...state, ...rest }
+    case 'nothidde':
+    state.hidde=false
+    return  { ...state, ...rest }
     default:
-
-     return state
+    return state
   } 
 
 }

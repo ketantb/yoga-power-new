@@ -1,3 +1,4 @@
+import './DefaultLayout.css'
 import React,{useEffect,useState} from 'react'
 import {
   AppContent,
@@ -8,7 +9,7 @@ import {
 
 import {useParams,redirect,useNavigate  } from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
-
+import WelcomePage from 'src/views/pages/WelcomePage'
 
 let user = JSON.parse(localStorage.getItem('user-info'))
 const token = user?.token;
@@ -21,6 +22,7 @@ const DefaultLayout = () => {
   const params = useParams()
 
   const getUserRight = useSelector((el)=>el.getUserRight)    
+  const hidde = useSelector((el)=>el.hidde)    
   const isEmployee = useSelector((el)=>el.isEmployee)    
   const activeToCall = useSelector((el)=>el.activeToCall)    
   const [toggaleToRerendar,setReRender] = useState(false)
@@ -65,14 +67,15 @@ useEffect(()=>{
     }else{
       setValidateLayout(false)
     }
-  },[validateVal])
+    disPatch({type:'nothidde'})
 
-  
+  },[validateVal])
 
 
   return (
     validateLayout&&
-    <div>
+    <>
+    <div className={hidde?'hidde':'main-div'}>
       <AppSidebar />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
@@ -82,6 +85,9 @@ useEffect(()=>{
         </div>
       </div>
     </div>
+    {/* <WelcomePage/> */}
+    </>  
+    
   )
 }
 
