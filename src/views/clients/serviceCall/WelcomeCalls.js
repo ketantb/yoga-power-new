@@ -235,6 +235,7 @@ useEffect(()=>{
                 onChange={(e)=>setUpdateForm(prev=>({...prev,wellComeCallDiscussion:e.target.value}))}
                 ></CFormTextarea>
             </CCol>
+            
             <CCol lg={8}>
                <CFormSelect
                label='Follow up by'

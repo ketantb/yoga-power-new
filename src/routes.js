@@ -174,18 +174,13 @@ const StaffCheckIn = React.lazy(() => import('./views/forms/StaffCheckIn'))
 const Appointment = React.lazy(() => import('./views/forms/Appointment'))
 const UserCompanyProfile =  React.lazy(() => import('./components/UserCompanyProfile'))
 const AutomatedCommunication  =  React.lazy(() => import('./views/Master/marketing/AutomatedCommunication'))
-
 // Icons
-
-// Notifications
-
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 // Employee Details Page 
 const   EmpDetails  = React.lazy(()=> import('./views/hr/Hr-Employee-Details/EmployeeDetails'))
-
-
+const NotificationPage  = React.lazy(()=> import('./components/header/Notification'))
 const routes = [
   { path: '/', exact: true, name: 'Login Page',valid:true },
   { path: '/login', name: 'Login',valid:true, element: Login },
@@ -198,6 +193,11 @@ const routes = [
     name: 'Employee Dashboard',
     element: EmployeeDashboard,
     mongoCollectionName:'pendingAmount' 
+  },
+  {
+    path: '/notification/view',
+    name: 'Notification Page',
+    element: NotificationPage,
   },
   {
     path: '/trainer-dashboard',

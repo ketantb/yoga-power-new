@@ -6,6 +6,7 @@ import {
   AppFooter,
   AppHeader,
 } from '../components/index'
+import { ToastContainer } from 'react-toastify'
 
 import {useParams,redirect,useNavigate  } from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
@@ -76,6 +77,7 @@ useEffect(()=>{
     validateLayout&&
     <>
     <div className={hidde?'hidde':'main-div'}>
+      <ToastContainer position='top-right'/>
       <AppSidebar className='left-er3' />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader className='header-38ru' />

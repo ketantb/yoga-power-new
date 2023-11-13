@@ -1,4 +1,5 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
+import { getDatabase, ref, set,onValue,push } from "firebase/database";
 import {
   CAvatar,
   CBadge,
@@ -44,12 +45,12 @@ import { SiEventstore } from 'react-icons/si'
 import LeadsRight from 'src/views/hr/AllRightRights/LeadsRight'
 import { hrManagement,financeRight,inventoryRight } from 'src/views/hr/Rights/rightsValue/erpRightsValue';
 import { masterMarketingRightVal } from 'src/views/hr/Rights/rightsValue/masterRightsValue'
-
+import { toast } from 'react-toastify'
 
 const AppHeaderDropdown = () => {
 
   const isEmployee = useSelector((el)=>el.isEmployee)
-  const empuniqId = useUniqAdminObjeact().employeeMongoId
+  const {employeeMongoId} = useUniqAdminObjeact()
 
 
   const disPatch = useDispatch()
@@ -79,7 +80,6 @@ const AppHeaderDropdown = () => {
   const email = user.user.email;
   const username = user.user.username;
   const imgUrl = user.user.profileLogo
-
 
 
   return (
@@ -144,7 +144,7 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilSettings} className="me-2" />
          Company  Profile
         </CDropdownItem>
-        {isEmployee?<CDropdownItem className='me-2' onClick={()=>handleNavigateFun(`/hr/employee-profile/employee/${empuniqId}`)}>
+        {isEmployee?<CDropdownItem className='me-2' onClick={()=>handleNavigateFun(`/hr/employee-profile/employee/${employeeMongoId}`)}>
           <CIcon icon={cilUser} className="me-2" />
           Employee Profile
         </CDropdownItem>:''}
@@ -161,9 +161,49 @@ const AppHeaderDropdown = () => {
 }
 
 const ReminderMessageDropdown = () =>{
-  return  <CDropdown variant="nav-item">
-  <CDropdownToggle placement="bottom-end" className="py-0" caret={false} >
- <CIcon icon={cilEnvelopeClosed} className="me-2" />
+  const [newMessageNo,setNewMessageNo] = useState({start:0,num:0})
+  const {employeeMongoId} = useUniqAdminObjeact()
+  const navigate = useNavigate()
+
+
+  
+  function getNotiFication() {
+    const db = getDatabase();
+    const starCountRef = ref(db, employeeMongoId);
+    onValue(starCountRef, (snapshot) => {
+    const data = snapshot.val();
+  
+    
+
+    const notiFications = []
+  
+    for (const notiFication in  data){
+      notiFications.push(data[notiFication])
+    }
+    setNewMessageNo(prev=>{
+      if(prev.start===0){
+        return {start:1,num:0}
+      }else{
+        toast.info('New Message')
+        return {...prev,num:prev.num+1}
+      }
+    })
+
+    });
+  
+  }
+  useEffect(()=>{
+    getNotiFication()
+  },[])
+  const handleNavigateFun =(path)=>{
+    setNewMessageNo({start:0,num:0})
+    navigate(path)
+  }
+  return  <CDropdown variant="nav-item" >
+  <CDropdownToggle style={{cursor:'pointer'}} placement="bottom-end" className="py-0" caret={false} onClick={()=>handleNavigateFun('/notification/view')} >
+ <CIcon icon={cilEnvelopeClosed} className="me-2" onClick={()=>handleNavigateFun('/notification/view')} />
+ {newMessageNo.num}
+ 
   </CDropdownToggle>
   </CDropdown>
 }

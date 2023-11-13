@@ -17,8 +17,6 @@ const headers = {
     'Content-Type': 'application/json'
 }
 
-console.log(token)
-
 const EmailMarketing = () => {
     const url = useSelector((el) => el.domainOfApi)
     const pathVal  = useAdminValidation()
@@ -65,20 +63,29 @@ email = emailMarketingData[parentKey].filter((el)=>el[childKey]).map((el)=>el.em
 }
 
 try{
-let  emailStr = email.join(',')
+console.log(email)
+
+const obj = {
+    "emails":email,
+    "subject":emailObj.subject,
+    "text":emailObj.message
+}
+
 const response = 
-await  axios.post(`${url}/sendMultipalMail/mail`,{...emailObj,client:emailStr},{headers})
+await  axios.post(`${url}/mail`,obj,{headers})
 
  if(response?.status===200){
     alert('successfully save')
    }
 }catch(error){
-console.log(error)
 }
 
 
 
+
 }
+
+console.log(emailObj)
 
     return (
         <CCard>
@@ -88,19 +95,9 @@ console.log(error)
             <CCardBody>
                 <CForm>
                     <CRow>
-                        <CCol lg={6} md={6} sm={12}>
-                            <CFormSelect
-                                className="mb-1"
-                                aria-label="Select Currency"
-                                label="Email Template"
-                                options={[
-                                    "Select Email Template",
-                                    { label: "yogpower@gmail.com", value: "yogpower@gmail.com" },
-                                ]}
-                            />
-                        </CCol>
+                      
 
-                        <CCol lg={6} md={6} sm={12}>
+                        <CCol lg={12} md={12} sm={12}>
                             <CFormInput
                                 className="mb-1"
                                 type="text"
